@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.didion.jwnl.JWNLException;
 import uk.ac.shef.dcs.oak.jate.JATEProperties;
 import uk.ac.shef.dcs.oak.jate.core.extractor.CandidateTermExtractor;
 import uk.ac.shef.dcs.oak.jate.util.control.Lemmatizer;
@@ -25,10 +26,15 @@ public class Utility{
 	}
 	
 	/** Returns the input string after lemmatization. */	
-	public static String getLemma(String context) throws IOException{
+	public static String getLemma(String context) throws IOException {
 		StopList stoplist = new StopList(true);
-		Lemmatizer lemmatizer = new Lemmatizer();
-		String stopremoved = CandidateTermExtractor.applyTrimStopwords(context.trim(), stoplist, lemmatizer);
+        Lemmatizer lemmatizer = null;
+        try {
+            lemmatizer = new Lemmatizer();
+        } catch (JWNLException e) {
+            throw new IOException(e);
+        }
+        String stopremoved = CandidateTermExtractor.applyTrimStopwords(context.trim(), stoplist, lemmatizer);
 		String lemma=null;
 		if(stopremoved!=null)
 			lemma = lemmatizer.normalize(stopremoved.toLowerCase().trim());
@@ -75,10 +81,15 @@ public class Utility{
 	
 	/**
 	 * Returns the set of words after lemmatizing every word present in the input set of context words. */
-	public static Set<String> getLemmatizedWordSet(Set<String> word_set) throws IOException{
+	public static Set<String> getLemmatizedWordSet(Set<String> word_set) throws IOException {
 		StopList stoplist = new StopList(true);
-		Lemmatizer lemmatizer = new Lemmatizer();		
-		Set<String> LemmatizedWordSet = new HashSet<String>();		
+        Lemmatizer lemmatizer = null;
+        try {
+            lemmatizer = new Lemmatizer();
+        } catch (JWNLException e) {
+            throw new IOException(e);
+        }
+        Set<String> LemmatizedWordSet = new HashSet<String>();
 		for(String context: word_set){
 			String lemmatizedWord = getLemma(context, stoplist, lemmatizer);
 			if(lemmatizedWord == null){

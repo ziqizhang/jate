@@ -3,6 +3,8 @@ package uk.ac.shef.dcs.oak.jate.test;
 import java.util.List;
 import java.io.IOException;
 import java.util.Date;
+
+import net.didion.jwnl.JWNLException;
 import uk.ac.shef.dcs.oak.jate.JATEException;
 import uk.ac.shef.dcs.oak.jate.core.algorithm.RAKEAlgorithm;
 import uk.ac.shef.dcs.oak.jate.core.algorithm.RAKEFeatureWrapper;
@@ -15,7 +17,7 @@ import uk.ac.shef.dcs.oak.jate.util.control.StopList;
 
 public class TestRAKE{
 
-		public static void main(String[] args) throws IOException, JATEException {
+		public static void main(String[] args) throws IOException, JATEException, JWNLException {
 		
 		
 			String path_to_corpus = args[0];

@@ -7,6 +7,32 @@
     <groupId>uk.ac.shef.dcs.oak</groupId>
     <artifactId>jate</artifactId>
     <version>2.0Alpha</version>
+    <packaging>jar</packaging>
+    <name>Java Automatic Term Extraction Toolkit (JATE)</name>
+    <description>JATE is a toolkit for developing and experimenting Automatic Term Extractions/Recognition algorithms in Java. The motivation of this toolkit is to make available several state-of-the-art algorithms of ATE/ATR to developers and users of ATE/ATR, and encourage developers of ATE/ATR methods to develop their methods under a uniform framework to enable comparative studies.
+    </description>
+    <url>https://github.com/ziqizhang/jate</url>
+
+
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License version 3.0</name>
+            <url>https://www.gnu.org/licenses/lgpl.html</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Ziqi Zhang</name>
+            <email>ziqizhang.email@googlemail.com</email>
+            <organization>University of Sheffield</organization>
+            <organizationUrl>http://staffwww.dcs.shef.ac.uk/people/Z.Zhang/</organizationUrl>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:git@github.com:ziqizhang/jate.git</connection>
+        <developerConnection>scm:git:git@github.com:ziqizhang/jate.git</developerConnection>
+        <url>git@github.com:ziqizhang/jate.git</url>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,7 +46,6 @@
             <artifactId>opennlp-tools</artifactId>
             <version>1.5.3</version>
         </dependency>
-
 
 
         <!--dependency>

@@ -1,5 +1,6 @@
 package uk.ac.shef.dcs.oak.jate.test;
 
+import net.didion.jwnl.JWNLException;
 import uk.ac.shef.dcs.oak.jate.core.algorithm.AbstractFeatureWrapper;
 import uk.ac.shef.dcs.oak.jate.core.algorithm.Algorithm;
 import uk.ac.shef.dcs.oak.jate.core.algorithm.GlossExAlgorithm;
@@ -52,7 +53,7 @@ public class TestGlossEx {
 		}
 	}
 
-	public static void main(String[] args) throws IOException, JATEException {
+	public static void main(String[] args) throws IOException, JATEException, JWNLException {
 
 		if (args.length < 3) {
 			System.out.println("Usage: java TestGlossEx [path_to_corpus] [path_to_reference_corpus_stats] [output_folder]");

@@ -1,5 +1,6 @@
 package uk.ac.shef.dcs.oak.jate.test;
 
+import net.didion.jwnl.JWNLException;
 import uk.ac.shef.dcs.oak.jate.JATEException;
 import uk.ac.shef.dcs.oak.jate.core.algorithm.AbstractFeatureWrapper;
 import uk.ac.shef.dcs.oak.jate.core.algorithm.Algorithm;
@@ -52,12 +53,12 @@ public class TestCValue {
 		}
 	}
 
-	public static void main(String[] args) throws IOException, JATEException{
+	public static void main(String[] args) throws IOException, JATEException, JWNLException {
 
 		TestCValue.CValueTester(args);
 	}
 	
-	public static AlgorithmTester CValueTester(String[] args) throws IOException, JATEException {
+	public static AlgorithmTester CValueTester(String[] args) throws IOException, JATEException, JWNLException {
 		
 		
 		String path_to_corpus= args[0];

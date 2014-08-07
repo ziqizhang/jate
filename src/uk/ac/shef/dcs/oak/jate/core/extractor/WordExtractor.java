@@ -53,6 +53,9 @@ public class WordExtractor extends CandidateTermExtractor {
         _minCharsInWord=minCharsInWord;
     }
 
+    public WordExtractor() {
+    }
+
     public Map<String, Set<String>> extract(Corpus c) throws JATEException {
         Map<String, Set<String>> res = new HashMap<String, Set<String>>();
         for (Document d : c) {

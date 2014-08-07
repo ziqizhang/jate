@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import net.didion.jwnl.JWNLException;
 import uk.ac.shef.dcs.oak.jate.JATEException;
 import uk.ac.shef.dcs.oak.jate.JATEProperties;
 import uk.ac.shef.dcs.oak.jate.core.context.ContextExtraction;
@@ -59,7 +60,7 @@ public class NCValueAlgorithm implements Algorithm{
 	/** Each candidate term from the C-value list appears in the corpus with a set of context words (may be an adjective, noun or a verb).
 	 * This function identifies the context words with respect to all the candidates identified in the C-Value result set. 
 	*/
-	private void ContextIdentification_Terms() throws IOException{
+	private void ContextIdentification_Terms() throws IOException {
 		Corpus corpus = new CorpusImpl(JATEProperties.getInstance().getCorpusPath());
 		for (Document d : corpus) {
 			sentLoop:

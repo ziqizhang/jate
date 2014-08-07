@@ -1,5 +1,6 @@
 package uk.ac.shef.dcs.oak.jate.test;
 
+import net.didion.jwnl.JWNLException;
 import uk.ac.shef.dcs.oak.jate.JATEException;
 import uk.ac.shef.dcs.oak.jate.core.algorithm.*;
 import uk.ac.shef.dcs.oak.jate.core.feature.FeatureBuilderCorpusTermFrequency;
@@ -47,7 +48,7 @@ public class TestAverageCorpusTF {
 		}
 	}
 
-	public static void main(String[] args) throws IOException, JATEException {
+	public static void main(String[] args) throws IOException, JATEException, JWNLException {
 
 		if (args.length < 2) {
 			System.out.println("Usage: java TestAverageCorpusTF [path_to_corpus] [path_to_output]");
