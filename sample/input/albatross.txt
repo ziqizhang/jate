@@ -1,0 +1,563 @@
+Albatross
+=========
+
+This article is about the bird family. Albatross
+
+Short-tailed Albatross (Phoebastria albatrus)
+
+
+
+Kingdom: Animalia
+
+Phylum: Chordata
+
+Class: Aves
+
+Order: Procellariiformes
+
+Family: Diomedeidae
+G.R. Gray, 1840
+
+Diomedea
+Thalassarche
+Phoebastria
+Phoebetria
+
+
+Albatrosses, of the biological family Diomedeidae, are large seabirds allied to the procellariids,
+storm-petrels and diving-petrels in the order Procellariiformes (the tubenoses). They range widely
+in the Southern Ocean and the North Pacific. They are absent from the North Atlantic, although
+fossil remains show they once occurred there too and occasional vagrants turn up. Albatrosses are
+amongst the largest of flying birds, and the great albatrosses (genus Diomedea) have the largest
+wingspans of any extant birds. The albatrosses are usually regarded as falling into four genera,
+but there is disagreement over the number of species.
+
+Albatrosses are highly efficient in the air, using dynamic soaring and slope soaring to cover
+great distances with little exertion. They feed on squid, fish and krill by either scavenging,
+surface seizing or diving. Albatrosses are colonial, nesting for the most part on remote oceanic
+islands, often with several species nesting together. Pair bonds between males and females form
+over several years, with the use of ritualised dances, and will last for the life of the pair. A
+breeding season can take over a year from laying to fledging, with a single egg laid in each
+breeding attempt.
+
+Of the 21 species of albatrosses recognised by the IUCN, 19 are threatened with extinction.
+Numbers of albatrosses have declined in the past due to harvesting for feathers, but today the
+albatrosses are threatened by introduced species such as rats and feral cats that attack eggs,
+chicks and nesting adults; by pollution; by a serious decline in fish stocks in many regions
+largely due to overfishing; and by long-line fishing. Long-line fisheries pose the greatest
+threat, as feeding birds are attracted to the bait and become hooked on the lines and drown.
+Governments, conservation organisations and fishermen are all working towards reducing this
+by-catch.
+
+Contents
+========
+
+
+
+* Albatross biology
+  o Taxonomy and evolution
+  o Morphology and flight
+  o Distribution and range at sea
+  o Diet
+  o Breeding
+
+* Albatrosses and humans
+  o Etymology
+  o Albatrosses and culture
+  o Threats and conservation
+
+* Species
+* Notes and references
+* External links
+
+ Albatross biology
+========================
+
+ Taxonomy and evolution
+=============================
+
+
+The albatrosses comprise between 13 and 24 species (the number of species is still a matter of
+some debate, 21 being the most commonly accepted number) in 4 genera. The four genera are the
+great albatrosses (Diomedea), the mollymawks (Thalassarche), the North Pacific albatrosses
+(Phoebastria), and the sooty albatrosses or sooties (Phoebetria). Of the four genera, the North
+Pacific albatrosses are considered to be a sister taxon to the great albatrosses, while the sooty
+albatrosses are considered closer to the mollymawks.
+
+The taxonomy of the albatross group has been a source of a great deal of debate. The
+Sibley-Ahlquist taxonomy places seabirds, birds of prey and many others in a greatly enlarged
+order Ciconiiformes, whereas the ornithological organisations in North America, Europe, South
+Africa, Australia and New Zealand retain the more traditional order Procellariiformes. The
+albatrosses can be separated from the other Procellariiformes both genetically and through
+morphological characteristics, size, their legs and the arrangement of their nasal tubes (see
+Morphology and flight).
+
+Within the family the assignment of genera has been debated for over a hundred years. Originally
+placed into a single genus, Diomedea, they were rearranged by Reichenbach into four different
+genera in 1852, then lumped back together and split apart again several times, acquiring 12
+different genus names in total (though never more than eight at one time) by 1965 (Diomedea,
+Phoebastria, Thalassarche, Phoebetria, Thalassageron, Diomedella, Nealbutrus, Rhothonia,
+Julietata, Galapagornis, Laysanornis, and Penthirenia).
+
+By 1965, in an attempt to bring some order back to the classification of albatrosses, they were
+lumped into two genera, Phoebetria (the sooty albatrosses which most closely seemed to resemble
+the procellarids and were at the time considered "primitive" ) and Diomedea (the rest).[1] Though
+there was a case for the simplification of the family (particularly the nomenclature), the
+classification was based on the morphological analysis of Elliott Coues in 1866, and paid little
+attention to more recent studies and even ignored some of Coues's suggestions.
+
+Phylogenetic relationships of the 4 albatross genera. Based on Nunn et al 1996.
+
+
+
+More recent research by Gary Nunn of the American Museum of Natural History (1996) and other
+researchers around the world studied the mitochondrial DNA of all 14 accepted species, finding
+that there were four, not two, monophyletic groups within the albatrosses.[2] They proposed the
+resurrection of two of the old genus names, Phoebastria for the North Pacific albatrosses and
+Thalassarche for the mollymawks, with the great albatrosses retaining Diomedea and the sooty
+albatrosses staying in Phoebetria. Both the British Ornithologists' Union and the South African
+authorities split the albatrosses into four genera as Nunn suggested, and the change has been
+accepted by the majority of researchers.
+
+Black-browed Albatross, a mollymawk.
+
+
+
+While there is some agreement on the number of genera, there is less agreement on the number of
+species. Historically, up to 80 different taxa have been described by different researchers; most
+of these were incorrectly identified juvenile birds.[3] Based on the work on albatross genera,
+Robertson and Nunn went on in 1998 to propose a revised taxonomy with 24 different species,[4]
+compared to the 14 then accepted. This interim taxonomy elevated many established subspecies to
+full species, but was criticised for not using, in every case, peer reviewed information to
+justify the splits. Since then further studies have in some instances supported or disproved the
+splits; a 2004 paper analysing the mitochondrial DNA and microsatellites agreed with the
+conclusion that the Antipodean Albatross and the Tristan Albatross were distinct from the
+Wandering Albatross, per Robertson and Nunn, but found that the suggested Gibson's Albatross,
+Diomedea gibsoni, was not distinct from the Antipodean Albatross.[5] For the most part, an interim
+taxonomy of 21 species is accepted by the IUCN and many other researchers, though by no means all
+— in 2004 Penhallurick and Wink called for the number of species to be reduced to 13 (including
+the lumping of the Amsterdam Albatross with the Wandering Albatross),[6] although this paper was
+itself controversial.[3][7] On all sides, there is the widespread agreement on the need for
+further research to clarify the issue.
+
+Sibley and Ahlquist's molecular study of the evolution of the bird families has put the radiation
+of the Procellariiformes in the Oligocene period (35–30 million years ago), though this group
+probably originated earlier, with a fossil sometimes attributed to the order, a seabird known as
+Tytthostonyx, being found in late Cretaceous rocks (70 mya). The molecular evidence suggests that
+the storm-petrels were the first to diverge from the ancestral stock, and the albatrosses next,
+with the procellarids and diving petrels separating later. The earliest fossil albatrosses were
+found in Eocene to Oligocene rocks, although some of these are only tentatively assigned to the
+faimly and none appear to be particularly close to the living forms. They are Murunkus (Middle
+Eocene of Uzbekistan), Manu (early Oligocene of New Zealand), and an undescribed form from the
+Late Oligocene of South Carolina. Similar to the last was Plotornis, formerly often considered a
+petrel but now accepted as an albatross. It is from the Middle Miocene of France, a time when the
+split between the four modern genera was already underway as evidenced by Phoebastria californica
+and Diomedea milleri, both being mid-Miocene species from Sharktooth Hill, California. These show
+that the split between the great albatrosses and the North Pacific albatrosses occurred by 15 mya.
+Similar fossil finds in the southern hemisphere put the split between the sooties and mollymawks
+at 10 mya.[8] The fossil record of the albatrosses in the northern hemisphere is more complete
+than that of the southern, and many fossil forms of albatross have been found in the North
+Atlantic, which today has no albatrosses. The remains of a colony of Short-tailed Albatrosses have
+been uncovered on the island of Bermuda,[9] and the majority of fossil albatrosses from the North
+Atlantic have been of the genus Phoebastria (the North Pacific albatrosses); one, Phoebastria
+anglica, has been found in deposits in both North Carolina and England. See the genus accounts for
+more data on fossil species.
+
+ Morphology and flight
+============================
+
+Unlike most Procellariiformes, albatrosses, like this Black-footed Albatross, can walk well on
+land.
+
+
+
+The albatrosses are a group of large to very large birds; they are the largest of the
+procellariiformes. The bill is large, strong and sharp-edged, the upper mandible terminating in a
+large hook. This bill is composed of several horny plates, and along the sides are the two
+"tubes", long nostrils that give the order its name. The tubes of all albatrosses are along the
+sides of the bill, unlike the rest of the Procellariiformes where the tubes run along the top of
+the bill. These tubes allow the albatrosses to have an acute sense of smell, an unusual ability
+for birds. Like other Procellariiformes they use this olfactory ability while foraging in order to
+locate potential food sources.[10] The feet have no hind toe and the three anterior toes are
+completely webbed. The legs are strong for Procellariiformes, in fact, almost uniquely amongst the
+order in that they and the giant petrels are able to walk well on land.
+
+The adult plumage of most of the albatrosses is usually some variation of dark upper-wing and
+back, white undersides, often compared to that of a gull. Of these, the species range from the
+Southern Royal Albatross which is almost completely white except for the ends and trailing edges
+of the wings in fully mature males, to the Amsterdam Albatross which has an almost juvenile-like
+breeding plumage with a great deal of brown, particularly a strong brown band around the chest.
+Several species of mollymawks and North Pacific albatrosses have face markings like eye patches or
+have grey or yellow on the head and nape. Three albatross species, the Black-footed Albatross and
+the two sooty albatrosses, vary completely from the usual patterns and are almost entirely dark
+brown (or dark grey in places in the case of the Light-mantled Sooty Albatross). Albatrosses take
+several years to get their full adult breeding plumage.
+
+The wingspans of the largest great albatrosses (genus Diomedea) are the largest of any bird,
+exceeding 340 cm (over 11 feet), although the other species' wingspans are considerably smaller.
+The wings are stiff and cambered, with thickened streamlined leading edges. Albatrosses travel
+huge distances with two techniques used by many long-winged seabirds, dynamic soaring and slope
+soaring. Dynamic soaring enables them to minimise the effort needed by gliding across wave fronts
+gaining energy from the vertical wind gradient. Slope soaring is more straightforward: the
+albatross turns to the wind, gaining height, from where it can then glide back down to the sea.
+Albatross have high glide ratios, around 1:22 to 1:23, meaning that for every metre they drop,
+they can travel forward 22 metres. They are aided in soaring by a shoulder-lock, a sheet of tendon
+that locks the wing when fully extended, allowing the wing to be kept up and out without any
+muscle expenditure, a morphological adaptation they share with the giant petrels.[11]
+
+Taking off is one of the main times albatrosses use flapping in order to fly, and is the most
+energetically demanding part of a journey.
+
+
+
+Albatrosses combine these soaring techniques with the use of predictable weather systems;
+albatrosses in the southern hemisphere flying north from their colonies will take a clockwise
+route, and those flying south will fly counterclockwise.[12] Albatrosses are so well adapted to
+this lifestyle that their heart rates while flying are close to their basal heart rate when
+resting. This efficiency is such that the most energetically demanding aspect of a foraging trip
+is not the distance covered, but the landings, take-offs and hunting they undertake having found a
+food source.[13] This efficient long-distance travelling underlies the albatross's success as a
+long-distance forager, covering great distances and expending little energy looking for patchily
+distributed food sources. Their adaptation to gliding flight makes them dependent on wind and
+waves, however, as their long wings are ill-suited to powered flight and most species lack the
+muscles and energy to undertake sustained flapping flight. Albatrosses in calm seas are forced to
+rest on the ocean's surface until the wind picks up again. They also sleep while resting on the
+surface (and not while on the wing as is sometimes thought). The North Pacific albatrosses can use
+a flight style known as flap-gliding, where the bird progresses by bursts of flapping followed by
+gliding.[14] When taking off, albatrosses need to take a run up to allow enough air to move under
+the wing to provide lift.
+
+
+ Distribution and range at sea
+====================================
+
+The distribution of albatrosses across the world.
+
+
+
+Most albatrosses range in the southern hemisphere from Antarctica to Australia, South Africa and
+South America. The exceptions to this are the four North Pacific albatrosses, of which three occur
+exclusively in the North Pacific, from Hawaii to Japan, California and Alaska; and one, the Waved
+Albatross, breeds in the Galapagos Islands and feeds off the coast of South America. The need for
+wind in order to glide is the reason albatrosses are for the most part confined to higher
+latitudes; being unsuited to sustained flapping flight makes crossing the doldrums extremely
+difficult. The exception, the Waved Albatross, is able to live in the equatorial waters around the
+Galapagos Islands because of the cool waters of the Humboldt Current and the resulting winds.
+
+Albatrosses range over huge areas of ocean and regularly circle the globe.
+
+
+
+It is not known for certain why the albatrosses became extinct in the North Atlantic, although
+rising sea levels due to an interglacial warming period are thought to have submerged the site of
+a Short-tailed Albatross colony that has been excavated in Bermuda.[9] Some southern species have
+occasionally turned up as vagrants in the North Atlantic and can become exiled, remaining there
+for decades. One of these exiles, a Black-browed Albatross, returned to gannet colonies in
+Scotland for many years in a lonely attempt to breed.[15]
+
+The use of satellite tracking is teaching scientists a great deal about the way albatrosses forage
+across the ocean in order to find food. They undertake no annual migration, but disperse widely
+after breeding, in the case of southern hemisphere species, often undertaking circumpolar
+trips.[16] There is also evidence that there is separation of the ranges of different species at
+sea. A comparison of the foraging niches of two related species that breed on Campbell Island, the
+Campbell Albatross and the Grey-headed Albatross, showed the Campbell Albatross primarily fed over
+the Campbell Plateau whereas the Grey-Headed Albatross fed in more pelagic, oceanic waters.
+Wandering Albatrosses also react strongly to bathymetry, feeding only in waters deeper than 1000 m
+(3281 feet); so rigidly did the satellite plots match this contour that one scientist remarked,
+"It almost appears as if the birds notice and obey a 'No Entry' sign where the water shallows to
+less than 1000 m".[8] There is also evidence of different ranges for the two sexes of the same
+species; a study of Tristan Albatrosses breeding on Gough Island showed that males foraged to the
+west of Gough and females to the east.
+
+        See also: List of albatross breeding locations
+
+ Diet
+===========
+
+
+The albatross diet is dominated by cephalopods, fish and crustaceans, although they will also
+scavenge carrion and feed on other zooplankton.[12] It should be noted that for most species, a
+comprehensive understanding of diet is only known for the breeding season, when the albatrosses
+regularly return to land and study is possible. The importance of each of these food sources
+varies from species to species, and even from population to population; some concentrate on squid
+alone, others take more krill or fish. Of the two albatross species found in Hawaii, one, the
+Black-footed Albatross, takes mostly fish while the Laysan feeds on squid.
+
+Light-mantled Sooty Albatrosses regularly dive in order to feed and can dive to below 12 m.
+
+
+
+The use of dataloggers at sea that record ingestion of water against time (providing a likely time
+of feeding) suggest that albatross predominantly feed during the day. Analysis of the squid beaks
+regurgitated by albatrosses has shown that many of the squid eaten are too large to have been
+caught alive,[17] and include mid-water species likely to be beyond the reach of albatross,
+suggesting that, for some species (like the Wandering Albatross), scavenged squid may be an
+important part of the diet. The source of these dead squid is a matter of debate; some certainly
+comes from squid fisheries, but in nature it primarily comes from the die-off that occurs after
+squid spawning and the vomit of squid-eating whales (sperm whales, pilot whales and Southern
+Bottlenose Whales). The diet of other species, like the Black-browed Albatross or the Grey-headed
+Albatross, is rich with smaller species of squid that tend to sink after death, and scavenging is
+not assumed to play a large role in their diet.
+
+Until recently it was thought that albatross were predominantly surface feeders, swimming at the
+surface and snapping up squid and fish pushed to the surface by currents, predators or death. The
+deployment of capillary depth recorders, which record the maximum dive depth undertaken by a bird
+(between attaching it to a bird and recovering it when it returns to land), has shown that while
+some species, like the Wandering Albatross, do not dive deeper than a metre, some species, like
+the Light-mantled Sooty Albatross, have a mean diving depth of almost 5 m and can dive as deep as
+12.5 m.[18] In addition to surface feeding and diving, they have now also been observed plunge
+diving from the air to snatch prey.[19]
+
+ Breeding
+===============
+
+Wandering Albatrosses are colonial but have large widely spaced territories. Here a pair performs
+their famous breeding dance.
+
+
+
+Albatrosses are colonial, usually nesting on isolated islands; where colonies are on larger
+landmasses, they are found on exposed headlands with good approaches from the sea in several
+directions, like the colony on the Otago Peninsula in Dunedin, New Zealand. Colonies vary from the
+very dense aggregations favoured by the mollymawks (Black-browed Albatross colonies on the
+Falkland Islands have densities of 70 nests per 100 m²) to the much looser groups and widely
+spaced individual nests favoured by the sooty and great albatrosses. All albatross colonies are on
+islands that historically were free of land mammals. Albatrosses are highly philopatric, meaning
+they will usually return to their natal colony to breed. This tendency to return is so strong that
+a study of Laysan Albatross showed that the average distance between hatching site and the site
+where a bird established its own territory was 22 metres.[20]
+
+Like most seabirds, albatrosses are K-selected with regard to their life history, meaning they
+live much longer than other birds, they delay breeding for longer, and invest more effort into
+fewer young. Albatrosses are very long lived; most species survive upwards of 50 years, the oldest
+recorded being a Northern Royal Albatross that was ringed as an adult and survived for another 51
+years, giving it an estimated age of 61.[21] Given that most albatross ringing projects are
+considerably younger than that, it is thought likely that other species will prove to live that
+long and even longer.
+
+Sky-pointing is one of the stereotyped actions of Laysan Albatross breeding dances.
+
+
+
+Albatrosses reach sexual maturity slowly, after about five years, but even once they have reached
+maturity, they will not begin to breed for another couple of years (even up to 10 years for some
+species). Young non-breeders will attend a colony prior to beginning to breed, spending many years
+practicing the elaborate breeding rituals and "dances" that the family is famous for.[22] Birds
+arriving back at the colony for the first time already have the stereotyped behaviours that
+compose albatross language, but can neither "read" that behaviour as exhibited by other birds nor
+respond appropriately.[12] After a period of trial and error learning, the young birds learn the
+syntax and perfect the dances. This language is mastered more rapidly if the younger birds are
+around older birds.
+
+The repertoire of behaviour involves synchronised performances of various actions such as
+preening, pointing, calling, bill clacking, staring, and combinations of such behaviours (like the
+sky-call).[23] When a bird first returns to the colony it will dance with many partners, but after
+a number of years the number of birds an individual will interact with drops, until one partner is
+chosen and a pair is formed. They then continue to perfect an individual language that will
+eventually be unique to that one pair. Having established a pair bond that will last for life,
+however, most of that dance will never be used ever again.
+
+Albatrosses are thought to undertake these elaborate and painstaking rituals to ensure that the
+correct partner has been chosen and to perfect recognition of their partner, as egg laying and
+chick rearing is a huge investment. Even species that can complete an egg-laying cycle in under a
+year seldom lay eggs in consecutive years.[8] The great albatrosses (like the Wandering Albatross)
+take over a year to raise a chick from laying to fledging. Albatrosses lay a single egg in a
+breeding season; if the egg is lost to predators or accidentally broken, then no further breeding
+attempts are made that year. The "divorce" of a pair is a rare occurrence, usually only happening
+after several years of breeding failure.
+
+An albatross chick at Northwest Hawaiian Islands National Monument, Midway Atoll.
+
+
+
+All the southern albatrosses create large nests for their egg, whereas the three species in the
+north Pacific make more rudimentary nests. The Waved Albatross, on the other hand, makes no nest
+and will even move its egg around the pair's territory, as much as 50 m, sometimes causing it to
+lose the egg.[24] In all albatross species, both parents incubate the egg in stints that last
+between one day and three weeks. Incubation lasts around 70 to 80 days (longer for the larger
+albatrosses), the longest incubation period of any bird. It can be an energetically demanding
+process, with the adult losing as much as 83 g of body weight a day.[25]
+
+After hatching, the chick is brooded and guarded for three weeks until it is large enough to
+defend and thermoregulate itself. During this period the parents feed the chick small meals when
+they relieve each other from duty. After the brooding period is over, the chick is fed in regular
+intervals by both parents. The parents adopt alternative patterns of short and long foraging
+trips, providing meals that weigh around 12% of their body weight (around 600 g). The meals are
+composed of both fresh squid, fish and krill, as well as stomach oil, an energy-rich food that is
+lighter to carry than undigested prey items.[26] This oil is created in a stomach organ known as a
+proventriculus from digested prey items by most tubenoses, and gives them their distinctive musty
+smell.
+
+Albatrosses brood young chicks until they are large enough to defend themselves and thermoregulate.
+
+
+
+Albatross chicks take a long time to fledge. In the case of the great albatrosses, it can take up
+to 280 days; even for the smaller albatrosses, it takes anywhere between 140 and 170 days.[27]
+Like many seabirds, albatross chicks will gain enough weight to be heavier than their parents, and
+prior to fledging they use these reserves to build up body condition (particularly growing all
+their flight feathers), usually fledging at the same weight as their parents. Albatross chicks
+fledge on their own and receive no further help from their parents, who return to the nest after
+fledging, unaware their chick has left. Studies of juveniles dispersing at sea have suggested an
+innate migration behaviour, a genetically coded navigation route, which helps young birds when
+they are first out at sea.[28]
+
+ Albatrosses and humans
+=============================
+
+ Etymology
+================
+
+
+The name albatross is derived from the Arabic al-câdous or al-ġaţţ�?s (a pelican; literally,
+"the diver"), which travelled to English via the Portuguese form alcatraz ("gannet"), which is
+also the origin of the title of the former prison, Alcatraz. The OED notes that the word alcatraz
+was originally applied to the frigatebird; the modification to albatross was perhaps influenced by
+Latin albus, meaning "white", in contrast to frigatebirds which are black.[12] The Portuguese word
+albatroz is of English origin.
+
+They were once commonly known as Goonie birds or Gooney birds, particularly those of the North
+Pacific. In the southern hemisphere, the name mollymawk is still well established in some areas,
+which is a corrupted form of malle-mugge, an old Dutch name for the Northern Fulmar. The name
+Diomedea, assigned to the albatrosses by Linnaeus, references the mythical metamorphosis of the
+companions of the Greek warrior Diomedes into birds.
+
+ Albatrosses and culture
+==============================
+
+A Northern Royal Albatross in flight at the colony in Taiaroa Head, New Zealand.
+
+
+
+Albatrosses have been described as "the most legendary of all birds".[27] An albatross is a
+central emblem in The Rime of the Ancient Mariner by Samuel Taylor Coleridge; a captive albatross
+is also a metaphor for the poète maudit in a poem of Charles Baudelaire. It is from the former
+poem that the usage of albatross as a metaphor is derived; someone with a burden or obstacle is
+said to have 'an albatross around their neck', the punishment given in the poem to the mariner who
+killed the albatross. In part due to the poem, there is a widespread myth that sailors believe it
+disastrous to shoot or harm an albatross; in truth, however, sailors regularly killed and ate
+them,[15] but they were often regarded as the souls of lost sailors.
+
+More recently, they have become part of popular culture, for example, in a Monty Python sketch. In
+the movie Serenity, the character River was referred to as an albatross by The Operative,
+reflecting the widespread adoption of the word as a metaphor. The Classic Crime's first album is
+entitled "Albatross." A well known whaling song, noted in Gale Huntington's book, Songs the
+Whalemen Sang is entitled "The Wings of a Goney." In The Voyage of the Dawn Treader, the third
+book in C.S. Lewis's Chronicles of Narnia series, an albatross is sent by the God-like figure
+Aslan to guide a ship to safety.
+
+Albatrosses are popular birds for birdwatchers and their colonies popular destinations for
+ecotourists. Regular birdwatching trips are taken out of many costal towns and cities, like
+Monterey, Kaikoura, Wollongong and Sydney, to see pelagic seabirds, and albatrosses are easily
+attracted to these sightseeing boats by the deployment of fish oil into the sea. Visits to
+colonies can be very popular; the Northern Royal Albatross colony at Taiaroa Head in New Zealand
+attracts 40,000 visitors a year,[8] and more isolated colonies are regular attractions on cruises
+to sub-Antarctic islands.
+
+ Threats and conservation
+===============================
+
+
+In spite of often being accorded legendary status, albatrosses have not escaped either indirect or
+direct pressure from humans. Early encounters with albatrosses by Polynesians and Aleut Indians
+resulted in hunting and in some cases extirpation from some islands (such as Easter Island). As
+Europeans began sailing the world, they too began to hunt albatross, "fishing" for them from boats
+to serve at the table or blasting them for sport.[29] This sport reached its peak on emigration
+lines bound for Australia, and only died down when ships became too fast to fish from, and
+regulations stopped the discharge of weapons for safety reasons. In the 19th century, albatross
+colonies, particularly those in the North Pacific, were harvested for the feather trade, leading
+to the near extinction of the Short-tailed Albatross.
+
+This Black-browed Albatross has been hooked on a long-line.
+
+
+
+Of the 21 albatross species recognised by IUCN on their Red List, 19 are threatened, and the other
+two are near threatened.[30] Two species (as recognised by the IUCN) are considered critically
+endangered: the Amsterdam Albatross and the Chatham Albatross. One of the main threats is
+commercial long-line fishing,[31] as the albatrosses and other seabirds which will readily feed on
+offal are attracted to the set bait become hooked on the lines and drown. An estimated 100,000
+albatross per year are killed in this fashion. Unregulated pirate fisheries exacerbate the problem.
+
+Another threat to albatrosses is introduced species, such as rats or feral cats, which directly
+attack the albatross or its chicks and eggs. Albatrosses have evolved to breed on islands where
+land mammals are absent and have not evolved defences against them. Even species as small as mice
+can be detrimental; on Gough Island the chicks of Tristan Albatrosses are attacked and eaten alive
+by introduced house mice that are almost 300 times smaller than they are.[32] Introduced species
+can have other indirect effects: cattle overgrazed essential cover on Amsterdam Island threatening
+the Amsterdam Albatross; on other islands introduced plants reduce potential nesting habitat.
+
+The remains of this Laysan Albatross chick show the plastic ingested prior to death, including a
+bottle cap and lighter.
+
+
+
+Ingestion of plastic flotsam is another problem, one faced by many seabirds. The amount of plastic
+in the seas has increased dramatically since the first record in the 1960s, coming from waste
+discarded by ships, offshore dumping, litter on beaches and waste washed to sea by rivers. It is
+impossible to digest and takes up space in the stomach or gizzard that should be used for food, or
+can cause an obstruction that starves the bird directly. Studies of birds in the North Pacific
+have shown that ingestion of plastics results in declining body weight and body condition.[33]
+This plastic is sometimes regurgitated and fed to chicks; a study of Laysan Albatross chicks on
+Midway Atoll showed large amounts of ingested plastic in naturally dead chicks compared to healthy
+chicks killed in accidents.[34] While not the direct cause of death, this plastic causes
+physiological stress and causes the chick to feel full during feedings, reducing its food intake
+and the chances of survival.
+
+Scientists and conservationists (most importantly BirdLife International and their partners, who
+run the Save the Albatross campaign) are working with governments and fishermen to find solutions
+to the threats albatrosses face. Techniques such as setting long-line bait at night, dying the
+bait blue, setting the bait underwater, increasing the amount of weight on lines and using bird
+scarers can all reduce the seabird by-catch.[35] For example, a collaborative study between
+scientists and fishermen in New Zealand successfully tested an underwater setting device for
+long-liners which set the lines below the reach of vulnerable albatross species.[36] The use of
+some of these techniques in the Patagonian Toothfish fishery in the Falkland Islands is thought to
+have reduced the number of Black-browed Albatross taken by the fleet in the last 10 years.[37]
+Conservationists have also worked on the field of island restoration, removing introduced species
+that threaten native wildlife, which protects albatrosses from introduced predators.
+
+One important step towards protecting albatrosses and other seabirds is the 2001 treaty the
+Agreement on the Conservation of Albatrosses and Petrels, which came into force in 2004 and has
+been ratified by eight countries, Australia, Ecuador, New Zealand, Spain, South Africa, France,
+Peru and the United Kingdom. The treaty requires these countries to take specific actions to
+reduce by-catch, pollution and to remove introduced species from nesting islands. The treaty has
+also been signed but not ratified by another three countries, Argentina, Brazil and Chile.
+
+ Species
+==============
+
+
+Current thinking divides the albatrosses into four genera. The number of species is a matter of
+some debate. The IUCN and BirdLife International among others recognise the interim taxonomy of 21
+extant species, other authorities retain the more traditional 14 species, and one recent paper
+proposed a reduction to 13:
+
+* Great albatrosses (Diomedea)
+  o Wandering Albatross D. exulans
+  o Antipodean Albatross D. (exulans) antipodensis
+  o Amsterdam Albatross D. (exulans) amsterdamensis
+  o Tristan Albatross D. (exulans) dabbenena
+  o Northern Royal Albatross D. (epomorpha) sanfordi
+  o Southern Royal Albatross D. epomophora
+
+* North Pacific albatrosses (Phoebastria)
+  o Waved Albatross P. irrorata
+  o Short-tailed Albatross P. albatrus
+  o Black-footed Albatross P. nigripes
+  o Laysan Albatross P. immutabilis
+
+* Mollymawks (Thalassarche)
+  o Black-browed Albatross T. melanophris
+  o Campbell Albatross T. (melanophris) impavida
+  o Shy Albatross T. cauta
+  o Chatham Albatross T. (cauta) eremita
+  o Salvin's Albatross T. (cauta) salvini
+  o Grey-headed Albatross T. chrysostoma
+  o Atlantic Yellow-nosed Albatross T. chlororhynchos
+  o Indian Yellow-nosed Albatross T. (chlororhynchos) carteri
+  o Buller's Albatross T. bulleri
+
+* Sooty albatrosses (Phoebetria)
+  o Dark-mantled Sooty Albatross P. fusca
+  o Light-mantled Sooty Albatross P. palpebrata.
+

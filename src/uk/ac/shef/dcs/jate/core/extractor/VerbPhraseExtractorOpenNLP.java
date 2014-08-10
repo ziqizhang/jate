@@ -72,7 +72,7 @@ public class VerbPhraseExtractorOpenNLP extends CandidateTermExtractor {
     @Override
     public Map<String, Set<String>> extract(String content) throws JATEException {
         //  System.out.println(content+ "||" );
-        Map<String, Set<String>> nouns = new HashMap<String, Set<String>>();
+        Map<String, Set<String>> vps = new HashMap<String, Set<String>>();
         try {
             String[] tokens = NLPToolsControllerOpenNLP.getInstance().getTokeniser().tokenize(content);
             String[] pos = NLPToolsControllerOpenNLP.getInstance().getPosTagger().tag(tokens);
@@ -82,7 +82,7 @@ public class VerbPhraseExtractorOpenNLP extends CandidateTermExtractor {
                 String[] e = applySplitList(c);
 
                 for (String str : e) {
-                    String stopremoved = applyTrimStopwords(str, _stoplist, _normaliser);
+                    String stopremoved = applyTrimStopwords(str, _stoplist, _normaliser,false,true);
                     if (stopremoved == null) continue;
                     String original = stopremoved;
                     str = _normaliser.normalize(stopremoved.toLowerCase()).trim();
@@ -100,10 +100,10 @@ public class VerbPhraseExtractorOpenNLP extends CandidateTermExtractor {
                     if (c.toLowerCase().indexOf(str) != -1) {
                         //System.out.print(original+"|");
 
-                        Set<String> variants = nouns.get(str);
+                        Set<String> variants = vps.get(str);
                         variants = variants == null ? new HashSet<String>() : variants;
                         variants.add(original);
-                        nouns.put(str, variants);
+                        vps.put(str, variants);
                     }
                 }
             }
@@ -112,7 +112,7 @@ public class VerbPhraseExtractorOpenNLP extends CandidateTermExtractor {
             throw new JATEException(wte);
         }
 
-        return nouns;
+        return vps;
     }
 
 
@@ -126,10 +126,10 @@ public class VerbPhraseExtractorOpenNLP extends CandidateTermExtractor {
         List<String> candidates = new ArrayList<String>();
         String phrase = "";
         for (int n = 0; n < tokens.length; n++) {
-            if (phrases[n].equals("B-NP")) {
+            if (phrases[n].equals("B-VP")) {
                 phrase = tokens[n];
                 for (int m = n + 1; m < tokens.length; m++) {
-                    if (phrases[m].equals("I-NP")) {
+                    if (phrases[m].equals("I-VP")||phrases[m].endsWith("-NP")) {
                         phrase = phrase + " " + tokens[m];
                     } else {
                         n = m;

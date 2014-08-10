@@ -1,0 +1,607 @@
+Bedbug
+======
+
+(Redirected from Bed bug)
+
+Cimex lectularius
+
+
+
+Kingdom: Animalia
+
+Phylum: Arthropoda
+
+Class: Insecta
+
+Order: Hemiptera
+
+Suborder: Heteroptera
+
+Family: Cimicidae
+Kirkaldy, 1909
+
+
+GeneraSpecies
+
+
+Genus Cimex
+
+* Cimex lectularius
+* Cimex hemipterus (C. rotundatus)
+* Cimex pilosellus
+* Cimex pipistrella
+
+Genus Leptocimex
+
+* Leptocimex boueti
+
+Genus Haematosiphon
+
+* Haematosiphon inodora
+
+Genus Oeciacus
+
+* Oeciacus hirudinis
+* Oeciacus vicarius
+
+
+Bedbugs (or bed bugs) are small nocturnal insects of the family Cimicidae that live by
+hematophagy, feeding on the blood of humans and other warm-blooded hosts.
+
+Contents
+========
+
+
+
+* Biology
+  o Genera and species
+  o Physical characteristics
+  o Feeding habits
+  o Health effects on humans
+  o Reproductive habits
+  o Natural enemies
+
+* Infestations
+  o Method of initial infestation
+  o Common location of infestations
+  o Size of infestations
+  o Detection of infestations
+  o Incidence of infestations
+  o Living with infestation
+  o Self-treatment
+  o Professional treatment
+    - Selection of professionals
+    - Necessary number of professional treatments
+    - Pre-treatment preparation
+      @ Packing
+      @ Laundry
+      @ Vacuuming
+      @ Steam treatment
+      @ Managing bedding
+
+    - Treatment
+    - Post-treatment
+
+
+* References
+* External links
+  o General information
+    - Dermatological information
+    - Maps &amp; registries
+    - Information from specialized sources
+      @ University or colleges
+      @ Pest-control agencies (noncommercial informational sites)
+
+
+  o Published articles (newest to oldest)
+
+ Biology
+==============
+
+ Genera and species
+=========================
+
+
+The common bedbug (Cimex lectularius) is the best adapted to human environments. It is found in
+temperate climates throughout the world and has been known since ancient times.
+
+Other species include Cimex hemipterus, found in tropical regions (including Florida), which also
+infests poultry and bats, and Leptocimex boueti, found in the tropics of West Africa and South
+America, which infests bats and humans. Cimex pilosellus and C. pipistrella primarily infest bats,
+while Haematosiphon inodora, a species of North America, primarily infests poultry.
+
+Oeciacus, while not strictly a bedbug, is a closely related genus primarily affecting birds.
+
+ Physical characteristics
+===============================
+
+
+Adult bedbugs are reddish brown, flattened, oval, and wingless, with microscopic hairs that give
+them a banded appearance. A common misconception is that they are not visible to the naked eye,
+but adults grow to 4 to 5 mm (one-eighth to three-sixteenths of an inch) in length and do not move
+quickly enough to escape the notice of an attentive observer. Newly hatched nymphs are translucent
+and lighter in color and continue to become browner and molt as they reach maturity. When it comes
+to size, they are often compared to lentils or appleseeds.
+
+A recent paper by Professor Brian J. Ford and Dr Debbie Stokes gives views of a bedbug under
+various microscopes.
+
+Bedbug 4 mm length 2.5 mm width (Shown in a film roll plastic container. On the right you can see
+the sloughed off skin, which this bedbug just recently wore while a nymph)
+
+ Feeding habits
+=====================
+
+
+Bedbugs are generally active only at night, with a peak attack period about an hour before dawn,
+though given the opportunity, they may attempt to feed at other times of day. Attracted by warmth
+and the presence of carbon dioxide, the bug pierces the skin of its host with two hollow tubes.
+With one tube it injects its saliva, which contains anticoagulants and anesthetics, while with the
+other it withdraws the blood of its host. After feeding for about five minutes, the bug returns to
+its hiding place. The bites cannot usually be felt until some minutes or hours later, as a
+dermatological reaction to the injected agents. Although bedbugs can live for up to 18 months
+without feeding, they typically seek blood every five to ten days.
+
+Bedbugs are often erroneously associated with filth. They are attracted by exhaled carbon dioxide,
+not by dirt, and they feed on blood, not waste. In short, the cleanliness of their environments
+has no effect on bedbugs. Their numbers may be reduced temporarily by vacuuming, but will recover
+and require vacuuming again.
+
+ Health effects on humans
+===============================
+
+
+While bedbugs have been known to harbor pathogens in their bodies, including plague and hepatitis
+B, they have not been linked to the transmission of any disease and are not regarded as a medical
+threat. Some individuals, however, can get skin infections and scars from scratching bites. While
+bedbugs are not regarded as a vector of transmissible diseases, they may be a significant source
+of alarm or distress. With some individuals, it may result in cases of delusional parasitosis and
+post-traumatic stress disorder.
+
+ Reproductive habits
+==========================
+
+
+Female bedbugs can lay up to five eggs in a day and 500 during a lifetime. The eggs are visible to
+the naked eye measuring 1 mm in length (approx. 2 grains of salt) and are a milky-white tone in
+color. The eggs hatch in one to two weeks. The hatchlings begin feeding immediately. They pass
+through five molting stages before they reach maturity. They must feed once during each of these
+stages. At room temperature, it takes about 5 weeks for a bedbug to pass from hatching, through
+the stages, to maturity. They become reproductively active only at maturity.
+
+All bedbugs mate via a process termed "traumatic insemination".[1][2][3] Instead of inserting
+their genitalia into the female's reproductive tract as is typical in copulation, males instead
+pierce females with hypodermic genitalia and ejaculate into the body cavity. This form of mating
+is thought to have evolved as a way for males to overcome female mating resistance.[4][5]
+Traumatic insemination imposes a cost on females in terms of physical damage and increased risk of
+infection.[6][7] To reduce these costs females have evolved internal and external "paragenital"
+structures [6][7] collectively known as the “spermalege�?.[1][2][3] Within the True Bugs
+(Heteroptera) traumatic insemination occurs in the Prostemmatinae (Nabidae) and the Cimicoidea
+(Anthocoridae, Plokiophilidae, Lyctocoridae, Polyctenidae and Cimicidae), and has recently been
+discovered in the plant bug genus Coridromius (Miridae).[8]
+
+Remarkably, in the genus Afrocimex both males and females possess functional external
+paragenitalia, and males have been found with copulatory scars and the ejaculate of other males in
+their haemolymph. There is a widespread misbelief that males inseminated by other males will in
+turn pass the sperm of both themselves and their assailants onto females with whom they mate.[9]
+While it is true that males are known to mate with and inject sperm into other males, there is
+however no evidence to suggest that this sperm ever fertilizes females inseminated by the victims
+of such acts.[2]
+
+ Natural enemies
+======================
+
+
+Some bedbug predators may also be found near bedbug infestations. The most common bedbug predator
+is the masked hunter.
+
+Jeffrey Hahn writes:
+
+        Adult masked hunters are dark brown to black and are elongate oval in shape. When full
+        grown, they're about 3/4 inch long. They have a short, stout, 3-segmented beak. Immature
+        masked hunters are similar but smaller and lack developed wings. They are often covered
+        with dust, lint and other debris, giving them a grayish or whitish appearance. Underneath,
+        however, they are dark-colored like adults. Masked hunters do not feed on human blood.
+        However, they are capable of inflicting painful bites as a defensive reaction if they are
+        disturbed or carelessly handled. The bite feels like a bee sting followed by numbness and
+        swelling. Rarely does a masked hunter bite require medical attention. Masked hunters do
+        not transmit any disease. [2]
+
+Masked hunters should not be considered as a means of exterminating bedbug colonies.
+
+ Infestations
+===================
+
+Bedbug (shown on writing paper)
+
+ Method of initial infestation
+====================================
+
+
+There are several means by which dwellings can become infested with bedbugs. People can often
+acquire bedbugs at hotels, motels, and bed-and-breakfasts, thanks to increased domestic and
+international tourism, and bring them back to their homes in their luggage. They also can pick
+them up by inadvertently bringing infested furniture or used clothing to their household. If
+someone is in a place that is severely infested, bedbugs may actually crawl onto and be carried by
+people's clothing, although this is atypical behavior — except in the case of severe
+infestations, bedbugs are not usually carried from place to place by people on clothing they are
+currently wearing. Finally, bedbugs may travel between units in multi-unit dwellings (such as
+condominiums and apartment buildings), after being originally brought into the building by one of
+the above routes. This spread between units is dependent in part on the degree of infestation, on
+the material used to partition units (concrete is a more effective barrier to the spread of the
+infestation), and whether or not infested items are dragged through common areas while being
+disposed of, resulting in the shedding of bedbugs and bedbug eggs while being dragged. In many
+areas, the initial investigation is aided by the use of professionally trained canine detection
+teams. A properly trained team can detect and pin point a bedbug infestation within minutes.
+
+ Common location of infestations
+======================================
+
+
+Bedbugs are very flat, which allows them to hide in tiny crevices. A crack wide enough to fit the
+edge of a credit card can harbor bedbugs [even in the ceiling]. In the daytime, they tend to stay
+out of the light, preferring to remain hidden in such places as mattress seams, mattress
+interiors, bed frames, nearby furniture, carpeting, baseboards, inner walls, tiny wood holes, or
+bedroom clutter. Bedbugs can settle in the open weave of linen; this will often appear as a gray
+spindle a centimeter long and a thread wide, with a dark speck in the middle. Bedbugs can be found
+on their own, but more often congregate in groups. They are not social insects, however, and do
+not build or stay in nests. These groups of bedbugs are very often found in beds, usually either
+in the seams of a mattress (usually the seams closest to the sleeper such as those on the edging
+of a matress or box spring), in the boxspring, or within the structure of the bed itself. They can
+also be found in a wide variety of locations in a home, such as behind baseboards, behind a
+picture frame, within books (near the bed), in telephones, or radios near the bed, and within the
+folds of curtains. When not feeding, bedbugs are likely to be found hiding in shaded areas such as
+the seam along which the floor and wall meet, or under the edge of the carpet. One may find a
+group of bugs in the seams, usually surrounded by black fecal matter and sometimes a reddish brown
+stain.
+
+Bedbugs are capable of travelling as far as 100 feet to feed, but usually remain close to the host
+in bedrooms or on sofas where people may sleep. They feed every five to 10 days. The manner in
+which infestations spread throughout a home or within an apartment building is not entirely
+understood and differs from case to case.
+
+It is important to inspect all adjacent rooms for infestation, as bedbugs travel easily and
+quickly along pipes and boards. In treatment, it is important to consider the insides of walls as
+potential places for bedbug infestation.
+
+ Size of infestations
+===========================
+
+
+The numerical size of a bedbug infestation is to some degree variable, as it is a function of the
+elapsed time from the initial infestation. With regards to the elapsed time from the initial
+infestation, even a single female bedbug brought into a home has a potential for reproduction,
+with its resulting offspring then breeding, resulting in a geometric progression of population
+expansion if control is not undertaken. Sometimes people are not aware of the insects, but do
+notice the bites. The visible bedbug infestation does not represent the infestation as a whole, as
+there may be infestations elsewhere in a home, however, the insects do have a tendency to stay
+close to their hosts (hence the name "bed" bugs).
+
+ Detection of infestations
+================================
+
+
+The most reliable way of detecting bedbug infestations is through the presence of bedbug feces,
+which can stain bedding.
+
+Though bedbug bites can occur singly, they often follow a distinctive pattern of a linear group of
+three bites, sometimes macabrely referred to as "breakfast, lunch and dinner". These patterns of
+bites are caused when a bedbug is disturbed in feeding by a person moving, and then the bedbug
+resumes feeding. Bedbug bites also often occur in lines marking the paths of blood vessels running
+close to the surface of the skin. The effect of these bites on humans varies from person to
+person, but often cause welts and swelling that are more itchy and longer-lasting than mosquito
+bites. Some people, however, have little or no reaction to bedbug bites. Those whose bodies do not
+initially react may subsequently develop symptoms, however, due to an allergic reaction caused by
+the development of antigen. Bedbugs never crawl under one's skin and markings implying this may be
+signs of other skin infections or a severe allergic reaction to bedbug bites.
+
+A technique for "catching" (detecting) bedbugs is to have a light source accessible from bed and
+to turn it on at about an hour before dawn, which is usually the time when bedbugs are most
+active. A flashlight is recommended instead of room lights, as the act of getting out of bed will
+cause any bedbugs present to scatter. Bedbugs can also sometimes be viewed during the day. The
+flashlight method is best; if you awaken during the night, leave your lights off but use your
+flashlight to inspect your mattress. Ironically, though not fast movers, the anemic pace of
+bedbugs can make them difficult to spot. A few seconds staring at patterned cover may be needed to
+notice them.
+
+Some individuals have used glue traps placed in strategic areas around their home (sometimes used
+in conjunction with heating pads, or balloons filled with exhaled breath, thus offering the carbon
+dioxide that bedbugs look for) in order to attract and thus detect bedbug infestations. There are
+also commercial traps like "flea" traps whose effectiveness is questionable except perhaps as a
+means of detection, but traps will certainly not work to control an infestation.
+
+Perhaps the easiest method for detection is to place double sided carpet tape in long strips near
+or around the bed and check the strips after a day or more. This is also useful in detecting
+insect presence in general.
+
+Veterinarians may mistake bedbugs' leavings on a pet's fur as "flea dirt".
+
+Bedbugs are known for being elusive, transient and nocturnal. For many, the only way to detect and
+identify with certainty an infestation is to contact a pest control professional.
+
+ Incidence of infestations
+================================
+
+
+With the widespread use of DDT in the 1940s and '50s, bedbugs all but disappeared from North
+America in the mid-twentieth century. Infestations remained common in many other parts of the
+world, however, and in recent years have begun to rebound in North America. Reappearance of
+bedbugs in North America has presented new challenges for pest control and, without DDT and
+similarly banned agents, no fully effective treatment is now in use. The industry is only
+beginning to develop procedures and techniques.
+
+Another reason for their increase is that pest control services more often nowadays use low
+toxicity gel-based pesticides for control of cockroaches, the most common pest in structures,
+instead of residual sprays. When residual sprays meant to kill other insects were commonly being
+used, they resulted in a collateral insecticidal effect on potential bedbug infestations; the
+gel-based insecticides primarily used nowadays do not have any effect on bedbugs, as they are
+incapable of feeding on these baits.
+
+The Professional Pest Management Association, a US advocacy group for pest control operators
+(PCOs) conducted a "proactive bed bug public relations campaign" in 2005 and 2006, resulting in
+increased media coverage of bedbug stories and an increase in business for PCOs, possibly
+distorting the scale of the increase in bedbug infestations.[10]
+
+ Living with infestation
+==============================
+
+
+If it is necessary to live with bedbugs in the short term, it is possible to create makeshift
+temporary barriers around a bed. Although bedbugs cannot fly or jump, they have been observed
+climbing a higher surface in order to then fall to a lower one, such as climbing a wall in order
+to fall onto a bed. That having been said, barrier strategies nevertheless often have beneficial
+effects: an elevated bed, for example, can be protected by applying double-sided sticky tape
+(carpet tape) around each leg, or by keeping each leg on a plastic furniture block in a tray of
+water. Bed frames can be effectively rid of adult bedbugs and eggs by use of steam or, used with
+caution, by spraying rubbing alcohol on any visible bugs (although this is not a permanent
+treatment). Small steam cleaners are available and are very effective for this local treatment. A
+suspect mattress can be protected by wrapping it in a painter's disposable plastic dropcloth,
+neatly sealing shut all the seams with packing tape, and putting it on a protected bed after a
+final visual inspection. Bedding can be sanitized by a 120 °F (49 °C) laundry dryer. Once
+sanitized, bedding should not be allowed to drape to the floor. An effective way to quarantine a
+protected bed is to store sanitized sleeping clothes in the bed during the day, and bathing before
+entering the bed.
+
+Vermin and pets may complicate a barrier strategy. Bedbugs prefer human hosts, but will resort to
+other warm-blooded hosts if humans are not available, and some species can live up to eighteen
+months without feeding at all. A co-infestation of mice can provide an auxiliary food source to
+keep bedbugs established for longer. Likewise, a house cat or human guest might easily defeat a
+barrier by sitting on a protected bed. Such considerations should be part of any barrier strategy.
+
+A camping tent can serve as a "safe" sanctuary for sleeping in the short term to avoid new bites.
+Keep sleep clothes in the tent to ensure bugs are not introduced to the tent.
+
+ Self-treatment
+=====================
+
+
+Some individuals have had success conducting their own exterminations by preparing an insecticide
+mixture of pyrethrins and fresh-water diatomaceous earth. At least one manufacturer produces a
+household insecticide D-20 with only 0.2% naturally derived pyrethrins and 1.0% Piperonyl
+Butoxide, which magnifies the pyrethrin's effectivenes by 10 times. Natural pyrethrins are more
+expensive than many alternatives. The function of the pyrethrins is to stimulate the nervous
+system of the bugs so that the spasms will allow the diatomaceous earth to desiccate, puncture,
+and kill the bugs through mechanical action. Great care should be taken not to use products with
+salt-water diatomaceous earth or heat-treated diatomaceous earth (the common industrial forms),
+which can damage the lungs of any mammal (dogs, cats, or humans) which inhale it (due to its
+extreme sharp crystalline edges), and has also been known to cause cancer. Fresh-water
+diatomaceous earth, however, is commonly used to deworm cats, dogs, and humans, and is considered
+as safe as table salt. What is sold as food-grade diatomite generally contains very low
+percentages of crystalline silica.
+
+Bedbugs are not coldweather insects and cannot tolerate temperatures below freezing for extended
+periods of time. Others have used fruit and vegetable insecticides, comprising a mixture of
+pyrethrins and canola oil, which are usually safe for humans and most pets (aside from fish).
+While not a permanent fix, spraying rubbing alcohol should kill bedbugs on contact.
+
+In addition, since bedbugs normally disperse, treatment of a bed or mattress is insufficient to
+eradicate an infestation.
+
+ Professional treatment
+=============================
+
+ Selection of professionals
+=================================
+
+
+Not all exterminators are familiar with extermination techniques for bedbugs. In the past,
+fumigation with Cyanogas was used for bedbug control. This was very effective, but also very
+dangerous. This method is no longer used. Fumigation—that is the use of poison gases—is
+costly, and though this has been tried as a method of control in isolated cases, it is transient.
+New infestation can be imported shortly after a fumigation has taken place. Fumigation does work,
+but it may not be practical, and may not be permitted in most jurisidictions. Care must thus be
+taken when selecting an exterminator, in order to select a professional who knows how to conduct
+proper bedbug removal. In the USA the National Pest Management Association can assist in the
+location of pest control professionals.
+
+ Necessary number of professional treatments
+==================================================
+
+
+A survey of pest control professionals conducted by a pest control professor at the University of
+Massachusetts stated that 68% of all bedbug infestations require three or more treatments, 26%
+require two treatments, and 6% require just one. [3] However, this survey does not seem to have
+taken into account the size of the infestation, the size of the venue being treated, the
+extensiveness of that venue's preparation for the treatment (thus enabling or inhibiting coverage
+of the poisons), the skill of the exterminator, whether popular nesting places have been disposed
+of, and the cause behind the original infestation.
+
+ Pre-treatment preparation
+================================
+
+
+Proper preparation is a mandatory requirement for control to be effective. Pest control firms
+should outline this in detail and provide detailed instructions on what to do. This is generally
+done by the resident; although some firms may offer preparation for an additional charge, this is
+uncommon. Preparation involves providing access for pest control treatment as well as taking
+measures to ensure that bedbugs are destroyed or contained. If a home is not properly prepared,
+successful elimination is practically impossible. Although preparation may be difficult for some
+people (for example, seniors or handicapped individuals), it is essential for effective treatment,
+and thus in such cases family members, friends or social or charitable agencies may need to
+provide assistance.
+
+ Packing
+==============
+
+
+All furniture and appliances in the dwelling usually need to be pulled away from the baseboards,
+and it is commonly asked that all furniture containing potential hiding crevices, such as
+bookshelves and desks, be emptied and left open for the exterminator to spray. Items in tightly
+sealed containers are usually safe from bedbug infestation and need not be emptied. Pest Control
+Operators may declare an item untreatable upon inspection--especially items of wood or paper.
+
+ Laundry
+==============
+
+
+Everything that can be laundered should be laundered, and laundered in advance of the treatment,
+then placed in plastic bags. This would include stuffed animals, drapes and so on.
+
+The items should be securely tied into plastic bags, then emptied directly into the machines. The
+bags should then be immediately disposed of. It is heat, not water, that kills any bedbugs
+residing within the laundered items; therefore items should be washed in hot water, regardless of
+normal washing directions, and should be dried with medium heat (preferably high heat) for 20
+minutes or more. (For those who have the ability to measure the temperature of the water in their
+washing machine, or of the hot air in their dryer, the target heat range is 120°F (49°C).)
+
+If a laundering session such as described is financially prohibitive, some have posited that the
+items need only be run through the dryer, not the washing machine. However, the extensive water
+and spinning action associated with washing machines may assist in dislodging bedbugs from where
+they are residing within clothes and laundered. This remains only "optional," as the heat of the
+cycle of drying will effectively kill all stages—eggs, immature stage (nymphs) and adults.
+
+For items that require dry cleaning, the dry cleaners should be informed that the items in
+question are potentially infested, and the items should be bagged. Cleaners may still refuse to
+accept them.
+
+Steam cleaning and vacuuming of carpets can be helpful. Although bedbugs will not be in the middle
+of the floor, they may be under the carpets at the edges of rooms. Pesticide is applied at
+perimeters and is effective, but the more steps are taken to assist removal, the more thorough the
+elimination will be.
+
+ Vacuuming
+================
+
+
+The mechanical removal of bedbugs by vacuuming is a most important part of preparing for control.
+Vacuuming alone will not solve the problem, but it will substantially reduce bedbug numbers and
+thus help reduce the population as part of preparing for treatment. A crevice attachment should be
+used on the seams of mattresses, on box springs, on bed legs, within furniture interiors, behind
+pictures, on curtains, and anywhere there is a possibility of the insects hiding (e.g. inside
+dresser drawers, dresser cases, under chairs, etc.). Carpets should also be vacuumed throughout
+the home, preferably with a power-head. Baseboards should also be vacuumed using the crevice
+tool—not swept—prior to the exterminator's arrival. Vacuum bags should then immediately be
+removed and placed in doubled plastic bags and placed into strong plastic bag for disposal.
+Spraying inside the vacuum cleaner bag with an aerosol insecticide or 50/50 alcohol/water mix is a
+good idea. The bags should be stored outside of home before collection. Burning the waste is not
+practical in the vast majority of urban centres and may be illegal.
+
+ Steam treatment
+======================
+
+
+Some pest control firms do offer steam treatment for items like mattresses or upholstered
+furniture especially when individuals are concerned about pesticides on bedding. This has only a
+very limited effectiveness, however, it is quite effective in this range of less than 1/2 inch of
+penetration. This also depends on the time that the steam is applied to the surface of the item.
+Small steam cleaners for domestic use can be useful for mattresses and the surfaces of upholstered
+furniture. This is a worthwhile option if there are issues of allergy, and the homeowner takes the
+time to treat carefully in this limited context.
+
+ Managing bedding
+=======================
+
+
+There are differing opinions as to whether it is necessary to dispose of mattress, boxsprings,
+futons, pillows, and other bedding. There is of course often a heavy cost involved in the complete
+replacement of such bedding. It is clear, also, that getting rid of infested bedding alone does
+not solve the problem. The decision to replace bedding or not depends on the condition of and
+often related level of infestation within the items, the comfort level of the owner, whether the
+owner can afford replacement, and aesthetics. A reasonable rule of thumb is that new bedding does
+not need to be replaced but if bedding is older and replacement may have been done soon in any
+case, then of course, replacing it AFTER control is a welcome clean start. Treatment of bedding
+items must be done with care and according to the label on the insecticide used. Mattresses
+typically need local treatment with non-residual insecticides at seams and borders. Boxsprings are
+more difficult to treat as there are more places for the insects to hide. The notion that getting
+rid of bedding helps solve the problem is misguided. Infestation must be handled first and then if
+new bedding is desired, the old bedding can be disposed of. Spread of infestation in apartment
+buildings is increased by tenants deciding to throw away old bedding. An infested mattress or box
+spring dragged in a hallway to an elevator will cause bedbugs to fall off or even run off the
+item, and these may then find their way into other units. As noted here, the use of protective
+encasements to protect bedding after treatment or to enclose bedbugs when the items are being
+thrown away are invaluable in preventing spread of infestation. It is also suggested to slash or
+mark up infested items so that others do not take them back into the building.
+
+After the mattress and/or box spring or futon has been treated, placing these inside a vinyl,
+polyvinyl or polyethylene encasement is a good idea as a secondary means of defense. Bedbugs like
+to hide near the victim and are commonly found on seams of mattresses, or within the structure of
+box springs. The mattress encasement serves to reduce this likelihood and in the case of box
+springs, it seals any remaining insects inside the encasement. The mattress encasement also
+protects the mattress from the mess of staining caused when bedbugs aggregate on seams. An
+encasement is a good idea either until the infestation has been totally eliminated or in the case
+of good quality encasements, useful as a permanent protection for the mattress—and also to
+enable easier control if infestation recurs.
+
+Those who end up disposing of suspect items should enclose them in vinyl mattress encasements, to
+prevent shedding bugs and eggs on their way to the disposal site. Care should also be taken to
+label throwaway items with a warning about the suspected bedbug infestation, as furniture is often
+reclaimed by dumpster divers.
+
+New items should not be purchased until after the infestation has been thoroughly eliminated.
+Also, many retailers offer disposal of old mattresses. This can pose obvious problems if new and
+old mattresses are carried together on the same truck without the proper precautions taken.
+
+ Treatment
+================
+
+
+Exterminators will often apply a "contact kill" spray directly on bedbugs found in the apartment
+(such as a mixture of cyfluthrin, pyrethrins, and piperonyl butoxide), and then spray
+lambda-cyhalothrin on baseboards and other favorite hiding places. Lambda-cyhalothrin acts as a
+"slow kill" barrier which kills bedbugs after they cross it, and is usually microencapsulated,
+making it safe to pets and humans after it dries. Often, deltamethrin is also injected into larger
+crevices. The lambda-cyhalothrin and the deltamethrin are at their strongest for the first two
+weeks following their application, but usually retain effectiveness for up to 60 days.
+
+Gentrol and Phantom can also be used for bedbug control. Gentrol contains the active ingredient
+(S)-Hydroprene, an insect growth regulator (IGR) that disrupts the normal growth development of
+cockroaches and stored product pests, drain flies and fruit flies, as well as bedbugs. Phantom®
+uses an active ingredient known as chlorfenapyr. It is non-repellent and relatively long-lasting.
+
+Successful treatment of a bedbug infestation is often highly dependent on how thorough the pest
+control professional is. Although the assessment and judgment of the pest control professional
+should be respected, most treatments cover such areas within homes as closets, curtains, outside
+and inside furniture crevices (dresser and desk drawers, night tables, etc.), as well as the
+interior of electrical outlets and behind pictures hangings on walls. If the choice was made to
+retain bedding, professionals will often either treat or steam-clean bedframes and the
+undersurface of solid beds. Some higher-end pest control firms also offer to perform the
+aforementioned vacuuming.
+
+Most infestations are not successfully handled by one treatment alone. Most require exterminators
+to visit multiple times. In multi-unit dwellings, such as apartment buildings, the whole building
+should be treated, in order to avoid a situation where bedbugs travel out of the treated unit,
+only to infest other apartments and/or repeatedly reinfest the original unit.
+
+ Post-treatment
+=====================
+
+
+Bedbugs can often be seen alive for up to two weeks following treatment of a dwelling, although
+they should not be seen in great number (e.g., only one or two). It is important to continue to
+monitor for bedbugs after the initial treatment.
+
+Vacuuming should not be performed for a period of time following treatment, as some pesticides dry
+as a fine film, and can be prematurely removed from the environment if vacuumed, allowing
+infestations to survive the treatment.
+
+Anecdotal evidence seems to suggest that many, and perhaps most, people who successfully deal with
+bedbug infestations find themselves anxious and fearful about the possibility of reinfestation,
+for varying lengths of time. These feelings of anxiety may have some relation to delusional
+parasitosis: "Sometimes an initial and real insect infestation precedes and triggers the delusion
+[...] Out of desperation the victims may move out of their home, only to report later that the
+‘bugs’ have followed them there too." (The Physician’s Guide to Arthropods of Medical
+Importance, J.A. Goddard, CRC Press, 1993.) The feelings are not always devoid of rational cause,
+however, given that reinfestations do occur, due to reasons such as ineffective treatment of
+adjacent units in multi-unit structures, nymphs missed due to their minute size, or secondary
+infestations sprung from the original infestation (in a car, at an employer, etc.).
+

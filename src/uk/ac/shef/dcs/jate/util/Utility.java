@@ -18,7 +18,7 @@ public class Utility{
 	
 	/** Returns the input string after lemmatization. */	
 	public static String getLemma(String context, StopList stoplist, Lemmatizer lemmatizer) throws IOException{
-		String stopremoved = CandidateTermExtractor.applyTrimStopwords(context.trim(), stoplist, lemmatizer);
+		String stopremoved = CandidateTermExtractor.applyTrimStopwords(context.trim(), stoplist, lemmatizer,true,true);
 		String lemma=null;
 		if(stopremoved!=null)
 			lemma = lemmatizer.normalize(stopremoved.toLowerCase().trim());
@@ -34,7 +34,7 @@ public class Utility{
         } catch (JWNLException e) {
             throw new IOException(e);
         }
-        String stopremoved = CandidateTermExtractor.applyTrimStopwords(context.trim(), stoplist, lemmatizer);
+        String stopremoved = CandidateTermExtractor.applyTrimStopwords(context.trim(), stoplist, lemmatizer,true,true);
 		String lemma=null;
 		if(stopremoved!=null)
 			lemma = lemmatizer.normalize(stopremoved.toLowerCase().trim());
@@ -44,7 +44,7 @@ public class Utility{
 	
 	public static String getLemmaChiSquare(String context, StopList stoplist, Lemmatizer lemmatizer) throws IOException{
 		
-		String stopremoved = CandidateTermExtractor.applyTrimStopwords(context.trim(), stoplist, lemmatizer);
+		String stopremoved = CandidateTermExtractor.applyTrimStopwords(context.trim(), stoplist, lemmatizer,true,true);
 		String lemma=null;
 		if(stopremoved!=null)
 			lemma = lemmatizer.normalize(stopremoved.toLowerCase().trim());

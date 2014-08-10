@@ -1,0 +1,944 @@
+Dinosaur
+========
+
+Dinosaur
+
+TriassicCretaceous
+Aves
+
+
+
+Mounted skeletons of Tyrannosaurus (left) and Apatosaurus (right) at the AMNH.
+
+
+
+Kingdom: Animalia
+
+Phylum: Chordata
+
+Class: Sauropsida
+
+Subclass: Diapsida
+
+Infraclass: Archosauromorpha
+
+Superorder: Dinosauria *
+Owen, 1842
+
+* Ornithischia
+  o Cerapoda
+  o Thyreophora
+
+* Saurischia
+  o Sauropodomorpha
+  o Theropoda
+
+Dinosaurs were vertebrate animals that dominated terrestrial ecosystems for over 160 million
+years, first appearing approximately 230 million years ago. At the end of the Cretaceous Period,
+approximately 65 million years ago, a catastrophic extinction event ended dinosaurs' dominance on
+land. One group of dinosaurs is known to have survived to the present day; taxonomists consider
+modern birds to be direct descendants of theropod dinosaurs.
+
+Since the first dinosaur fossils were recognized in the nineteenth century, mounted dinosaur
+skeletons have become major attractions at museums around the world. Dinosaurs have become a part
+of world culture and remain consistently popular among children and adults alike. They have been
+featured in best-selling books and films such as Jurassic Park, and new discoveries are regularly
+covered by the media.
+
+The term dinosaur is sometimes used informally to describe other prehistoric reptiles, such as the
+pelycosaur Dimetrodon, the winged pterosaurs, and the aquatic ichthyosaurs, plesiosaurs and
+mosasaurs, although technically none of these were dinosaurs.
+
+Contents
+========
+
+
+
+* What is a dinosaur?
+  o Definition
+  o Size
+  o Behavior
+
+* Evolution of dinosaurs
+* Study of dinosaurs
+  o The current "dinosaur renaissance"
+  o Classification
+  o Order Saurischia
+  o Order Ornithischia
+
+* Areas of debate
+  o Warm-bloodedness
+  o Feathered dinosaurs and the bird connection
+  o Evidence for Cenozoic dinosaurs
+  o Bringing dinosaurs back to life
+  o Soft tissue in dinosaur fossils
+
+* Extinction theories
+  o Asteroid collision
+  o Multiple collisions—the Oort cloud
+  o Environment changes
+
+* History of discovery
+* In popular culture
+* Religious views
+* See also
+* Notes and references
+* General references
+* External links
+
+What is a dinosaur?
+===================
+
+Definition
+==========
+
+Triceratops skeleton at the American Museum of Natural History in New York City
+
+
+
+The taxon Dinosauria was formally named by the English palaeontologist, Richard Owen, in 1842 as
+"a distinct tribe or sub-order of Saurian Reptiles".[1] The term is derived from the Greek words
+δεινός (deinos meaning "terrible", "fearsome", or "formidable") and σα�?�?α (saura
+meaning "lizard" or "reptile"). Owen chose the name to express his awe at the size and majesty of
+the extinct animals,[2] not out of fear or trepidation at their size and often-formidable arsenal
+of teeth and claws.
+
+Dinosaurs were an extremely varied group of animals; according to a 2006 study, 527 dinosaur
+genera have been identified with certainty so far, and 1,844 genera are believed to have
+existed.[3][4] Some were herbivorous, others carnivorous. Some dinosaurs were bipeds, some were
+quadrupeds, and others, such as Ammosaurus and Iguanodon, could walk just as easily on two or four
+legs. Regardless of body type, nearly all known dinosaurs were well-adapted for a predominantly
+terrestrial, rather than aquatic or aerial, habitat.
+
+Distinguishing features of dinosaurs
+
+While recent discoveries have made it more difficult to present a universally agreed-upon list of
+dinosaurs' distinguishing features, nearly all dinosaurs discovered so far share certain
+modifications to the ancestral archosaurian skeleton. Although some later groups of dinosaurs
+featured further modified versions of these traits, they are considered typical across Dinosauria;
+the earliest dinosaurs had them and passed them on to all their descendants. Such common
+structures across a taxonomic group are called synapomorphies.
+
+Dinosaur synapomorphies include an elongated crest on the humerus, or upper arm bone, to
+accommodate the attachment of deltopectoral muscles; a shelf at the rear of the ilium, or main hip
+bone; a tibia, or shin bone, featuring a broad lower edge and a flange pointing out and to the
+rear; and an ascending projection on the astragalus, one of the ankle bones, which secures it to
+the tibia.[5]
+
+Edmontonia was an "armored dinosaur" of the group Ankylosauria.
+
+
+
+A variety of other skeletal features were shared by many dinosaurs. However, because they were
+either common to other groups of archosaurs or were not present in all early dinosaurs, these
+features are not considered to be synapomorphies. Such shared features include a diapsid skull
+bearing two pairs of holes in the temporal region; holes in the snout and lower jaw (two
+characteristics shared by other archosaurs); loss of the skull's postfrontal bone; a long neck
+incorporating an S-shaped curve;[6]an elongated scapula, or shoulder blade; forelimbs shorter and
+lighter than hind limbs, coupled to asymmetrical hands; a sacrum composed of three or more fused
+vertebrae; and an acetabulum, or hip socket, with a hole at the center of its inside surface.[7]
+
+The open, or "perforate", hip joint described above had significant implications for dinosaur
+movement and behavior. Most notably, it allowed dinosaur hind limbs to be "underslung", or
+situated directly beneath the animals' bodies; this, in turn, allowed dinosaurs to stand erect in
+a manner similar to modern mammals, but distinct from most other reptiles, whose limbs sprawl out
+to either side.[8] Vertical limb configuration also enabled dinosaurs to breathe easily while
+moving, which likely permitted stamina and activity levels that surpassed those of "sprawling"
+reptiles.
+
+Phylogenetic definition
+
+Under phylogenetic taxonomy, dinosaurs are usually defined as all descendants of the most recent
+common ancestor of Triceratops and modern birds.[9] It has also been suggested that Dinosauria be
+defined as all the descendants of the most recent common ancestor of Megalosaurus and Iguanodon,
+because these were two of the three genera cited by Richard Owen when he recognized the
+Dinosauria.[10] They are divided into Ornithischia (bird-hipped) and Saurischia (lizard-hipped),
+depending upon pelvic structure. Ornithischian dinosaurs had a four-pronged pelvic configuration,
+incorporating a caudally-directed (rear-pointing) pubis bone with (most commonly) a
+forward-pointing process. By contrast, the pelvic structure of saurischian dinosaurs was
+three-pronged, and featured a pubis bone directed cranially, or forwards, only.[8] Ornithischia
+includes all taxa sharing a more recent common ancestor with Triceratops than with Saurischia,
+while Saurischia includes those taxa sharing a more recent common ancestor with birds than with
+Ornithischia.
+
+Stegosaurus skeleton, Field Museum, Chicago.
+
+
+
+There is an almost universal consensus among paleontologists that birds are the descendants of
+theropod dinosaurs. Using the strict cladistical definition that all descendants of a single
+common ancestor are related, modern birds are dinosaurs and dinosaurs are, therefore, not extinct.
+Modern birds are classified by most paleontologists as belonging to the subgroup Maniraptora,
+which are coelurosaurs, which are theropods, which are saurischians, which are dinosaurs.[11]
+
+However, referring to birds as 'avian dinosaurs' and to all other dinosaurs as 'non-avian
+dinosaurs' is cumbersome. Birds are still referred to as birds, at least in popular usage and
+among ornithologists. It is also technically correct to refer to birds as a distinct group under
+the older Linnaean classification system, which accepts paraphyletic taxa that exclude some
+descendants of a single common ancestor. Paleontologists mostly use cladistics, which classifies
+birds as dinosaurs, but some biologists of the older generation do not.
+
+For clarity, this article will use 'dinosaur' as a synonym for 'non-avian dinosaur', and 'bird' as
+a synonym for 'avian dinosaur' (meaning any animal that evolved from the common ancestor of
+Archaeopteryx and modern birds). The term 'non-avian dinosaur' will be used for emphasis as needed.
+
+Size
+====
+
+Comparative size of Diplodocus; human figures provide scale.
+
+
+
+While the evidence is incomplete, it is clear that, as a group, dinosaurs were large. Even by
+dinosaur standards, the sauropods were gigantic. For much of the dinosaur era, the smallest
+sauropods were larger than anything else in their habitat, and the largest were an order of
+magnitude more massive than anything else that has since walked the Earth. Giant prehistoric
+mammals such as the Indricotherium and the Columbian mammoth were dwarfed by the giant sauropods,
+and only a handful of modern aquatic animals approach or surpass them in size — most notably the
+blue whale, which reaches up to 190,000 kg (209 tons) and 33.5 m (110 ft) in length.
+
+Most dinosaurs, however, were much smaller than the giant sauropods. Current evidence suggests
+that dinosaur average size varied through the Triassic, early Jurassic, late Jurassic and
+Cretaceous periods.[12] According to paleontologist Bill Erickson, estimates of median dinosaur
+weight range from 500 kg to 5 tonnes; a recent study of 63 dinosaur genera yielded an average
+weight greater than 850 kg — comparable to the weight of a grizzly bear — and a median weight
+of nearly 2 tons, or about as much as a giraffe. This contrasts sharply with the size of modern
+mammals; on average, mammals weigh only 863 grams, or about as much as a large rodent. The
+smallest dinosaur was bigger than two-thirds of all current mammals; the majority of dinosaurs
+were bigger than all but 2% of living mammals.[13]
+
+Largest and smallest dinosaurs
+
+Only a tiny percentage of animals ever fossilize, and most of these remain buried in the earth.
+Few of the specimens that are recovered are complete skeletons, and impressions of skin and other
+soft tissues are rare. Rebuilding a complete skeleton by comparing the size and morphology of
+bones to those of similar, better-known species is an inexact art, and reconstructing the muscles
+and other organs of the living animal is, at best, a process of educated guesswork. As a result,
+scientists will probably never be certain of the largest and smallest dinosaurs.
+
+Comparative size of Sauroposeidon.
+
+Comparative size of Eoraptor.
+
+
+
+The tallest and heaviest dinosaur known from good skeletons is Brachiosaurus brancai (also known
+as Giraffatitan). Its remains were discovered in Tanzania between 1907–12. Bones from multiple
+similarly-sized individuals were incorporated into the skeleton now mounted and on display at the
+Humboldt Museum of Berlin;[14] this mount is 12 m (38 ft) tall, 22.5 m (74 ft) long, and would
+have belonged to an animal that weighed between 30,000–60,000 kg (33–66 short tons). The
+longest complete dinosaur is the 27 m (89 ft) long Diplodocus, which was discovered in Wyoming in
+the United States and displayed in Pittsburgh's Carnegie Natural History Museum in 1907.
+
+There were larger dinosaurs, but knowledge of them is based entirely on a small number of
+fragmentary fossils. Most of the largest herbivorous specimens on record were all discovered in
+the 1970s or later, and include the massive Argentinosaurus, which may have weighed
+80,000–100,000 kg (88–121 tons); the longest, the 40 m (130 ft) long Supersaurus; and the
+tallest, the 18 m (60 ft) Sauroposeidon, which could have reached a sixth-floor window. The
+longest of them all may have been Amphicoelias fragillimus, known only from a now lost partial
+vertebral neural arch described in 1878. Extrapolating from the illustration of this bone, the
+animal may have been 58 m (190 ft) long and weighed over 120,000 kg (132 tons),[15] heavier than
+all known dinosaurs except possibly the poorly known Bruhathkayosaurus, which could have weighed
+175,000-220,000 kg (193-243 tons). The largest known carnivorous dinosaur was Spinosaurus,
+reaching a length of 16-18 meters (53-60 ft), and weighing in at 9 tons.[16] Other large
+meat-eaters included Giganotosaurus, Mapusaurus, Tyrannosaurus rex and Carcharodontosaurus.
+
+Not including modern birds like the bee hummingbird, the smallest dinosaurs known were about the
+size of a crow or a chicken. The theropods Microraptor and Parvicursor were both under 60 cm (2
+ft) in length.
+
+Behavior
+========
+
+A nesting ground of Maiasaura was discovered in 1978.
+
+
+
+Interpretations of dinosaur behavior are generally based on the pose of body fossils and their
+habitat, computer simulations of their biomechanics, and comparisons with modern animals in
+similar ecological niches. As such, the current understanding of dinosaur behavior relies on
+speculation, and will likely remain controversial for the foreseeable future. However, there is
+general agreement that some behaviors which are common in crocodiles and birds, dinosaurs' closest
+living relatives, were also common among dinosaurs.
+
+The first direct evidence of herding behavior was the 1878 discovery of 31 Iguanodon dinosaurs
+which were thought to have perished together in Bernissart, Belgium, after they fell into a deep,
+flooded sinkhole and drowned.[17] Despite the deposition of those skeletons being now regarded as
+more gradual,[18] other, well supported, mass death sites were subsequently discovered. Those,
+along with multiple trackways, suggest that herd or pack behavior was common in many dinosaur
+species. Trackways of hundreds or even thousands of herbivores indicate that duck-bills
+(hadrosaurids) may have moved in great herds, like the American Bison or the African Springbok.
+Sauropod tracks document that these animals traveled in groups composed of several different
+species, at least in Oxford, England,[19] and others kept their young in the middle of the herd
+for defense according to trackways at Davenport Ranch, Texas. Dinosaurs may have congregated in
+herds for defense, for migratory purposes, or to provide protection for their young.
+
+Jack Horner's 1978 discovery of a Maiasaura ("good mother dinosaur") nesting ground in Montana
+demonstrated that parental care continued long after birth among the ornithopods.[20][21] There is
+also evidence that other Cretaceous-era dinosaurs, like the Patagonian sauropod Saltasaurus (1997
+discovery), had similar nesting behaviors, and that the animals congregated in huge nesting
+colonies like those of penguins. The Mongolian maniraptoran Oviraptor was discovered in a
+chicken-like brooding position in 1993, which may mean it was covered with an insulating layer of
+feathers that kept the eggs warm.[22] Trackways have also confirmed parental behavior among
+sauropods and ornithopods from the Isle of Skye in northwestern Scotland.[23] Nests and eggs have
+been found for most major groups of dinosaurs, and it appears likely that dinosaurs communicated
+with their young, in a manner similar to modern birds and crocodiles.
+
+Artist's rendering of two Centrosaurus, herbivorous ceratopsid dinosaurs from the late Cretaceous
+fauna of North America.
+
+
+
+The crests and frills of some dinosaurs, like the marginocephalians, theropods and lambeosaurines,
+may have been too fragile to be used for active defense, so they were likely used for sexual or
+aggressive displays, though little is known about dinosaur mating and territorialism. The nature
+of dinosaur communication also remains enigmatic, and is an active area of research. For example,
+recent evidence suggests that the hollow crests of the lambeosaurines may have functioned as
+resonance chambers used for a wide range of vocalizations.
+
+From a behavioral standpoint, one of the most valuable dinosaur fossils was discovered in the Gobi
+Desert in 1971. It included a Velociraptor attacking a Protoceratops,[24] proving that dinosaurs
+did indeed attack and eat each other. While cannibalistic behavior among theropods is no
+surprise,[25] this too was confirmed by tooth marks from Madagascar in 2003.[26]
+
+Based on current fossil evidence, there seem to have been no burrowing species of dinosaur and few
+climbing species. Since the later mammalian radiation in the Cenozoic produced many burrowing and
+climbing species, the lack of evidence for similar dinosaur species is somewhat surprising.
+Because most dinosaur species seem to have relied on land-based locomotion, a good understanding
+of how dinosaurs moved on the ground is key to models of dinosaur behavior; the science of
+biomechanics, in particular, has provided significant insight in this area. For example, studies
+of the forces exerted by muscles and gravity on dinosaurs' skeletal structure have investigated
+how fast dinosaurs could run,[27][28] whether diplodocids could create sonic booms via whip-like
+tail snapping,[29] whether giant theropods had to slow down when rushing for food to avoid fatal
+injuries,[30] and whether sauropods could float.[31]
+
+Evolution of dinosaurs
+======================
+
+Cast of a Coelophysis skeleton from the upper Triassic, one of the most well-known early dinosaurs.
+
+
+
+Dinosaurs diverged from their archosaur ancestors approximately 230 million years ago during the
+Middle to Late Triassic period, roughly 20 million years after the Permian-Triassic extinction
+event wiped out an estimated 95% of all life on Earth.[32][33] Radiometric dating of fossils from
+the early dinosaur genus Eoraptor establishes its presence in the fossil record at this time.
+Paleontologists believe Eoraptor resembles the common ancestor of all dinosaurs;[34] if this is
+true, its traits suggest that the first dinosaurs were small, bipedal predators.[35] The discovery
+of primitive, dinosaur-like ornithodirans such as Marasuchus and Lagerpeton in Argentinian Middle
+Triassic strata supports this view; analysis of recovered fossils suggests that these animals were
+indeed small, bipedal predators.
+
+The first few lines of primitive dinosaurs diversified rapidly through the rest of the Triassic
+period; dinosaur species quickly evolved the specialized features and range of sizes needed to
+exploit nearly every terrestrial ecological niche. During the period of dinosaur predominance,
+which encompassed the ensuing Jurassic and Cretaceous periods, nearly every known land animal
+larger than 1 meter in length was a dinosaur.
+
+The Cretaceous-Tertiary extinction event, which occurred approximately 65 million years ago at the
+end of the Cretaceous period, caused the extinction of all dinosaurs except for the line that had
+already given rise to the first birds. Other diapsid species related to the dinosaurs also
+survived the event.
+
+Study of dinosaurs
+==================
+
+
+Knowledge about dinosaurs is derived from a variety of fossil and non-fossil records, including
+fossilized bones, feces, trackways, gastroliths, feathers, impressions of skin, internal organs
+and soft tissues.[36][37] Many fields of study contribute to our understanding of dinosaurs,
+including physics, chemistry, biology, and the earth sciences (of which paleontology is a
+sub-discipline).
+
+Dinosaur remains have been found on every continent on Earth, including Antarctica. Numerous
+fossils of the same dinosaur species have been found on completely different continents,
+corroborating the generally-accepted theory that all land masses were at one time connected in a
+super-continent called Pangaea. Pangaea began to break apart during the Triassic period roughly
+230 million years ago.[38]
+
+The current "dinosaur renaissance"
+==================================
+
+
+
+        Main article: Dinosaur renaissance
+
+Model of a Deinonychus skull.
+
+
+
+The field of dinosaur research has enjoyed a surge in activity that began in the 1970s and is
+ongoing. This was triggered, in part, by John Ostrom's discovery of Deinonychus, an active,
+vicious predator that may have been warm-blooded, in marked contrast to the then-prevailing image
+of dinosaurs as sluggish and cold-blooded. Vertebrate paleontology, arguably the primary
+scientific discipline involved in dinosaur research, has become a global science. Major new
+dinosaur discoveries have been made by paleontologists working in previously unexploited regions,
+including India, South America, Madagascar, Antarctica, and most significantly in China (the
+amazingly well-preserved feathered dinosaurs in China have further consolidated the link between
+dinosaurs and their conjectured living descendants, modern birds). The widespread application of
+cladistics, which rigorously analyzes the relationships between biological organisms, has also
+proved tremendously useful in classifying dinosaurs. Cladistic analysis, among other modern
+techniques, helps to compensate for an often incomplete and fragmentary fossil record.
+
+Classification
+==============
+
+
+
+        Main article: Dinosaur classification
+
+Dinosaurs (including birds) are archosaurs, like modern crocodilians. Archosaurs' diapsid skulls
+have two holes located where the jaw muscles attach, called temporal fenestrae. Most reptiles
+(including birds) are diapsids; mammals, with only one temporal fenestra, are called synapsids;
+and turtles, with no temporal fenestra, are anapsids. Anatomically, dinosaurs share many other
+archosaur characteristics, including teeth that grow from sockets rather than as direct extensions
+of the jawbones. Within the archosaur group, dinosaurs are differentiated most noticeably by their
+gait. Dinosaur legs extend directly beneath the body, whereas the legs of lizards and crocodylians
+sprawl out to either side. All dinosaurs were land animals.
+
+Many other types of reptiles lived at the same time as the dinosaurs. Some of these are commonly,
+but incorrectly, thought of as dinosaurs, including plesiosaurs (which are not closely related to
+the dinosaurs) and pterosaurs, which developed separately from reptilian ancestors in the late
+Triassic period.
+
+Collectively, dinosaurs are usually regarded as a superorder or an unranked clade. They are
+divided into two orders, the Saurischia and the Ornithischia, on the basis of their hip structure.
+Saurischians ('lizard-hipped', from the Greek sauros (σαυ�?ος) meaning 'lizard' and ischion
+(ισχιον) meaning 'hip joint') are dinosaurs that originally retained the hip structure of
+their ancestors. They include all the theropods (bipedal carnivores) and sauropods (long-necked
+herbivores). Ornithischians ('bird-hipped', from the Greek ornitheios (ο�?νιθειος) meaning
+'of a bird' and ischion (ισχιον) meaning 'hip joint') is the other dinosaurian order, most
+of which were quadrupedal herbivores. (NB: the terms "lizard hip" and "bird-hip" are misnomers —
+birds evolved from dinosaurs with "lizard hips".)
+
+Saurischian pelvis structure (left side)
+
+ 
+
+Tyrannosaurus pelvis (showing saurischian structure - left side)
+
+ 
+
+Ornithischian pelvis structure (left side).
+
+ 
+
+Edmontosaurus pelvis (showing ornithischian structure - left side)
+
+The following is a simplified classification of dinosaur families. A more detailed version can be
+found at List of dinosaur classifications.
+
+The dagger (†) is used to indicate taxa that are extinct.
+
+Order Saurischia
+================
+
+Struthiomimus, an ostrich-like theropod dinosaur.
+
+
+
+* †Infraorder Herrerasauria
+* Suborder Theropoda
+  o †Infraorder Coelophysoidea
+  o †Infraorder Ceratosauria
+    - Family Ceratosauridae
+    - Family Abelisauridae
+
+  o Clade Tetanurae
+    - †Superfamily Megalosauroidea
+      @ Family Megalosauridae
+      @ Family Spinosauridae
+
+    - †Infraorder Carnosauria
+    - Clade Coelurosauria
+      @ †Superfamily Tyrannosauroidea
+      @ †Infraorder Ornithomimosauria
+      @ †Infraorder Segnosauria
+      @ †Infraorder Oviraptorosauria
+      @ †Infraorder Deinonychosauria
+        # Family Dromaeosauridae
+        # Family Troodontidae
+
+Brachiosaurus is an example of a sauropod dinosaur.
+
+
+
+* †Suborder Sauropodomorpha
+  o Infraorder Prosauropoda
+    - Family Riojasauridae
+    - Family Plateosauridae
+    - Family Massospondylidae
+
+  o Infraorder Sauropoda
+    - Family Anchisauridae
+    - Family Melanorosauridae
+    - Family Blikanasauridae
+    - Family Vulcanodontidae
+    - Family Cetiosauridae
+    - Family Omeisauridae
+    - Clade Turiasauria
+    - Clade Neosauropoda
+      @ Superamily Diplodocoidea
+      @ Family Camarasauridae
+      @ Family Brachiosauridae
+      @ Superfamily Titanosauroidea
+
+Order Ornithischia
+==================
+
+Various cerapod dinosaurs. Far left: Camptosaurus, left: Iguanodon, centre background:
+Shantungosaurus, centre foreground: Dryosaurus, right: Tenontosaurus, far right: Heterodontosaurus.
+
+
+
+* †Family Fabrosauridae
+* †Suborder Thyreophora
+  o Family Scelidosauridae
+  o Infraorder Stegosauria
+  o Infraorder Ankylosauria
+    - Family Nodosauridae
+    - Family Ankylosauridae
+
+
+* †Suborder Cerapoda
+  o Family Heterodontosauridae
+  o Infraorder Ornithopoda
+    - Family Hypsilophodontidae
+    - Family Iguanodontidae
+    - Superfamily Hadrosauroidea
+
+  o Clade Marginocephalia
+    - Infraorder Pachycephalosauria
+    - Infraorder Ceratopsia
+      @ Family Psittacosauridae
+      @ Family Protoceratopsidae
+      @ Family Ceratopsidae
+
+Areas of debate
+===============
+
+Warm-bloodedness
+================
+
+
+
+        Main article: Warm-bloodedness of dinosaurs
+
+Tyrannosaurus rex skull and upper vertebral column, Palais de la Découverte, Paris.
+
+
+
+A vigorous debate on the subject of temperature regulation in dinosaurs has been ongoing since the
+1960s. Originally, scientists broadly disagreed as to whether dinosaurs were capable of regulating
+their body temperatures at all. More recently, dinosaur endothermy has become the consensus view,
+and debate has focused on the mechanisms of temperature regulation.
+
+After dinosaurs were discovered, paleontologists first posited that they were ectothermic
+creatures: "terrible lizards" as their name suggests. This supposed cold-bloodedness implied that
+dinosaurs were relatively slow, sluggish organisms, comparable to modern reptiles, which need
+external sources of heat in order to regulate their body temperature. Dinosaur ectothermy remained
+a prevalent view until Robert T. "Bob" Bakker, an early proponent of dinosaur endothermy,
+published an influential paper on the topic in 1968.
+
+Modern evidence indicates that dinosaurs thrived in cooler temperate climates, and that at least
+some dinosaur species must have regulated their body temperature by internal biological means
+(perhaps aided by the animals' bulk). Evidence of endothermism in dinosaurs includes the discovery
+of polar dinosaurs in Australia and Antarctica (where they would have experienced a cold, dark
+six-month winter), the discovery of dinosaurs whose feathers may have provided regulatory
+insulation, and analysis of blood-vessel structures that are typical of endotherms within dinosaur
+bone. Skeletal structures suggest that theropods and other dinosaurs had active lifestyles better
+suited to an endothermic cardiovascular system, while sauropods exhibit fewer endothermic
+characteristics. It is certainly possible that some dinosaurs were endothermic while others were
+not. Scientific debate over the specifics continues.[39]
+
+Complicating the debate is the fact that warm-bloodedness can emerge based on more than one
+mechanism. Most discussions of dinosaur endothermy tend to compare them to average birds or
+mammals, which expend energy to elevate body temperature above that of the environment. Small
+birds and mammals also possess insulation, such as fat, fur, or feathers, which slows down heat
+loss. However, large mammals, such as elephants, face a different problem because of their
+relatively small ratio of surface area to volume (Haldane's principle). This ratio compares the
+volume of an animal with the area of its skin: as an animal gets bigger, its surface area
+increases more slowly than its volume. At a certain point, the amount of heat radiated away
+through the skin drops below the amount of heat produced inside the body, forcing animals to use
+additional methods to avoid overheating. In the case of elephants, they are hairless, and have
+large ears which increase their surface area, and have behavioral adaptations as well (such as
+using the trunk to spray water on themselves and mud wallowing). These behaviors increase cooling
+through evaporation.
+
+Large dinosaurs would presumably have had to deal with similar issues; their body size suggest
+they lost heat relatively slowly to the surrounding air, and so could have been what are called
+inertial homeotherms, animals that are warmer than their environments through sheer size rather
+than through special adaptations like those of birds or mammals. However, so far this theory fails
+to account for the vast number of dog- and goat-sized dinosaur species which made up the bulk of
+the ecosystem during the Mesozoic period.
+
+Feathered dinosaurs and the bird connection
+===========================================
+
+
+
+        Main article: Feathered dinosaurs
+
+
+        Main article: Dinosaur-bird connection
+
+Birds and non-avian dinosaurs share many features. Birds share over a hundred distinct anatomical
+features with theropod dinosaurs, which are generally accepted to have been their closest ancient
+relatives.[40]
+
+Feathers
+
+The famous Berlin Specimen of Archaeopteryx lithographica.
+
+
+
+Archaeopteryx, the first good example of a "feathered dinosaur", was discovered in 1861. The
+initial specimen was found in the Solnhofen limestone in southern Germany, which is a
+lagerstätte, a rare and remarkable geological formation known for its superbly detailed fossils.
+Archaeopteryx is a transitional fossil, with features clearly intermediate between those of modern
+reptiles and birds. Brought to light just two years after Darwin's seminal The Origin of Species,
+its discovery spurred the nascent debate between proponents of evolutionary biology and
+creationism. This early bird is so dinosaur-like that, without a clear impression of feathers in
+the surrounding rock, at least one specimen was mistaken for Compsognathus.[41]
+
+Since the 1990s, a number of additional feathered dinosaurs have been found, providing even
+stronger evidence of the close relationship between dinosaurs and modern birds. Most of these
+specimens were unearthed in the Liaoning province in northeastern China, which was part of an
+island continent during the Cretaceous period. Though feathers have been found only in the
+lagerstätte of the Yixian Formation and a few other places, it is possible that non-avian
+dinosaurs elsewhere in the world were also feathered. The lack of widespread fossil evidence for
+feathered non-avian dinosaurs may be due to the fact that delicate features like skin and feathers
+are not often preserved by fossilization and thus are absent from the fossil record.
+
+A recent development in the debate centers around the discovery of impressions of "protofeathers"
+surrounding many dinosaur fossils. Said protofeathers suggest that the tyrannosauroids may have
+been feathered.[42] However, others claim that these protofeathers are simply the result of the
+decomposition of collagenous fiber that underlaid the dinosaurs' integument.[43]
+
+The feathered dinosaurs discovered so far include Beipiaosaurus, Caudipteryx, Dilong, Microraptor,
+Protarchaeopteryx, Shuvuuia, Sinornithosaurus, Sinosauropteryx, and Jinfengopteryx. Dinosaur-like
+birds like Confuciusornis, which are anatomically closer to modern avians, have also been
+discovered. All of these specimens come from the same formation in northern China. The
+dromaeosauridae family in particular seems to have been heavily feathered, and at least one
+dromaeosaurid, Cryptovolans, may have been capable of flight.
+
+Skeleton
+
+Because feathers are often associated with birds, feathered dinosaurs are often touted as the
+missing link between birds and dinosaurs. However, the multiple skeletal features also shared by
+the two groups represent the more important link for paleontologists. Furthermore, it is
+increasingly clear that the relationship between birds and dinosaurs, and the evolution of flight,
+are more complex topics than previously realized. For example, while it was once believed that
+birds evolved from dinosaurs in one linear progression, some scientists, most notably Gregory S.
+Paul, conclude that dinosaurs such as the dromaeosaurs may have evolved from birds, losing the
+power of flight while keeping their feathers in a manner similar to the modern ostrich and other
+ratites.
+
+Theropods, a diverse group of carnivorous dinosaurs that included Tyrannosaurus rex, are generally
+accepted to have been birds' closest relatives.
+
+
+
+Comparison of bird and dinosaur skeletons, as well as cladistic analysis, strengthens the case for
+the link, particularly for a branch of theropods called maniraptors. Skeletal similarities include
+the neck, pubis, wrist (semi-lunate carpal), arm and pectoral girdle, shoulder blade, clavicle and
+breast bone.
+
+Reproductive biology
+
+A discovery of features in a Tyrannosaurus rex skeleton recently provided even more evidence that
+dinosaurs and birds evolved from a common ancestor and, for the first time, allowed
+paleontologists to establish the sex of a dinosaur. When laying eggs, female birds grow a special
+type of bone in their limbs. This medullary bone, which is rich in calcium, forms a layer inside
+the hard outer bone that is used to make eggshells. The presence of endosteally-derived bone
+tissues lining the interior marrow cavities of portions of the Tyrannosaurus rex specimen's hind
+limb suggested that T. rex used similar reproductive strategies, and revealed the specimen to be
+female.
+
+A dinosaur embryo was found without teeth, suggesting that some parental care was required to feed
+the young dinosaur. It is also possible that the adult dinosaurs regurgitated into a young
+dinosaur's mouth to provide sustenance, a behavior that is also characteristic of numerous modern
+bird species.
+
+Lungs
+
+Large meat-eating dinosaurs had a complex system of air sacs similar to those found in modern
+birds, according to an investigation which was led by Patrick O'Connor of Ohio University. The
+lungs of theropod dinosaurs (carnivores that walked on two legs and had birdlike feet) likely
+pumped air into hollow sacs in their skeletons, as is the case in birds. "What was once formally
+considered unique to birds was present in some form in the ancestors of birds", O'Connor said. The
+study was funded in part by the National Science Foundation.[44]
+
+Model of Microraptor, a four-winged dinosaur with long pennaceous feathers.
+
+
+
+Heart and sleeping posture
+
+Modern computerized tomography (CT) scans of a dinosaur chest cavity (conducted in 2000) found the
+apparent remnants of complex four-chambered hearts, much like those found in today's mammals and
+birds.[45] The idea is controversial within the scientific community, coming under-fire for bad
+anatomical science[46] or simply wishful thinking.[47] A recently discovered troodont fossil
+demonstrates that the dinosaurs slept like certain modern birds, with their heads tucked under
+their arms.[48] This behavior, which may have helped to keep the head warm, is also characteristic
+of modern birds.
+
+Gizzard
+
+Another piece of evidence that birds and dinosaurs are closely related is the use of gizzard
+stones. These stones are swallowed by animals to aid digestion and break down food and hard fibres
+once they enter the stomach. When found in association with fossils, gizzard stones are called
+gastroliths. Because a particular stone could have been swallowed at one location before being
+carried to another during migration, paleontologists sometimes use the stones found in dinosaur
+stomachs to establish possible migration routes.
+
+Evidence for Cenozoic dinosaurs
+===============================
+
+
+In 2002, paleontologists Zielinski and Budahn reported the discovery of a single hadrosaur leg
+bone fossil in the San Juan Basin, New Mexico. The formation in which the bone was discovered has
+been dated to the early Paleocene epoch approximately 64.5 million years ago. If the bone was not
+re-deposited into that stratum by weathering action, it would provide evidence that some dinosaur
+populations may have survived at least a half million years into the Cenozoic Era.[49]
+
+Bringing dinosaurs back to life
+===============================
+
+
+There has been much speculation about the use of technology to bring dinosaurs back to life. In
+Michael Crichton's book Jurassic Park, which popularized the idea, scientists use blood from
+fossilized mosquitos that have been suspended in tree sap since the Mesozoic to reconstruct the
+DNA of dinosaurs, filling chromosomal gaps with modern frog genes. It is probably impossible to
+resurrect dinosaurs in this manner. One problem with the amber extraction method is that exposure
+to air, water and radiation causes DNA to decay over time, making it unlikely that such an
+approach would recover sufficient genetic material in an intact state.
+
+Ancient insect preserved in amber.
+
+
+
+The successful extraction of ancient DNA from dinosaur fossils has been reported on two separate
+occasions, but upon further inspection and peer review, neither of these reports could be
+confirmed.[50] However, a functional visual peptide of a theoretical dinosaur has been inferred
+using analytical phylogenetic reconstruction methods on gene sequences of related modern species
+such as reptiles and birds.[51] In addition, several proteins have putatively been detected in
+dinosaur fossils[52], including hemoglobin[53].
+
+Even if dinosaur DNA could be reconstructed, it would be exceedingly difficult to clone and "grow"
+dinosaurs using current technology since no closely related species exist to provide zygotes or a
+suitable environment for embryonic development.
+
+Soft tissue in dinosaur fossils
+===============================
+
+
+One of the best examples of soft tissue impressions in a fossil dinosaur was discovered in
+Petraroia, Italy. The discovery was reported in 1998, and described the specimen of a small, very
+young coelurosaur, Scipionyx samniticus. The fossil includes portions of the intestines, colon,
+liver, muscles, and windpipe of this immature dinosaur.[36]
+
+In the March 2005 issue of Science, Dr. Mary Higby Schweitzer and her team announced the discovery
+of flexible material resembling actual soft tissue inside a 68-million-year-old Tyrannosaurus rex
+leg bone from the Hell Creek Formation in Montana. After recovery, the tissue was rehydrated by
+the science team.
+
+When the fossilized bone was treated over several weeks to remove mineral content from the
+fossilized bone marrow cavity (a process called demineralization), Schweitzer found evidence of
+intact structures such as blood vessels, bone matrix, and connective tissue (bone fibers).
+Scrutiny under the microscope further revealed that the putative dinosaur soft tissue had retained
+fine structures (microstructures) even at the cellular level. The exact nature and composition of
+this material are not yet clear, although many news reports immediately linked it with the movie
+Jurassic Park. Interpretation of the artifact is ongoing, and the relative importance of Dr.
+Schweitzer's discovery is not yet clear.[54]
+
+Extinction theories
+===================
+
+
+
+        Main article: Cretaceous-Tertiary extinction event
+
+The sudden mass extinction of non-avian dinosaurs, an event that occurred approximately 65 million
+years ago, is one of the most intriguing mysteries in paleontology. Many other groups of animals
+also became extinct at this time, including ammonites (nautilus-like mollusks), mosasaurs,
+plesiosaurs, pterosaurs, herbivorous turtles and crocodiles, most birds, and many groups of
+mammals.[55] The nature of the event that caused this mass extinction has been extensively studied
+since the 1970s; at present, several related theories are supported by paleontologists. Though the
+general consensus is that an impact event was the primary cause of dinosaur extinction, some
+scientists cite other possible causes, or support the idea that a confluence of several factors
+was responsible for the sudden disappearance of dinosaurs from the fossil record.
+
+Asteroid collision
+==================
+
+The Chicxulub Crater at the tip of the Yucatán Peninsula, the impact of which may have caused the
+dinosaur extinction.
+
+
+
+The asteroid collision theory, which was first proposed by Walter Alvarez in the late 1970s, links
+the extinction event at the end of the Cretaceous period to a bolide impact approximately 65.5
+million years ago. Alvarez proposed that a sudden increase in iridium levels, recorded around the
+world in the period's rock stratum, was direct evidence of the impact. The bulk of the evidence
+now suggests that a 5-15 km wide bolide hit in the vicinity of the Yucatán Peninsula, creating
+the 170?km-wide Chicxulub Crater and triggering the mass extinction. Scientists are not certain
+whether dinosaurs were thriving or declining before the impact event. Some scientists propose that
+the meteorite caused a long and unnatural drop in Earth's atmospheric temperature, while others
+claim that it would have instead created an unusual heat wave.
+
+Although the speed of extinction cannot be deduced from the fossil record alone, various models
+suggest that the extinction was extremely rapid. The consensus among scientists who support this
+theory is that the impact caused extinctions both directly (by heat from the meteorite impact) and
+also indirectly (via a worldwide cooling brought about when matter ejected from the impact crater
+reflected thermal radiation from the sun).
+
+Multiple collisions—the Oort cloud
+====================================
+
+
+While similar to Alvarez's impact theory (which involved a single asteroid or comet), this theory
+proposes that a stream of comets was dislodged from the Oort cloud due to the gravitational
+disruption caused by a passing star. One or more of these objects then collided with the Earth at
+approximately the same time, causing the worldwide extinction. As with the impact of a single
+asteroid, the end result of this comet bombardment would have been a sudden drop in global
+temperatures, followed by a protracted cool period.[56]
+
+Environment changes
+===================
+
+
+At the peak of the dinosaur era, there were no polar ice caps, and sea levels are estimated to
+have been from 100 to 250 metres (330 to 820 feet) higher than they are today. The planet's
+temperature was also much more uniform, with only 25 degrees Celsius separating average polar
+temperatures from those at the equator. On average, atmospheric temperatures were also much
+warmer; the poles, for example, were 50 °C warmer than today.[57][58]
+
+The atmosphere's composition during the dinosaur era was vastly different as well. Carbon dioxide
+levels were up to 12 times higher than today's levels, and oxygen formed 32 to 35% of the
+atmosphere, as compared to 21% today. However, by the late Cretaceous, the environment was
+changing dramatically. Volcanic activity was decreasing, which led to a cooling trend as levels of
+atmospheric carbon dioxide dropped. Oxygen levels in the atmosphere also started to fluctuate and
+would ultimately fall considerably. Some scientists hypothesize that climate change, combined with
+lower oxygen levels, might have led directly to the demise of many species. If the dinosaurs had
+respiratory systems similar to those commonly found in modern birds, it may have been particularly
+difficult for them to cope with reduced respiratory efficiency, given the enormous oxygen demands
+of their very large bodies.[55]
+
+History of discovery
+====================
+
+
+Dinosaur fossils have been known for millennia, although their true nature was not recognized. The
+Chinese, whose own word for dinosaur is konglong (�??�?, or "terrible dragon"), considered them
+to be dragon bones and documented them as such. For example, Hua Yang Guo Zhi, a book written by
+Zhang Qu during the Western Jin Dynasty, reported the discovery of dragon bones at Wucheng in
+Sichuan Province.[59] In Europe, dinosaur fossils were generally believed to be the remains of
+giants and other creatures killed by the Great Flood.
+
+William Buckland.
+
+
+
+Megalosaurus was the first dinosaur to be formally described, in 1677, when part of a bone was
+recovered from a limestone quarry at Cornwell near Oxford, England. This bone fragment was
+identified correctly as the lower extremity of the femur of an animal larger than anything living
+in modern times. The second dinosaur species to be identified, Iguanodon, was discovered in 1822
+by the English geologist Gideon Mantell, who recognized similarities between his fossils and the
+bones of modern iguanas. Two years later, the Rev William Buckland, a professor of geology at
+Oxford University, unearthed more fossilized bones of Megalosaurus and became the first person to
+describe dinosaurs in a scientific journal.
+
+The study of these "great fossil lizards" soon became of great interest to European and American
+scientists, and in 1842 the English paleontologist Richard Owen coined the term "dinosaur". He
+recognized that the remains that had been found so far, Iguanodon, Megalosaurus and Hylaeosaurus,
+shared a number of distinctive features, and so decided to present them as a distinct taxonomic
+group. With the backing of Prince Albert of Saxe-Coburg-Gotha, the husband of Queen Victoria, Owen
+established the Natural History Museum in South Kensington, London, to display the national
+collection of dinosaur fossils and other biological and geological exhibits.
+
+In 1858, the first known American dinosaur was discovered, in marl pits in the small town of
+Haddonfield, New Jersey (although fossils had been found before, their nature had not been
+correctly discerned). The creature was named Hadrosaurus foulkii, after the town and the
+discoverer, William Parker Foulke. It was an extremely important find; Hadrosaurus was the first
+nearly complete dinosaur skeleton found and it was clearly a bipedal creature. This was a
+revolutionary discovery as, until that point, most scientists had believed dinosaurs walked on
+four feet, like other lizards. Foulke's discoveries sparked a wave of dinosaur mania in the United
+States.
+
+Othniel Charles Marsh, 19th-century photograph.
+
+Edward Drinker Cope, 19th-century photograph.
+
+
+
+Dinosaur mania was exemplified by the fierce rivalry between Edward Drinker Cope and Othniel
+Charles Marsh, both of whom raced to be the first to find new dinosaurs in what came to be known
+as the Bone Wars. The feud probably originated when Marsh publicly pointed out that Cope's
+reconstruction of an Elasmosaurus skeleton was flawed; Cope had inadvertently placed the
+plesiosaur's head at what should have been the animal's tail end. The fight between the two
+scientists lasted for over 30 years, ending in 1897 when Cope died after spending his entire
+fortune on the dinosaur hunt. Marsh 'won' the contest primarily because he was better funded
+through a relationship with the US Geological Survey. Unfortunately, many valuable dinosaur
+specimens were damaged or destroyed due to the pair's rough methods; for example, their diggers
+often used dynamite to unearth bones (a method modern paleontologists would find appalling).
+Despite their unrefined methods, the contributions of Cope and Marsh to paleontology were vast;
+Marsh unearthed 86 new species of dinosaur and Cope discovered 56, for a total of 142 new species.
+Cope's collection is now at the American Museum of Natural History in New York, while Marsh's is
+on display at the Peabody Museum of Natural History at Yale University.[60]
+
+Since 1897, the search for dinosaur fossils has extended to every continent, including Antarctica.
+The first Antarctic dinosaur to be discovered, the ankylosaurid Antarctopelta oliveroi, was found
+on Ross Island in 1986, although it was 1994 before an Antarctic species, the theropod
+Cryolophosaurus ellioti, was formally named and described in a scientific journal.
+
+Current dinosaur "hot spots" include southern South America (especially Argentina) and China.
+China in particular has produced many exceptional feathered dinosaur specimens due to the unique
+geology of its dinosaur beds, as well as an ancient arid climate particularly conducive to
+fossilization.
+
+In popular culture
+==================
+
+Pink dinosaur model at Vernal, Utah
+
+        Main article: Dinosaurs in popular culture
+
+By human standards, dinosaurs were creatures of fantastic appearance and often enormous size. As
+such, they have captured people's imagination and become an enduring part of human popular
+culture. Dinosaur exhibitions and displays at parks and museum exhibits around the world both
+cater to, and reinforce, the public interest. The popular preoccupation with dinosaurs is also
+reflected in a broad array of fictional and non-fictional works.
+
+Notable examples of older fictional works featuring dinosaurs include Arthur Conan Doyle's book
+The Lost World; the 1933 film King Kong; and Godzilla. Newer examples include Jurassic Park and
+the associated movies, books, and games, as well as the Turok series.
+
+Religious views
+===============
+
+
+
+        Main article: Religious perspectives on dinosaurs
+
+Various religious groups have views about dinosaurs that differ from those held by scientists,
+usually due to conflicts with creation stories in their scriptures. However, these
+religiously-inspired interpretations of dinosaurs do not withstand serious scientific
+scrutiny.[61][62]
+
+See also
+========
+
+ Dinosaurs Portal
+
+
+* Dinosaur classification
+* Fossils
+* List of dinosaurs
+* List of fossil sites (with link directory)
+* Living dinosaurs
+* Prehistoric life
+* Prehistoric reptiles
+* Senckenberg Museum - The Senckenberg Museum in Frankfurt, Germany boasts the largest
+  exhibition of large dinosaurs in Europe.
+

@@ -1,0 +1,790 @@
+Spider
+======
+
+Spider
+
+Crab spider Xysticus sp.
+
+
+
+Kingdom: Animalia
+
+Phylum: Arthropoda
+
+Class: Arachnida
+
+Order: Araneae
+Clerck, 1757
+
+Diversity
+111 families, 40,000 species
+
+Mesothelae
+Mygalomorphae
+Araneomorphae
+?See table of families
+
+Closeup image of a Wolf Spider
+
+Wikispecies has information related to:
+Spiders
+
+
+
+Spiders are predatory invertebrate animals that have two body segments, eight legs, no chewing
+mouth parts and no wings. They are classified in the order Araneae, one of several orders within
+the larger class of arachnids, a group which also contains scorpions, whip scorpions, mites,
+ticks, and opiliones (harvestmen). The study of spiders is known as arachnology.
+
+All spiders produce silk, a thin, strong protein strand extruded by the spider from spinnerets
+most commonly found on the end of the abdomen. Many species use it to trap insects in webs,
+although there are many species that hunt freely. Silk can be used to aid in climbing, form smooth
+walls for burrows, build egg sacs, wrap prey, and temporarily hold sperm, among other applications.
+
+All spiders except those in the families Uloboridae and Holarchaeidae, and in the suborder
+Mesothelae (together about 350 species) can inject venom to protect themselves or to kill and
+liquefy prey. Only about 200 species, however, have bites that can pose health problems to
+humans.[1] Many larger species' bites may be painful, but will not produce lasting health concerns.
+
+Spiders are found all over the world, from the tropics to the Arctic, living underwater in silken
+domes they supply with air, and on the tops of mountains. In 1973 Skylab 3 took 2 spiders into
+space to test their web-spinning capability in zero-gravity.
+
+Contents
+========
+
+
+
+* Morphology
+  o Cephalothorax
+  o Sense organs
+  o Respiration and circulation
+  o Digestion
+  o Spinnerets
+  o Size
+  o Coloration
+  o Life Cycle
+  o Lifespan
+  o Reproduction
+  o Sacrificial males
+
+* Ecology
+* Behavior
+  o Predatory techniques
+    - Spider webs
+    - Hunting spiders
+    - Ambush predators
+
+  o Defense
+  o Social spiders
+
+* Web types
+  o Tangleweb spiders
+  o Orb web spiders
+  o Other forms of webs
+
+* Evolution
+* Taxonomy
+  o Mesothelae
+  o Mygalomorphae
+  o Araneomorphae
+  o Creatures often mistaken for spiders
+
+* Spiders and people
+  o Spider bites
+  o Spiders as food
+  o Arachnophobia
+  o Spiders in symbolism and culture
+
+* See also
+* References
+* External links
+  o General
+  o Regional
+  o Morphology
+  o Taxonomy
+  o Pictures
+  o Other
+
+ Morphology
+=================
+
+Spider anatomy:
+(1) four pairs of legs
+(2) cephalothorax
+(3) opisthosoma
+
+
+
+Spiders, unlike insects, have only two body segments (tagmata) instead of three: a fused head and
+thorax (called a cephalothorax or prosoma) and an abdomen (called the opisthosoma). The exception
+to this rule are the assassin spiders, whose cephalothorax seems to be almost divided into two
+independent units. Except for a few species of very primitive spiders (family Liphistiidae), the
+abdomen is not externally segmented. The abdomen and cephalothorax are connected with a thin waist
+called the pedicle or the pregenital somite, a trait that allows the spider to move the abdomen in
+all directions. This waist is actually the last segment (somite) of the cephalothorax and is lost
+in most other members of the Arachnida (in scorpions it is only detectable in the embryos).
+
+ Cephalothorax
+====================
+
+
+All spiders have eight legs, although a few ant-mimicking species use their front legs to imitate
+antennae, which spiders lack. Their eyes are single lenses rather than compound eyes, ranging from
+simple light/dark-receptors to eyes rivaling that of a pigeon (some jumping spiders).
+
+They have pedipalps (or just palps), at the base of which are coxae or maxillae next to their
+mouth that aid in ingesting food; the ends of the palp are modified in adult males into elaborate
+and often species-specific structures used for mating. Since they don't have any antennae, they
+use specialised and sensitive hairs on their legs to pick up scent, sounds, vibrations and air
+currents.
+
+Spiders lack the ability to chew their food. Instead, like other arachnids, they have a tiny
+proboscis which they use to suck up the liquid parts of their prey. However, they are able to eat
+their own silk.
+
+ Sense organs
+===================
+
+Multiple eyes of the jumping spider Platycryptus undatus
+
+
+
+Spiders usually have eight eyes in various arrangements, a fact which is used to aid in
+taxonomically classifying different species. Most species of the Haplogynae have six eyes,
+although some have eight (Plectreuridae), four (eg., Tetrablemma) or even two (most Caponiidae)
+eyes. Sometimes one pair of eyes is better developed than the rest, or even, in some cave species,
+there are no eyes at all. Several families of hunting spiders, such as jumping spiders and wolf
+spiders, have fair to excellent vision. The main pair of eyes in jumping spiders even see in color.
+
+Net-casting spiders have enormous, compound lenses that give a wide field of view and gather
+available light very efficiently.
+
+However, most spiders that lurk on flowers, webs, and other fixed locations waiting for prey tend
+to have very poor eyesight; instead they possess an extreme sensitivity to vibrations, which aids
+in prey capture. Vibration sensitive spiders can sense vibrations from such various mediums as the
+water surface, the soil or their silk threads. Also changes in the air pressure can be detected in
+the search for prey.
+
+ Respiration and circulation
+==================================
+
+Rear side of a spider
+
+
+
+Spiders have an open circulatory system; i.e., they do not have true blood, or veins to convey it.
+Rather, their bodies are filled with haemolymph, which is pumped through arteries by a heart into
+spaces called sinuses surrounding their internal organs.
+
+Spiders have developed several different respiratory anatomies, based either on book lungs, a
+tracheal system, or both. Mygalomorph and Mesothelae spiders have two pairs of book lungs filled
+with haemolymph, where openings on the ventral surface of the abdomen allow air to enter and
+diffuse oxygen. This is also the case for some basal araneomorph spiders like the family
+Hypochilidae, but the remaining members of this group have just the anterior pair of book lungs
+intact while the posterior pair of breathing organs are partly or fully modified into tracheae,
+through which oxygen is diffused into the haemolymph or directly to the tissue and organs. This
+system has most likely evolved in small ancestors to help resist desiccation. The trachea were
+originally connected to the surroundings through a pair of spiracles, but in the majority of
+spiders this pair of spiracles has fused into a single one in the middle, and migrated posterior
+close to the spinnerets.
+
+Among smaller araneomorph spiders we can find species who have evolved also the anterior pair of
+book lungs into trachea, or the remaining book lungs are simply reduced or missing, and in a very
+few the book lungs have developed deep channels, apparently signs of evolution into tracheae. Some
+very small spiders in moist and sheltered habitats have no breathing organs at all, and instead
+breathe directly through their body surface. In the tracheal system, oxygen interchange is much
+more efficient, enabling cursorial hunting (hunting involving extended pursuit) and other advanced
+characteristics as having a smaller heart and the ability to live in drier habitats.
+
+ Digestion
+================
+
+A spider in the process of wrapping a bluebottle caught in its web
+
+
+
+Digestion is carried out internally and externally. Spiders that do not have powerful chelicerae
+secrete digestive fluids into their prey from a series of ducts perforating their chelicerae.
+These digestive fluids dissolve the prey's internal tissues. Then the spider feeds by sucking the
+partially digested fluids out. Other spiders with more powerfully built chelicerae masticate the
+entire body of their prey and leave behind only a relatively small residue of indigestible
+materials. Spiders consume only liquid foods. Many spiders will store prey temporarily. Web
+weaving spiders that have made a shroud of silk to quiet their envenomed prey's death struggles
+will generally leave them in these shrouds and then consume them at their leisure.
+
+Spiders are capable of digesting their own silk, so some spiders may eat their used webs. When a
+spider drops down on a single strand of silk and then returns, it will generally rapidly consume
+the strand of silk on its way back up.
+
+ Spinnerets
+=================
+
+
+The abdomen has no appendages except from one to four (usually three) modified pairs of movable
+telescoping organs called spinnerets, which produce silk. The suborder Mesothelae is unique in
+having only two types of silk glands - thought to be the ancestral condition. All other spiders
+have the spinnerets further towards the posterior end of the body where they form a small cluster,
+and the anterior central spinnerets on the tenth segment are lost or reduced (suborder
+Mygalomorphae), or modified into a specialised and flattened plate called the cribellum (parts of
+suborder Araneomorphae), which produces a thread made up of hundreds to thousands of very fine dry
+silk fibers resulting in a woolly structure that traps prey. The cribellate spiders were the first
+spiders to build specialized prey catching webs. Later some groups evolved (called ecribellate)
+that use silk threads dotted with sticky droplets to capture prey ranging from small arthropods to
+sometimes even small bats and birds.
+
+ Size
+===========
+
+
+Spiders occur in a large range of sizes. The smallest (members of the subfamily Micryphantinae)
+are less than 1 mm. long (i.e., less than about .05 inches) in body length. The largest and
+heaviest spiders occur among the tarantulas, which can have body lengths as great as 9 cm. (i.e.,
+about 3.5 inches) and leg spans as great as 25 cm. (i.e., about 10 inches).[2]
+
+ Coloration
+=================
+
+
+Only three classes of pigment (ommochromes, bilins and guanine) have been identified in spiders,
+although other pigments have been detected but not yet characterized. Melanins, carotenoids and
+pterins, very common in other animals, are apparently absent. In some species the exocuticle of
+the legs and prosoma is modified by a tanning process, resulting in brown coloration.[3]
+
+Bilins are found for example in Micrommata virescens, resulting in its green color. Guanine is
+responsible for the white markings of the European garden spider Araneus diadematus. It is in many
+species accumulated in specialized cells called guanocytes. In genera such as Tetragnatha,
+Leucauge, Argyrodes or Theridiosoma, guanine creates their silvery appearance. While guanine is
+originally an end-product of protein metabolism, its excretion can be blocked in spiders, leading
+to an increase in its storage.[3]
+
+Structural colors occur in some species, which are the result of the diffraction, scattering or
+interference of light, for example by modified setae or scales. The white prosoma of Argiope
+results from hairs reflecting the light, Lycosa and Josa both have areas of modified cuticle that
+act as light reflectors.[3]
+
+Golden orb weavers in Parque Nacional Corcovado, a female in the foreground and a male behind her
+
+Pisaura mirabilis guarding her egg sac
+
+Spider showing its epigyne
+
+Bird dropping spider with its unusual eggs
+
+Spiderlings on a web
+
+The exuvia of a spider after moulting
+
+ Life Cycle
+=================
+
+
+The spider life cycle progresses through three stages: the embryonic, the larval, and the
+nympho-imaginal.
+
+The time between when an egg is fertilized and when the spider begins to take the shape of an
+adult spider is referred to as the embryonic stage. As the spider enters the larval stage, it
+begins to look more and more like a full grown spider. It enters the larval stage as a prelarva
+and, through subsequent moults, reaches its larval form, a spider-shaped animal feeding off its
+yolk supply. After a few more moults (also called instars) body structures become differentiated.
+Soon, all organ systems are complete and the animal begins to hunt on its own; it has reached the
+nympho-imaginal stage.[4]
+
+This stage is differentiated into two sub-stages: the nymph, or juvenile stage and the imago, or
+adult stage. A spider does not become sexually mature until it makes the transition from nymph to
+imago.[4] Once a spider has reached the imago stage, it will remain there until its death. After
+sexual maturity is reached, the general rule is that they stop moulting, but the females of some
+non-araneomorph species will continue to moult the rest of their lives.
+
+ Lifespan
+===============
+
+
+Many spiders may only live for about a year, but a number will live two years or more,
+overwintering in sheltered areas. The annual influx of 'outdoor' spiders into houses in the fall
+is due to this search for a warm place to spend the winter. It is common for tarantulas to live
+around twenty years.
+
+ Reproduction
+===================
+
+
+Spiders reproduce by means of eggs, which are packed into silk bundles called egg sacs. Spiders
+often use elaborate mating rituals (especially the visually advanced jumping spiders) to allow
+conspecifics to identify each other and to allow the male to approach and inseminate the female
+without triggering a predatory response. If the approach signals are exchanged correctly, the male
+spider must (in most cases) make a timely departure after mating to escape before the female's
+normal predatory instincts return.
+
+Sperm transmission from male to female occurs indirectly. When a male is ready to mate, he spins a
+web pad upon which he discharges his seminal fluid. He then dips his pedipalps (also known as
+palpi), the small, leg-like appendages on the front of his cephalothorax, into the seminal fluid,
+picking it up by capillary attraction. Mature male spiders have swollen bulbs on the end of their
+palps for this purpose, and this is a useful way to identify the sex of a spider in the field.
+With his palps thus charged he goes off in search of a female. Copulation occurs when the male
+inserts one or both palps into the female's genital opening, known as the epigyne. He transfers
+his seminal fluid into the female by expanding the sinuses in his palp. Once the sperm is inside
+her, she stores it in a chamber and only uses it during the egg-laying process, when the eggs
+comes into contact with the male sperm for the first time and are fertilized; this may be why the
+vivipary has never evolved in spiders.
+
+Very unusual behaviour is seen in spiders of the genus Tidarren: the male amputates one of his
+palps before maturation and enters his adult life with one palp only. The palpi constitute 20% of
+the body mass of males of this species, and since this weight greatly impedes its movement, by
+detaching one of the two he gains increased mobility. In the Yemeni species Tidarren argo, the
+remaining palp is then torn off by the female. The separated palp remains attached to the female's
+epigynum for about four hours and apparently continues to function independently. In the meantime
+the female feeds on the palpless male.[5]
+
+ Sacrificial males
+========================
+
+
+
+        Main article: Spider cannibalism
+
+It is a common belief that male spiders, which usually are significantly smaller than the females,
+are likely to be killed after or during mating, or sometimes even before mating can occur.
+
+Even in some species of black widow, which are named exactly for this belief, the male may live in
+the female's web for some time without being harmed. However, the male of the closely related
+Australian redback spider is killed ritually by the females after it inserts its second palpus in
+the female genital opening; in over 60% of cases the female then eats the male.[6] Males that
+'sacrifice' themselves gain the benefit of increasing their paternity relative to males who do not
+get cannibalized, by feeding the egg-laying female.
+
+In many other species, males are sometimes killed by females. In at least some of these cases it's
+likely that the males are simply mistaken as prey.
+
+ Ecology
+==============
+
+
+Spiders have a great range of variation and lifestyle, although all are predatory.
+
+While spiders are generalist predators, in actuality their different methods of prey capture often
+determine the type of prey taken. Thus web-building spiders rarely capture caterpillars, and crab
+spiders that ambush prey in flowers capture more bees, butterflies and some flies than other
+insects. Groups of families that tend to take certain types of prey because of their prey capture
+methods are often called guilds. A few spiders are more specialized in their prey capture. Dysdera
+captures and eats sowbugs, pillbugs and beetles, while pirate spiders eat only other spiders.
+Bolas spiders in the family Araneidae use sex pheromone analogs to capture only the males of
+certain moth species. Despite their generally broad prey ranges, spiders are one of the most
+important links in the regulation of the populations of insects.
+
+ Behavior
+===============
+
+
+Spiders show a wide variety of behavior, from the ballet-like mating dances of certain jumping
+spiders to the seeming athletics of bolas spiders snatching their prey. Most diversity comes with
+the mode of predation, for example whether the spider waits for it in its orb web, or hunts it
+down.
+
+ Predatory techniques
+===========================
+
+
+
+        Main article: Spider diversity
+
+A spider hiding in its leaf (located at the center of its web)
+
+
+
+There are many families of spiders, and the ways that they catch prey are diverse. But whether
+they catch insects, fish, small mammals, small birds, or some other small form of life, as soon as
+a spider makes contact with its prey it will generally attempt to bite it.
+
+Spiders bite their prey, and occasionally animals that cause them pain or threaten them, to do two
+things. First, they inflict mechanical damage, which, in the case of a spider that is as large as
+or larger than its prey, can be severe. Second, they can choose to inject venom through their
+hollow fangs. Many genera, such as the widow spiders, inject neurotoxins that can spread through
+the prey's entire body and interfere with vital body functions. Other genera inject venom that
+operates to produce tissue damage at the site of the bite. Genera such as that of the brown
+recluse spider produce a necrotoxin. The necrotoxin is injected into prey where it causes the
+degradation of cell membranes. In the larger victims that do not die from these attacks, painful
+lesions over a fairly wide area of the body can remain active for fairly long periods of time. The
+spitting spiders have modified their poison glands to produce a mixture of venom and sticky
+substance that works as glue and immobilises the prey.
+
+Although there are no vegetarian spiders, some species in the families Anyphaenidae, Corinnidae,
+Clubionidae, Thomisidae and Salticidae have been observed feeding on plant nectar.[7] Several
+spider species are also known to feed on bananas, marmalade, milk, egg yolk and sausages in
+captivity.[7]
+
+ Spider webs
+==================
+
+
+
+        Main article: Spider web
+
+Having completed its web, a spider in the forests of Malaysia awaits its prey. Appears to be some
+species of Nephila.
+
+A golden silk orb-weaver (Nephila clavipes?), member of the family Nephilidae.
+
+
+
+Some spiders spin funnel-shaped webs, others make sheet webs, spiders like the black widow make
+tangled, maze-like, webs, and still others make the spiral "orb" webs that are most commonly
+associated with spiders. These webs may be made with sticky capture silk, or with "fluffy" capture
+silk, depending on the type of spider. Webs may be in a vertical plane (most orb webs), a
+horizontal plane (sheet webs), or at any angle in between. Most commonly found in the sheet-web
+spider families, some webs will have loose, irregular tangles of silk above them. These tangled
+obstacle courses serve to disorient and knock down flying insects, making them more vulnerable to
+being trapped on the web below. They may also help to protect the spider from aerial predators
+such as birds and wasps.
+
+The spider, after spinning its web, will then wait on, or near, the web for a prey animal to
+become trapped. The spider can sense the impact and struggle of a prey animal by vibrations
+transmitted along the web lines.
+
+Other species of spiders do not use webs for capturing prey directly, instead pouncing from
+concealment (e.g. trapdoor spiders) or running them down in open chase (e.g. wolf spiders). The
+net-casting spider balances the two methods of running and web-spinning in its feeding habits.
+This spider weaves a small net which it attaches to its front legs. It then lurks in wait for
+potential prey and, when such prey arrives, lunges forward to wrap its victim in the net, bite and
+paralyze it. Hence, this spider expends less energy catching prey than a primitive hunter such as
+the Wolf spider. It also avoids the energy cost of weaving a large orb-web. The diving bell spider
+does not use its web directly in prey capture, but has modified it into an underwater diving bell.
+Even species whose ancestors were building spiral orb webs have given rise to spiders who no
+longer make webs, for instance some Hawaiian spiny-legged spiders (genus Tetragnatha, family
+Tetragnathidae) which have abandoned web construction entirely.
+
+Some spiders manage to use the 'signaling snare' technique of a web without spinning a web at all.
+Several types of water-dwelling spiders will rest their feet on the water's surface in much the
+same manner as an orb-web user. When an insect falls onto the water and is ensnared by surface
+tension, the spider can detect the vibrations and run out to capture the prey.
+
+ Hunting spiders
+======================
+
+An ant-mimicking jumping spider
+
+Wolf spider, an active hunter
+
+
+
+Many spiders do not build webs for catching prey. Some examples include:
+
+* Brazilian wandering spider
+* Brown recluse spider
+* Huntsman spiders
+* Jumping spiders
+* Lynx spiders
+* Nursery web spiders
+* Spitting spiders
+* Tarantulas
+* Wolf spiders (Lycosidae)
+* Yellow sac spider
+* Assassin spider
+
+ Ambush predators
+=======================
+
+
+Some actively lure prey (the Bolas spiders) and may capture them with a sticky ball of silk on a
+line; others (like the crab spiders, trapdoor spiders, or the six-eyed sand spider) wait in a
+high-traffic area and directly attack their prey from ambush.
+
+ Defense
+==============
+
+
+All spiders will attempt to protect themselves by biting, especially if they are unable to flee.
+Some tarantulas have a second kind of defense, a patch of urticating hairs, or urticating setae,
+on their abdomens, which is generally absent on modern spiders and Mesothelae. These ultra-fine
+hairs causes irritation and sometimes even allergic reactions in the attacker. Certain other
+species have specialized defense tactics. For example, the golden wheeling spider (Carparachne
+aureoflava) of the desert of Namibia escapes tarantula hawks (a species of wasp that lays its eggs
+in a paralyzed spider so the larvae have enough food when they hatch) by flipping onto its side
+and cartwheeling away.
+
+ Social spiders
+=====================
+
+
+A few species of spiders that build webs live together in large colonies and show social behavior,
+albeit not as well evolved as in social insects. The most social species is probably Anelosimus
+eximius, which can form colonies of up to fifty thousand individuals.
+
+ Web types
+================
+
+ Tangleweb spiders
+========================
+
+
+Members of this group (family Theridiidae) are characterized by irregular, messy-looking, tangled,
+three-dimensional (non-sticky) webs, generally low and anchored to the ground or floor and wall.
+They are commonly found in or near buildings; some build webs in bushes. The spider generally
+hangs in the center of its web, upside-down. Prey is generally ground-dwelling insects such as
+ants or crickets, in addition to small flying insects. These include the infamous black widows,
+the minute happyface spider, and thousands of other species.
+
+ Orb web spiders
+======================
+
+Nephila clavata, a golden orb weaver
+
+
+
+Spiders in several families (eg., Araneidae, Tetragnathidae, Nephilidae) spin the familiar spiral
+snare that most people think of as the typical spider web. On average, an orb-weaving spider takes
+30 minutes to an hour to weave a web. They range in size from quite large (6+?cm) to very small
+(<1?cm), but all are quite harmless to humans, beyond the shock entailed from walking into a
+face-height web and having a large spider dangling from your nose. Many of the daytime hunters
+have a 'ferocious' appearance, with spines or large 'fangs', but they are almost invariably
+inoffensive, preferring to drop on a dragline to the ground when disturbed, rather than bite,
+which can nevertheless be quite painful.
+
+ Other forms of webs
+==========================
+
+
+Many other groups spin webs in a variety of structural styles.
+
+Some (the Linyphiidae) make various forms of bowl- or dome-shaped webs with or without a flat
+sheet or a tangled web above or below. Some make a flat platform extending from a funnel-shaped
+retreat, with generally a tangle of silk above the web. The common northern hemisphere
+'funnel-web', 'house' or 'grass' spiders are only superficially similar to the notorious Sydney
+funnel-web spider, and are generally considered to be quite harmless. Some of the more primitive
+group Atypidae may make tubular webs up the base of trees, from inside which they bite insects
+that land on the webbing. These spiders look quite ferocious, but are not generally considered to
+be particularly dangerous to humans.
+
+ Evolution
+================
+
+
+
+        Main article: Spider evolution
+
+Trigonotarbids, spider-like arachnids, were among the oldest known land arthropods. Like spiders,
+they were terrestrial, respired through book lungs, and walked on eight legs with two additional
+legs adapted to use around their mouth. However, they were not true spiders, not even ancestral to
+them, but represented independent offshoots of the Arachnida.
+
+True spiders (thin-waisted arachnids) evolved about 400 million years ago, and were among the
+first species to live on land. They are distinguished by abdominal segmentation and silk producing
+spinnerets. The Pedipalpi (including whip scorpions) are believed to constitute the sister group
+to the Araneae.[8]
+
+Most of the early segmented fossil spiders belonged to the Mesothelae, a group of primitive
+spiders with the spinnerets placed underneath the middle of the abdomen, rather than at the end as
+in modern spiders (Opisthothelae). They were probably ground dwelling predators of other primitive
+arthropods. Silk may have been used simply as a protective covering for the eggs, a lining for a
+retreat hole, and later perhaps for simple ground sheet web and trapdoor construction.
+
+As plant and insect life diversified so also did the spider's use of silk. Spiders with spinnerets
+at the end of the abdomen (Mygalomorphae and Araneomorphae) appeared more than 250 million years
+ago, presumably promoting the development of more elaborate sheet and maze webs for prey capture
+both on ground and foliage, as well as the development of the safety dragline.
+
+By the Jurassic, the sophisticated aerial webs of the orb weaving spiders had already developed to
+take advantage of the rapidly diversifying groups of insects. A spider web preserved in amber,
+thought to be 110 million years old, shows evidence of a perfect orb web.] It is believed that
+adhesive capture threads, as opposed to cribellate threads, evolved about 135 million years ago.[9]
+
+The ability to weave orb webs is thought to have been "lost", and sometimes even re-evolved or
+evolved separately, in different breeds of spiders since its first appearance.
+
+ Taxonomy
+===============
+
+
+
+        Main article: Spider taxonomy
+
+Deinopis_subrufa
+
+
+
+Almost 40,000 species of spiders (order Araneae) have been identified and are currently grouped
+into 111 families by arachnologists, but because of difficulties in collecting these often very
+minute and evasive animals, and because of many specimens stored in collections waiting to be
+described and classified, it is believed that up to 200,000 species may exist.
+
+The order is composed of three suborders. In the non-venomous primitive Mesothelae, body
+segmentation is clearly visible, demonstrating the link of spiders with their segmented arthropod
+ancestors.
+
+The two other suborders, the Mygalomorphae (trapdoor spiders, funnel-web spiders, tarantulas) and
+the Araneomorphae ("modern" spiders), are sometimes grouped together as Opisthothelae. The latter
+account for about 94% of all spider species.
+
+ Mesothelae
+=================
+
+
+
+        Main article: Mesothelae
+
+Liphistius sp.
+
+The tarantula Brachypelma smithi
+
+
+
+The Mesothelae include the only recent family Liphistiidae. Two more families (Arthrolycosidae and
+Arthromygalidae) are recognized from fossil evidence only.
+
+The Liphistiidae are burrowing spiders only found in Southeast Asia, China, and Japan with about
+90 species in 5 genera. Spiders of this remnant suborder are very rare, and are among the most
+"primitive" types of spiders in existence.
+
+Recent Mesothelae are characterized by the narrow sternum on the ventral side of the prosoma.
+Several plesiomorphic characters may be useful in recognizing these spiders: there are tergite
+plates on the dorsal side and the almost-median position of the spinnerets on the ventral side of
+the opisthosoma.
+
+ Mygalomorphae
+====================
+
+
+
+        Main article: Mygalomorphae
+
+The Mygalomorphae are also called the Orthognatha, referring to the orientation of the fangs which
+point straight down and do not cross each other (cf Araneomorphae). This suborder includes the
+heavy bodied, stout legged spiders popularly known as tarantulas as well as the dangerous
+Australasian funnel-web spiders. They have ample poison glands that lie entirely within their
+chelicerae. Their chelicerae and fangs are large and powerful. Occasionally members of this
+suborder will even kill small fish, small mammals, etc. Most members of this suborder occur in the
+tropics and subtropics, but their range can extend farther toward the poles, e.g. into the
+southern and western regions of the United States and Canada, the northern parts of Europe and
+south into Argentina and Chile.
+
+ Araneomorphae
+====================
+
+
+
+        Main article: Araneomorphae
+
+The Araneomorphae, (previously called the Labidognatha), are often known as the modern spiders.
+
+They are distinguished by having chelicerae that point diagonally forward and cross in a pinching
+action, in contrast to the Mygalomorphae (tarantulas and their close kin), where they point
+straight down. Most of the spiders that people encounter in daily life belong to this suborder,
+which makes up 94% of all spider species.
+
+There are approximately 95 families in this suborder, ranging from the minute Patu digua (0.37?mm)
+to the big and flashy Argiope, from the common orb-weaver spiders to the abstruse assassin
+spiders, from the reclusive tree trapdoor spiders to the inquisitive jumping spiders.
+
+ Creatures often mistaken for spiders
+===========================================
+
+Araneus diadematus
+
+
+
+In addition to the true spiders, there are several arachnids commonly mistaken for spiders, but
+which are not true spiders.
+
+* Camel spider, a species of solifugid (also commonly called sun-spiders or wind-scorpions), are
+  the source of many urban legends. In spite of their bad reputation they are actually harmless to
+  humans, and have no venom.
+* The daddy long-legs or harvestman is a member of the order Opiliones. These round-bodied
+  arachnids have only two eyes and their heads are fused to their bodies. However, the name "daddy
+  long-legs" is sometimes used to refer to cellar spiders, which have a similar leg shape; these
+  are true spiders. Both are also often said to produce a deadly venom. While the harvestmen do
+  not produce venom at all, the cellar spider's venom is completely harmless to humans.
+
+ Spiders and people
+=========================
+
+ Spider bites
+===================
+
+Sydney funnel-web spider
+
+        Main article: Spider bite
+
+Most spiders are unlikely to bite humans because they do not identify humans as prey. Spiders,
+even small ones, may however bite humans when pinched. For instance, a common jumping spider
+(Family: Salticidae), around ⅜?inch (1?cm) long, when pinched between the folds of a human's
+palm may inflict a bite that is about as painful as a bee sting.
+
+Spiders in the world which have been linked to fatalities in humans, or have been shown to have
+potentially fatal bites by toxicology studies of their venom, include:
+
+* The Brazilian wandering spider
+* The Australasian funnel-web spider
+* The widow spiders, including the Australian redback spider
+* The six-eyed sand spider, and possibly other spiders of genus Sicarius
+* The recluse spiders
+
+Spiders which likely are not deadly to humans, but which are nonetheless medically significant
+include:
+
+* The hobo spider (this is doubtful, however)
+* The yellow sac spider
+* Certain species of tarantulas
+* The false black widows
+
+Spiders which can inflict painful bites (often similar to a bee sting), but whose bites generally
+do not cause any systemic or long-lasting effects, include:
+
+* The huntsman spider
+* The redback jumping spider (not to be confused with the very dangerous redback spider, the
+  latter being one of the widow spiders).
+
+None of these spiders will intentionally "come after you," but they should be removed from one's
+house to avoid accidental injury. Many authorities warn against spraying poisons indiscriminately
+to kill all spiders, because doing so may actually remove one of the biological controls against
+incursions of the more dangerous species by ridding them of their competition.
+
+If dangerous spiders are present in your area, be mindful when moving cardboard boxes and other
+such objects that may have become the shelter of a venomous spider. There is no need to be
+fearful; just do not grab a spider.
+
+ Spiders as food
+======================
+
+
+Spiders, especially larger sorts, are eaten routinely or as a delicacy in various parts of the
+world, including Cambodia, Thailand, the Solomon Islands, and parts of South America.
+
+ Arachnophobia
+====================
+
+Spinyback orbweaver
+
+        Main article: Arachnophobia
+
+Arachnophobia is a specific phobia, an abnormal fear of spiders. It is among the most common of
+phobias. The reactions of arachnophobics often seem irrational to others (and sometimes to the
+sufferers themselves). People with arachnophobia tend to feel uneasy in any area they believe
+could harbor spiders or that has visible signs of their presence, such as webs. If they see a
+spider they may not enter the general vicinity until they overcome the panic attack that is often
+associated with their phobia. They may feel humiliated if such episodes happen in the presence of
+peers or family members. The fear of spiders can be treated by any of general techniques suggested
+for specific phobias.
+
+Arachnophobia is also the title of a 1990 film, as well as a spin-off video game, in which
+(fictitious) deadly spiders overrun a small California town.
+
+ Spiders in symbolism and culture
+=======================================
+
+
+
+        Main article: Spiders in culture
+
+There are many references to the spider in popular culture, folklore and symbolism. The spider
+symbolizes patience for its hunting with web traps, and mischief and malice for its poison and the
+slow death this causes. It symbolizes possessiveness for its spinning its prey into a ball and
+taking it to its burrow (for burrowing species).
+
+ See also
+===============
+
+
+* Spider diversity
+* For a guide to identifying spiders, see Spider finder.
+* Spider webs in space
+

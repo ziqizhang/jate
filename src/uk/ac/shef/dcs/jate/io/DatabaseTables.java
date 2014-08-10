@@ -1,7 +1,7 @@
 package uk.ac.shef.dcs.jate.io;
 
 /**
- * Outputting jate term extraction data as database is no longer supported. the current hsql database outputter can still be used but code will not be maintained
+ * Outputting jate term extraction data as database is no longer supported. the current hsql database outputter can still be used with hsqldb2.2.3 but code will not be maintained
  */
 @Deprecated public enum DatabaseTables {
 

@@ -163,7 +163,7 @@ public class NounPhraseExtractorOpenNLP extends CandidateTermExtractor {
                 String[] e = applySplitList(c);
 
                 for (String str : e) {
-                    String stopremoved = applyTrimStopwords(str, _stoplist, _normaliser);
+                    String stopremoved = applyTrimStopwords(str, _stoplist, _normaliser, true,true);
                     if (stopremoved == null) continue;
                     String original = stopremoved;
                     str = _normaliser.normalize(stopremoved.toLowerCase()).trim();

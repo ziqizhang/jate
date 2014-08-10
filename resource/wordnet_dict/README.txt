@@ -1,0 +1,1 @@
+These are copied from a Windows WordNet 2.1 installation. 

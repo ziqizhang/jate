@@ -1,0 +1,737 @@
+Insect
+======
+
+Carboniferous
+
+
+
+Western honey bee (Order Hymenoptera)
+
+
+
+Kingdom: Animalia
+
+Phylum: Arthropoda
+
+Subphylum: Hexapoda
+
+Class: Insecta
+Linnaeus, 1758
+
+See taxonomy
+
+
+Insects (Class Insecta) are a major group of arthropods and the most diverse group of animals on
+the Earth, with over a million described species—more than all other animal groups combined.[1]
+Insects may be found in nearly all environments on the planet, although only a small number of
+species occur in the oceans where crustaceans tend to predominate instead.
+
+There are approximately 5,000 dragonfly species, 2,000 praying mantis, 20,000 grasshopper, 170,000
+butterfly and moth, 120,000 fly, 82,000 true bug, 360,000 beetle, and 110,000 bee, wasp and ant
+species described to date. Estimates of the total number of current species, including those not
+yet known to science, range from two million to fifty million, with newer studies favouring a
+lower figure of about six to ten million.[1][2][3] Adult modern insects range in size from a
+0.139?mm Mymarid wasp (Dicopomorpha echmepterygis) to a 55.5?cm long Stick insect (Phobaeticus
+serratipes).[4] The heaviest documented insect is a Giant Weta (at 70 grams), but other possible
+candidates include the Goliath beetles Goliathus goliatus, Goliathus regius and Cerambycid beetles
+such as Titanus giganteus, though no one is certain which is truly the heaviest.[4]
+
+The study of insects (from Latin insectus, meaning "cut into sections") is called entomology, from
+the Greek εντομος, also meaning "cut into sections".[5]
+
+Contents
+========
+
+
+
+* Roles in the environment and human society
+* Morphology
+  o Nervous system
+  o Exoskeleton
+
+* Development
+* Behavior
+  o Sociality
+  o Light production and vision
+  o Sound production and hearing
+  o Chemical communication
+
+* Locomotion
+  o Flight
+  o Walking
+  o Swimming
+
+* Evolution
+  o Coevolution
+
+* Taxonomy
+* Relationship to other arthropods
+* Quotations
+* Gallery
+* References
+* See also
+* For further reading
+* External links
+  o Image resources
+
+ Roles in the environment and human society
+=================================================
+
+Aedes aegypti, a parasite, and vector of dengue fever and yellow fever
+
+
+
+Many insects are considered pests by humans. Insects commonly regarded as pests include those that
+are parasitic (mosquitoes, lice, bedbugs), transmit diseases (mosquitoes, flies), damage
+structures (termites), or destroy agricultural goods (locusts, weevils). Many entomologists are
+involved in various forms of pest control, often using insecticides, but more and more relying on
+methods of biocontrol.
+
+Although pest insects attract the most attention, many insects are beneficial to the environment
+and to humans. Some pollinate flowering plants (for example wasps, bees, butterflies, ants).
+Pollination is a trade between plants that need to reproduce, and pollinators that receive rewards
+of nectar and pollen. A serious environmental problem today is the decline of populations of
+pollinator insects, and a number of species of insects are now cultured primarily for pollination
+management in order to have sufficient pollinators in the field, orchard or greenhouse at bloom
+time.
+
+Insects also produce useful substances such as honey, wax, lacquer and silk. Honey bees have been
+cultured by humans for thousands of years for honey, although contracting for crop pollination is
+becoming more significant for beekeepers. The silkworm has greatly affected human history, as
+silk-driven trade established relationships between China and the rest of the world. Fly larvae
+(maggots) were formerly used to treat wounds to prevent or stop gangrene, as they would only
+consume dead flesh. This treatment is finding modern usage in some hospitals. Adult insects such
+as crickets, and insect larvae of various kinds are also commonly used as fishing bait.
+
+Chorthippus biguttatus, a grasshopper
+
+
+
+In some parts of the world, insects are used for human food ("Entomophagy"), while being a taboo
+in other places. There are proponents of developing this use to provide a major source of protein
+in human nutrition. Since it is impossible to entirely eliminate pest insects from the human food
+chain, insects already are present in many foods, especially grains. Most people do not realize
+that food laws in many countries do not prohibit insect parts in food, but rather limit the
+quantity. According to cultural materialist anthropologist Marvin Harris, the eating of insects is
+taboo in cultures that have protein sources that require less work, like farm birds or cattle.
+
+Many insects, especially beetles, are scavengers, feeding on dead animals and fallen trees,
+recycling the biological materials into forms found useful by other organisms, and insects are
+responsible for much of the process by which topsoil is created. The ancient Egyptian religion
+adored beetles and represented them as scarabeums.
+
+Although mostly unnoticed by most humans, the most useful of all insects are insectivores, those
+that feed on other insects. Many insects, such as grasshoppers, can potentially reproduce so
+quickly that they could literally bury the earth in a single season. However, there are hundreds
+of other insect species that feed on grasshopper eggs, and some that feed on grasshopper adults.
+This role in ecology is usually assumed to be primarily one of birds, but insects, though less
+glamorous, are much more significant. For any pest insect one can name, there is a species of wasp
+that is either a parasitoid or predator upon that pest, and plays a significant role in
+controlling it.
+
+Human attempts to control pests by insecticides can backfire, because important but unrecognized
+insects already helping to control pest populations are also killed by the poison, leading
+eventually to population explosions of the pest species.
+
+ Morphology
+=================
+
+Insect anatomy
+A- Head ? B- Thorax ? C- Abdomen
+1. antenna
+2. ocelli (lower)
+3. ocelli (upper)
+4. compound eye
+5. brain (cerebral ganglia)
+6. prothorax
+7. dorsal artery
+8. tracheal tubes (trunk with spiracle)
+9. mesothorax
+10. metathorax
+11. forewing
+12. hindwing
+13. mid-gut (stomach)
+14. heart
+15. ovary
+16. hind-gut (intestine, rectum & anus)
+17. anus
+18. vagina
+19. nerve chord (abdominal ganglia)
+20. Malpighian tubes
+21. pillow
+22. claws
+23. tarsus
+24. tibia
+25. femur
+26. trochanter
+27. fore-gut (crop, gizzard)
+28. thoracic ganglion
+29. coxa
+30. salivary gland
+31. subesophageal ganglion
+32. mouthparts
+
+Insects possess segmented bodies supported by an exoskeleton, a hard outer covering made mostly of
+chitin. The body is divided into a head, a thorax, and an abdomen. The head supports a pair of
+sensory antennae, a pair of compound eyes, and mouth parts. The thorax has six legs (one pair per
+segment) and wings (if present in the species). The abdomen (made up of eleven segments some of
+which may be reduced or fused) has respiratory, excretory and reproductive structures.
+
+ Nervous system
+=====================
+
+
+Their nervous system can be divided into a brain and a ventral nerve cord. The head capsule (made
+up of six fused segments) has six pairs of ganglia. The first three pairs are fused into the
+brain, while the three following pairs are fused into a structure called the subesophageal
+ganglion.
+
+The thoracic segments have one ganglion on each side, which are connected into a pair, one pair
+per segment. This arrangement is also seen in the abdomen but only in the first eight segments.
+Many species of insects have reduced numbers of ganglia due to fusion or reduction. Some
+cockroaches have just six ganglia in the abdomen, whereas the wasp Vespa crabro has only two in
+the thorax and three in the abdomen. And some like the house fly Musca domestica have fused all
+the body ganglia into a single large thoracic ganglion.
+
+ Exoskeleton
+==================
+
+
+Most insects have two pairs of wings located on the second and third thoracic segments. Insects
+are the only invertebrates to have developed flight, and this has played an important part in
+their success. The winged insects, and their wingless relatives, make up the subclass Pterygota.
+Insect flight is not very well understood, relying heavily on turbulent aerodynamic effects. The
+primitive insect groups use muscles that act directly on the wing structure. The more advanced
+groups making up the Neoptera have foldable wings and their muscles act on the thorax wall and
+power the wings indirectly. These muscles are able to contract multiple times for each single
+nerve impulse, allowing the wings to beat faster than would ordinarily be possible (see insect
+flight).
+
+Their outer skeleton, the cuticle, is made up of two layers; the epicuticle which is a thin and
+waxy water resistant outer layer and contains no chitin, and another layer under it called the
+procuticle. This is chitinous and much thicker than the epicuticle and has two layers. The outer
+being the exocuticle while the inner is the endocuticle. The tough and flexible endocuticle is
+built from numerous layers of fibrous chitin and proteins, criss-crossing each others in a
+sandwich pattern, while the exocuticle is rigid and sclerotized.
+
+ Development
+==================
+
+Hoverflies mating in flight
+
+
+
+Most insects hatch from eggs, but others are ovoviviparous or viviparous, and all undergo a series
+of moults as they develop and grow in size. This manner of growth is necessitated by the inelastic
+exoskeleton. Moulting is a process by which the individual escapes the confines of the exoskeleton
+in order to increase in size, then grows a new and larger outer covering. In some insects, the
+young are called nymphs and are similar in form to the adults except that the wings are not
+developed until the adult stage. This is called incomplete metamorphosis and insects showing this
+are termed hemimetabolous. Holometabolous insects show complete metamorphosis, which distinguishes
+the Endopterygota and includes many of the most successful insect groups. In these species, an egg
+hatches to produce a larva, which is generally worm-like in form, and can be divided into five
+different forms; eruciform (caterpillar-like), scarabaeiform (grublike), campodeiform (elongated,
+flattened, and active), elateriform (wireworm-like) and vermiform (maggot-like). The larva grows
+and eventually becomes a pupa, a stage sealed within a cocoon in some species. There are three
+types of pupae; obtect (the pupa is compact with the legs and other appendages enclosed), exarate
+(where the pupa has the legs and other appendages free and extended) and coarctate (where the pupa
+develops inside the larval skin). In the pupal stage, the insect undergoes considerable change in
+form to emerge as an adult, or imago. Butterflies are an example of an insect that undergoes
+complete metamorphosis. Some insects have even evolved hypermetamorphosis.
+
+Some insects (parastic wasps) show polyembryony where a single fertilized egg can divide into many
+and in some cases thousands of separate embryos. Other developmental and reproductive variations
+include haplodiploidy, polymorphism, paedomorphosis (metathetely and prothetely), sexual
+dimorphism, parthenogenesis and more rarely hermaphroditism.
+
+ Behavior
+===============
+
+Flies attracted to an incandescent light bulb
+
+
+
+Many insects possess very sensitive and/or specialized organs of perception. Some insects such as
+bees can perceive ultraviolet wavelengths, or detect polarized light, while the antennae of male
+moths can detect the pheromones of female moths over distances of many kilometers. There is a
+pronounced tendency for there to be a trade-off between visual acuity and chemical or tactile
+acuity, such that most insects with well-developed eyes have reduced or simple antennae, and
+vice-versa. There is a variety of different mechanisms by which insects perceive sound, and it is
+by no means universal; the general pattern, however, is that if an insect can produce sound, then
+it can also hear sound, though the range of frequencies they can hear is often quite narrow (and
+may in fact be limited to only the frequency that they themselves produce). Some nocturnal moths
+can perceive the ultrasonic emissions of bats, a mechanism which helps them avoid predation.
+Certain predatory and parasitic insects can detect the characteristic sounds made by their
+prey/hosts. Bloodsucking insects have special sensory structures that can detect infrared
+emissions, and use them to home in on their hosts.
+
+Sensillae: sensory structures on insects
+
+
+
+Most insects lead short lives as adults, and rarely interact with one another except to mate, or
+compete for mates. A small number exhibit some form of parental care, where they will at least
+guard their eggs, and sometimes continue guarding their offspring until adulthood, and possible
+even actively feeding them. Another simple form of parental care is to construct a nest (a burrow
+or an actual construction, either of which may be simple or complex), store provisions in it, and
+lay an egg upon those provisions. The adult does not contact the growing offspring, but it
+nonetheless does provide food. This sort of care is typical of bees and various types of wasps.
+
+A few such insects also have a well-developed number sense, among the solitary wasps that
+provision with a single species of prey. The mother wasp lays her eggs in individual cells and
+provides each egg with a number of live caterpillars on which the young feed when hatched. Some
+species of wasp always provide five, others twelve, and others as high as twenty-four caterpillars
+per cell. The number of caterpillars is different among species, but it is always the same for
+each sex of larvae. The male solitary wasp in the genus Eumenes is smaller than the female, so the
+mother of one species supplies him with only five caterpillars; the larger female receives ten
+caterpillars in her cell. She can in other words distinguish between both the numbers five and ten
+in the caterpillars she is providing and which cell contains a male or a female.
+
+ Sociality
+================
+
+A termite mound made by the cathedral termite
+
+
+
+Social insects, such as the termites, ants and many bees and wasps, are the most familiar species
+of eusocial animal. They live together in large well-organized colonies that may be so tightly
+integrated and genetically similar that the colonies of some species are sometimes considered
+superorganisms. It is sometimes argued that the various species of honey bee are the only
+invertebrates (and indeed one of the few non-human groups) to have evolved a system of abstract
+symbolic communication (i.e., where a behavior is used to represent and convey specific
+information about something in the environment), called the "dance language" - the angle at which
+a bee dances represents a direction relative to the sun, and the length of the dance represents
+the distance to be flown.
+
+Only those insects which live in nests or colonies demonstrate any true capacity for fine-scale
+spatial orientation or "homing" - this can be quite sophisticated, however, and allow an insect to
+return unerringly to a single hole a few millimeters in diameter among a mass of thousands of
+apparently identical holes all clustered together, after a trip of up to several kilometers'
+distance, and (in cases where an insect hibernates) as long as a year after last viewing the area
+(a phenomenon known as philopatry). A few insects migrate, but this is a larger-scale form of
+navigation, and often involves only large, general regions (e.g., the overwintering areas of the
+Monarch butterfly).
+
+ Light production and vision
+==================================
+
+
+A few insects, notably the beetles of the family Lampyridae have evolved light generating organs.
+They are also able to control this light generation to produce flashes and some species use the
+light to attract mates.
+
+Most insects except some species of cave dwelling crickets are able to perceive light and dark.
+Many species have acute vision capable of detecting minute movements. The eyes include simple eyes
+or ocelli as well as compound eyes of varying sizes. Many species are able to detect light in the
+infrared, ultraviolet as well as the visible light wavelengths. Colour vision has been
+demonstrated in many species.
+
+ Sound production and hearing
+===================================
+
+
+Insects were the earliest organisms to produce sounds and to sense them. Soundmaking in insects is
+achieved mostly by mechanical action of appendages. In the grasshoppers and crickets this is
+achieved by stridulation. The cicadas have the loudest sounds among the insects and have special
+modifications to their body and musculature to produce and amplify sounds. Some species such as
+the African cicada, Brevisana brevis have been measured at 106.7 decibels at a distance of 50
+cm.[4] Some insects can hear ultrasound and take evasive action when they sense detection by bats.
+Some moths produce clicks and these were earlier thought to have a role in jamming the bat
+echolocation. However studies suggest that these are produced mostly by unpalatable moths to warn
+the bats, just as warning colouration is used visually.[6]
+
+Very low sounds are also produced in various species of Lepidoptera, Coleoptera and Hymenoptera,
+mostly through the use of wing movement or friction at the joints of appendages.
+
+Most soundmaking insects also have tympanal organs that can perceive airborne sounds. Most insects
+are also able to sense vibrations transmitted by the substrate.
+
+ Chemical communication
+=============================
+
+
+In addition to the use of sound for communication, a wide range of insects have evolved chemical
+means for communication. These chemicals, termed semiochemicals, are often derived from plant
+metabolites include those meant to attract, repel and provide other kinds of information. While
+some chemicals are targeted at individuals of the same species, others are used for communication
+across species. The use of scents is especially well known developed in the social insects.
+
+ Locomotion
+=================
+
+ Flight
+=============
+
+
+
+        Main article: insect flight
+
+Insects are the only group of invertebrates to have developed flight. The evolution of insect
+wings has been the subject of debate. Some proponents suggest that the wings are para-notal in
+origin while others have suggested that these are modified gills. In the Carboniferous age, some
+of the Meganeura dragonflies had as much as a 50cms wide wingspan. The largest flying insects
+today are much smaller and include several moth species such as the Atlas moth and the White Witch
+(Thysania agrippina).
+
+Insect flight has been a topic of great interest in aerodynamics due partly to the inability of
+steady-state theories to explain the lift generated by the tiny wings of insects.
+
+ Walking
+==============
+
+
+Many adult insects use six legs for walking and have adopted a tripedal gait. The tripedal gait
+allows for rapid walking whilst always having a stable stance and has been studied extensively in
+cockroaches. The legs are used in alternate triangles touching the ground. For the first step the
+middle right leg and the front and rear left legs are in contact with the ground and move the
+insect forward, whilst the front and rear right leg and the middle left leg are lifted and moved
+forward to a new position. When they touch the ground to form a new stable triangle the other legs
+can be lifted and brought forward in turn and so on.
+
+The purest form of the tripedal gait is seen in insects moving at speed and is illustrated in the
+gif animation of a 7-spot ladybird (Coccinellidae, Coccinella septempunctata). However, this type
+of locomotion is not rigid and insects can adapt a variety of gaits; for example, when moving
+slowly, turning, or avoiding obstacles, four or more feet may be touching the ground. Insects can
+also adapt their gait to cope with the loss of one or more limbs.
+
+Cockroaches are amongst the fastest insect runners and at full speed actually adopt a bipedal run
+to reach a high velocity in proportion to their body size. As Cockroaches move extremely rapidly,
+they need recording at several hundred frames per second to reveal their gait. More sedate
+locomotion is also studied by scientists in stick insects Phasmatodea.
+
+A few insects have evolved to walk on the surface of the water, especially the bugs of the family,
+Gerridae, also known as water striders. A few species in the genus Halobates even live on the
+surface of open oceans, a habitat that has few insect species.
+
+Insect walking is of particular interest as an alternative form of locomotion to the use of wheels
+for robots (Robot locomotion).
+
+ Swimming
+===============
+
+The backswimmer Notonecta glauca underwater, showing the paddle like hindleg adaptation
+
+
+
+A large number of insects live either a part or their whole lives underwater. In many orders the
+immature stages are spent in water while the adults are either aerial or terrestrial in habit. A
+few species spend a part of their adult life either under or over water. Many of these species
+have adaptations to help in locomotion under water. The water beetles and water bugs have legs
+adapted into paddle like structures. Some Odonate larvae, such as dragonfly naiads, propel
+themselves rapidly by expelling water forcibly out of the rectal chamber.
+
+ Evolution
+================
+
+Evolution has produced astonishing variety in insects. Pictured are some of the possible shapes of
+antennae.
+
+        Main article: Insect evolution
+
+The relationships of insects to other animal groups remain unclear. Although more traditionally
+grouped with millipedes and centipedes, evidence has emerged favoring closer evolutionary ties
+with the crustaceans. In the Pancrustacea theory insects, together with Remipedia and
+Malacostraca, make up a natural clade.
+
+Apart from some tantalizing Devonian fragments, insects first appear suddenly in the fossil record
+at the very beginning of the Late Carboniferous period, Early Bashkirian age, about 350 million
+years ago. Insect species were already diverse and highly specialized by this time, with fossil
+evidence reflecting the presence of more than half a dozen different orders. Thus, the first
+insects probably emerged earlier in the Carboniferous period, or even in the preceding Devonian.
+The oldest insect traces are found in amber from Lebanon representing the Lower Cretaceous (120
+mya). Research to discover these earliest insect ancestors in the fossil record continues.
+
+The origins of insect flight remain obscure, since the earliest winged insects currently known
+appear to have been capable fliers. Some extinct insects had an additional pair of winglets
+attaching to the first segment of the thorax, for a total of three pairs. So far, there is nothing
+that suggests that the insects were a particularly successful group of animals before they got
+their wings.
+
+Late Carboniferous and Early Permian insect orders include both several current very long-lived
+groups and a number of Paleozoic forms. During this era, some giant dragonfly-like forms reached
+wingspans of 55 to 70?cm, making them far larger than any living insect. Also their nymphs must
+have had a very impressive size. This gigantism may have been due to higher atmospheric oxygen
+levels that allowed increased respiratory efficiency relative to today. The lack of flying
+vertebrates could have been another factor.
+
+Most extant orders of insects developed during the Permian era that began around 270 million years
+ago. Many of the early groups became extinct during the Permian-Triassic extinction event, the
+largest mass extinction in the history of the Earth, around 252 million years ago.
+
+The remarkably successful Hymenopterans appeared in the Cretaceous but achieved their diversity
+more recently, in the Cenozoic. A number of highly-successful insect groups evolved in conjunction
+with flowering plants, a powerful illustration of co-evolution.
+
+Many modern insect genera developed during the Cenozoic; insects from this period on are often
+found preserved in amber, often in perfect condition. Such specimens are easily compared with
+modern species. The study of fossilized insects is called paleoentomology.
+
+ Coevolution
+==================
+
+
+
+        Main article: Coevolution
+
+Insects were among the earliest terrestrial herbivores and they acted as major selection agents on
+plants. Plants evolved chemical defenses against this herbivory and the insects in turn evolved
+mechanisms to deal with plant toxins. Many insects make use of these toxins to protect themselves
+from their predators. And such insects advertise their toxicity using warning colours. This
+successful evolutionary pattern has also been utilized by mimics. Over time, this has led to
+complex groups of co-evolved species. Conversely, some interactions between plants and insects are
+beneficial (see pollination), and coevolution has led to the development of very specific
+mutualisms in such systems.
+
+ Taxonomy
+===============
+
+A Syrphid fly on a Grape hyacinth
+
+Orthetrum caledonicum, the Blue Skimmer dragonfly
+
+
+
+This is a list of the orders and higher taxa of insects.
+
+Within the subphylum Hexapoda, a few groups such as springtails (Collembola), are often treated as
+insects; however some authors treat them as distinct from the insects in having a different
+evolutionary origin. This may also be the case for the rest of the members of the Entognatha;
+Protura and Diplura.
+
+The true insects, those of the Class Insecta, are distinguished from all other arthropods in part
+by having ectognathous, or exposed, mouthparts and eleven abdominal segments. The true insects are
+therefore sometimes also referred to as the Ectognatha. Many insect groups are winged as adults.
+The exopterygote part of the Neoptera are sometimes divided into Orthopteroida (cerci present) and
+Hemipteroida (cerci absent), also called lower and higher Exopterygota; a full classification is
+given below.
+
+Subclass Apterygota
+
+
+        * Archaeognatha (bristletails)
+        * Thysanura (silverfish)
+        * Monura - extinct
+
+Subclass Pterygota
+
+
+        * Infraclass Paleoptera (may be paraphyletic)
+
+
+        * Ephemeroptera (mayflies)
+        * Palaeodictyoptera - extinct
+        * Megasecoptera - extinct
+        * Archodonata - extinct
+        * Diaphanopterodea - extinct
+        * Protodonata - extinct
+        * Odonata (dragonflies and damselflies)
+
+* Infraclass Neoptera
+
+        Superorder Exopterygota
+        * Caloneurodea - extinct
+        * Titanoptera - extinct
+        * Protorthoptera - extinct
+        * Grylloblattodea (ice-crawlers)
+        * Mantophasmatodea (gladiators)
+        * Plecoptera (stoneflies)
+        * Embioptera (webspinners)
+        * Zoraptera (angel insects)
+        * Dermaptera (earwigs)
+        * Orthoptera (grasshoppers, etc)
+        * Phasmatodea (stick insects)
+        * Blattodea (cockroaches)
+        * Isoptera (termites)
+        * Mantodea (mantids)
+        * Psocoptera (booklice, barklice)
+        * Thysanoptera (thrips)
+        * Phthiraptera (lice)
+        * Hemiptera (true bugs)
+
+        Superorder Endopterygota
+        * Hymenoptera (ants, bees, etc.)
+        * Coleoptera (beetles)
+        * Strepsiptera (twisted-winged parasites)
+        * Raphidioptera (snakeflies)
+        * Megaloptera (alderflies, etc.)
+        * Neuroptera (net-veined insects)
+        * Mecoptera (scorpionflies, etc.)
+        * Siphonaptera (fleas)
+        * Diptera (true flies)
+        * Protodiptera extinct
+
+        Superorder Amphiesmenoptera
+        * Trichoptera (caddisflies)
+        * Lepidoptera (butterflies, moths)
+
+        Incertae sedis
+        * Glosselytrodea extinct
+        * Miomoptera extinct
+
+As seen above, insects are divided into two subclasses; Apterygota and Pterygota (flying insects),
+but this could relatively soon change. Apterygota is made up of two orders; Archaeognatha
+(bristletails) and Thysanura (silverfish). In the suggested classification, the Archaeognatha
+makes up the Monocondylia while Thysanura and Pterygota are grouped together as Dicondylia. It is
+even possible that the Thysanura itself are not monophyletic, making the family Lepidotrichidae a
+sister group to the Dicondylia (Pterygota + the rest of the Thysanura).
+
+Also within the infraclass Neoptera we will probably see some re-organization in not too long.
+Today Neoptera is divided into the superorders Exopterygota and Endopterygota. But even if the
+Endopterygota are monophyletic, the Exopterygota seems to be paraphyletic, and can be separated
+into smaller groups; Paraneoptera, Dictyoptera, Orthopteroidea and to other groups
+(Grylloblattodea + Mantophasmatodea and Plecoptera + Zoraptera + Dermaptera). Phasmatodea and
+Embioptera has been suggested to form Eukinolabia, while Strepsiptera and Diptera are sometimes
+grouped together in Halteria. Paraneoptera has turned out to be more closeley related to
+Endopterygota than to the rest of the Exopterygota. It is not still clear how closely related the
+remaining Exopterygote groups are and if they belongs together in a larger unit. Only more
+research will give the answer.
+
+ Relationship to other arthropods
+=======================================
+
+Spiders such as this wolf spider are not insects
+
+
+
+Other terrestrial arthropods, such as centipedes, millipedes, scorpions and spiders, are sometimes
+confused with insects since their body plans can appear similar, sharing (as do all arthropods) a
+jointed exoskeleton. However upon closer examination their features differ significantly; most
+noticeably they do not have the six legs characteristic of adult insects.
+
+The higher level phylogeny of the arthropods continues to be a matter of debate and research. A
+proposed phylogenetic tree of the arthropods and related groups is given in the tree below. This
+tree does not take into consideration many extinct groups.[7]
+
+
+ 
+
+ 
+
+ 
+
+Hexapoda (Insecta, collembola, diplura, protura)
+
+ 
+
+Crustacea (crabs, shrimp, isopods)
+
+Myriapoda 
+
+ 
+
+Pauropoda
+
+ 
+
+Diplopoda (Millipedes)
+
+ 
+
+Chilopoda (Centipedes)
+
+ 
+
+Symphyla
+
+Chelicerata 
+
+ 
+
+Arachnida (Spiders, scorpions and allies)
+
+ 
+
+Eurypterida (Sea scorpions: Extinct)
+
+ 
+
+Xiphosura (King crabs)
+
+ 
+
+Pycnogonida (Sea spiders)
+
+ 
+
+Trilobites (Extinct)
+
+ Quotations
+=================
+
+
+* "Something in the insect seems to be alien to the habits, morals, and psychology of this
+  world, as if it had come from some other planet: more monstrous, more energetic, more insensate,
+  more atrocious, more infernal than our own."
+
+
+        —Maurice Maeterlinck (1862–1949)
+* When asked what can be learned about the Creator by examining His work, J.B.S. Haldane said
+  "an inordinate fondness for beetles."
+
+* "To understand the success of insects is to appreciate our own shortcomings" —Thomas Eisner
+
+ Gallery
+==============
+
+Beautiful Demoiselle (Calopteryx virgo)
+
+ 
+
+Common earwig (Forficula auricularia)
+
+ 
+
+A juvenile Patanga japonica
+
+ 
+
+A stick insect (Ctenomorpha chronus)
+
+Termite alates
+
+ 
+
+Water strider (Gerris najas)
+
+ 
+
+Bishop's mitre shield bug (Aelia acuminata)
+
+ 
+
+Ant
+
+Red mason bee (Osmia rufa)
+
+ 
+
+A wasp drinking
+
+ 
+
+Aleiodes indiscretus parasitising a gypsy moth (Lymantria dispar) larva
+
+ 
+
+Adult citrus root weevil (Diaprepes abbreviatus)
+
+A flower fly, Episyrphus balteatus
+
+ 
+
+Scarce swallowtail (Iphiclides podalirius)
+
+ 
+
+Giant Leopard Moth (Ecpantheria scribonia)
+
+ 
+
+Rosy maple moth (Dryocampa rubicunda)
+
+* Flesh fly (file info)?— Watch in browser
+  o Video of a flesh fly cleaning itself
+
+* Problems seeing the videos? See media help.
+

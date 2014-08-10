@@ -5,6 +5,7 @@ import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.core.algorithm.AbstractFeatureWrapper;
 import uk.ac.shef.dcs.jate.core.algorithm.Algorithm;
 import uk.ac.shef.dcs.jate.core.algorithm.FrequencyAlgorithm;
+import uk.ac.shef.dcs.jate.core.extractor.VerbPhraseExtractorOpenNLP;
 import uk.ac.shef.dcs.jate.core.feature.FeatureBuilderCorpusTermFrequency;
 import uk.ac.shef.dcs.jate.core.feature.FeatureCorpusTermFrequency;
 import uk.ac.shef.dcs.jate.core.feature.indexer.GlobalIndexMem;
@@ -25,6 +26,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * <p>
@@ -75,6 +78,7 @@ public class TestFrequency {
 
 			//noun phrase extractor
 			CandidateTermExtractor npextractor = new NounPhraseExtractorOpenNLP(stop, lemmatizer);
+            //CandidateTermExtractor npextractor = new VerbPhraseExtractorOpenNLP(stop, lemmatizer);
 
 			//counters
 			TermFreqCounter npcounter = new TermFreqCounter();

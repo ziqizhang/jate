@@ -1,0 +1,785 @@
+Bird
+====
+
+Bird
+
+“Aves�? redirects here. For other uses, see Aves (disambiguation).
+
+Jurassic
+
+
+
+Superb Fairy-wren, Malurus cyaneus, juvenile
+
+
+
+Kingdom: Animalia
+
+Phylum: Chordata
+
+Subphylum: Vertebrata
+
+Class: Aves
+Linnaeus, 1758
+
+
+Orders
+
+
+About two dozen - see section below
+
+
+Birds (class Aves) are bipedal, warm-blooded, oviparous vertebrate animals. The earliest known
+bird is the Jurassic Archaeopteryx, and most scientists think that birds evolved from theropod
+dinosaurs. Ranging in size from tiny hummingbirds to the huge Ostrich and Emu, there are between
+9,000-10,000 known living bird species in the world, making them the most diverse class of
+terrestrial vertebrate. About 120–130 species have become extinct as a result of human activity
+since 1600, and hundreds more prior to this.
+
+Birds are characterized by feathers, a beak with no teeth, the laying of hard-shelled eggs, high
+metabolic rate, a four-chambered heart, and a light but strong skeleton. Most birds have forelimbs
+modified as wings and can fly, though the ratites are flightless, and several others, particularly
+endemic island species, have also lost the ability to fly.
+
+Many species of bird undertake long distance annual migrations, and many more perform shorter more
+irregular movements. Birds are social and communicate using visual signals and through calls and
+bird song, and participate in social behaviours including cooperative hunting and breeding,
+flocking. The breeding behaviour of birds is dominated by monogamy, although infidelity is common
+in some species and other species have polygamous or polyandrous breeding systems. Eggs are
+usually laid in a nest and incubated and most birds have an extended period of parental care after
+hatching.
+
+Humans make use of birds in a number of ways: many are important sources of food, acquired either
+through hunting or farming, often commercially. Some species, particularly songbirds and parrots,
+are popular as pets. Birds figure prominently in all aspects of human culture from religion to
+poetry and popular music. Numerous species of birds are threatened with extinction by human
+activities and efforts are underway to protect them.
+
+Contents
+========
+
+
+
+* Evolution and taxonomy
+  o Use of the term "bird"
+  o Dinosaurs and the origin of birds
+  o Radiation of modern birds
+  o Bird orders
+
+* Distribution
+* Bird anatomy
+  o Feathers and plumage
+  o Flight
+
+* Behaviour
+  o Diet and Feeding
+  o Migration
+  o Communication
+  o Breeding
+    - Courtship
+    - Social systems
+    - Territories, nesting and incubation
+    - Parental care and fledging
+    - Brood parasites
+
+
+* Relationship with humans
+  o Birds and humans
+  o Birds in popular culture
+  o Conservation
+
+* References
+* External links
+
+ Evolution and taxonomy
+=============================
+
+
+
+        Main article: Bird evolution
+
+Archaeopteryx, the earliest known bird. Some place it basalmost in the Aves, others immediately
+outside that "true bird" clade
+
+
+
+The first classification of birds was developed by Francis Willughby and John Ray in their 1676
+volume, Ornithologiae.[1] That work, slightly modified, was the basis for today's classification
+system originally devised by Carolus Linnaeus in 1758.
+
+Birds are categorized as a biological class Aves in Linnean taxonomy. Modern phylogenies place
+Aves in the dinosaur clade Theropoda; a few scientists consider them synonymous or even place the
+Theropoda in Aves, but this view is not widely accepted. According to the current consensus, Aves
+and a sister group, the order Crocodilia, together are the sole living members of an unranked
+"reptile" clade, the Archosauria. Archaeopteryx, from the Kimmeridgian (Late Jurassic, some
+155-150 million years ago), is considered to be the earliest known bird. Phylogenetically, Aves is
+defined as all descendants of the most recent common ancestor of modern birds (a specific modern
+bird species like Passer domesticus for the purposes of phylogenetic taxonomy), and Archaeopteryx
+lithographica] or some more modern bird] to avoid the uncertainties] about Archaeopteryx's
+placement within the theropods.
+
+Modern birds are divided into two superorders, the Paleognathae (mostly flightless birds like
+ostriches), and the wildly diverse Neognathae, containing all other birds. Depending on the
+taxonomic viewpoint, the number of species cited varies anywhere from 8,800 to 10,200 known living
+bird species in the world.
+
+ Use of the term "bird"
+=============================
+
+
+This article uses "bird" to denote members of the Aves including Archaeopteryx, but primarily
+deals with the living birds which are all Neornithes and thus unquestionably Aves. In popular
+science, the term "bird" is often used more as a form taxon, denoting any theropod with feathers
+and wings. Thus, one may find animals such as Microraptor and Rahonavis to be called "birds" in a
+news article, although most scientists would not consider them to belong to Aves.
+
+ Dinosaurs and the origin of birds
+========================================
+
+
+
+        Main article: Dinosaur-bird connection
+
+Confuciusornis, a Cretaceous bird from China
+
+
+
+There is significant evidence that birds evolved from theropod dinosaurs, specifically, that birds
+are members of Maniraptora, a group of theropods which includes dromaeosaurs and oviraptorids,
+among others.[2] As more non-avian theropods that are closely related to birds are discovered, the
+formerly clear distinction between non-birds and birds becomes less so. Recent discoveries in
+northeast China (Liaoning Province), demonstrating that many small theropod dinosaurs had
+feathers, contribute to this ambiguity.[3]
+
+The basal bird Archaeopteryx from the Jurassic is well-known as one of the first "missing links"
+to be found in support of evolution in the late 19th century, though it is not considered a direct
+ancestor of modern birds. Confuciusornis is another early bird; it lived in the Early Cretaceous.
+Both may be predated by Protoavis texensis, though the fragmentary nature of this fossil leaves it
+open to considerable doubt if this was a bird ancestor. Other Mesozoic birds include the
+Enantiornithes, Yanornis, Ichthyornis, Gansus and the Hesperornithiformes, a group of flightless
+divers resembling grebes and loons.
+
+The recently (2002) discovered dromaeosaur Cryptovolans was capable of powered flight, possessed a
+sternal keel and had ribs with uncinate processes. In fact, Cryptovolans makes a better "bird"
+than Archaeopteryx which is missing some of these modern bird features. Because of this, some
+paleontologists have suggested that dromaeosaurs are actually basal birds whose larger members are
+secondarily flightless, i.e. that dromaeosaurs evolved from birds and not the other way around.
+Evidence for this theory is currently inconclusive, but digs continue to unearth fossils
+(especially in China) of the strange feathered dromaeosaurs. At any rate, it is fairly certain
+that avian flight existed in the mid-Jurassic and was "tried out" in several lineages and variants
+by the mid-Cretaceous.
+
+Although ornithischian (bird-hipped) dinosaurs share the same hip structure as birds, birds
+actually originated from the saurischian (lizard-hipped) dinosaurs (if the dinosaurian origin
+theory is correct), and thus arrived at their hip structure condition independently. In fact, the
+bird-like hip structure also developed a third time among a peculiar group of theropods, the
+Therizinosauridae.
+
+An alternate theory to the dinosaurian origin of birds, espoused by a few scientists (most notably
+Lary Martin and Alan Feduccia), states that birds (including maniraptoran "dinosaurs") evolved
+from early archosaurs like Longisquama,[4] a theory which is contested by most other scientists in
+paleontology, and by experts in feather development and evolution.[5]
+
+ Radiation of modern birds
+================================
+
+
+Modern birds are classified in Neornithes, which are now known to have evolved into some basic
+lineages by the end of the Cretaceous (see Vegavis). The Neornithes are split into the
+Paleognathae and Neognathae. The paleognaths include the tinamous (found only in Central and South
+America) and the ratites. The ratites are large flightless birds, and include ostriches,
+cassowaries, kiwis and emus (though some scientists suspect that the ratites represent an
+artificial grouping of birds which have independently lost the ability to fly in a number of
+unrelated lineages). The basal divergence from the remaining Neognathes was that of the
+Galloanseri, the superorder containing the Anseriformes (ducks, geese and swans), and the
+Galliformes (the pheasants, grouse, and their allies). The dates for the splits are a matter of
+considerable debate amongst scientists. It is agreed that the Neothrines evolved in the Cretaceous
+and that the split between the Galloanseri and the other Neognathes occurred before the K-T
+extinction event, but there are different opinions about whether the radiation of the remaining
+Neognathes occurred before or after the extinction of the other dinosaurs.[6] This disagreement is
+in part caused by a divergence in the evidence, with molecular dating suggesting a Cretaceous
+radiation and fossil evidence supporting a Tertiary radiation. Attempts made to reconcile the
+molecular and fossil evidence have proved controversial.[6][7]
+
+The classification of birds is a contentious issue. Sibley & Ahlquist's Phylogeny and
+Classification of Birds (1990) is a landmark work on the classification of birds (although
+frequently debated and constantly revised). A preponderance of evidence seems to suggest that the
+modern bird orders constitute accurate taxa. However, scientists are not in agreement as to the
+relationships between the orders; evidence from modern bird anatomy, fossils and DNA have all been
+brought to bear on the problem but no strong consensus has emerged. More recently, new fossil and
+molecular evidence is providing an increasingly clear picture of the evolution of modern bird
+orders. See also: Sibley-Ahlquist taxonomy and dinosaur classification.
+
+ Bird orders
+==================
+
+Relationships between bird orders according the Sibley-Ahlquist taxonomy. "Galloanseri" is now
+considered a superorder Galloanserae
+
+
+
+This is a list of the taxonomic orders in the subclass Neornithes, or modern birds. The list of
+birds gives a more detailed summary of these, including families.
+
+SUBCLASS NEORNITHES
+Paleognathae:
+
+* Struthioniformes, Ostrich, emus, kiwis, and allies
+* Tinamiformes, tinamous
+
+Neognathae:
+
+* Anseriformes, waterfowl
+* Galliformes, fowl
+* Gaviiformes, loons
+* Podicipediformes, grebes
+* Procellariiformes, albatrosses, petrels, and allies
+* Sphenisciformes, penguins
+* Pelecaniformes, pelicans and allies
+* Ciconiiformes, storks and allies
+* Phoenicopteriformes, flamingos
+* Falconiformes, falcons, eagles, hawks and allies
+* Gruiformes, cranes and allies
+* Charadriiformes, gulls, button-quail, plovers and allies
+* Pteroclidiformes, sandgrouse
+* Columbiformes, doves and pigeons
+* Psittaciformes, parrots and allies
+* Cuculiformes, cuckoos, turacos, hoatzin
+* Strigiformes, owls
+* Caprimulgiformes, nightjars and allies
+* Apodiformes, swifts and hummingbirds
+* Coraciiformes, kingfishers
+* Piciformes, woodpeckers and allies
+* Trogoniformes, trogons
+* Coliiformes, mousebirds
+* Passeriformes, passerines
+
+Note: This is the traditional classification (the so-called Clements order). A radically different
+classification based on molecular data has been developed (the so-called Sibley-Monroe
+classification or Sibley-Ahlquist taxonomy). This has influenced taxonomic thinking considerably,
+with the Galloanserae proving well-supported by recent molecular, fossil and anatomical
+evidence.[6] With increasingly good evidence, it had become possible by 2006 to test the major
+proposals of the Sibley-Ahlquist taxonomy, with favorable results (see for example
+Charadriiformes, Gruiformes or Caprimulgiformes).
+
+A wide variety of extinct bird taxa occurred during the Mesozoic era and left no modern
+descendants. These include Confuciusornis, toothed seabirds like the Hesperornithes and
+Ichthyornithes, and the diverse subclass Enantiornithes ("opposite birds"). For a comprehensive
+listing of these ancient avians, see Fossil birds.
+
+ Distribution
+===================
+
+A female House Sparrow living in an urban environment
+
+
+
+Birds breed on all seven continents, with the highest diversity occurring in tropical regions, as
+a result of either higher speciation in the tropics or higher extinction rates at higher
+latitudes.[8] They are able to live and feed in most of the world's terrestrial habitats; the most
+extreme the south of their range is the breeding colonies of the Snow Petrel, as far as 440 km
+inland in Antarctica.[9] Several familes have adapted to life on all the worlds oceans,[10] coming
+ashore only to breed, as well in them, with penguins recorded as diving as deep as 300 m.[11] Many
+bird species have been introduced to new locations by humans and have established naturalized
+breeding colonies there. This has either been done deliberately, for example the Ring-necked
+Pheasant is one of the most widely introduced birds in the world due to introductions for sporting
+reasons;[12] or accidentally, for example escaped pets such as Monk Parakeets establishing in a
+number of North American cities.[13] Others, such as the Cattle Egret and Galah have spread widely
+beyond their original range due to the creation of suitable habitat by agriculture.[14]
+
+ Bird anatomy
+===================
+
+
+
+        Main article: Bird anatomy
+
+External anatomy of a typical bird
+
+
+
+Birds have a body plan that shows many unusual adaptations, mostly to facilitate flight.
+
+The skeleton consists of bones which are very light. They have large pneumatic cavities which
+connect with the respiratory system. The skull bones are fused and do not show cranial sutures.
+The orbits are large and separated by a bony septum. The spine has cervical, thoracic, lumbar and
+caudal regions with the number of cervical (neck) vertebrae highly variable and especially
+flexible, but movement is reduced in the anterior thoracic vertebrae and absent in the later
+vertebrae. The last few are fused with the pelvis to form the synsacrum. The ribs are flattened
+and the sternum is keeled for the attachment of flight muscles, except in the flightless bird
+orders. The forelimbs are modified into the wings.
+
+Unlike mammals, birds do not urinate. Their kidneys extract nitrogenous wastes from the
+bloodstream, but instead of excreting it as urea dissolved in urine, they excrete it in the form
+of uric acid. They also excrete creatine rather than creatinine as in mammals. Uric acid has a
+very low solubility in water, so it emerges as a white paste. This material, as well as the output
+of the intestines, emerges from the bird's cloaca. The cloaca is a multi-purpose opening: their
+wastes are expelled through it, they mate by joining cloaca, and females lay eggs out of it. In
+addition, many species of birds regurgitate pellets.
+
+Birds have one of the most complex respiratory systems of all animal groups. When the bird
+inhales, 75% of the fresh air bypasses the lungs and flows directly into a posterior air sac which
+extends from the lungs and connects with air spaces in the bones and fills them with air. When the
+bird exhales, the used air flows out of the lung and the stored fresh air from the posterior air
+sac is simultaneously forced into the lungs. Thus, a bird's lungs receive a constant supply of
+fresh air during both inhalation and exhalation.[15] Sound production is achieved using the
+syrinx, a muscular chamber with several tympanic membranes, situated at the lower end of the
+trachea where it bifurcates. The bird's heart has four chambers and the right aortic arch gives
+rise to systemic aorta (unlike in the mammals where the left arch is involved). Postcava receives
+blood from the limbs via the renal portal system. Birds, unlike mammals, have nucleated
+erythrocytes, i.e. red blood cells which retain a nucleus.
+
+The digestive system of the bird is unique, involveing a crop for storage and a gizzard that
+contains swallowed stones for grinding food given the bird's lack of teeth. Most are highly
+adapted for rapid digestion, an adaptation to flight. Migratory birds have the additional ability
+to reduce parts of the intestines prior to migration.[16]
+
+The nervous system, relative to the bird's size, is actually quite large. The most developed part
+of the brain is the one that controls the flight related function while the cerebellum coordinates
+movement and the cerebrum controls behavior patterns, navigation, mating and nest building. A
+bird’s eyes are developed for taking off, spotting landmarks, hunting and feeding. Birds with
+eyes on the sides of their heads have a wide visual field while birds with eyes on the front of
+their heads like owls have binocular vision and can measure depth.[17] Most birds have a poor
+sense of smell with notable exceptions including kiwis,[18] vultures and the tubenoses.[19] The
+visual system is usually highly developed. Water birds have special flexible lenses, allowing
+accommodation for vision in air and water. Some species also have dual fovea. The bird retina has
+a fan shaped blood supply system called the pecten. The avian ear lacks external pinnae but is
+covered by feathers. The inner ear has a cochlea but it is not spiral as in mammals.
+
+Some birds use chemical defenses against predators. Some Procellariiformes can eject an unpleasant
+oil against an aggressor,[20] and some species of pitohui, found in New Guinea, secrete a powerful
+neurotoxin in their skin and feathers.[21]
+
+ Feathers and plumage
+===========================
+
+
+
+        Main article: Feather
+
+The plumage of the African Scops Owl allows it to blend in with its surroundings
+
+
+
+The one characteristic that distinguishes birds from all other living groups is the covering of
+feathers. Feathers are epidermal growths attached to the skin that serve a variety of functions to
+birds: they aid in thermoregulation by insulating birds from cold weather and water, they are
+essential to bird flight, and they are also used in display, camouflage and signalling. There are
+several different types of feather that serve different purposes. Feathers need maintenance, and
+birds preen or groom their feathers daily, using their bills to brush away foreign particles, and
+applying waxy secretions from the uropygial gland, which protects feather flexibility and also
+acts as an anti-microbial agent, inhibiting the growth of feather-degrading bacteria.[22] This may
+be supplemented with the secretions of formic acid from ants, which birds apply in a behaviour
+known as anting in order to remove feather parasites.[23]
+
+The arrangement and appearance of feathers on the body is known as plumage. Plumage is regularly
+moulted, the standard plumage of a bird that has moulted after breeding is known as the 'basic
+plumage', breeding plumages or variations of the basic plumage are known as 'alternate
+plumages'.[24]
+
+ Flight
+=============
+
+
+
+        Main article: Bird flight
+
+Flight characterizes most birds, and distinguishes them from almost all other vertebrates with the
+exception of mammalian bats and the extinct pterosaurs. As the main means of locomotion for most
+bird species, flight is used for breeding, feeding, and predator avoidance and escape. Birds have
+a variety of adaptations to flight, including a lightweight skeleton, two large flight muscles,
+the pectoralis (which accounts for 15% of the total mass of the bird) and the supercoracoideus and
+a modified forelimb (the wing) serving as an aerofoil. [25] Wing shape and size primarily
+determines the type of flight each species is capable of. Many birds combined powered or flapping
+flight with less energy intensive soaring flight. About 40 species of extant birds are flightless,
+many extinct birds were also flightless. Flightlessness often arises in birds on isolated islands,
+probably due to the lack of land predators and limited resources, which rewards the loss of costly
+unnecessary adaptations.[26] Penguins, while flightless, use similar musculature and movements to
+"fly" through the water, as do auks, shearwaters and dippers.[27]
+
+ Behaviour
+================
+
+
+Most birds are diurnal, but some birds, such as many species of owls and nightjars, are nocturnal
+or crepuscular (active during twilight hours), and many coastal waders feed when the tides are
+appropriate, by day or night.
+
+ Diet and Feeding
+=======================
+
+The South Polar Skua (left) is a generalist, taking the eggs of other birds, fish, carrion and
+other animals. This skua is attempting to push an Adelie Penguin (right) off its nest
+
+
+
+Birds feed on a variety of materials, including nectar, fruit[28] , plants [29], seeds [30],
+carrion[31], and various types of small animals including other birds [32]. Because birds have no
+teeth, the digestive system of birds is specially adapted to process deal with unmasticated food
+items that are usually swallowed whole.[25]
+
+Various feeding strategies are used by birds. Gleaning for insects, invertebrates, fruit and seeds
+is used by many species. Sallying from a branch and flycatching for insects is used by many
+songbirds. Nectar feeders such as hummingbirds [33], lorikeets, sunbirds [34], honeyeaters and
+some other songbirds is facilitated by specially adapted brushy tongues and in many cases bills
+designed to fit co-adapted flowers.[35] Probing for invertebrates is used by kiwis and shorebirds
+with long bills; in the case of shorebirds length of bill and feeding method allow niche
+separation.[25] [36] Pursuit diving is used by falcons and accipiters in the air, and by loons,
+diving ducks and penguins in the water. Plunge diving is used by sulids, kingfishers and terns.
+Three species of prion, the flamingos and some ducks are filter feeders.[37] [38] Geese and
+dabbling ducks are primarily grazers. Some species will engage in kleptoparasitism, stealing food
+items from other birds; frigatebirds, gulls [39], and skuas [40] employ this type of feeding
+behaviour. Kleptoparasitism is not thought to play a significant part of the diet of any species,
+and is instead a supplement to food obtained by hunting; a study of Great Frigatebirds stealing
+from Masked Boobies estimated that the frigatebirds could at most obtain 40% of the food they
+needed, and on average obtained only 5%.[41] Finally, some birds are scavengers such as gulls and
+vultures. Some birds may employ many strategies to obtain food or feed on a variety of food items
+and are called generalists [42], while others are considered specialists [43],concentrating time
+and effort on specific food items or having a single strategy to obtain food.
+
+ Migration
+================
+
+
+
+        Main article: Bird migration
+
+The routes of satellite tagged Bar-tailed Godwits migrating north from New Zealand. This species
+has the longest known non-stop migration of any species, up to 10,200 km
+
+
+
+Many bird species migrate to take advantage of global differences of seasonal temperatures to
+optimize availability of food sources and breeding habitat. These migrations vary among the
+different groups. Many landbirds, shorebirds and waterbirds undertake annual long distance bird
+migrations, usually triggered by length of daylight as well as weather conditions. It is
+characterized by species spending the warmer breeding season in temperate or arctic/antarctic
+regions, and the colder non breeding season in the tropical regions. Prior to migration birds
+substantially increase body fats and reserves and reduce the size of some of their organs.[44][16]
+Migration is highly energetically demanding, particularly as birds need to cross deserts and
+oceans without refuelling; landbirds have a flight range of around 2500 km and shorebirds can fly
+up to 4000 km,[25] although the Bar-tailed Godwit is capable of non-stop flights of up to 10,200
+km.[45] Seabirds also undertake long migrations, the longest annual migration being those of Sooty
+Shearwaters, which nest in New Zealand and Chile and spend the northern summer feeding in the
+North Pacific off Japan, Alaska and California, an annual round trip of 64,000?km.[46] Other
+seabirds disperse after breeding, travelling widely but having no set migration route. Albatrosses
+nesting in the Southern Ocean often undertake circumpolar trips between breeding seasons.[47]
+
+Birds also display other types of migration. Some species undertake shorter migrations, travelling
+only as far as is required to avoid bad weather or obtain food. These include irruptive species,
+which may be quite common some years and almost absent in others. This type of migration is
+normally associated with food availability.[48] Boreal finches, arctic owls, and waxwings are most
+commonly identified as irruptive species. Altitudinal migration is a form of short distance
+migration. Species may also travel shorter distances over part of their range, with individuals
+from higher latitudes traveling into the existing range of conspecifics, or undertake partial
+migrations, where only a fraction of the population, usually females and subdominant males,
+migrates.[49] Partial migration can form a large percentage of the migration bejhaviour of birds
+in some regions; in Australia found that 44% of non-passerine birds studied were partially
+migratory and 32% of passerines were.[50] Altitudinal migrants move from higher elevations to
+lower ones during suboptimal conditions. It is most often triggered by temperature changes and
+usually occurs when the normal territories become inhospitable also due to lack of food.[51] Some
+species may also be nomadic, holding no fixed territory and moving according to weather and food
+availability. Parrots as a family are overwhelmingly neither migratory nor sedentary but
+considered to either be dispersive, irruptive, nomadic or undertake small and irregular
+migration.[52]
+
+The ability of birds to return to precise locations across vast distances has been known for some
+time; in an experiment conducted in the 1950s a Manx Shearwater released in Boston returned to its
+colony in Skomer, Wales within 13 days, a distance of 5,150 kilometres (3,200?mi).[53] Birds
+navigate during migration using a variety of methods. For diurnal migrants the sun is used to
+navigate by, at night a stellar compass is used instead. Birds that use the sun compensate for the
+changing position of the sun during the day, by the use of an internal clock.[25] Orientation with
+the stellar compass depends on the position of the constellations surrounding Polaris.[54] These
+are backed up in some species with the ability to sense the Earth's geomagnetism through
+specialised sensitive photoreceptors.[55]
+
+ Communication
+====================
+
+
+Birds communicate principally using visual and auditory signals. Signals can be interspecific
+(between species) and intraspecific (within species).
+
+The display of the Sunbittern mimics a large potentially dangerous predator
+
+
+
+Visual communication in birds serves a number of functions and is manifested in both the bird's
+plumage and behaviour. Plumage can be used to assess and assert social dominance,[56] display
+breeding condition in sexually selected species, even create a threatening display, such as the
+threat display of the Sunbittern, which mimics a potentially large predator. This display has is
+used to ward of potential predators such as hawks, and protect young chicks.[57] Variation in
+plumage also allows for identification, particularly between species.
+
+Visual communication also includes displays. These usually consist or ritualised behaviour, and
+are used to signal aggression and submission or are used in the formation of pair bonds. These
+ritualised behaviours develop from non-signalling actions such as preening, adjustments of feather
+position, pecking or other behaviours. The most elaborate displays are displayed during courtship,
+particularly the breeding dances of the albatrosses, where the successful formation of a life long
+pair bond requires both partners to develop and learn an unique dance,[58] and the
+birds-of-paradise, where the breeding success of males depends on plumage and display quality.[59]
+Male birds can also demonstrate their fitness through construction; female weavers like the Baya
+Weavers chose mates dependent on the nest-building skills of males,[60] and numerous species of
+bowerbird attract mates using bowers decorated with bright objects.[61]
+
+In addition to visual communication, birds are renowned for their auditory communication. Calls,
+and in some species song, are the major means by which bird communicate with sound; however some
+birds also create mechanical sounds, for example driving air thorugh their feathers, as do the
+Coenocorypha snipes of New Zealand,[62], the territorial drumming of woodpeckers or use of tools
+to drum in Palm Cockatoos.[63] Bird calls and songs can e very complex; sounds are created in the
+syrinx, and in some species both sides can be operated seperately, resulting in two different
+songs being produced at the same time. Calls are used for a number of purposes, and several
+purposes can be tied into an individual song. They are used to advertise when looking for a mate,
+the either to attract a mate, aid identification of potential mates or aid in bond formation
+(often with combined with visual communication), they can also be used to claim a territory. Calls
+can also be used to identify individual identity, aiding parents in finding chicks in crowded
+colonies or adults reuniting with mates at the start of the breeding season. They can also be used
+to warn other birds of potential predators; calls of this nature can be highly detailed and convey
+highly specific information about the nature of the threat.[64]
+
+
+* House Wren call (file info) — play in browser (beta)
+  o The call of the House Wren, a common songbird from North America
+  o Problems listening to the file? See media help.
+
+ Breeding
+===============
+
+These Redwing hatchlings are completely dependent on parental care
+
+ Courtship
+================
+
+
+Breeding usually involve some type of courtship display, most often performed by the male.[65]
+Most are rather simple, and usually involve some type of song. Some displays can be quite
+elaborate, using such varied methods as tail and wing drumming, dancing, aerial flights, and
+communal leks depending on the species. Females are most often involved with partner
+selection.[66] Courtship feeding, billing and preening are commonly performed between partners,
+most often after birds have been paired and mated.[67]
+
+ Social systems
+=====================
+
+
+The three mating systems that predominate among birds are monogamy (seen in approximately 91% of
+bird species), polygyny (2%) and polyandry (< 1%). Monogamous species of males and females pair
+for the breeding season. In some cases, the individuals may pair for life.
+
+One reason for the high rate of monogamy among birds is the fact that male birds are just as adept
+at parental care as females. In most groups of animals, male parental care is rare, but in birds
+it is quite common; in fact, it is more extensive in birds than in any other vertebrate class. In
+birds, male care can be seen as important or essential to female fitness. "In one form of monogamy
+such as with obligate monogamy a female cannot rear a litter without the aid of a male".[68]
+
+The parental behavior most closely associated with monogamy is male incubation. Interestingly,
+male incubation is the most confining male parental behavior. It takes time and also may require
+physiological changes that interfere with continued mating. This extreme loss of mating
+opportunities leads to a reduction in reproductive success among incubating males. Gowaty (1983)
+notes that "This information then suggests that sexual selection may be less intense in taxa where
+males incubate, hypothetically because males allocate more effort to parental care and less to
+mating".[69] In other words, in bird species in which male incubation is common, females tend to
+select mates on the basis of parental behaviors rather than physical appearance.
+
+ Territories, nesting and incubation
+==========================================
+
+
+Many birds actively defend a territory from others of the same species during the breeding season.
+Large territories are protected in order to protect the food source for their chicks. Species that
+are unable to defend feeding territories, such as seabirds and swifts, often breed colonially
+instead, which is thought to offer protection from predators. Colonial breeders will defend small
+nesting sites, and competition between and within species for nesting sites can be intense.[70]
+
+The nesting colonies of the Social Weaver are amongst the largest bird-created structures
+
+
+
+All birds lay amniotic eggs[71] with hard shells made mostly of calcium carbonate. The colour of
+eggs is controlled by a number of factors, those of hole and burrow nesting species tend to be
+white or pale, while those of open nesters such as Charadriiformes are camouflaged. Many bird
+species do not conform to this, however; the ground nesting nightjars have pale eggs, camouflage
+being provided instead by the bird's plumage. Species that are victims of brood parasites like the
+Dideric Cuckoo will vary their egg colours in order to improve the chances of spotting a cuckoo's
+egg, and female cuckoos need to match their eggs to their hosts.[72]
+
+The eggs are usually laid in a nest, which can be highly elaborate, like those created by weavers
+and oropendolas, or extremely primitive, like some albatrosses, which are no more than a scrape on
+the ground. Some species have no nest, the cliff nesting Common Guillemot lays its egg on bare
+rock and the egg of the Emperor Penguin is kept between the body and feet; this is especially
+prevalent in ground nesting species where the newly hatched young are precocial. Most species
+build more elaborate nests, which can be cups, domes, plates, beds scrapes, mounds or burrows.[73]
+Most nests are built in shelter and hidden to reduce the risk of predation, more open nests are
+usually colonial or built by larger birds capable of defending the nest. Nests are mostly built
+out of plant matter, some species specifically select plants such as yarrow which have chemicals
+that reduce nesting parasites such as mites, leading to increased chick survival.[74] Nests are
+often lined with feathers in improve the retention of heat.
+
+Incubation, which regulates of temperature to keep it optimum for chick development, usually
+begins after the last egg has been laid. Incubation duties are often shared in monogamous species,
+in polygamous species a singe parent undertakes all duties. Warmth from parents passes to the eggs
+through brood patches, areas of bare skin on the abdomen or breast of the incubating birds.
+Incubation can be an energetically demanding process, for example adult albatrosses lose as much
+as 83 g of body weight a day.[75] Incubation periods last between 10 days (in species of
+woodpeckers, cuckoos and passerine birds) to over 80 days (in albatrosses and kiwis).
+
+ Parental care and fledging
+=================================
+
+The altricial chicks of the Richard's Pipit have bright mouths to stimulate feeding
+
+
+
+Chicks can be helpless or independent at birth, or be at any stage in between. The helpless chicks
+are known as altricial, and tend to be born, small, naked and blind; chicks that are mobile and
+feathered at birth are precocial, chicks can also be semi-prcocial and semi-altricial. Altricial
+chicks require help in thermoregulation and need to be brooded for longer than prococial chicks.
+
+The length and nature of parental care varies widely amongst different orders and species. At one
+extreme parental care in megapodes ends at hatching, with the chick being able to care for itself
+immediately.[76] At the other extreme many seabirds have extended periods of parental care, the
+longest being Great Frigatebird, the chicks of which taking up to six months to fledge and being
+fed by the parents for up to 14 months after that.[77]
+
+In some species the care of young is shared between both parents, in other species it is the
+responsibility of just one sex. In some species other members of the same species will help the
+breeding pair in raising the young. These helpers are usually close relatives such as the chicks
+of the breeding pair from previous breeding seasons.[78] Alloparenting is particularly common in
+the corvids, but has been observed in as different species as the Rifleman, Red Kite and
+Australian Magpie.
+
+This Reed Warbler is rasing the young of a Common Cuckoo, a brood parasite
+
+
+
+The point at which chicks fledge varies dramatically. The chicks of the Synthliboramphus
+murrelets, like the Ancient Murrelet, leave the nest the night after they hatch, following their
+parents calls out to sea, where they are raised away from terrestrial predators.[79] Some other
+species, especially ducks, move their chicks away from the nest at an early age. In most species
+chicks leave the nest soon after, or just before, they are able to fly. Parental care after
+fledging varies; in albatrosses chicks leave the nest alone and recieve no further help, other
+species continue some supplementary feeding after fledging. Chicks may also follow their parents
+during their first migration.
+
+ Brood parasites
+======================
+
+
+
+        Main article: Brood parasite
+
+Although some insects and fish engage in brood parasitism, most brood parasites are birds. Brood
+parasites are birds which lay their eggs in the nests of other birds. These eggs are often
+accepted and raised by the host species, often at the cost of their own brood. There are two kinds
+of brood parasite, obligate brood parasites, which are incapable of raising their own young and
+must lay their eggs in the nests of other species; and non-obligate brood parasites, which are
+capable of raising their own young but lay eggs in nests of conspecifics in order to increase its
+reproductive output. The most famous obligate brood parasites are the cuckoos, although in total
+100 species of cuckoo, honeyguide, icterid, estrildid finch and duck are obligate parasites.[80]
+Some brood parasites are adapted to hatching before their hosts and pushing their hosts eggs out
+of the nest, ensuring that all the food brought to the nest is fed to them.
+
+ Relationship with humans
+===============================
+
+Chickens in a coop
+
+
+
+Birds are highly visible and common animals and humans have had a long relationship with them. In
+some cases the relationship has been mutualistic, such as the cooperative relationship between
+honeyguides and tribesmen in obtaining honey,[81] or commensal, as found in the numerous species
+that benefit indirectly from human activities. For example, the common pigeon or Rock Pigeon
+thrives in urban areas around the world. Human effects can also be detrimental, where species are
+threatened by human activities.
+
+Birds also have many effects on humans. They can act as vectors for diseases spreading
+psittacosis, salmonellosis, campylobacteriosis, mycobacteriosis (avian tuberculosis), avian
+influenza (bird flu), giardiasis, and cryptosporidiosis. They can also be commercially important
+pests. The are also important food and income sources.
+
+ Birds and humans
+=======================
+
+
+Birds are an important food source for humans. The most commonly eaten species is the domestic
+chicken and its eggs, although geese, pheasants, turkeys, ducks and quail are also widely eaten.
+Fowl grown for human consumption are referred to as poultry. Hunting has also been an important
+method of obtaining birds for food, and in the past led to several bird extinctions.
+
+Besides meat and eggs, birds provide other items useful to humans, including feathers for bedding
+and decoration, guano-derived phosphorus and nitrogen used in fertilizer and gunpowder, and the
+central ingredient of bird's nest soup.
+
+Cormorants used by fishermen in Southeast Asia
+
+
+
+Other birds have long been used by humans to perform tasks. Falcons are still used for hunting,
+while cormorants are employed by fishermen. Chickens and pigeons are popular as experimental
+subjects, and are often used in biology and comparative psychology research. Birds are among the
+most extensively studied of all animal groups. The scientific study of birds is called
+ornithology. Hundreds of academic journals and thousands of scientists are devoted to bird
+research, while amateur enthusiasts (called birdwatchers, twitchers or, more commonly, birders)
+number in the millions.
+
+Domesticated colour variety of Budgerigars
+
+
+
+Colorful, particularly tropical, birds (e.g. parrots, and mynas) are often kept as pets although
+this practice has led to the illegal trafficking of some endangered species; CITES, an
+international agreement adopted in 1963, has considerably reduced trafficking in the bird species
+it protects.
+
+Many homeowners erect bird feeders near their homes to attract various species to their yards.
+Bird feeding has grown into a multimillion dollar industry; for example an estimated 75% of
+households in Britain provide food for birds at some point during the winter.[82]
+
+ Birds in popular culture
+===============================
+
+
+Birds feature prominently in folklore and popular culture. They generally tend to be portrayed as
+benign with hidden talents. Examples include Big Bird, Woodstock, Woody Woodpecker, and Donald and
+Daffy Duck. Sometimes, birds are associated with a darker side, as exemplified by Edgar Allan
+Poe's poem The Raven, the comic book series The Crow, or the appearance of various nocturnal owl
+species during frightening moments in television and movies. Most often eagles and hawks appear as
+regal characters, with the former often used as a national symbol for various countries. The
+cuckoo clock remains a popular timepiece. The clocks hourly signal is made to imitate the call of
+Europes Common Cuckoo. Various musical groups have been named after birds such as the Eagles, the
+Fabulous Thunderbirds and Flock of Seagulls. Feature length movies with birds as the predominant
+theme include Alfred Hitchcock's The Birds, The Birdman of Alcatraz, Winged Migration, March of
+the Penguins, and Happy Feet. Professional and school athletic teams have used birds as mascots.
+Birds have been referenced throughout literature, music and mythology. Many automobiles have been
+named after birds.
+
+ Conservation
+===================
+
+
+
+        Main article: Bird conservation
+
+This Black-browed Albatross has been hooked on a long-line
+
+
+
+Humans have had a large impact on many bird species. Human activities have in some cases allowed
+some species to dramatically expand their natural ranges, in other species ranges have decreased
+and have even resulted in many extinction. Over a hundred species have gone extinct in historical
+times, although the most dramatic extinctions occurred in the Pacific Ocean as humans colonised
+the islands of Melanesia, Polynesia and Micronesia, during which an estimated 750-1800 species of
+bird went extinct.[83] According to Worldwatch Institute, many bird populations are currently
+declining worldwide, with 1,200 species facing extinction in the next century.[84] The biggest
+cited reason surrounds habitat loss.[85] Other threats include overhunting, accidental mortality
+due to structural collisions and as long-line fishing bycatch, pollution, competition and
+predation by nonnative invasive species,[86] oil spills and pesticide use and climate change.
+Governments, along with numerous conservation charities, work to protect birds, either through
+laws to protect birds, preserving and restoring bird habitat or establishing captive populations
+for reintroductions.
+
+See Late Quaternary prehistoric birds for taxa which disappeared in prehistoric and early historic
+times, usually due to human activity (i.e., starting with the Upper Paleolithic Revolution). For
+birds having gone extinct in modern times (since 1500), see Extinct birds.
+

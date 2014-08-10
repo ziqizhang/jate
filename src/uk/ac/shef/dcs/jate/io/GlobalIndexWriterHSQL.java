@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * This is a helper class to output in-memory GlobalIndex objects to database HSQL persistence
  *
- * Outputting jate term extraction data as database is no longer supported. the current hsql database outputter can still be used but code will not be maintained
+ * Outputting jate term extraction data as database is no longer supported. the current hsql database outputter can still be used with hsqldb2.2.3 but code will not be maintained
  */
 @Deprecated public class GlobalIndexWriterHSQL {
     private static Connection conn;
