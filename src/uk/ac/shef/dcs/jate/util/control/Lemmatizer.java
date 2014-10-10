@@ -61,6 +61,9 @@ public class Lemmatizer extends Normalizer {
 	 * @return
 	 */
 	public String normalize(String value) {
+        if(value.length()==0)
+            return value;
+
         value=value.toLowerCase();
         int position = findJWNLDictionaryTokenSeparator(value);
         if(position==0){

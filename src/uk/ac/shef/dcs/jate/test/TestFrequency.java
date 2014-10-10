@@ -77,8 +77,8 @@ public class TestFrequency {
 			Lemmatizer lemmatizer = new Lemmatizer();
 
 			//noun phrase extractor
-			CandidateTermExtractor npextractor = new NounPhraseExtractorOpenNLP(stop, lemmatizer);
-            //CandidateTermExtractor npextractor = new VerbPhraseExtractorOpenNLP(stop, lemmatizer);
+			//CandidateTermExtractor npextractor = new NounPhraseExtractorOpenNLP(stop, lemmatizer);
+            CandidateTermExtractor npextractor = new VerbPhraseExtractorOpenNLP(stop, lemmatizer);
 
 			//counters
 			TermFreqCounter npcounter = new TermFreqCounter();
