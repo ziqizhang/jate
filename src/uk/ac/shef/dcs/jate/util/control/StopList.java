@@ -17,7 +17,8 @@ import java.io.FileReader;
 
 public class StopList extends HashSet<String> {
 
-	private boolean _caseSensitive;
+    private static final long serialVersionUID = -7758099706526554666L;
+    private boolean _caseSensitive;
 
 	/**
 	 * Creates an instance of stop word list
@@ -25,10 +26,19 @@ public class StopList extends HashSet<String> {
 	 * @throws IOException
 	 */
 	public StopList (final boolean caseSensitive) throws IOException {
+	    this(caseSensitive, "en-stoplist.txt");
+	}
+	
+	/**
+	 * Creates an instance of stop word list
+	 * @param caseSensitive whether the list should ignore cases
+	 * @throws IOException
+	 */
+	public StopList (final boolean caseSensitive, String filename) throws IOException {
 		super();
 		_caseSensitive =caseSensitive;
 		loadStopList(new File(
-				JATEProperties.getInstance().getNLPPath()+"/stoplist.txt"),_caseSensitive);
+				JATEProperties.getInstance().getNLPPath()+"/" + filename),_caseSensitive);
 	}
 
 	/**
@@ -49,6 +59,7 @@ public class StopList extends HashSet<String> {
          if(lowercase) this.add(line.toLowerCase());
 	      else this.add(line);
       }
+      reader.close();
    }
 
 }

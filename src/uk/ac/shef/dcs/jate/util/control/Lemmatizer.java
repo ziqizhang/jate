@@ -31,8 +31,12 @@ public class Lemmatizer extends Normalizer {
     private JWNLDictionary dict;
 
 	public Lemmatizer() throws IOException, JWNLException {
-		init();
+		init("wordnet_dict");
 	}
+	
+        public Lemmatizer(String wordnetDict) throws IOException, JWNLException {
+            init(wordnetDict);
+    }
 
 	/**
 	 * @param word a single word
@@ -126,8 +130,8 @@ public class Lemmatizer extends Normalizer {
 	}
 
 
-	private void init() throws IOException, JWNLException {
-		dict = new JWNLDictionary(JATEProperties.getInstance().getNLPPath()+"/wordnet_dict");
+	private void init(String wordnetDict) throws IOException, JWNLException {
+		dict = new JWNLDictionary(JATEProperties.getInstance().getNLPPath() + "/" + wordnetDict);
 	}
 
 }

@@ -5,7 +5,9 @@ package uk.ac.shef.dcs.jate;
 
 public class JATEException extends Exception {
 
-	public JATEException(String exception){
+    private static final long serialVersionUID = 7625049137946095304L;
+
+    public JATEException(String exception){
 		super(exception);
 	}
 

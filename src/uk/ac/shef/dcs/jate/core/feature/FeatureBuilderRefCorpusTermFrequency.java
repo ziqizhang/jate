@@ -55,6 +55,7 @@ public class FeatureBuilderRefCorpusTermFrequency extends AbstractFeatureBuilder
 				if(Integer.valueOf(elements[0])<2) continue;
 				_feature.addToTermFreq(elements[1].trim(), Integer.valueOf(elements[0]));
 			}
+			reader.close();
 
 		}
 		catch(Exception e){e.printStackTrace();}

@@ -33,6 +33,7 @@ public class Voting {
 				result.add(new Term(elements[0],0));
 				//result.add(new Term(elements[0], Double.valueOf(elements[1])));
 			}
+			reader.close();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
