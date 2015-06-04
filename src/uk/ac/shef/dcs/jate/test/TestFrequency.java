@@ -34,9 +34,7 @@ import java.util.regex.Pattern;
  * DESCRIPTIONS
  * </p>
  *
- * @Author: Ziqi Zhang
- * @Email: z.zhang@dcs.shef.ac.uk
- * @Organisation: University of Sheffield
+ * @author: Ziqi Zhang
  */
 public class TestFrequency {
 

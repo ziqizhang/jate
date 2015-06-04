@@ -13,7 +13,7 @@ import uk.ac.shef.dcs.jate.core.feature.indexer.GlobalIndex;
  * A specific type of feature builder that builds an instance of FeatureTermNest from a GlobalIndex.
  * Counting of term nested frequency is based on <b>canonical forms</b>.
  *
- *  <br>Also credits to <b>pmclachlan@gmail.com</b> for revision for performance tweak </br>
+ *  <br>Also credits to <b>pmclachlan@gmail.com</b> for revision for performance tweak <br>
  *
  * @author <a href="mailto:z.zhang@dcs.shef.ac.uk">Ziqi Zhang</a>
  */

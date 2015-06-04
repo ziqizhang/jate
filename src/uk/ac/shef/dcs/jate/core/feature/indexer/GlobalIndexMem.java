@@ -14,13 +14,13 @@ import java.util.*;
  * <br>- corpus elements (document) and their int ids
  * <br>- candidate term and their containing documents (id - ids)
  * <br>- document ids and their contained candidate terms (id - ids)
- * <p/>
+ * <br>
  * In other words, a GlobalIndexMem contains mappings from a candidate term to its id, mappings from a candidate
  * term's canonical form to its variants found in the corpus,  a document to its id,
  * a lexical unit id to the document ids that contain the unit, a document id to the lexical unit ids which the document
  * contains.
- * <p/>
- * <br>Also credits to <b>pmclachlan@gmail.com</b> for revision for performance tweak </br>
+ * <br>
+ * <br>Also credits to <b>pmclachlan@gmail.com</b> for revision for performance tweak <br>
  *
  * @author <a href="mailto:z.zhang@dcs.shef.ac.uk">Ziqi Zhang</a>
  */

@@ -18,12 +18,6 @@ public class RAKEFeatureWrapper extends AbstractFeatureWrapper {
 		_CandidateTerms = new ArrayList<String>();
 		_CandidateTerms.addAll(candidates);
 	}
-
-	/**
-	 * @param term
-	 * @return number of occurrences of a term in a corpus. If a term cannot be found it always returns 1.
-	 */
-
 	
 	@Override
 	public Set<String> getTerms() {

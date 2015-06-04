@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * A feature store that contains information of nested terms. E.g., "hedgehog" is a
  * nested term in "European hedgehog". See details in K. Frantz et al 2000. This contains following information:
- * <p/>
+ * <br>
  * <br>- total number of occurrences of all terms found in the corpus, which is the sum of occurrences of each term
  * <br>- number of occurrences of each term found in the corpus
  *

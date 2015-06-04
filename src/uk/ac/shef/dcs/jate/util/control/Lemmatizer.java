@@ -19,7 +19,7 @@ public class Lemmatizer extends Normalizer {
     /**
      * The current OPENNLP implements a dictionary based lemmatizer. This lemmatizer seems to cause problem when the string
      * contains white space, separator characters such as '-'. It simply removes the part before the separator char
-     * and only lemmatizes the remaining part and returns the result (e.g., pre-schoolers => schooler).
+     * and only lemmatizes the remaining part and returns the result (e.g., pre-schoolers =&gt; schooler).
      * So the pre-part is missing. To work around this problem we firstly check if an input string contains potential
      * token separators. If so, the string is split at the *last* token separator into two parts. The first part
      * is kept as-is, the last part is lemmatized. Then the result is reconstructed by the first part plus the
@@ -54,7 +54,7 @@ public class Lemmatizer extends Normalizer {
     /**
      * The current OPENNLP implements a dictionary based lemmatizer. This lemmatizer seems to cause problem when the string
      * contains white space, separator characters such as '-'. It simply removes the part before the separator char
-     * and only lemmatizes the remaining part and returns the result (e.g., pre-schoolers => schooler).
+     * and only lemmatizes the remaining part and returns the result (e.g., pre-schoolers =&gt; schooler).
      * So the pre-part is missing. To work around this problem we firstly check if an input string contains potential
      * token separators. If so, the string is split at the *last* token separator into two parts. The first part
      * is kept as-is, the last part is lemmatized. Then the result is reconstructed by the first part plus the
@@ -93,7 +93,7 @@ public class Lemmatizer extends Normalizer {
     /**
      * The current OPENNLP implements a dictionary based lemmatizer. This lemmatizer seems to cause problem when the string
      * contains white space, separator characters such as '-'. It simply removes the part before the separator char
-     * and only lemmatizes the remaining part and returns the result (e.g., pre-schoolers => schooler).
+     * and only lemmatizes the remaining part and returns the result (e.g., pre-schoolers =&gt; schooler).
      * So the pre-part is missing. To work around this problem we firstly check if an input string contains potential
      * token separators. If so, the string is split at the *last* token separator into two parts. The first part
      * is kept as-is, the last part is lemmatized. Then the result is reconstructed by the first part plus the

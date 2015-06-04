@@ -118,7 +118,7 @@ public abstract class CandidateTermExtractor {
 
     /**
      * If a string beings or ends with a stop word (e.g., "the"), the stop word is removed.
-     * <p/>
+     * <br>
      * This method is used to further process/normalize extracted candidate terms. Due to imperfections of NLP tools,
      * sometimes candidate terms can be noisy and needs further normalization.
      *
