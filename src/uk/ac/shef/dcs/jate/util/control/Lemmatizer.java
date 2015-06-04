@@ -69,6 +69,9 @@ public class Lemmatizer extends Normalizer {
             return value;
 
         value=value.toLowerCase();
+        if (value.endsWith(".")) {
+            return value.replaceAll("[\\.]+$", "");
+        }
         int position = findJWNLDictionaryTokenSeparator(value);
         if(position==0){
             return getLemma(value,"NNP");
