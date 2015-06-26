@@ -52,7 +52,7 @@ public class GlobalIndexBuilderMem implements GlobalIndexBuilder{
 	
 	
 	
-	public GlobalIndexMem build(Corpus c, CandidateTermExtractor extractor) throws JATEException {
+	public synchronized GlobalIndexMem build(Corpus c, CandidateTermExtractor extractor) throws JATEException {
 		GlobalIndexMem _index = new GlobalIndexMem();
 		for (Document d : c) {
 			_logger.info("For Document " + d);

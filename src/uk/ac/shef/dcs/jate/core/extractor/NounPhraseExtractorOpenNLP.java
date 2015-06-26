@@ -46,7 +46,7 @@ public class NounPhraseExtractorOpenNLP extends CandidateTermExtractor {
         
     }
 
-    public Map<String, Set<String>> extract(Corpus c) throws JATEException {
+    public synchronized Map<String, Set<String>> extract(Corpus c) throws JATEException {
         Map<String, Set<String>> res = new HashMap<String, Set<String>>();
         for (Document d : c) {
             _logger.info("Extracting candidate NP... From Document " + d);
@@ -63,7 +63,7 @@ public class NounPhraseExtractorOpenNLP extends CandidateTermExtractor {
     
     //modified part begins..the first function only commented and the rest are new implementations
 
-    public Map<String, Set<String>> extract(Document d) throws JATEException {
+    public synchronized Map<String, Set<String>> extract(Document d) throws JATEException {
         Map<String, Set<String>> res = new HashMap<String, Set<String>>();
         try {
             for (String s : NLPToolsControllerOpenNLP.getInstance().getSentenceSplitter().sentDetect(d.getContent())) {
@@ -102,7 +102,7 @@ public class NounPhraseExtractorOpenNLP extends CandidateTermExtractor {
     */
 
 
-    public Map<String, Set<String>> extract(String[] candidates) throws JATEException {
+    public synchronized Map<String, Set<String>> extract(String[] candidates) throws JATEException {
         Map<String, Set<String>> nouns = new HashMap<String, Set<String>>(); 
         for (String c : candidates) {
         	
@@ -151,7 +151,7 @@ public class NounPhraseExtractorOpenNLP extends CandidateTermExtractor {
     
 
 
-    public Map<String, Set<String>> extract(String content) throws JATEException {
+    public synchronized Map<String, Set<String>> extract(String content) throws JATEException {
       //  System.out.println(content+ "||" );
     	Map<String, Set<String>> nouns = new HashMap<String, Set<String>>();
         try {
@@ -196,7 +196,7 @@ public class NounPhraseExtractorOpenNLP extends CandidateTermExtractor {
         return nouns;
     }
 
-    private String[] chunkNPs(String[] tokens, String[] pos) throws IOException {
+    private synchronized String[] chunkNPs(String[] tokens, String[] pos) throws IOException {
         String[] phrases = NLPToolsControllerOpenNLP.getInstance().getPhraseChunker().chunk(tokens, pos);
        /* for(int i=0;i<phrases.length;i++){
         	System.out.println(tokens[i]+ " "+ phrases[i]);

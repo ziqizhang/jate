@@ -51,33 +51,39 @@ public class NLPToolsControllerOpenNLP {
         _sentDetect = new SentenceDetectorME(sentModel);
 	}
 	
-        public static NLPToolsControllerOpenNLP setInstance(NLPToolsControllerOpenNLP nlp) throws IOException {
+        public synchronized static NLPToolsControllerOpenNLP setInstance(NLPToolsControllerOpenNLP nlp) throws IOException {
             _ref = nlp;
             return _ref;
         }
 
-	public static NLPToolsControllerOpenNLP getInstance() throws IOException {
-		if(_ref ==null) _ref=new NLPToolsControllerOpenNLP();
-		return _ref;
+	public synchronized static NLPToolsControllerOpenNLP getInstance() throws IOException {
+	    try {
+		if (_ref ==null) {
+		    _ref=new NLPToolsControllerOpenNLP();
+		}
+	    } catch (Exception e) {
+	        //nothing, opennlp.tools.util.Cache create a null exception at first use in multi threaded env
+	    }
+	    return _ref;
 	}
 
 	public Object clone() throws CloneNotSupportedException {
       throw new CloneNotSupportedException();
    }
 
-	public POSTagger getPosTagger() {
+	public synchronized POSTagger getPosTagger() {
 		return _posTagger;
 	}
 
-	public Chunker getPhraseChunker() {
+	public synchronized Chunker getPhraseChunker() {
 		return _npChunker;
 	}
 
-	public SentenceDetector getSentenceSplitter() {
+	public synchronized SentenceDetector getSentenceSplitter() {
 		return _sentDetect;
 	}
 
-	public Tokenizer getTokeniser() {
+	public synchronized Tokenizer getTokeniser() {
 		return _tokenizer;
 	}
 }
