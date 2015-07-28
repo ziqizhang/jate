@@ -51,12 +51,13 @@ public class NounPhraseExtractorOpenNLP extends CandidateTermExtractor {
         for (Document d : c) {
             _logger.info("Extracting candidate NP... From Document " + d);
             for (Map.Entry<String, Set<String>> e : extract(d).entrySet()) {
-                Set<String> variants = res.get(e.getKey());
+                Set<String> variants = res.get(Normalizer.basicNormalize(e.getKey()));
                 variants = variants == null ? new HashSet<String>() : variants;
                 variants.addAll(e.getValue());
                 res.put(e.getKey(), variants);
             }
         }
+
         return res;
     }
     
@@ -68,10 +69,20 @@ public class NounPhraseExtractorOpenNLP extends CandidateTermExtractor {
         try {
             for (String s : NLPToolsControllerOpenNLP.getInstance().getSentenceSplitter().sentDetect(d.getContent())) {
                 for (Map.Entry<String, Set<String>> e : extract(s).entrySet()) {
-                    Set<String> variants = res.get(e.getKey());
+                    
+                    final String key = Normalizer.basicNormalize(e.getKey());
+                    if (_stoplist.isStopWord(key)) {
+                        continue;
+                    }
+                    
+                    Set<String> variants = res.get(key);
                     variants = variants == null ? new HashSet<String>() : variants;
-                    variants.addAll(e.getValue());
-                    res.put(e.getKey(), variants);
+                    for (String v : e.getValue()) {
+                        if (!v.equals(key)) {
+                            variants.add(v);
+                        }
+                    }
+                    res.put(key, variants);
                 }
             }
         } catch (IOException e) {
@@ -165,9 +176,8 @@ public class NounPhraseExtractorOpenNLP extends CandidateTermExtractor {
                 for (String str : e) {
                     String stopremoved = applyTrimStopwords(str, _stoplist, _normaliser, true,true);
                     if (stopremoved == null) continue;
-                    String original = stopremoved;
-                    str = _normaliser.normalize(stopremoved.toLowerCase()).trim();
-
+                    str = Normalizer.basicNormalize(stopremoved);
+                    
                     String[] nelements = str.split("\\s+");
                     if (nelements.length < 1 || nelements.length >
                             Integer.valueOf(JATEProperties.getInstance().getMaxMultipleWords()))
@@ -183,7 +193,7 @@ public class NounPhraseExtractorOpenNLP extends CandidateTermExtractor {
                     	
                         Set<String> variants = nouns.get(str);
                         variants = variants == null ? new HashSet<String>() : variants;
-                        variants.add(original);
+                        variants.add(stopremoved);
                         nouns.put(str, variants);
                     }
                 }

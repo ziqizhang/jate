@@ -3,7 +3,6 @@ package uk.ac.shef.dcs.jate.util.control;
 import net.didion.jwnl.JWNLException;
 import opennlp.tools.coref.mention.JWNLDictionary;
 import uk.ac.shef.dcs.jate.JATEProperties;
-
 import java.io.IOException;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -29,14 +28,27 @@ public class Lemmatizer extends Normalizer {
      */
     protected static final Pattern JWNLDICTIONARY_POSSIBLE_TOKEN_SEPARATOR = Pattern.compile("[\\-\\.\\s+]");
     private JWNLDictionary dict;
+    private final boolean useDict;
 
 	public Lemmatizer() throws IOException, JWNLException {
 		init("wordnet_dict");
+		this.useDict = true;
 	}
 	
+        public Lemmatizer(String wordnetDict, boolean useDict) throws IOException, JWNLException {
+            init(wordnetDict);
+            this.useDict = useDict;
+    }
+        
         public Lemmatizer(String wordnetDict) throws IOException, JWNLException {
             init(wordnetDict);
+            this.useDict = true;
     }
+        
+        public boolean useDict()
+        {
+            return this.useDict;
+        }
 
 	/**
 	 * @param word a single word
@@ -67,23 +79,22 @@ public class Lemmatizer extends Normalizer {
 	public String normalize(String value) {
         if(value.length()==0)
             return value;
-
-        value=value.toLowerCase();
-        if (value.endsWith(".")) {
-            return value.replaceAll("[\\.]+$", "");
+        
+        if (this.useDict) {
+            int position = findJWNLDictionaryTokenSeparator(value);
+            if(position==0){
+                return getLemma(value,"NNP").trim();
+            }
+            else{
+                String part1 = value.substring(0,position);
+                String part2 = value.substring(position);
+                if(part2.length()>0) //should always be true otherwise somewhere there is a bug
+                    part2 = getLemma(part2,"NNP");
+                return (part1+part2).trim();
+            }
+        } else {
+            return value;
         }
-        int position = findJWNLDictionaryTokenSeparator(value);
-        if(position==0){
-            return getLemma(value,"NNP");
-        }
-        else{
-            String part1 = value.substring(0,position);
-            String part2 = value.substring(position);
-            if(part2.length()>0) //should always be true otherwise somewhere there is a bug
-                part2 = getLemma(part2,"NNP");
-            return part1+part2.trim();
-        }
-
 		/*if(position==-1||value.endsWith(" s")||value.endsWith("'s")) //if string is a single word, or it is in "XYZ's" form where the ' char has been removed
 			return getLemma(value,"NNP");
 

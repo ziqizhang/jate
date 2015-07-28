@@ -9,7 +9,6 @@ import uk.ac.shef.dcs.jate.core.extractor.VerbPhraseExtractorOpenNLP;
 import uk.ac.shef.dcs.jate.core.feature.FeatureBuilderCorpusTermFrequency;
 import uk.ac.shef.dcs.jate.core.feature.FeatureCorpusTermFrequency;
 import uk.ac.shef.dcs.jate.core.feature.indexer.GlobalIndexMem;
-import uk.ac.shef.dcs.jate.core.extractor.NounPhraseExtractorOpenNLP;
 import uk.ac.shef.dcs.jate.io.ResultWriter2File;
 import uk.ac.shef.dcs.jate.model.CorpusImpl;
 import uk.ac.shef.dcs.jate.model.Term;
@@ -26,8 +25,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * <p>

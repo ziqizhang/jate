@@ -23,4 +23,25 @@ public abstract class Normalizer {
 	 * @return
 	 */
 	public abstract String normalizeContent(String content);
+	
+	public static String basicNormalize(String value)
+	{
+	    if (value.length() == 0) {
+	        return value;
+	    }
+	    //to lower case
+	    value = value.toLowerCase();
+	    //FR cleaning, remove begin : d', l'
+	    value = value.replaceAll("^[l|d]{1}[ ]{0,1}[']{1}", "");
+	    //EN cleaning, remove end : 's, 't, 'd,
+	    value = value.replaceAll("[']{1}[s|t|d]{1}$", "");
+	    //COMMON cleaning, remove punctuation at end of a word
+	    value = value.replaceAll("[.'%-]+$", "");
+	    //remove unnecessary spaces
+	    value = value.replace("- ", "");
+	    value = value.replace(" -", "");
+	    //trim to remove unnecessary spaces
+	    value = value.trim();
+	    return value;
+	}
 }

@@ -14,7 +14,7 @@ public class JATEProperties {
 
     //public static final String NP_FILTER_PATTERN = "[^a-zA-Z0-9\\-]";
     //replaced by the following var:
-    public static final String TERM_CLEAN_PATTERN = "[^\\p{L}0-9|.|'|’|%|\\-]";
+    public static final String TERM_CLEAN_PATTERN = "[^\\p{L}0-9|.|'|%|\\- ]+";
     public static final String REGEX_QUOTES="[\"]";
     
 

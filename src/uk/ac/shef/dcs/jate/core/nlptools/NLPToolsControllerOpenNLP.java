@@ -27,10 +27,11 @@ import java.io.IOException;
 public class NLPToolsControllerOpenNLP {
 
 	private static NLPToolsControllerOpenNLP _ref;
-	private POSTagger _posTagger;
-	private Chunker _npChunker;
-	private SentenceDetector _sentDetect;
-	private Tokenizer _tokenizer;
+	private final POSTagger _posTagger;
+	private final Chunker _npChunker;
+	private final SentenceDetector _sentDetect;
+	private final Tokenizer _tokenizer;
+	private final String locale;
 
 	public NLPToolsControllerOpenNLP() throws IOException {
             this("en");
@@ -49,6 +50,7 @@ public class NLPToolsControllerOpenNLP {
 
         SentenceModel sentModel = new SentenceModel(new FileInputStream(basePath + "-sent.bin"));
         _sentDetect = new SentenceDetectorME(sentModel);
+        this.locale = locale;
 	}
 	
         public synchronized static NLPToolsControllerOpenNLP setInstance(NLPToolsControllerOpenNLP nlp) throws IOException {
@@ -57,13 +59,6 @@ public class NLPToolsControllerOpenNLP {
         }
 
 	public synchronized static NLPToolsControllerOpenNLP getInstance() throws IOException {
-	    try {
-		if (_ref ==null) {
-		    _ref=new NLPToolsControllerOpenNLP();
-		}
-	    } catch (Exception e) {
-	        //nothing, opennlp.tools.util.Cache create a null exception at first use in multi threaded env
-	    }
 	    return _ref;
 	}
 
@@ -85,5 +80,10 @@ public class NLPToolsControllerOpenNLP {
 
 	public synchronized Tokenizer getTokeniser() {
 		return _tokenizer;
+	}
+	
+	public String getLocale()
+	{
+	    return locale;
 	}
 }
