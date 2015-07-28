@@ -12,7 +12,7 @@ import java.util.Arrays;
  *
  * @author <a href="mailto:z.zhang@dcs.shef.ac.uk">Ziqi Zhang</a>
  *
- *  <br>Also credits to <b>pmclachlan@gmail.com</b> for revision for performance tweak </br>
+ *  <br>Also credits to <b>pmclachlan@gmail.com</b> for revision for performance tweak
  */
 
 

@@ -27,8 +27,8 @@ import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 /**
- * An implementation of the Chi Square algorithm. See Matsuo, Y., Ishizuka, M. </i>
- * Keyword Extraction from a Single Document Using Word Co-Occurrence Statistical Information. </i>
+ * An implementation of the Chi Square algorithm. See Matsuo, Y., Ishizuka, M.
+ * Keyword Extraction from a Single Document Using Word Co-Occurrence Statistical Information.
  * Proc. 16th Intl. Florida AI Research Society, 2003, 392-396.
  */
 

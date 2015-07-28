@@ -27,7 +27,7 @@ public class FeatureBuilderRefCorpusTermFrequency extends AbstractFeatureBuilder
 	 * Default constructor
 	 * @param refStatsPath file path to the reference corpus statistics file. The file should store one term on a line, and in the format of:
 	 * <br>[freq_in_ref_corpus]   [term]
-	 * <br> Any terms with frequency < 2 will be ignored.
+	 * <br> Any terms with frequency &lt; 2 will be ignored.
 	 */
 	public FeatureBuilderRefCorpusTermFrequency(String refStatsPath) {
 		super(null, null, null);
@@ -55,6 +55,7 @@ public class FeatureBuilderRefCorpusTermFrequency extends AbstractFeatureBuilder
 				if(Integer.valueOf(elements[0])<2) continue;
 				_feature.addToTermFreq(elements[1].trim(), Integer.valueOf(elements[0]));
 			}
+			reader.close();
 
 		}
 		catch(Exception e){e.printStackTrace();}

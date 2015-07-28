@@ -53,8 +53,8 @@ public class FileUtils {
 		List<File> result = new ArrayList<File>();
 
 		File[] filesAndDirs = dir.listFiles();
-		List filesDirs = Arrays.asList(filesAndDirs);
-		Iterator filesIter = filesDirs.iterator();
+		List<File> filesDirs = Arrays.asList(filesAndDirs);
+		Iterator<File> filesIter = filesDirs.iterator();
 		File file;
 		while (filesIter.hasNext()) {
 			file = (File) filesIter.next();
@@ -79,8 +79,8 @@ public class FileUtils {
 		Set<File> result = new HashSet<File>();
 
 		File[] filesAndDirs = dir.listFiles();
-		List filesDirs = Arrays.asList(filesAndDirs);
-		Iterator filesIter = filesDirs.iterator();
+		List<File> filesDirs = Arrays.asList(filesAndDirs);
+		Iterator<File> filesIter = filesDirs.iterator();
 		File file;
 		while (filesIter.hasNext()) {
 			file = (File) filesIter.next();

@@ -75,33 +75,27 @@ public class WordExtractor extends CandidateTermExtractor {
     }
 
     public Map<String, Set<String>> extract(String content) throws JATEException {
-        String[] words = applyCharacterReplacement(content, JATEProperties.TERM_CLEAN_PATTERN).split(" ");
-        Map<String, Set<String>> result = new HashMap<String, Set<String>>();
+        final String[] words = applyCharacterReplacement(content, JATEProperties.TERM_CLEAN_PATTERN).split(" ");
+        final Map<String, Set<String>> result = new HashMap<String, Set<String>>();
 
         for (String w : words) {
-            String nw = w.trim();
-            //
-            nw = nw.toLowerCase();
-            //if(_stoplist.isStopWord(nw)) continue;
-            nw = _normaliser.normalize(nw).trim();
-
-            //
-            if (!containsLetter(nw) && !containsDigit(nw)) continue;
-            if (nw.length() < _minCharsInWord) continue;
-
-            if (_removeStop && (_stoplist.isStopWord(nw) || _stoplist.isStopWord(w.trim()))) continue;
-            //String lemma = _normaliser.normalize(w.trim());
-            //word should be treated separately to NP, as different forms of a word should be treated separately in counting
-            if (nw.length() > 0) {
-                Set<String> variants = result.get(nw);
-                variants = variants == null ? new HashSet<String>() : variants;
-                variants.add(w);
-                result.put(nw, variants);
+            
+            String originalWord = Normalizer.basicNormalize(w);
+            String nw = _normaliser.normalize(originalWord);
+            if (nw.length() < _minCharsInWord) {
+                continue;
             }
-/*			String lemma = _normaliser.normalize(w.trim());
-			if (lemma.length()>0) {
-				result.add(lemma);
-			}*/
+
+            if (_removeStop && (_stoplist.isStopWord(originalWord) || _stoplist.isStopWord(nw))) {
+                continue;
+            }
+
+            Set<String> variants = result.get(originalWord);
+            variants = variants == null ? new HashSet<String>() : variants;
+            if (!w.equals(originalWord)) {
+                variants.add(w);
+            }
+            result.put(nw, variants);
         }
         return result;
     }

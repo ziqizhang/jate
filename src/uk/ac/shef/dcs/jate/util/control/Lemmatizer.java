@@ -3,7 +3,6 @@ package uk.ac.shef.dcs.jate.util.control;
 import net.didion.jwnl.JWNLException;
 import opennlp.tools.coref.mention.JWNLDictionary;
 import uk.ac.shef.dcs.jate.JATEProperties;
-
 import java.io.IOException;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -19,7 +18,7 @@ public class Lemmatizer extends Normalizer {
     /**
      * The current OPENNLP implements a dictionary based lemmatizer. This lemmatizer seems to cause problem when the string
      * contains white space, separator characters such as '-'. It simply removes the part before the separator char
-     * and only lemmatizes the remaining part and returns the result (e.g., pre-schoolers => schooler).
+     * and only lemmatizes the remaining part and returns the result (e.g., pre-schoolers =&gt; schooler).
      * So the pre-part is missing. To work around this problem we firstly check if an input string contains potential
      * token separators. If so, the string is split at the *last* token separator into two parts. The first part
      * is kept as-is, the last part is lemmatized. Then the result is reconstructed by the first part plus the
@@ -29,10 +28,27 @@ public class Lemmatizer extends Normalizer {
      */
     protected static final Pattern JWNLDICTIONARY_POSSIBLE_TOKEN_SEPARATOR = Pattern.compile("[\\-\\.\\s+]");
     private JWNLDictionary dict;
+    private final boolean useDict;
 
 	public Lemmatizer() throws IOException, JWNLException {
-		init();
+		init("wordnet_dict");
+		this.useDict = true;
 	}
+	
+        public Lemmatizer(String wordnetDict, boolean useDict) throws IOException, JWNLException {
+            init(wordnetDict);
+            this.useDict = useDict;
+    }
+        
+        public Lemmatizer(String wordnetDict) throws IOException, JWNLException {
+            init(wordnetDict);
+            this.useDict = true;
+    }
+        
+        public boolean useDict()
+        {
+            return this.useDict;
+        }
 
 	/**
 	 * @param word a single word
@@ -50,7 +66,7 @@ public class Lemmatizer extends Normalizer {
     /**
      * The current OPENNLP implements a dictionary based lemmatizer. This lemmatizer seems to cause problem when the string
      * contains white space, separator characters such as '-'. It simply removes the part before the separator char
-     * and only lemmatizes the remaining part and returns the result (e.g., pre-schoolers => schooler).
+     * and only lemmatizes the remaining part and returns the result (e.g., pre-schoolers =&gt; schooler).
      * So the pre-part is missing. To work around this problem we firstly check if an input string contains potential
      * token separators. If so, the string is split at the *last* token separator into two parts. The first part
      * is kept as-is, the last part is lemmatized. Then the result is reconstructed by the first part plus the
@@ -63,20 +79,22 @@ public class Lemmatizer extends Normalizer {
 	public String normalize(String value) {
         if(value.length()==0)
             return value;
-
-        value=value.toLowerCase();
-        int position = findJWNLDictionaryTokenSeparator(value);
-        if(position==0){
-            return getLemma(value,"NNP");
+        
+        if (this.useDict) {
+            int position = findJWNLDictionaryTokenSeparator(value);
+            if(position==0){
+                return getLemma(value,"NNP").trim();
+            }
+            else{
+                String part1 = value.substring(0,position);
+                String part2 = value.substring(position);
+                if(part2.length()>0) //should always be true otherwise somewhere there is a bug
+                    part2 = getLemma(part2,"NNP");
+                return (part1+part2).trim();
+            }
+        } else {
+            return value;
         }
-        else{
-            String part1 = value.substring(0,position);
-            String part2 = value.substring(position);
-            if(part2.length()>0) //should always be true otherwise somewhere there is a bug
-                part2 = getLemma(part2,"NNP");
-            return part1+part2.trim();
-        }
-
 		/*if(position==-1||value.endsWith(" s")||value.endsWith("'s")) //if string is a single word, or it is in "XYZ's" form where the ' char has been removed
 			return getLemma(value,"NNP");
 
@@ -89,7 +107,7 @@ public class Lemmatizer extends Normalizer {
     /**
      * The current OPENNLP implements a dictionary based lemmatizer. This lemmatizer seems to cause problem when the string
      * contains white space, separator characters such as '-'. It simply removes the part before the separator char
-     * and only lemmatizes the remaining part and returns the result (e.g., pre-schoolers => schooler).
+     * and only lemmatizes the remaining part and returns the result (e.g., pre-schoolers =&gt; schooler).
      * So the pre-part is missing. To work around this problem we firstly check if an input string contains potential
      * token separators. If so, the string is split at the *last* token separator into two parts. The first part
      * is kept as-is, the last part is lemmatized. Then the result is reconstructed by the first part plus the
@@ -126,8 +144,8 @@ public class Lemmatizer extends Normalizer {
 	}
 
 
-	private void init() throws IOException, JWNLException {
-		dict = new JWNLDictionary(JATEProperties.getInstance().getNLPPath()+"/wordnet_dict");
+	private void init(String wordnetDict) throws IOException, JWNLException {
+		dict = new JWNLDictionary(JATEProperties.getInstance().getNLPPath() + "/" + wordnetDict);
 	}
 
 }
