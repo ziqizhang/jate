@@ -1,6 +1,6 @@
 package uk.ac.shef.dcs.jate.deprecated.core.voting;
 
-import uk.ac.shef.dcs.jate.deprecated.JATEException;
+import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.model.Term;
 
 import java.util.*;
@@ -47,7 +47,7 @@ public class Voting {
 	 *
 	 * @param outputs
 	 * @return
-	 * @throws uk.ac.shef.dcs.jate.deprecated.JATEException
+	 * @throws uk.ac.shef.dcs.jate.v2.JATEException
 	 */
 	public List<Term> calculate(WeightedOutput... outputs) throws JATEException {
 /*		for (WeightedOutput output : outputs) {

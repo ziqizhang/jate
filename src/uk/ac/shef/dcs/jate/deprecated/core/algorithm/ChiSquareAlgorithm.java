@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import net.didion.jwnl.JWNLException;
-import uk.ac.shef.dcs.jate.deprecated.JATEException;
+import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.JATEProperties;
 import uk.ac.shef.dcs.jate.deprecated.core.nlptools.NLPToolsControllerOpenNLP;
 import uk.ac.shef.dcs.jate.deprecated.model.Corpus;
@@ -192,7 +192,7 @@ public class ChiSquareAlgorithm implements Algorithm {
 	/**
 	 * @param store
 	 * @return Term[]
-	 * @throws uk.ac.shef.dcs.jate.deprecated.JATEException
+	 * @throws uk.ac.shef.dcs.jate.v2.JATEException
 	 */
 	@Override
 	public Term[] execute(AbstractFeatureWrapper store) throws JATEException {

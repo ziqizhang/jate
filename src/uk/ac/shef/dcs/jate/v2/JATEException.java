@@ -1,4 +1,4 @@
-package uk.ac.shef.dcs.jate.deprecated;
+package uk.ac.shef.dcs.jate.v2;
 
 /**
  */

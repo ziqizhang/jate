@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import uk.ac.shef.dcs.jate.deprecated.JATEException;
+import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.core.feature.indexer.GlobalIndex;
 
 /**
@@ -35,7 +35,7 @@ public class FeatureBuilderTermNest extends AbstractFeatureBuilder {
      *
      * @param index
      * @return
-     * @throws uk.ac.shef.dcs.jate.deprecated.JATEException
+     * @throws uk.ac.shef.dcs.jate.v2.JATEException
      *
      */
     public FeatureTermNest build(GlobalIndex index) throws JATEException {

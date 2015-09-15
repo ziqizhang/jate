@@ -18,7 +18,7 @@ import uk.ac.shef.dcs.jate.deprecated.io.ResultWriter2File;
 import uk.ac.shef.dcs.jate.deprecated.model.CorpusImpl;
 import uk.ac.shef.dcs.jate.deprecated.model.Term;
 import uk.ac.shef.dcs.jate.deprecated.util.control.StopList;
-import uk.ac.shef.dcs.jate.deprecated.JATEException;
+import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.util.counter.WordCounter;
 import uk.ac.shef.dcs.jate.deprecated.util.control.Lemmatizer;
 import uk.ac.shef.dcs.jate.deprecated.util.counter.TermFreqCounter;

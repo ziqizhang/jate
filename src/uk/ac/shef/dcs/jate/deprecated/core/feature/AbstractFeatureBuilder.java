@@ -1,6 +1,6 @@
 package uk.ac.shef.dcs.jate.deprecated.core.feature;
 
-import uk.ac.shef.dcs.jate.deprecated.JATEException;
+import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.core.feature.indexer.GlobalIndex;
 import uk.ac.shef.dcs.jate.deprecated.util.control.Normalizer;
 import uk.ac.shef.dcs.jate.deprecated.util.counter.TermFreqCounter;

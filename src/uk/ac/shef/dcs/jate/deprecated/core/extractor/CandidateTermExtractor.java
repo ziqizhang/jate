@@ -1,6 +1,6 @@
 package uk.ac.shef.dcs.jate.deprecated.core.extractor;
 
-import uk.ac.shef.dcs.jate.deprecated.JATEException;
+import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.model.Corpus;
 import uk.ac.shef.dcs.jate.deprecated.util.control.Normalizer;
 import uk.ac.shef.dcs.jate.deprecated.util.control.StopList;
@@ -26,7 +26,7 @@ public abstract class CandidateTermExtractor {
     /**
      * @param c corpus
      * @return a map containing mappings from term canonical form to its variants found in the corpus
-     * @throws uk.ac.shef.dcs.jate.deprecated.JATEException
+     * @throws uk.ac.shef.dcs.jate.v2.JATEException
      *
      */
     public abstract Map<String, Set<String>> extract(Corpus c) throws JATEException;
@@ -34,7 +34,7 @@ public abstract class CandidateTermExtractor {
     /**
      * @param d document
      * @return a map containing mappings from term canonical form to its variants found in the document
-     * @throws uk.ac.shef.dcs.jate.deprecated.JATEException
+     * @throws uk.ac.shef.dcs.jate.v2.JATEException
      *
      */
     public abstract Map<String, Set<String>> extract(Document d) throws JATEException;
@@ -42,7 +42,7 @@ public abstract class CandidateTermExtractor {
     /**
      * @param content a string
      * @return a map containing mappings from term canonical form to its variants found in the string
-     * @throws uk.ac.shef.dcs.jate.deprecated.JATEException
+     * @throws uk.ac.shef.dcs.jate.v2.JATEException
      *
      */
     public abstract Map<String, Set<String>> extract(String content) throws JATEException;

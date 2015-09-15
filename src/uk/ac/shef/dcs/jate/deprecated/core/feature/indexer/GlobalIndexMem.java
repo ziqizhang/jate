@@ -29,6 +29,9 @@ import java.util.*;
 
 public class GlobalIndexMem extends GlobalIndex {
 
+    int _termCounter;
+    int _docCounter;
+    int _variantCounter;
     /**
      * Term to TermId map
      */

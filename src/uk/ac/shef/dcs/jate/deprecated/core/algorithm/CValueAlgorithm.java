@@ -1,5 +1,5 @@
 package uk.ac.shef.dcs.jate.deprecated.core.algorithm;
-import uk.ac.shef.dcs.jate.deprecated.JATEException;
+import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.model.Term;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ public class CValueAlgorithm implements Algorithm {
 	 *
 	 * @param store
 	 * @return
-	 * @throws uk.ac.shef.dcs.jate.deprecated.JATEException
+	 * @throws uk.ac.shef.dcs.jate.v2.JATEException
 	 */
 	public Term[] execute(AbstractFeatureWrapper store) throws JATEException {
 		if (!(store instanceof CValueFeatureWrapper)) throw new JATEException("" +

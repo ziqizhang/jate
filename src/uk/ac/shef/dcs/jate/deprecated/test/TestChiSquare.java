@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import net.didion.jwnl.JWNLException;
-import uk.ac.shef.dcs.jate.deprecated.JATEException;
+import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.core.algorithm.ChiSquareAlgorithm;
 import uk.ac.shef.dcs.jate.deprecated.core.algorithm.ChiSquareFeatureWrapper;
 import uk.ac.shef.dcs.jate.deprecated.core.algorithm.FrequencyAlgorithm;

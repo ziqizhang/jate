@@ -5,7 +5,7 @@ import uk.ac.shef.dcs.jate.deprecated.core.feature.indexer.GlobalIndex;
 import uk.ac.shef.dcs.jate.deprecated.core.extractor.CandidateTermExtractor;
 import uk.ac.shef.dcs.jate.deprecated.model.Document;
 import uk.ac.shef.dcs.jate.deprecated.util.control.Normalizer;
-import uk.ac.shef.dcs.jate.deprecated.JATEException;
+import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.util.counter.TermFreqCounter;
 import uk.ac.shef.dcs.jate.deprecated.util.counter.WordCounter;
 
@@ -35,7 +35,7 @@ public class FeatureBuilderDocumentTermFrequencyMultiThread extends AbstractFeat
      *
      * @param index the global resource index
      * @return
-     * @throws uk.ac.shef.dcs.jate.deprecated.JATEException
+     * @throws uk.ac.shef.dcs.jate.v2.JATEException
      *
      */
     public FeatureDocumentTermFrequency build(GlobalIndex index) throws JATEException {

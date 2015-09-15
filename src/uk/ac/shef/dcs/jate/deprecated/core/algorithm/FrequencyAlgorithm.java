@@ -1,7 +1,7 @@
 package uk.ac.shef.dcs.jate.deprecated.core.algorithm;
 
 import uk.ac.shef.dcs.jate.deprecated.model.Term;
-import uk.ac.shef.dcs.jate.deprecated.JATEException;
+import uk.ac.shef.dcs.jate.v2.JATEException;
 
 import java.util.Set;
 import java.util.HashSet;

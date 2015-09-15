@@ -1,6 +1,6 @@
 package uk.ac.shef.dcs.jate.deprecated.core.extractor;
 
-import uk.ac.shef.dcs.jate.deprecated.JATEException;
+import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.JATEProperties;
 import uk.ac.shef.dcs.jate.deprecated.model.Corpus;
 import uk.ac.shef.dcs.jate.deprecated.model.Document;

@@ -1,6 +1,6 @@
 package uk.ac.shef.dcs.jate.deprecated.core.feature;
 
-import uk.ac.shef.dcs.jate.deprecated.JATEException;
+import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.JATEProperties;
 import uk.ac.shef.dcs.jate.deprecated.core.feature.indexer.GlobalIndex;
 
@@ -25,7 +25,7 @@ public class FeatureBuilderTermNestMultiThread extends AbstractFeatureBuilder {
      *
      * @param index
      * @return
-     * @throws uk.ac.shef.dcs.jate.deprecated.JATEException
+     * @throws uk.ac.shef.dcs.jate.v2.JATEException
      *
      */
     public FeatureTermNest build(GlobalIndex index) throws JATEException {

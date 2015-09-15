@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import net.didion.jwnl.JWNLException;
-import uk.ac.shef.dcs.jate.deprecated.JATEException;
+import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.core.algorithm.RAKEAlgorithm;
 import uk.ac.shef.dcs.jate.deprecated.core.algorithm.RAKEFeatureWrapper;
 import uk.ac.shef.dcs.jate.deprecated.core.feature.indexer.GlobalIndexBuilderMem;

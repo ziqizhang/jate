@@ -1,7 +1,7 @@
 package uk.ac.shef.dcs.jate.deprecated.core.feature;
 
 import uk.ac.shef.dcs.jate.deprecated.core.feature.indexer.GlobalIndex;
-import uk.ac.shef.dcs.jate.deprecated.JATEException;
+import uk.ac.shef.dcs.jate.v2.JATEException;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -41,7 +41,7 @@ public class FeatureBuilderRefCorpusTermFrequency extends AbstractFeatureBuilder
 	 * specified in the constructor
 	 * @param nullValue can be either an instance or null value
 	 * @return
-	 * @throws uk.ac.shef.dcs.jate.deprecated.JATEException
+	 * @throws uk.ac.shef.dcs.jate.v2.JATEException
 	 */
 	public FeatureRefCorpusTermFrequency build(GlobalIndex nullValue) throws JATEException {
 		FeatureRefCorpusTermFrequency _feature = new FeatureRefCorpusTermFrequency();

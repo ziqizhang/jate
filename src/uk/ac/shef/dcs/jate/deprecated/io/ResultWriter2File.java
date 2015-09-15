@@ -1,6 +1,6 @@
 package uk.ac.shef.dcs.jate.deprecated.io;
 
-import uk.ac.shef.dcs.jate.deprecated.JATEException;
+import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.core.feature.indexer.GlobalIndex;
 import uk.ac.shef.dcs.jate.deprecated.model.Term;
 
@@ -46,7 +46,7 @@ public class ResultWriter2File {
 	 * </p>
 	 * @param result term recognition result sorted descendingly by confidence
 	 * @param path output file path
-	 * @throws uk.ac.shef.dcs.jate.deprecated.JATEException
+	 * @throws uk.ac.shef.dcs.jate.v2.JATEException
 	 */
 	public void output(Term[] result, String path) throws JATEException {
 		try {

@@ -1,7 +1,7 @@
 package uk.ac.shef.dcs.jate.deprecated.test;
 
 import net.didion.jwnl.JWNLException;
-import uk.ac.shef.dcs.jate.deprecated.JATEException;
+import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.core.algorithm.JustesonAlgorithm;
 import uk.ac.shef.dcs.jate.deprecated.core.feature.FeatureBuilderCorpusTermFrequency;
 import uk.ac.shef.dcs.jate.deprecated.core.feature.FeatureCorpusTermFrequency;

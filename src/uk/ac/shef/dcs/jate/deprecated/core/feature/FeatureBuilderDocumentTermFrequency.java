@@ -1,6 +1,6 @@
 package uk.ac.shef.dcs.jate.deprecated.core.feature;
 
-import uk.ac.shef.dcs.jate.deprecated.JATEException;
+import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.JATEProperties;
 import uk.ac.shef.dcs.jate.deprecated.core.feature.indexer.GlobalIndex;
 import uk.ac.shef.dcs.jate.deprecated.core.extractor.CandidateTermExtractor;
@@ -41,7 +41,7 @@ public class FeatureBuilderDocumentTermFrequency extends AbstractFeatureBuilder 
 	 * Build an instance of FeatureCorpusTermFrequency
 	 * @param index the global resource index
 	 * @return
-	 * @throws uk.ac.shef.dcs.jate.deprecated.JATEException
+	 * @throws uk.ac.shef.dcs.jate.v2.JATEException
 	 */
 	public FeatureDocumentTermFrequency build(GlobalIndex index) throws JATEException {
 		FeatureDocumentTermFrequency _feature = new FeatureDocumentTermFrequency(index);

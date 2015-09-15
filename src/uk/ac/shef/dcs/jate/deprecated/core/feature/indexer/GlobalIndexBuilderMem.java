@@ -1,6 +1,6 @@
 package uk.ac.shef.dcs.jate.deprecated.core.feature.indexer;
 
-import uk.ac.shef.dcs.jate.deprecated.JATEException;
+import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.model.Corpus;
 import uk.ac.shef.dcs.jate.deprecated.model.Document;
 import uk.ac.shef.dcs.jate.deprecated.core.extractor.CandidateTermExtractor;
@@ -47,7 +47,7 @@ public class GlobalIndexBuilderMem implements GlobalIndexBuilder{
 	 * @param c
 	 * @param extractor
 	 * @return
-	 * @throws uk.ac.shef.dcs.jate.deprecated.JATEException
+	 * @throws uk.ac.shef.dcs.jate.v2.JATEException
 	 */
 	
 	

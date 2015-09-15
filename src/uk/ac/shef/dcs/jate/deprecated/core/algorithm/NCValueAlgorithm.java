@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import uk.ac.shef.dcs.jate.deprecated.JATEException;
+import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.JATEProperties;
 import uk.ac.shef.dcs.jate.deprecated.core.context.ContextExtraction;
 import uk.ac.shef.dcs.jate.deprecated.core.nlptools.NLPToolsControllerOpenNLP;
@@ -158,7 +158,7 @@ public class NCValueAlgorithm implements Algorithm{
 	/**
 	 * @param store
 	 * @return Term[]
-	 * @throws uk.ac.shef.dcs.jate.deprecated.JATEException
+	 * @throws uk.ac.shef.dcs.jate.v2.JATEException
 	 */
 	public Term[] execute(AbstractFeatureWrapper store) throws JATEException{
 		if (!(store instanceof NCValueFeatureWrapper)) throw new JATEException("" +
