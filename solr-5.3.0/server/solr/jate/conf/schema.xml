@@ -267,7 +267,7 @@
 			NOTE: This field is not indexed by default, since it is also copied to "text"
 			using copyField below. This is to save space. Use this field for returning and
 			highlighting document content. Use the "text" field to search the content. -->
-	   <field name="jate_all_text" type="jate_processable_text" indexed="false" stored="true" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
+	   <field name="jate_all_text" type="jate_processable_text" indexed="true" stored="true" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
 	
 	   <!-- Dynamic field definitions allow using convention over configuration
        for fields via the specification of patterns to match field names. 
@@ -282,7 +282,7 @@
 			They only provide a way to trace the part of a document that a candidate term is found. Such 
 			information can be used by some ATR algorithms. However most ATR algorithms do not 
 			use such information. -->
-	   <dynamicField name="jate_f*_text"  type="jate_processable_text" indexed="false"  stored="true"/>
+	   <dynamicField name="jate_f*"  type="jate_processable_text" indexed="false"  stored="true"/>
 	   
        <dynamicField name="*_i"  type="int"    indexed="true"  stored="true"/>
 	   <dynamicField name="*_is" type="int"    indexed="true"  stored="true"  multiValued="true"/>

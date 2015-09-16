@@ -19,16 +19,14 @@ import java.io.InputStream;
 public class TikaSimpleDocumentCreator extends DocumentCreator {
 
     protected AutoDetectParser parser;
-    protected BodyContentHandler handler;
 
     public TikaSimpleDocumentCreator(){
         this.parser=new AutoDetectParser();
-        this.handler=new BodyContentHandler();
     }
 
     public Document create(String source) throws JATEException, IOException {
         InputStream in = new BufferedInputStream(new FileInputStream(source));
-
+        BodyContentHandler handler = new BodyContentHandler(-1);
         Metadata metadata = new Metadata();
         try {
             Document doc = new Document(source);

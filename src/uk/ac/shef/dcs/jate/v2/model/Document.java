@@ -16,12 +16,17 @@ public class Document {
         this.id=id;
     }
 
+    public String getId(){return id;}
     public void setPath(String path){
         this.path=path;
     }
 
     public void setContent(String content){
         this.content=content;
+    }
+
+    public String getContent(){
+        return this.content;
     }
 
     public Map<String, String> getMapField2Content(){
