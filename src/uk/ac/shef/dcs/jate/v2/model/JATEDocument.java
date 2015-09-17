@@ -6,13 +6,13 @@ import java.util.Map;
 /**
  * Created by zqz on 15/09/2015.
  */
-public class Document {
+public class JATEDocument {
     protected String id;
     protected String path;
     protected String content;
     protected Map<String, String> mapField2Content = new HashMap<String, String>();
 
-    public Document(String id){
+    public JATEDocument(String id){
         this.id=id;
     }
 

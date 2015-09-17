@@ -2,18 +2,16 @@ package uk.ac.shef.dcs.jate.v2.indexing;
 
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.common.SolrException;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.tika.utils.ExceptionUtils;
 import uk.ac.shef.dcs.jate.v2.JATEException;
+import uk.ac.shef.dcs.jate.v2.JATEProperties;
 import uk.ac.shef.dcs.jate.v2.JATERecursiveTaskWorker;
-import uk.ac.shef.dcs.jate.v2.JATEnum;
 import uk.ac.shef.dcs.jate.v2.io.DocumentCreator;
-import uk.ac.shef.dcs.jate.v2.model.Document;
+import uk.ac.shef.dcs.jate.v2.model.JATEDocument;
 import uk.ac.shef.dcs.jate.v2.util.SolrUtil;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -21,36 +19,40 @@ import java.util.logging.Logger;
 /**
  * Created by zqz on 15/09/2015.
  */
-public class ParallelIndexingWorker extends JATERecursiveTaskWorker<String, Integer> {
+public class SolrParallelIndexingWorker extends JATERecursiveTaskWorker<String, Integer> {
 
-    private static final Logger LOG = Logger.getLogger(ParallelIndexingWorker.class.getName());
+    private static final Logger LOG = Logger.getLogger(SolrParallelIndexingWorker.class.getName());
     protected List<String> tasks;
     protected int batchSize=100;
     protected DocumentCreator docCreator;
     protected SolrClient solrClient;
+    protected JATEProperties properties;
 
-    public ParallelIndexingWorker(List<String> tasks,
-                                  int maxTasksPerThread,
-                                  DocumentCreator docCreator,
-                                  SolrClient solrClient){
+    public SolrParallelIndexingWorker(List<String> tasks,
+                                      int maxTasksPerThread,
+                                      DocumentCreator docCreator,
+                                      SolrClient solrClient,
+                                      JATEProperties properties){
         super(tasks, maxTasksPerThread);
         this.docCreator = docCreator;
         this.solrClient=solrClient;
+        this.properties=properties;
     }
 
-    public ParallelIndexingWorker(List<String> tasks,
-                                  int maxTasksPerThread,
-                                  int batchSize,
-                                  DocumentCreator docCreator,
-                                  SolrClient solrClient){
-        this(tasks, maxTasksPerThread, docCreator, solrClient);
+    public SolrParallelIndexingWorker(List<String> tasks,
+                                      int maxTasksPerThread,
+                                      int batchSize,
+                                      DocumentCreator docCreator,
+                                      SolrClient solrClient,
+                                      JATEProperties properties){
+        this(tasks, maxTasksPerThread, docCreator, solrClient,properties);
         this.batchSize=batchSize;
     }
 
     @Override
     protected JATERecursiveTaskWorker<String, Integer> createInstance(List<String> splitTasks) {
-        return new ParallelIndexingWorker(splitTasks, maxTasksPerThread,
-                batchSize, docCreator.copy(), solrClient);
+        return new SolrParallelIndexingWorker(splitTasks, maxTasksPerThread,
+                batchSize, docCreator.copy(), solrClient, properties);
     }
 
     @Override
@@ -66,11 +68,11 @@ public class ParallelIndexingWorker extends JATERecursiveTaskWorker<String, Inte
         int total = 0, batches=0;
         for(String task: tasks){
             try {
-                Document doc = docCreator.create(task);
+                JATEDocument doc = docCreator.create(task);
                 total++;
                 SolrInputDocument solrDoc = new SolrInputDocument();
-                solrDoc.addField(JATEnum.SOLR_FIELD_ID.getString(), doc.getId());
-                solrDoc.addField(JATEnum.SOLR_FIELD_JATE_ALL_TEXT.getString(), doc.getContent());
+                solrDoc.addField(properties.getSolrFieldnameID(), doc.getId());
+                solrDoc.addField(properties.getSolrFieldnameJATETextAll(), doc.getContent());
                 for(Map.Entry<String, String> field2Value : doc.getMapField2Content().entrySet()){
                     String field = field2Value.getKey();
                     String value = field2Value.getValue();

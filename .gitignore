@@ -5,3 +5,4 @@ target/*
 .iml
 *.asc
 *.gif
+/solr-5.3.0/server/solr/jate/data/*

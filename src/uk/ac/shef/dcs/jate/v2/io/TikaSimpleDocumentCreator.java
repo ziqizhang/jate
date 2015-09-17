@@ -6,7 +6,7 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.SAXException;
 import uk.ac.shef.dcs.jate.v2.JATEException;
-import uk.ac.shef.dcs.jate.v2.model.Document;
+import uk.ac.shef.dcs.jate.v2.model.JATEDocument;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -24,12 +24,12 @@ public class TikaSimpleDocumentCreator extends DocumentCreator {
         this.parser=new AutoDetectParser();
     }
 
-    public Document create(String source) throws JATEException, IOException {
+    public JATEDocument create(String source) throws JATEException, IOException {
         InputStream in = new BufferedInputStream(new FileInputStream(source));
         BodyContentHandler handler = new BodyContentHandler(-1);
         Metadata metadata = new Metadata();
         try {
-            Document doc = new Document(source);
+            JATEDocument doc = new JATEDocument(source);
             doc.setPath(source);
             parser.parse(in, handler, metadata);
             doc.setContent(handler.toString());
@@ -46,12 +46,5 @@ public class TikaSimpleDocumentCreator extends DocumentCreator {
     @Override
     public DocumentCreator copy() {
         return new TikaSimpleDocumentCreator();
-    }
-
-    public static void main(String[] args) throws IOException, JATEException {
-        TikaSimpleDocumentCreator dc =new TikaSimpleDocumentCreator();
-        dc.create("D:\\Work\\jate_github\\jate\\sample\\input/albatross.txt");
-
-        System.out.println();
     }
 }
