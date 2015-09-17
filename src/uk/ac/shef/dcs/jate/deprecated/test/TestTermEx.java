@@ -19,6 +19,7 @@ import uk.ac.shef.dcs.jate.deprecated.util.control.StopList;
 import uk.ac.shef.dcs.jate.deprecated.util.counter.TermFreqCounter;
 import uk.ac.shef.dcs.jate.deprecated.util.counter.WordCounter;
 import uk.ac.shef.dcs.jate.deprecated.core.extractor.CandidateTermExtractor;
+import uk.ac.shef.dcs.jate.v2.feature.TTFReferenceFeatureFileBuilder;
 
 import java.io.IOException;
 import java.util.*;
@@ -85,11 +86,11 @@ public class TestTermEx {
 					new FeatureBuilderDocumentTermFrequency(npcounter,wordcounter,lemmatizer).build(termDocIndex);
 			FeatureCorpusTermFrequency wordFreq =
 					new FeatureBuilderCorpusTermFrequency(npcounter,wordcounter,lemmatizer).build(wordDocIndex);
-			FeatureRefCorpusTermFrequency bncRef =
-					new FeatureBuilderRefCorpusTermFrequency(args[1]).build(null);
+			/*FeatureRefCorpusTermFrequency bncRef =
+					new TTFReferenceFeatureFileBuilder(args[1]).build(null);*/
 
 			AlgorithmTester tester = new AlgorithmTester();
-			tester.registerAlgorithm(new TermExAlgorithm(), new TermExFeatureWrapper(termDocFreq,wordFreq,bncRef));
+			tester.registerAlgorithm(new TermExAlgorithm(), new TermExFeatureWrapper(termDocFreq,wordFreq,null));
 			tester.execute(termDocIndex, args[2]);
 			System.out.println("Ended at: " + new Date());
 		}

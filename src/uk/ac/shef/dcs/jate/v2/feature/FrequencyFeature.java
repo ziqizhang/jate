@@ -1,8 +1,4 @@
 package uk.ac.shef.dcs.jate.v2.feature;
-
-
-import org.apache.lucene.util.BytesRef;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,9 +16,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class FrequencyFeature extends AbstractFeature {
 
     //term and its total freq in corpus
-    private Map<BytesRef, Integer> term2TTF = new ConcurrentHashMap<>();
+    private Map<String, Integer> term2TTF = new ConcurrentHashMap<>();
     //term and its freq in each document, stored as a map
-    private Map<BytesRef, Map<Integer, Integer>> term2FID = new ConcurrentHashMap<>();
+    private Map<String, Map<Integer, Integer>> term2FID = new ConcurrentHashMap<>();
     private int totalWords = 0;
 
     protected FrequencyFeature() {
@@ -40,7 +36,7 @@ public class FrequencyFeature extends AbstractFeature {
         totalWords = i;
     }
 
-    public int getTTF(BytesRef luceneTerm){
+    public int getTTF(String luceneTerm){
         Integer freq = term2TTF.get(luceneTerm);
         if(freq==null)
             freq=0;
@@ -53,7 +49,7 @@ public class FrequencyFeature extends AbstractFeature {
      * @param luceneTerm
      * @return
      */
-    public double getTTFNorm(BytesRef luceneTerm) {
+    public double getTTFNorm(String luceneTerm) {
         return (double) getTTF(luceneTerm) / ((double) getTotalWords() + 1);
     }
 
@@ -63,13 +59,13 @@ public class FrequencyFeature extends AbstractFeature {
      * @param luceneTerm
      * @param i
      */
-    protected void add(BytesRef luceneTerm, int i) {
+    protected void add(String luceneTerm, int i) {
         term2TTF.put(luceneTerm, i);
     }
 
 
 
-    protected void addTermFrequencyInDocument(BytesRef luceneTerm, int luceneDocId, int freq){
+    protected void addTermFrequencyInDocument(String luceneTerm, int luceneDocId, int freq){
         Map<Integer, Integer> freqMap = term2FID.get(luceneTerm);
         if(freqMap==null)
             freqMap = new HashMap<>();

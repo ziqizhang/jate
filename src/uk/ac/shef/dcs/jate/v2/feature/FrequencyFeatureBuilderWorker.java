@@ -56,7 +56,7 @@ class FrequencyFeatureBuilderWorker extends JATERecursiveTaskWorker<BytesRef, in
                 int doc=0;
                 while ((doc = docEnum.nextDoc()) != PostingsEnum.NO_MORE_DOCS) {
                     int tfid = docEnum.freq();  //tf in document
-                    feature.addTermFrequencyInDocument(luceneTerm, doc, tfid);
+                    feature.addTermFrequencyInDocument(luceneTerm.utf8ToString(), doc, tfid);
                 }
                 totalSuccess++;
             }catch (JATEException je){

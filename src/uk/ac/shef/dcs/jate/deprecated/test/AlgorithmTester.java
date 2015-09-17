@@ -15,6 +15,7 @@ import uk.ac.shef.dcs.jate.deprecated.model.Term;
 import uk.ac.shef.dcs.jate.deprecated.util.control.Lemmatizer;
 import uk.ac.shef.dcs.jate.deprecated.util.control.StopList;
 import uk.ac.shef.dcs.jate.deprecated.util.counter.WordCounter;
+import uk.ac.shef.dcs.jate.v2.feature.TTFReferenceFeatureFileBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -161,8 +162,7 @@ public class AlgorithmTester {
                         new FeatureBuilderDocumentTermFrequencyMultiThread(wordcounter, lemmatizer).build(termDocIndex);
 				FeatureTermNest termNest =
                         new FeatureBuilderTermNestMultiThread().build(termDocIndex);
-				FeatureRefCorpusTermFrequency bncRef =
-						new FeatureBuilderRefCorpusTermFrequency(args[1]).build(null);
+				FeatureRefCorpusTermFrequency bncRef =null;
 				FeatureCorpusTermFrequency termCorpusFreq =
                         new FeatureBuilderCorpusTermFrequencyMultiThread(wordcounter, lemmatizer).build(termDocIndex);
 

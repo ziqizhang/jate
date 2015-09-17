@@ -6,7 +6,7 @@ import uk.ac.shef.dcs.jate.deprecated.core.algorithm.Algorithm;
 import uk.ac.shef.dcs.jate.deprecated.core.algorithm.GlossExAlgorithm;
 import uk.ac.shef.dcs.jate.deprecated.core.algorithm.GlossExFeatureWrapper;
 import uk.ac.shef.dcs.jate.deprecated.core.feature.FeatureBuilderCorpusTermFrequency;
-import uk.ac.shef.dcs.jate.deprecated.core.feature.FeatureBuilderRefCorpusTermFrequency;
+import uk.ac.shef.dcs.jate.v2.feature.TTFReferenceFeatureFileBuilder;
 import uk.ac.shef.dcs.jate.deprecated.core.feature.FeatureCorpusTermFrequency;
 import uk.ac.shef.dcs.jate.deprecated.core.feature.FeatureRefCorpusTermFrequency;
 import uk.ac.shef.dcs.jate.deprecated.core.feature.indexer.GlobalIndexBuilderMem;
@@ -90,8 +90,7 @@ public class TestGlossEx {
 					new FeatureBuilderCorpusTermFrequency(npcounter,wordcounter,lemmatizer).build(termDocIndex);
 			FeatureCorpusTermFrequency wordFreq =
 					new FeatureBuilderCorpusTermFrequency(npcounter,wordcounter,lemmatizer).build(wordDocIndex);
-			FeatureRefCorpusTermFrequency bncRef =
-					new FeatureBuilderRefCorpusTermFrequency(args[1]).build(null);
+			FeatureRefCorpusTermFrequency bncRef =null;
 
 			AlgorithmTester tester = new AlgorithmTester();
 			tester.registerAlgorithm(new GlossExAlgorithm(), new GlossExFeatureWrapper(termCorpusFreq,wordFreq,bncRef));
