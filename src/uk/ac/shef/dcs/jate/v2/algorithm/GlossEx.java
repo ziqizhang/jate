@@ -1,15 +1,12 @@
 package uk.ac.shef.dcs.jate.v2.algorithm;
 
-import uk.ac.shef.dcs.jate.deprecated.model.Term;
 import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.v2.feature.AbstractFeature;
 import uk.ac.shef.dcs.jate.v2.feature.FrequencyFeature;
-import uk.ac.shef.dcs.jate.v2.feature.TTFReferenceFeatureFileBuilder;
 import uk.ac.shef.dcs.jate.v2.model.JATETerm;
 import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +43,7 @@ public class GlossEx extends Algorithm {
 
         List<JATETerm> result = new ArrayList<>();
         boolean collectInfo = termInfoCollector != null;
-        double totalTermsInCorpus = fFeatureTerms.getTotalTerms();
+        double totalWordsInCorpus = fFeatureWords.getCorpusTotal();
         for(Map.Entry<String, Integer> entry: fFeatureTerms.getMapTerm2TTF().entrySet()){
             String tString = entry.getKey();
             double score;
@@ -57,7 +54,7 @@ public class GlossEx extends Algorithm {
 
             for (int i = 0; i < T; i++) {
                 String wi = elements[i];
-                SUMwi += Math.log((double) fFeatureWords.getTTF(wi) / totalTermsInCorpus / fFeatureRef.getTTFNorm(wi));
+                SUMwi += /*Math.log(*/(double) fFeatureWords.getTTF(wi) / totalWordsInCorpus / fFeatureRef.getTTFNorm(wi)/*)*/;
                 SUMfwi += (double) fFeatureWords.getTTF(wi);
             }
 

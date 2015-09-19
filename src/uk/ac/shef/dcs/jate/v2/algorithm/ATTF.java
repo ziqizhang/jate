@@ -18,16 +18,7 @@ public class ATTF extends Algorithm{
     @Override
     public List<JATETerm> execute() throws JATEException {
         AbstractFeature feature = features.get(FrequencyFeature.class.getName());
-        if(feature==null || !(feature instanceof FrequencyFeature)) {
-            StringBuilder sb = new StringBuilder(TTF.class.getName());
-            sb.append(" requires feature type:").append(FrequencyFeature.class.getName()).append(",")
-                    .append(" provided:");
-            if(feature==null)
-                sb.append("null");
-            else
-                sb.append(feature.getClass().getName());
-            throw new JATEException(sb.toString());
-        }
+        validateFeature(feature, FrequencyFeature.class);
 
         FrequencyFeature fFeature = (FrequencyFeature) feature;
         boolean collectInfo=termInfoCollector!=null;

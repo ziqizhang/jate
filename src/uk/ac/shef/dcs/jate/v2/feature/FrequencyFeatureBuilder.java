@@ -30,6 +30,7 @@ public class FrequencyFeatureBuilder extends AbstractFeatureBuilder {
     @Override
     public AbstractFeature build() throws JATEException {
         FrequencyFeature feature = new FrequencyFeature();
+        feature.setTotalDocs(indexReader.numDocs());
         String targetField=apply2Terms==0?properties.getSolrFieldnameJATETermsAll(): properties.getSolrFieldnameJATEWordsAll();
         try {
             Fields fields = MultiFields.getFields(indexReader);

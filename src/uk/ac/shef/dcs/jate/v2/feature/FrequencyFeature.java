@@ -19,7 +19,8 @@ public class FrequencyFeature extends AbstractFeature {
     private Map<String, Integer> term2TTF = new ConcurrentHashMap<>();
     //term and its freq in each document, stored as a map
     private Map<String, Map<Integer, Integer>> term2FID = new ConcurrentHashMap<>();
-    private int totalWords = 0;
+    private int corpusTotal = 0;
+    private int totalDocs=0;
 
     protected FrequencyFeature() {
     }
@@ -28,16 +29,20 @@ public class FrequencyFeature extends AbstractFeature {
         return term2TTF;
     }
 
-    public int getTotalTerms() {
-        if(totalWords==0){
+    public int getCorpusTotal() {
+        if(corpusTotal ==0){
             for(int i: term2TTF.values())
-                totalWords+=i;
+                corpusTotal +=i;
         }
-        return totalWords;
+        return corpusTotal;
     }
 
-    protected void setTotalTerms(int i) {
-        totalWords = i;
+    public int getTotalDocs(){
+        return totalDocs;
+    }
+
+    protected void setTotalDocs(int totalDocs){
+        this.totalDocs=totalDocs;
     }
 
     public int getTTF(String luceneTerm){
@@ -54,7 +59,7 @@ public class FrequencyFeature extends AbstractFeature {
      * @return
      */
     public double getTTFNorm(String luceneTerm) {
-        return (double) getTTF(luceneTerm) / ((double) getTotalTerms() + 1);
+        return (double) getTTF(luceneTerm) / ((double) getCorpusTotal() + 1);
     }
 
     /**

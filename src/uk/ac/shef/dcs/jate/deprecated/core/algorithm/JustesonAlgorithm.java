@@ -15,6 +15,7 @@ import java.util.Arrays;
  * </p>
  */
 
+@Deprecated
 public class JustesonAlgorithm implements Algorithm{
 
 	public Term[] execute(AbstractFeatureWrapper store) throws JATEException {

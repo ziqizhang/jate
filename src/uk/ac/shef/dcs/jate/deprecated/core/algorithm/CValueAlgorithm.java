@@ -13,6 +13,7 @@ import java.util.Arrays;
  * 
  * @author <a href="mailto:z.zhang@dcs.shef.ac.uk">Ziqi Zhang</a>
  */
+@Deprecated
 public class CValueAlgorithm implements Algorithm {
 
 	/**

@@ -19,33 +19,12 @@ public class CValue extends Algorithm {
     public List<JATETerm> execute() throws JATEException {
 
         AbstractFeature feature = features.get(FrequencyFeature.class.getName());
-        if (feature == null || !(feature instanceof FrequencyFeature)) {
-            StringBuilder sb = new StringBuilder(TTF.class.getName());
-            sb.append(" requires feature type:").append(FrequencyFeature.class.getName()).append(",")
-                    .append(" provided:");
-            if (feature == null)
-                sb.append("null");
-            else
-                sb.append(feature.getClass().getName());
-            throw new JATEException(sb.toString());
-        }
-
+        validateFeature(feature, FrequencyFeature.class);
         FrequencyFeature fFeature = (FrequencyFeature) feature;
 
         AbstractFeature feature2 = features.get(ContainmentFeature.class.getName());
-        if (feature2 == null || !(feature2 instanceof ContainmentFeature)) {
-            StringBuilder sb = new StringBuilder(TTF.class.getName());
-            sb.append(" requires feature type:").append(ContainmentFeature.class.getName()).append(",")
-                    .append(" provided:");
-            if (feature == null)
-                sb.append("null");
-            else
-                sb.append(feature2.getClass().getName());
-            throw new JATEException(sb.toString());
-        }
-
+        validateFeature(feature2, ContainmentFeature.class);
         ContainmentFeature cFeature = (ContainmentFeature) feature2;
-
 
         boolean collectInfo = termInfoCollector != null;
         List<JATETerm> result = new ArrayList<>();

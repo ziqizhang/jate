@@ -10,6 +10,7 @@ import java.util.Set;
 /**
  * Average corpus tf = tf_in_corpus(t)/doc freq (t).
  */
+@Deprecated
 public class AverageCorpusTFAlgorithm implements Algorithm{
     public Term[] execute(AbstractFeatureWrapper store) throws JATEException {
 		if(!(store instanceof AverageCorpusTFFeatureWrapper)) throw new JATEException("" +

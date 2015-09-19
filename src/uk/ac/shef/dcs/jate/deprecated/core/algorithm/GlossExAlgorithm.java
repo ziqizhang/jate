@@ -25,6 +25,7 @@ import java.util.Set;
 
 
 
+@Deprecated
 public class GlossExAlgorithm implements Algorithm {
 
 	private final double _alpha;
