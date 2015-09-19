@@ -12,6 +12,7 @@ import java.util.Set;
  * Church, K. and Gale, W. 1995a. Inverse Document Frequency (IDF): A Measure of Deviation from Poisson. In Proceedings of the 3rd Workshop on Very Large Corpora. Cambridge, Massachusetts, USA, pp.121-30.
  *
  */
+@Deprecated
 public class RIDFAlgorithm implements Algorithm {
     public Term[] execute(AbstractFeatureWrapper store) throws JATEException {
 		if(!(store instanceof RIDFFeatureWrapper)) throw new JATEException("" +

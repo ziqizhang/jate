@@ -15,7 +15,7 @@ import java.util.Arrays;
  *  <br>Also credits to <b>pmclachlan@gmail.com</b> for revision for performance tweak </br>
  */
 
-
+@Deprecated
 public class TFIDFAlgorithm implements Algorithm {
 	public Term[] execute(AbstractFeatureWrapper store) throws JATEException {
 		if(!(store instanceof TFIDFFeatureWrapper)) throw new JATEException("" +

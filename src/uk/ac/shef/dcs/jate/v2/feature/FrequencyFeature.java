@@ -55,11 +55,11 @@ public class FrequencyFeature extends AbstractFeature {
      * Get the normalised frequency of a term in the corpus, which is the number of occurrences of that term as a fraction
      * of the total number of occurrences of all terms in the corpus.
      *
-     * @param luceneTerm
+     * @param term
      * @return
      */
-    public double getTTFNorm(String luceneTerm) {
-        return (double) getTTF(luceneTerm) / ((double) getCorpusTotal() + 1);
+    public double getTTFNorm(String term) {
+        return (double) getTTF(term) / ((double) getCorpusTotal() + 1);
     }
 
     /**
