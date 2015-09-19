@@ -24,6 +24,10 @@ public class FrequencyFeature extends AbstractFeature {
     protected FrequencyFeature() {
     }
 
+    public Map<String, Integer> getMapTerm2TTF(){
+        return term2TTF;
+    }
+
     public int getTotalWords() {
         if(totalWords==0){
             for(int i: term2TTF.values())
