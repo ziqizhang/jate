@@ -28,7 +28,7 @@ public class FrequencyFeature extends AbstractFeature {
         return term2TTF;
     }
 
-    public int getTotalWords() {
+    public int getTotalTerms() {
         if(totalWords==0){
             for(int i: term2TTF.values())
                 totalWords+=i;
@@ -36,7 +36,7 @@ public class FrequencyFeature extends AbstractFeature {
         return totalWords;
     }
 
-    protected void setTotalWords(int i) {
+    protected void setTotalTerms(int i) {
         totalWords = i;
     }
 
@@ -54,7 +54,7 @@ public class FrequencyFeature extends AbstractFeature {
      * @return
      */
     public double getTTFNorm(String luceneTerm) {
-        return (double) getTTF(luceneTerm) / ((double) getTotalWords() + 1);
+        return (double) getTTF(luceneTerm) / ((double) getTotalTerms() + 1);
     }
 
     /**
@@ -69,12 +69,16 @@ public class FrequencyFeature extends AbstractFeature {
 
 
 
-    protected void addTermFrequencyInDocument(String luceneTerm, int luceneDocId, int freq){
-        Map<Integer, Integer> freqMap = term2FID.get(luceneTerm);
+    protected void addTermFrequencyInDocument(String term, int luceneDocId, int freq){
+        Map<Integer, Integer> freqMap = term2FID.get(term);
         if(freqMap==null)
             freqMap = new HashMap<>();
         freqMap.put(luceneDocId, freq);
-        term2FID.put(luceneTerm, freqMap);
+        term2FID.put(term, freqMap);
+    }
+
+    public Map<Integer, Integer> getTermFrequencyInDocument(String term){
+        return term2FID.get(term);
     }
 
 }

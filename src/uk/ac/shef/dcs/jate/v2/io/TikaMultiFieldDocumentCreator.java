@@ -40,12 +40,12 @@ public class TikaMultiFieldDocumentCreator extends DocumentCreator {
             doc.setContent(handler.toString());
 
             //add two specific fields: title and links. The values are not really useful
-            String dynamicFieldname = properties.getSolrFieldnameJATETextF();
+            String dynamicFieldname = properties.getSolrFieldnameJATETermsF();
             if (dynamicFieldname == null)
                 throw new JATEException("'fieldname_jate_text_f' required but is not defined in jate.properties");
-            doc.getMapField2Content().put(properties.getSolrFieldnameJATETextF().
+            doc.getMapField2Content().put(properties.getSolrFieldnameJATETermsF().
                     replace("\\*", "title"), doc.getContent().substring(0, 100));
-            doc.getMapField2Content().put(properties.getSolrFieldnameJATETextF().
+            doc.getMapField2Content().put(properties.getSolrFieldnameJATETermsF().
                     replace("\\*", "link"), doc.getContent().substring(101,120));
             return doc;
         } catch (SAXException e) {

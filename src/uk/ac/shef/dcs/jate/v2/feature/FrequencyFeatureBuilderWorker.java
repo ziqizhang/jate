@@ -20,48 +20,49 @@ class FrequencyFeatureBuilderWorker extends JATERecursiveTaskWorker<BytesRef, in
     private JATEProperties properties;
     private IndexReader index;
     private FrequencyFeature feature;
+    private String targetField;
 
     FrequencyFeatureBuilderWorker(JATEProperties properties, List<BytesRef> luceneTerms, IndexReader index,
-                                  FrequencyFeature feature, int maxTasksPerWorker) {
+                                  FrequencyFeature feature, int maxTasksPerWorker,
+                                  String targetField) {
         super(luceneTerms, maxTasksPerWorker);
-        this.properties=properties;
-        this.feature=feature;
-        this.index=index;
+        this.properties = properties;
+        this.feature = feature;
+        this.index = index;
+        this.targetField = targetField;
     }
 
     @Override
     protected JATERecursiveTaskWorker<BytesRef, int[]> createInstance(List<BytesRef> termSplit) {
-        return new FrequencyFeatureBuilderWorker(properties,termSplit, index, feature, maxTasksPerThread);
+        return new FrequencyFeatureBuilderWorker(properties, termSplit, index, feature, maxTasksPerThread, targetField);
     }
 
     @Override
     protected int[] mergeResult(List<JATERecursiveTaskWorker<BytesRef, int[]>> jateRecursiveTaskWorkers) {
-        int totalSuccess=0, total=0;
-        for(JATERecursiveTaskWorker<BytesRef, int[]> worker: jateRecursiveTaskWorkers) {
-            int[] rs= worker.join();
-            totalSuccess+=rs[0];
-            total+=rs[1];
+        int totalSuccess = 0, total = 0;
+        for (JATERecursiveTaskWorker<BytesRef, int[]> worker : jateRecursiveTaskWorkers) {
+            int[] rs = worker.join();
+            totalSuccess += rs[0];
+            total += rs[1];
         }
-        return new int[]{totalSuccess,total};
+        return new int[]{totalSuccess, total};
     }
 
     @Override
     protected int[] computeSingleWorker(List<BytesRef> terms) {
-        int totalSuccess=0;
-        for(BytesRef luceneTerm: terms) {
+        int totalSuccess = 0;
+        for (BytesRef luceneTerm : terms) {
             try {
                 PostingsEnum docEnum = MultiFields.getTermDocsEnum(index,
-                        properties.getSolrFieldnameJATETextAll(), luceneTerm);
+                        targetField, luceneTerm);
 
-                int doc=0;
+                int doc = 0;
                 while ((doc = docEnum.nextDoc()) != PostingsEnum.NO_MORE_DOCS) {
                     int tfid = docEnum.freq();  //tf in document
                     feature.addTermFrequencyInDocument(luceneTerm.utf8ToString(), doc, tfid);
                 }
                 totalSuccess++;
-            }catch (JATEException je){
-                LOG.severe(ExceptionUtils.getFullStackTrace(je));
-            }catch(IOException ioe){
+            } catch (IOException ioe) {
                 StringBuilder sb = new StringBuilder("Unable to build feature for candidate:");
                 sb.append(luceneTerm.utf8ToString()).append("\n");
                 sb.append(ExceptionUtils.getFullStackTrace(ioe));

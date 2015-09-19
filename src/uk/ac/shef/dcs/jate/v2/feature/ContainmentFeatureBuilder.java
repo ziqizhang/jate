@@ -30,7 +30,7 @@ public class ContainmentFeatureBuilder extends AbstractFeatureBuilder {
             boolean foundJATETextField = false;
             for (String field : fields) {
                 foundJATETextField = true;
-                if (field.equals(properties.getSolrFieldnameJATETextAll())) {
+                if (field.equals(properties.getSolrFieldnameJATETermsAll())) {
                     Map<String, Integer> term2NumTokens = new HashMap<>();
                     Terms terms = fields.terms(field);
                     TermsEnum termsEnum = terms.iterator();
@@ -58,7 +58,7 @@ public class ContainmentFeatureBuilder extends AbstractFeatureBuilder {
             }
 
             if(!foundJATETextField){
-                throw new JATEException("Cannot find expected field: "+properties.getSolrFieldnameJATETextAll());
+                throw new JATEException("Cannot find expected field: "+properties.getSolrFieldnameJATETermsAll());
             }
         }catch (IOException ioe){
             StringBuilder sb = new StringBuilder("Failed to build features!");

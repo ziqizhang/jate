@@ -18,4 +18,11 @@ public class ContainmentFeature extends AbstractFeature {
         parentTerms.add(parentTerm);
         term2Parents.put(term, parentTerms);
     }
+
+    public Set<String> getTermParents(String term){
+        Set<String> parents = term2Parents.get(term);
+        if(parents==null)
+            parents=new HashSet<>();
+        return parents;
+    }
 }

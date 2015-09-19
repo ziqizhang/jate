@@ -33,15 +33,20 @@ public class JATEProperties {
         return fieldnameID;
     }
 
-    public String getSolrFieldnameJATETextAll() throws JATEException {
-        String fieldnameID = getString("fieldname_jate_text_all");
+    public String getSolrFieldnameJATETermsAll() throws JATEException {
+        String fieldnameID = getString("fieldname_jate_terms_all");
         if (fieldnameID == null)
-            throw new JATEException("'fieldname_jate_text_all' not defined in jate.properties");
+            throw new JATEException("'fieldname_jate_terms_all' not defined in jate.properties");
         return fieldnameID;
     }
 
-    public String getSolrFieldnameJATETextF(){
-        String fieldnameID = getString("fieldname_jate_text_f");
+    public String getSolrFieldnameJATEWordsAll() {
+        String fieldnameID = getString("fieldname_jate_words_all");
+        return fieldnameID;
+    }
+
+    public String getSolrFieldnameJATETermsF(){
+        String fieldnameID = getString("fieldname_jate_terms_f");
         return fieldnameID;
     }
 

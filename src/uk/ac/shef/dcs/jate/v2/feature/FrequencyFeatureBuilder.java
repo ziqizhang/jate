@@ -20,19 +20,23 @@ public class FrequencyFeatureBuilder extends AbstractFeatureBuilder {
 
     private static final Logger LOG=Logger.getLogger(FrequencyFeatureBuilder.class.getName());
 
-    public FrequencyFeatureBuilder(IndexReader index, JATEProperties properties) {
+    protected int apply2Terms=0; //1 means no= words
+    public FrequencyFeatureBuilder(IndexReader index, JATEProperties properties,
+                                   int apply2Terms) {
         super(index, properties);
+        this.apply2Terms=apply2Terms;
     }
 
     @Override
     public AbstractFeature build() throws JATEException {
         FrequencyFeature feature = new FrequencyFeature();
+        String targetField=apply2Terms==0?properties.getSolrFieldnameJATETermsAll(): properties.getSolrFieldnameJATEWordsAll();
         try {
             Fields fields = MultiFields.getFields(indexReader);
             boolean foundJATETextField = false;
             for (String field : fields) {
                 foundJATETextField = true;
-                if (field.equals(properties.getSolrFieldnameJATETextAll())) {
+                if (field.equals(targetField)) {
                     List<BytesRef> allLuceneTerms = new ArrayList<>();
                     Terms terms = fields.terms(field);
                     TermsEnum termsEnum = terms.iterator();
@@ -46,7 +50,7 @@ public class FrequencyFeatureBuilder extends AbstractFeatureBuilder {
                     cores = cores == 0 ? 1 : cores;
                     FrequencyFeatureBuilderWorker worker = new
                             FrequencyFeatureBuilderWorker(properties, allLuceneTerms,
-                            indexReader, feature, properties.getFeatureBuilderMaxTermsPerWorker());
+                            indexReader, feature, properties.getFeatureBuilderMaxTermsPerWorker(),targetField);
                     ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
                     int[] total = forkJoinPool.invoke(worker);
                     StringBuilder sb = new StringBuilder("Complete building features. Total=");
@@ -56,7 +60,7 @@ public class FrequencyFeatureBuilder extends AbstractFeatureBuilder {
             }
 
             if(!foundJATETextField){
-                throw new JATEException("Cannot find expected field: "+properties.getSolrFieldnameJATETextAll());
+                throw new JATEException("Cannot find expected field: "+properties.getSolrFieldnameJATETermsAll());
             }
         }catch (IOException ioe){
             StringBuilder sb = new StringBuilder("Failed to build features!");

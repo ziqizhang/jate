@@ -32,6 +32,8 @@ public class SolrParallelIndexingMaster {
 
         LOG.info("Beginning indexing dataset using cores="+cores);
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
+        if(properties.getSolrFieldnameJATEWordsAll()==null)
+            LOG.info("'fieldname_jate_words_all' undefined. If you do not use GlossEx or TermEx this is ok.");
         SolrParallelIndexingWorker idxWorker = new SolrParallelIndexingWorker(tasks,
                 maxTaskPerWorker, batchSize, docCreator, solrClient,properties);
         int total= forkJoinPool.invoke(idxWorker);
