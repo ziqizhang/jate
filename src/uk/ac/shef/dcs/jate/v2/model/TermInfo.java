@@ -1,17 +1,25 @@
 package uk.ac.shef.dcs.jate.v2.model;
 
+import java.util.*;
+
 /**
- * Created by zqz on 19/09/2015.
  */
-public class TermInfo<T> {
+public class TermInfo {
 
-    protected T info;
+    protected Map<JATEDocument, Set<int[]>> offsets = new HashMap<>();
+    protected List<String> variants = new ArrayList<>();
 
-    public T getInfo(){
-        return info;
+    protected Map<String, Object> otherInfo = new HashMap<>();
+
+    public Map<JATEDocument, Set<int[]>> getOffsets(){
+        return offsets;
     }
 
-    public void setInfo(T info){
-        this.info=info;
+    public List<String> getVariants(){
+        return variants;
+    }
+
+    public Map<String, Object> getOtherInfo(){
+        return otherInfo;
     }
 }

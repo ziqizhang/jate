@@ -11,7 +11,7 @@ public class JATETerm implements Comparable<JATETerm>{
 
     protected String string;
     protected double score;
-    protected Map<TermInfoType, TermInfo> termInfo;
+    protected TermInfo termInfo;
 
     public JATETerm(String string){
         this(string, 0.0);
@@ -19,7 +19,6 @@ public class JATETerm implements Comparable<JATETerm>{
     public JATETerm(String string, double score){
         this.string=string;
         this.score=score;
-        this.termInfo=new HashMap<>();
     }
 
     public String getString(){
@@ -38,12 +37,12 @@ public class JATETerm implements Comparable<JATETerm>{
         this.score=score;
     }
 
-    public Map<TermInfoType, TermInfo> getTermInfo(){
+    public TermInfo getTermInfo(){
         return termInfo;
     }
 
-    public void addTermInfo(TermInfoType type, TermInfo info){
-        termInfo.put(type, info);
+    public void setTermInfo(TermInfo info){
+        this.termInfo= info;
     }
 
     public String toString(){
