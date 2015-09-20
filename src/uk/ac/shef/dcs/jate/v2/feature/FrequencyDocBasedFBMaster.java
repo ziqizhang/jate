@@ -5,7 +5,6 @@ import org.apache.lucene.index.*;
 import org.apache.lucene.util.BytesRef;
 import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.v2.JATEProperties;
-import uk.ac.shef.dcs.jate.v2.indexing.SolrParallelIndexingWorker;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,22 +13,21 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Logger;
 
 /**
- * Created by zqz on 17/09/2015.
+ *
  */
-public class FrequencyFeatureBuilder extends AbstractFeatureBuilder {
-
-    private static final Logger LOG=Logger.getLogger(FrequencyFeatureBuilder.class.getName());
+public class FrequencyDocBasedFBMaster extends AbstractFeatureBuilder {
+    private static final Logger LOG=Logger.getLogger(FrequencyDocBasedFBMaster.class.getName());
 
     protected int apply2Terms=0; //1 means no= words
-    public FrequencyFeatureBuilder(IndexReader index, JATEProperties properties,
-                                   int apply2Terms) {
+    public FrequencyDocBasedFBMaster(IndexReader index, JATEProperties properties,
+                                      int apply2Terms) {
         super(index, properties);
         this.apply2Terms=apply2Terms;
     }
 
     @Override
     public AbstractFeature build() throws JATEException {
-        FrequencyFeature feature = new FrequencyFeature();
+        FrequencyDocBased feature = new FrequencyDocBased();
         feature.setTotalDocs(indexReader.numDocs());
         String targetField=apply2Terms==0?properties.getSolrFieldnameJATETermsAll(): properties.getSolrFieldnameJATEWordsAll();
         try {
@@ -49,13 +47,13 @@ public class FrequencyFeatureBuilder extends AbstractFeatureBuilder {
                     int cores = Runtime.getRuntime().availableProcessors();
                     cores = (int) (cores * properties.getFeatureBuilderMaxCPUsage());
                     cores = cores == 0 ? 1 : cores;
-                    FrequencyFeatureBuilderWorker worker = new
-                            FrequencyFeatureBuilderWorker(properties, allLuceneTerms,
-                            indexReader, feature, properties.getFeatureBuilderMaxTermsPerWorker(),targetField);
+                    FrequencyDocBasedFBWorker worker = new
+                            FrequencyDocBasedFBWorker(properties, allLuceneTerms,
+                            indexReader, properties.getFeatureBuilderMaxTermsPerWorker(),targetField);
                     ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
-                    int[] total = forkJoinPool.invoke(worker);
+                    feature = forkJoinPool.invoke(worker);
                     StringBuilder sb = new StringBuilder("Complete building features. Total=");
-                    sb.append(total[1]).append(" success=").append(total[0]);
+                    sb.append(feature.getTotalDocs()).append(" success=").append(feature.getMapDoc2TTF().size());
                     LOG.info(sb.toString());
                 }
             }

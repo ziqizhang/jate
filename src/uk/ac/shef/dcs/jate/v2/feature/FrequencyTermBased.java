@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 
-public class FrequencyFeature extends AbstractFeature {
+public class FrequencyTermBased extends AbstractFeature {
 
     //term and its total freq in corpus
     private Map<String, Integer> term2TTF = new ConcurrentHashMap<>();
@@ -22,7 +22,7 @@ public class FrequencyFeature extends AbstractFeature {
     private int corpusTotal = 0;
     private int totalDocs=0;
 
-    protected FrequencyFeature() {
+    protected FrequencyTermBased() {
     }
 
     public Map<String, Integer> getMapTerm2TTF(){

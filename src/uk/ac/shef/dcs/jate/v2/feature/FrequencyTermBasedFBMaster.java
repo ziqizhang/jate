@@ -7,48 +7,50 @@ import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.v2.JATEProperties;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Logger;
 
 /**
  * Created by zqz on 17/09/2015.
  */
-public class ContainmentFeatureBuilder extends AbstractFeatureBuilder {
+public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
 
-    private static final Logger LOG = Logger.getLogger(ContainmentFeatureBuilder.class.getName());
+    private static final Logger LOG=Logger.getLogger(FrequencyTermBasedFBMaster.class.getName());
 
-    public ContainmentFeatureBuilder(IndexReader index, JATEProperties properties) {
+    protected int apply2Terms=0; //1 means no= words
+    public FrequencyTermBasedFBMaster(IndexReader index, JATEProperties properties,
+                                      int apply2Terms) {
         super(index, properties);
+        this.apply2Terms=apply2Terms;
     }
 
     @Override
     public AbstractFeature build() throws JATEException {
-        ContainmentFeature feature = new ContainmentFeature();
+        FrequencyTermBased feature = new FrequencyTermBased();
+        feature.setTotalDocs(indexReader.numDocs());
+        String targetField=apply2Terms==0?properties.getSolrFieldnameJATETermsAll(): properties.getSolrFieldnameJATEWordsAll();
         try {
             Fields fields = MultiFields.getFields(indexReader);
             boolean foundJATETextField = false;
             for (String field : fields) {
                 foundJATETextField = true;
-                if (field.equals(properties.getSolrFieldnameJATETermsAll())) {
-                    Map<String, Integer> term2NumTokens = new HashMap<>();
+                if (field.equals(targetField)) {
+                    List<BytesRef> allLuceneTerms = new ArrayList<>();
                     Terms terms = fields.terms(field);
                     TermsEnum termsEnum = terms.iterator();
                     while (termsEnum.next() != null) {
-                        String t = termsEnum.term().utf8ToString();
-                        int tokens = t.split("\\s+").length;
-                        term2NumTokens.put(t, tokens);
+                        BytesRef t = termsEnum.term();
+                        allLuceneTerms.add(t);
                     }
                     //start workers
                     int cores = Runtime.getRuntime().availableProcessors();
                     cores = (int) (cores * properties.getFeatureBuilderMaxCPUsage());
                     cores = cores == 0 ? 1 : cores;
-                    List<String> termSorted = new ArrayList<>(term2NumTokens.keySet());
-                    Collections.sort(termSorted);
-                    ContainmentFeatureBuilderWorker worker = new
-                            ContainmentFeatureBuilderWorker(properties, termSorted,
-                            term2NumTokens,
-                            feature, properties.getFeatureBuilderMaxTermsPerWorker());
+                    FrequencyTermBasedFBWorker worker = new
+                            FrequencyTermBasedFBWorker(properties, allLuceneTerms,
+                            indexReader, feature, properties.getFeatureBuilderMaxTermsPerWorker(),targetField);
                     ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
                     int[] total = forkJoinPool.invoke(worker);
                     StringBuilder sb = new StringBuilder("Complete building features. Total=");
@@ -65,7 +67,6 @@ public class ContainmentFeatureBuilder extends AbstractFeatureBuilder {
             sb.append("\n").append(ExceptionUtils.getFullStackTrace(ioe));
             LOG.severe(sb.toString());
         }
-
         return feature;
     }
 }

@@ -2,7 +2,7 @@ package uk.ac.shef.dcs.jate.v2.algorithm;
 
 import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.v2.feature.AbstractFeature;
-import uk.ac.shef.dcs.jate.v2.feature.FrequencyFeature;
+import uk.ac.shef.dcs.jate.v2.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.v2.model.JATETerm;
 
 import java.util.HashMap;
@@ -28,7 +28,7 @@ public abstract class Algorithm {
     public abstract List<JATETerm> execute() throws JATEException;
 
     protected void validateFeature(AbstractFeature feature, Class type) throws JATEException {
-        if (feature == null || !(feature instanceof FrequencyFeature)) {
+        if (feature == null || !(feature instanceof FrequencyTermBased)) {
             StringBuilder sb = new StringBuilder();
             sb.append("requires feature type:").append(type).append(",")
                     .append(" provided:");

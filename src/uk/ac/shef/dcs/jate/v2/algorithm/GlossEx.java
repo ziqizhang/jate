@@ -2,7 +2,7 @@ package uk.ac.shef.dcs.jate.v2.algorithm;
 
 import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.v2.feature.AbstractFeature;
-import uk.ac.shef.dcs.jate.v2.feature.FrequencyFeature;
+import uk.ac.shef.dcs.jate.v2.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.v2.model.JATETerm;
 import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 
@@ -29,17 +29,17 @@ public class GlossEx extends Algorithm {
     }
 
     public List<JATETerm> execute() throws JATEException {
-        AbstractFeature feature = features.get(FrequencyFeature.class.getName());
-        validateFeature(feature, FrequencyFeature.class);
-        FrequencyFeature fFeatureTerms = (FrequencyFeature) feature;
+        AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
+        validateFeature(feature, FrequencyTermBased.class);
+        FrequencyTermBased fFeatureTerms = (FrequencyTermBased) feature;
 
-        AbstractFeature feature2 = features.get(FrequencyFeature.class.getName()+"_"+PREFIX_WORD);
-        validateFeature(feature2, FrequencyFeature.class);
-        FrequencyFeature fFeatureWords = (FrequencyFeature) feature2;
+        AbstractFeature feature2 = features.get(FrequencyTermBased.class.getName()+"_"+PREFIX_WORD);
+        validateFeature(feature2, FrequencyTermBased.class);
+        FrequencyTermBased fFeatureWords = (FrequencyTermBased) feature2;
 
-        AbstractFeature feature3 = features.get(FrequencyFeature.class.getName()+"_"+PREFIX_REF);
-        validateFeature(feature3, FrequencyFeature.class);
-        FrequencyFeature fFeatureRef = (FrequencyFeature) feature3;
+        AbstractFeature feature3 = features.get(FrequencyTermBased.class.getName()+"_"+PREFIX_REF);
+        validateFeature(feature3, FrequencyTermBased.class);
+        FrequencyTermBased fFeatureRef = (FrequencyTermBased) feature3;
 
         List<JATETerm> result = new ArrayList<>();
         boolean collectInfo = termInfoCollector != null;

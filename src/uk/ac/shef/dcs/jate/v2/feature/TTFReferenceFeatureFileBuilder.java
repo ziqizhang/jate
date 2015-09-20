@@ -1,8 +1,6 @@
 package uk.ac.shef.dcs.jate.v2.feature;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import uk.ac.shef.dcs.jate.deprecated.core.feature.*;
-import uk.ac.shef.dcs.jate.deprecated.core.feature.indexer.GlobalIndex;
 import uk.ac.shef.dcs.jate.v2.JATEException;
 
 import java.io.BufferedReader;
@@ -46,8 +44,8 @@ public class TTFReferenceFeatureFileBuilder extends AbstractFeatureBuilder {
      * @return
      * @throws uk.ac.shef.dcs.jate.v2.JATEException
      */
-    public FrequencyFeature build() throws JATEException {
-        FrequencyFeature feature = new FrequencyFeature();
+    public FrequencyTermBased build() throws JATEException {
+        FrequencyTermBased feature = new FrequencyTermBased();
 
         try {
             final BufferedReader reader = new BufferedReader(new FileReader(_refStatsPath));

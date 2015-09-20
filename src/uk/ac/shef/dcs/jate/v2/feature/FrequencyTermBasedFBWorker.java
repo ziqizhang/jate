@@ -3,7 +3,6 @@ package uk.ac.shef.dcs.jate.v2.feature;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.lucene.index.*;
 import org.apache.lucene.util.BytesRef;
-import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.v2.JATEProperties;
 import uk.ac.shef.dcs.jate.v2.JATERecursiveTaskWorker;
 
@@ -14,17 +13,17 @@ import java.util.logging.Logger;
 /**
  * Created by zqz on 17/09/2015.
  */
-class FrequencyFeatureBuilderWorker extends JATERecursiveTaskWorker<BytesRef, int[]> {
+class FrequencyTermBasedFBWorker extends JATERecursiveTaskWorker<BytesRef, int[]> {
 
-    private static final Logger LOG = Logger.getLogger(FrequencyFeatureBuilderWorker.class.getName());
+    private static final Logger LOG = Logger.getLogger(FrequencyTermBasedFBWorker.class.getName());
     private JATEProperties properties;
     private IndexReader index;
-    private FrequencyFeature feature;
+    private FrequencyTermBased feature;
     private String targetField;
 
-    FrequencyFeatureBuilderWorker(JATEProperties properties, List<BytesRef> luceneTerms, IndexReader index,
-                                  FrequencyFeature feature, int maxTasksPerWorker,
-                                  String targetField) {
+    FrequencyTermBasedFBWorker(JATEProperties properties, List<BytesRef> luceneTerms, IndexReader index,
+                               FrequencyTermBased feature, int maxTasksPerWorker,
+                               String targetField) {
         super(luceneTerms, maxTasksPerWorker);
         this.properties = properties;
         this.feature = feature;
@@ -34,7 +33,7 @@ class FrequencyFeatureBuilderWorker extends JATERecursiveTaskWorker<BytesRef, in
 
     @Override
     protected JATERecursiveTaskWorker<BytesRef, int[]> createInstance(List<BytesRef> termSplit) {
-        return new FrequencyFeatureBuilderWorker(properties, termSplit, index, feature, maxTasksPerThread, targetField);
+        return new FrequencyTermBasedFBWorker(properties, termSplit, index, feature, maxTasksPerThread, targetField);
     }
 
     @Override

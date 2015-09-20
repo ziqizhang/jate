@@ -1,12 +1,8 @@
 package uk.ac.shef.dcs.jate.v2.feature;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.lucene.index.TermsEnum;
-import org.apache.lucene.util.BytesRef;
 import uk.ac.shef.dcs.jate.v2.JATEProperties;
 import uk.ac.shef.dcs.jate.v2.JATERecursiveTaskWorker;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -15,15 +11,15 @@ import java.util.regex.Pattern;
 /**
  * Created by zqz on 17/09/2015.
  */
-class ContainmentFeatureBuilderWorker extends JATERecursiveTaskWorker<String, int[]> {
-    private static final Logger LOG = Logger.getLogger(FrequencyFeatureBuilderWorker.class.getName());
+class ContainmentFBWorker extends JATERecursiveTaskWorker<String, int[]> {
+    private static final Logger LOG = Logger.getLogger(FrequencyTermBasedFBWorker.class.getName());
     private JATEProperties properties;
     private Map<String, Integer> term2NumTokens;
-    private ContainmentFeature feature;
+    private Containment feature;
 
-    ContainmentFeatureBuilderWorker(JATEProperties properties, List<String> taskTerms,
-                                    Map<String, Integer> term2NumTokens,
-                                    ContainmentFeature feature, int maxTasksPerWorker) {
+    ContainmentFBWorker(JATEProperties properties, List<String> taskTerms,
+                        Map<String, Integer> term2NumTokens,
+                        Containment feature, int maxTasksPerWorker) {
         super(taskTerms, maxTasksPerWorker);
         this.properties = properties;
         this.feature = feature;
@@ -32,7 +28,7 @@ class ContainmentFeatureBuilderWorker extends JATERecursiveTaskWorker<String, in
 
     @Override
     protected JATERecursiveTaskWorker<String, int[]> createInstance(List<String> termSplit) {
-        return new ContainmentFeatureBuilderWorker(properties, termSplit, term2NumTokens,
+        return new ContainmentFBWorker(properties, termSplit, term2NumTokens,
                 feature, maxTasksPerThread);
     }
 

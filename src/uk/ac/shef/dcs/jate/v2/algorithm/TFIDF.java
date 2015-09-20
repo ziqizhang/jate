@@ -1,14 +1,12 @@
 package uk.ac.shef.dcs.jate.v2.algorithm;
 
-import uk.ac.shef.dcs.jate.deprecated.model.Term;
 import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.v2.feature.AbstractFeature;
-import uk.ac.shef.dcs.jate.v2.feature.FrequencyFeature;
+import uk.ac.shef.dcs.jate.v2.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.v2.model.JATETerm;
 import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -18,9 +16,9 @@ import java.util.Map;
 public class TFIDF extends Algorithm {
     @Override
     public List<JATETerm> execute() throws JATEException {
-        AbstractFeature feature = features.get(FrequencyFeature.class.getName());
-        validateFeature(feature, FrequencyFeature.class);
-        FrequencyFeature fFeature = (FrequencyFeature) feature;
+        AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
+        validateFeature(feature, FrequencyTermBased.class);
+        FrequencyTermBased fFeature = (FrequencyTermBased) feature;
 
         double totalDocs = (double) fFeature.getTotalDocs();
         boolean collectInfo = termInfoCollector != null;

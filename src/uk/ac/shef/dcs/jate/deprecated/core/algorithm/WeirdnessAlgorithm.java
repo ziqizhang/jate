@@ -17,6 +17,7 @@ import java.util.Set;
 
 
 
+@Deprecated
 public class WeirdnessAlgorithm implements Algorithm {
 	public Term[] execute(AbstractFeatureWrapper store) throws JATEException {
 		if (!(store instanceof WeirdnessFeatureWrapper)) throw new JATEException("" +
