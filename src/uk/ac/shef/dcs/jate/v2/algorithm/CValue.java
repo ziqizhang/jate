@@ -15,7 +15,7 @@ import java.util.*;
 public class CValue extends Algorithm {
 
     @Override
-    public List<JATETerm> execute() throws JATEException {
+    public List<JATETerm> execute(Set<String> candidates) throws JATEException {
 
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);
@@ -27,13 +27,13 @@ public class CValue extends Algorithm {
 
         boolean collectInfo = termInfoCollector != null;
         List<JATETerm> result = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : fFeature.getMapTerm2TTF().entrySet()) {
-            String tString = entry.getKey();
-            JATETerm term = new JATETerm(tString, (double) entry.getValue());
+        for (String tString: candidates) {
+            int ttf = fFeature.getTTF(tString);
+            JATETerm term = new JATETerm(tString);
 
             double score;
             double log2a = Math.log((double) tString.split(" ").length + 0.1) / Math.log(2.0); //Anurag mods for log (a), log(a + 0.1)
-            double freqa = (double) entry.getValue();
+            double freqa = (double) ttf;
 
             Set<String> parentTerms = cFeature.getTermParents(tString);
             double pTa = (double) parentTerms.size();

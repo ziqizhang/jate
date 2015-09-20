@@ -17,34 +17,34 @@ import java.util.Set;
  */
 public class TermEx extends Algorithm{
 
-    private final double _alpha;
-    private final double _beta;
-    private final double _zeta;
+    private final double alpha;
+    private final double beta;
+    private final double zeta;
 
-    public static final String PREFIX_REF ="REF_";
-    public static final String PREFIX_WORD="WORD_";
+    public static final String SUFFIX_REF ="_REF";
+    public static final String SUFFIX_WORD ="_WORD";
 
     public TermEx() {
         this(0.33,0.33,0.34);
     }
 
     public TermEx(double alpha, double beta, double zeta) {
-        _alpha = alpha;
-        _beta = beta;
-        _zeta = zeta;
+        this.alpha = alpha;
+        this.beta = beta;
+        this.zeta = zeta;
     }
 
     @Override
-    public List<JATETerm> execute() throws JATEException {
+    public List<JATETerm> execute(Set<String> candidates) throws JATEException {
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeatureTerms = (FrequencyTermBased) feature;
 
-        AbstractFeature feature2 = features.get(FrequencyTermBased.class.getName()+"_"+PREFIX_WORD);
+        AbstractFeature feature2 = features.get(FrequencyTermBased.class.getName()+ SUFFIX_WORD);
         validateFeature(feature2, FrequencyTermBased.class);
         FrequencyTermBased fFeatureWords = (FrequencyTermBased) feature2;
 
-        AbstractFeature feature3 = features.get(FrequencyTermBased.class.getName()+"_"+PREFIX_REF);
+        AbstractFeature feature3 = features.get(FrequencyTermBased.class.getName()+ SUFFIX_REF);
         validateFeature(feature3, FrequencyTermBased.class);
         FrequencyTermBased fFeatureRef = (FrequencyTermBased) feature3;
 
@@ -54,10 +54,8 @@ public class TermEx extends Algorithm{
 
         List<JATETerm> result = new ArrayList<>();
         boolean collectInfo = termInfoCollector != null;
-        double totalTermsInCorpus = fFeatureTerms.getCorpusTotal();
-        for(Map.Entry<String, Integer> entry: fFeatureTerms.getMapTerm2TTF().entrySet()) {
-            String tString = entry.getKey();
-
+        double totalWordsInCorpus = fFeatureWords.getCorpusTotal();
+        for(String tString: candidates) {
             String[] elements = tString.split(" ");
             double T = (double) elements.length;
             double SUMwi = 0.0;
@@ -65,8 +63,11 @@ public class TermEx extends Algorithm{
 
             for (int i = 0; i < T; i++) {
                 String wi = elements[i];
-                SUMwi += (double) fFeatureWords.getTTF(wi) / totalTermsInCorpus /
-                        (fFeatureRef.getTTFNorm(wi) + ((double) fFeatureWords.getTTF(wi) / totalTermsInCorpus));
+                /*
+                This term is modified to ensure DP within the range of 0~1.0
+                 */
+                SUMwi += (double) fFeatureWords.getTTF(wi) / totalWordsInCorpus /
+                        (fFeatureRef.getTTFNorm(wi) + ((double) fFeatureWords.getTTF(wi) / totalWordsInCorpus));
                 SUMfwi += (double) fFeatureWords.getTTF(wi);
             }
 
@@ -83,12 +84,12 @@ public class TermEx extends Algorithm{
                 }
             }
 
-            double DR = SUMwi;
+            double DP = SUMwi;
             double DC = sum;
             double LC = (T * Math.log(fFeatureTerms.getTTF(tString) + 1) * fFeatureTerms.getTTF(tString)) / SUMfwi;
 
             //System.out.println(DR+"------"+DC+"------"+LC);
-            double score = _alpha * DR + _beta * DC + _zeta * LC;
+            double score = alpha * DP + beta * DC + zeta * LC;
             JATETerm term = new JATETerm(tString, score);
             if (collectInfo) {
                 TermInfo termInfo = termInfoCollector.collect(tString);

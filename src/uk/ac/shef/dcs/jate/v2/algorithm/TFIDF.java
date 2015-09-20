@@ -9,13 +9,14 @@ import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by zqz on 19/09/2015.
  */
 public class TFIDF extends Algorithm {
     @Override
-    public List<JATETerm> execute() throws JATEException {
+    public List<JATETerm> execute(Set<String> candidates) throws JATEException {
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeature = (FrequencyTermBased) feature;
@@ -24,11 +25,8 @@ public class TFIDF extends Algorithm {
         boolean collectInfo = termInfoCollector != null;
         List<JATETerm> result = new ArrayList<>();
 
-        for (Map.Entry<String, Integer> entry : fFeature.getMapTerm2TTF().entrySet()) {
-            String tString = entry.getKey();
+        for (String tString: candidates) {
             JATETerm term = new JATETerm(tString);
-            int ttf = entry.getValue();
-
             double tf = fFeature.getTTFNorm(tString);
             double df = fFeature.getTermFrequencyInDocument(tString).size();
             double idf = Math.log(totalDocs / df);

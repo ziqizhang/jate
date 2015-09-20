@@ -9,6 +9,7 @@ import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  */
@@ -28,7 +29,7 @@ public class GlossEx extends Algorithm {
         _beta = beta;
     }
 
-    public List<JATETerm> execute() throws JATEException {
+    public List<JATETerm> execute(Set<String> candidates) throws JATEException {
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeatureTerms = (FrequencyTermBased) feature;
@@ -44,8 +45,8 @@ public class GlossEx extends Algorithm {
         List<JATETerm> result = new ArrayList<>();
         boolean collectInfo = termInfoCollector != null;
         double totalWordsInCorpus = fFeatureWords.getCorpusTotal();
-        for(Map.Entry<String, Integer> entry: fFeatureTerms.getMapTerm2TTF().entrySet()){
-            String tString = entry.getKey();
+        for(String tString: candidates){
+            int ttf = fFeatureTerms.getTTF(tString);
             double score;
             String[] elements = tString.split(" ");
             double T = (double) elements.length;
@@ -59,7 +60,7 @@ public class GlossEx extends Algorithm {
             }
 
             double TD = SUMwi / T;
-            double TC = (T * Math.log10(fFeatureTerms.getTTF(tString) + 1) * fFeatureTerms.getTTF(tString)) / SUMfwi;
+            double TC = (T * Math.log10(ttf + 1) * ttf) / SUMfwi;
 
             if (T == 1) score= 0.9 * TD + 0.1 * TC;
             else score= _alpha * TD + _beta * TC;

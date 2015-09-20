@@ -8,6 +8,7 @@ import uk.ac.shef.dcs.jate.v2.model.JATETerm;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -25,7 +26,7 @@ public abstract class Algorithm {
         this.termInfoCollector=tiCollector;
     }
 
-    public abstract List<JATETerm> execute() throws JATEException;
+    public abstract List<JATETerm> execute(Set<String> candidates) throws JATEException;
 
     protected void validateFeature(AbstractFeature feature, Class type) throws JATEException {
         if (feature == null || !(feature instanceof FrequencyTermBased)) {

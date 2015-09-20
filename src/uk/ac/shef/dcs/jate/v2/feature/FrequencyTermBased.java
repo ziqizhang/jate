@@ -45,8 +45,8 @@ public class FrequencyTermBased extends AbstractFeature {
         this.totalDocs=totalDocs;
     }
 
-    public int getTTF(String luceneTerm){
-        Integer freq = term2TTF.get(luceneTerm);
+    public int getTTF(String term){
+        Integer freq = term2TTF.get(term);
         if(freq==null)
             freq=0;
         return freq;

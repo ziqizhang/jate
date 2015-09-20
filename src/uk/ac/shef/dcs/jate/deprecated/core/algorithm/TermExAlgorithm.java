@@ -21,7 +21,7 @@ import java.util.Arrays;
  */
 
 
-
+@Deprecated
 public class TermExAlgorithm implements Algorithm {
 
 	private final double _alpha;

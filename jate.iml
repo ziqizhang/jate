@@ -158,6 +158,19 @@
     <orderEntry type="library" name="Maven: org.ow2.asm:asm-commons:4.1" level="project" />
     <orderEntry type="library" name="Maven: org.restlet.jee:org.restlet:2.3.0" level="project" />
     <orderEntry type="library" name="Maven: org.restlet.jee:org.restlet.ext.servlet:2.3.0" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.parallelcolt:parallelcolt:0.10.1" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.jplasma:jplasma:1.2.0" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.jplasma:core-lapack:0.1" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.f2j:arpack_combined_all:0.1" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.jtransforms:jtransforms:2.4.0" level="project" />
+    <orderEntry type="library" name="Maven: junit:junit:4.8.2" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.csparsej:csparsej:1.1.1" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.parallelcolt:optimization:1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.googlecode.netlib-java:netlib-java:0.9.3" level="project" />
+    <orderEntry type="library" name="Maven: com.github.rwl:JKLU:1.0.0" level="project" />
+    <orderEntry type="library" name="Maven: com.github.rwl:BTFJ:1.0.1" level="project" />
+    <orderEntry type="library" name="Maven: com.github.rwl:AMDJ:1.0.1" level="project" />
+    <orderEntry type="library" name="Maven: com.github.rwl:COLAMDJ:1.0.1" level="project" />
   </component>
 </module>
 

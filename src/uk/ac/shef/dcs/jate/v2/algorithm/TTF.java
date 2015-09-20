@@ -6,10 +6,7 @@ import uk.ac.shef.dcs.jate.v2.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.v2.model.JATETerm;
 import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by zqz on 19/09/2015.
@@ -17,15 +14,14 @@ import java.util.Map;
 public class TTF extends Algorithm {
 
     @Override
-    public List<JATETerm> execute() throws JATEException{
+    public List<JATETerm> execute(Set<String> candidates) throws JATEException{
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeature = (FrequencyTermBased) feature;
         boolean collectInfo=termInfoCollector!=null;
         List<JATETerm> result = new ArrayList<>();
-        for(Map.Entry<String, Integer> entry: fFeature.getMapTerm2TTF().entrySet()){
-            String tString = entry.getKey();
-            JATETerm term = new JATETerm(tString, (double)entry.getValue());
+        for(String tString: candidates){
+            JATETerm term = new JATETerm(tString, (double)fFeature.getTTF(tString));
 
             if(collectInfo){
                 TermInfo termInfo =termInfoCollector.collect(tString);

@@ -16,6 +16,7 @@ import java.util.Arrays;
  * </i>
  *
  */
+@Deprecated
 public class RAKEAlgorithm implements Algorithm {
 
 	

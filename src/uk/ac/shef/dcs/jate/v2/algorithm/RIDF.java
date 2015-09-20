@@ -9,13 +9,14 @@ import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by zqz on 19/09/2015.
  */
 public class RIDF extends Algorithm{
     @Override
-    public List<JATETerm> execute() throws JATEException {
+    public List<JATETerm> execute(Set<String> candidates) throws JATEException {
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeature = (FrequencyTermBased) feature;
@@ -24,10 +25,9 @@ public class RIDF extends Algorithm{
         boolean collectInfo=termInfoCollector!=null;
         List<JATETerm> result = new ArrayList<>();
 
-        for(Map.Entry<String, Integer> entry: fFeature.getMapTerm2TTF().entrySet()){
-            String tString = entry.getKey();
+        for(String tString: candidates){
             JATETerm term = new JATETerm(tString);
-            int ttf = entry.getValue();
+            int ttf = fFeature.getTTF(tString);
             double cf_over_N = (double) ttf / totalDocs;
             double exponential = Math.exp(0 - cf_over_N);
             double nominator = totalDocs * (1 - exponential);

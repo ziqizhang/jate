@@ -9,6 +9,7 @@ import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by zqz on 19/09/2015.
@@ -19,23 +20,18 @@ public class Weirdness extends Algorithm {
     public static final String SUFFIX_WORD ="_WORD";
 
     @Override
-    public List<JATETerm> execute() throws JATEException {
-        AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
-        validateFeature(feature, FrequencyTermBased.class);
-        FrequencyTermBased fFeatureTerms = (FrequencyTermBased) feature;
+    public List<JATETerm> execute(Set<String> candidates) throws JATEException {
+        AbstractFeature feature1 = features.get(FrequencyTermBased.class.getName()+"_"+SUFFIX_WORD);
+        validateFeature(feature1, FrequencyTermBased.class);
+        FrequencyTermBased fFeatureWords = (FrequencyTermBased) feature1;
 
-        AbstractFeature feature2 = features.get(FrequencyTermBased.class.getName()+"_"+SUFFIX_WORD);
+        AbstractFeature feature2 = features.get(FrequencyTermBased.class.getName()+"_"+ SUFFIX_REF);
         validateFeature(feature2, FrequencyTermBased.class);
-        FrequencyTermBased fFeatureWords = (FrequencyTermBased) feature2;
-
-        AbstractFeature feature3 = features.get(FrequencyTermBased.class.getName()+"_"+ SUFFIX_REF);
-        validateFeature(feature3, FrequencyTermBased.class);
-        FrequencyTermBased fFeatureRef = (FrequencyTermBased) feature3;
+        FrequencyTermBased fFeatureRef = (FrequencyTermBased) feature2;
         List<JATETerm> result = new ArrayList<>();
         boolean collectInfo = termInfoCollector != null;
         double totalWordsInCorpus = fFeatureWords.getCorpusTotal();
-        for(Map.Entry<String, Integer> entry: fFeatureTerms.getMapTerm2TTF().entrySet()) {
-            String tString = entry.getKey();
+        for(String tString: candidates) {
             JATETerm term = new JATETerm(tString);
 
             String[] elements = tString.split(" ");
