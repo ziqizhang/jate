@@ -32,6 +32,7 @@ import java.io.FileWriter;
  * Proc. 16th Intl. Florida AI Research Society, 2003, 392-396.
  */
 
+@Deprecated
 public class ChiSquareAlgorithm implements Algorithm {
 	
 	private Map<String, Integer> cooccurence_map;	// freq(w,g) calculation => key:"term+frequentTerm" value: co-occurence freq 

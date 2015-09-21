@@ -2,7 +2,7 @@ package uk.ac.shef.dcs.jate.v2.algorithm;
 
 import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.v2.feature.AbstractFeature;
-import uk.ac.shef.dcs.jate.v2.feature.FrequencyDocBased;
+import uk.ac.shef.dcs.jate.v2.feature.FrequencyCtxBased;
 import uk.ac.shef.dcs.jate.v2.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.v2.model.JATETerm;
 import uk.ac.shef.dcs.jate.v2.model.TermInfo;
@@ -23,6 +23,7 @@ public class TermEx extends Algorithm{
 
     public static final String SUFFIX_REF ="_REF";
     public static final String SUFFIX_WORD ="_WORD";
+    public static final String SUFFIX_DOC="_DOC";
 
     public TermEx() {
         this(0.33,0.33,0.34);
@@ -48,9 +49,9 @@ public class TermEx extends Algorithm{
         validateFeature(feature3, FrequencyTermBased.class);
         FrequencyTermBased fFeatureRef = (FrequencyTermBased) feature3;
 
-        AbstractFeature feature4 = features.get(FrequencyDocBased.class.getName());
-        validateFeature(feature4, FrequencyDocBased.class);
-        FrequencyDocBased fFeatureDocs = (FrequencyDocBased) feature4;
+        AbstractFeature feature4 = features.get(FrequencyCtxBased.class.getName()+SUFFIX_DOC);
+        validateFeature(feature4, FrequencyCtxBased.class);
+        FrequencyCtxBased fFeatureDocs = (FrequencyCtxBased) feature4;
 
         List<JATETerm> result = new ArrayList<>();
         boolean collectInfo = termInfoCollector != null;
@@ -75,8 +76,8 @@ public class TermEx extends Algorithm{
             Set<Integer> docs = fFeatureTerms.getTermFrequencyInDocument(tString).keySet();
             double sum = 0;
             for (int i : docs) {
-                int tfid = fFeatureDocs.getTFID(i).get(tString);
-                int ttfid = fFeatureDocs.getMapDoc2TTF().get(i);
+                int tfid = fFeatureDocs.getTFIC(i).get(tString);
+                int ttfid = fFeatureDocs.getMapCtx2TTF().get(i);
                 double norm = tfid==0?0: (double)tfid/ttfid;
                 if (norm == 0) sum += 0;
                 else {

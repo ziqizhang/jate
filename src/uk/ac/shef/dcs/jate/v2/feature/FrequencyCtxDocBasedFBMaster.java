@@ -15,20 +15,19 @@ import java.util.logging.Logger;
 /**
  *
  */
-public class FrequencyDocBasedFBMaster extends AbstractFeatureBuilder {
-    private static final Logger LOG=Logger.getLogger(FrequencyDocBasedFBMaster.class.getName());
+public class FrequencyCtxDocBasedFBMaster extends AbstractFeatureBuilder {
+    private static final Logger LOG=Logger.getLogger(FrequencyCtxDocBasedFBMaster.class.getName());
 
     protected int apply2Terms=0; //1 means no= words
-    public FrequencyDocBasedFBMaster(IndexReader index, JATEProperties properties,
-                                      int apply2Terms) {
+    public FrequencyCtxDocBasedFBMaster(IndexReader index, JATEProperties properties,
+                                        int apply2Terms) {
         super(index, properties);
         this.apply2Terms=apply2Terms;
     }
 
     @Override
     public AbstractFeature build() throws JATEException {
-        FrequencyDocBased feature = new FrequencyDocBased();
-        feature.setTotalDocs(indexReader.numDocs());
+        FrequencyCtxBased feature = new FrequencyCtxBased();
         String targetField=apply2Terms==0?properties.getSolrFieldnameJATETermsAll(): properties.getSolrFieldnameJATEWordsAll();
         try {
             Fields fields = MultiFields.getFields(indexReader);
@@ -47,13 +46,13 @@ public class FrequencyDocBasedFBMaster extends AbstractFeatureBuilder {
                     int cores = Runtime.getRuntime().availableProcessors();
                     cores = (int) (cores * properties.getFeatureBuilderMaxCPUsage());
                     cores = cores == 0 ? 1 : cores;
-                    FrequencyDocBasedFBWorker worker = new
-                            FrequencyDocBasedFBWorker(properties, allLuceneTerms,
+                    FrequencyCtxDocBasedFBWorker worker = new
+                            FrequencyCtxDocBasedFBWorker(properties, allLuceneTerms,
                             indexReader, properties.getFeatureBuilderMaxTermsPerWorker(),targetField);
                     ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
                     feature = forkJoinPool.invoke(worker);
                     StringBuilder sb = new StringBuilder("Complete building features. Total=");
-                    sb.append(feature.getTotalDocs()).append(" success=").append(feature.getMapDoc2TTF().size());
+                    sb.append(feature.getMapCtx2TTF().size());
                     LOG.info(sb.toString());
                 }
             }

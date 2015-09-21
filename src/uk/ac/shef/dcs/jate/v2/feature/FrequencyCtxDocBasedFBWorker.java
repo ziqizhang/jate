@@ -1,7 +1,6 @@
 package uk.ac.shef.dcs.jate.v2.feature;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.lucene.document.Document;
 import org.apache.lucene.index.*;
 import org.apache.lucene.util.BytesRef;
 import uk.ac.shef.dcs.jate.v2.JATEProperties;
@@ -15,16 +14,16 @@ import java.util.logging.Logger;
 /**
  *
  */
-public class FrequencyDocBasedFBWorker extends JATERecursiveTaskWorker<BytesRef, FrequencyDocBased> {
+public class FrequencyCtxDocBasedFBWorker extends JATERecursiveTaskWorker<BytesRef, FrequencyCtxBased> {
 
-    private static final Logger LOG = Logger.getLogger(FrequencyDocBasedFBWorker.class.getName());
+    private static final Logger LOG = Logger.getLogger(FrequencyCtxDocBasedFBWorker.class.getName());
     private JATEProperties properties;
     private IndexReader index;
     private String targetField;
 
-    FrequencyDocBasedFBWorker(JATEProperties properties, List<BytesRef> luceneTerms, IndexReader index,
-                              int maxTasksPerWorker,
-                               String targetField) {
+    FrequencyCtxDocBasedFBWorker(JATEProperties properties, List<BytesRef> luceneTerms, IndexReader index,
+                                 int maxTasksPerWorker,
+                                 String targetField) {
         super(luceneTerms, maxTasksPerWorker);
         this.properties = properties;
         this.index = index;
@@ -32,22 +31,22 @@ public class FrequencyDocBasedFBWorker extends JATERecursiveTaskWorker<BytesRef,
     }
 
     @Override
-    protected JATERecursiveTaskWorker<BytesRef, FrequencyDocBased> createInstance(List<BytesRef> termSplits) {
-        return new FrequencyDocBasedFBWorker(properties, termSplits, index, maxTasksPerThread, targetField);
+    protected JATERecursiveTaskWorker<BytesRef, FrequencyCtxBased> createInstance(List<BytesRef> termSplits) {
+        return new FrequencyCtxDocBasedFBWorker(properties, termSplits, index, maxTasksPerThread, targetField);
     }
 
     @Override
-    protected FrequencyDocBased mergeResult(List<JATERecursiveTaskWorker<BytesRef, FrequencyDocBased>> jateRecursiveTaskWorkers) {
-        FrequencyDocBased joined = new FrequencyDocBased();
-        for (JATERecursiveTaskWorker<BytesRef, FrequencyDocBased> worker : jateRecursiveTaskWorkers) {
-            FrequencyDocBased feature = worker.join();
-            for(Map.Entry<Integer, Integer> mapDoc2TTF: feature.getMapDoc2TTF().entrySet()){
+    protected FrequencyCtxBased mergeResult(List<JATERecursiveTaskWorker<BytesRef, FrequencyCtxBased>> jateRecursiveTaskWorkers) {
+        FrequencyCtxBased joined = new FrequencyCtxBased();
+        for (JATERecursiveTaskWorker<BytesRef, FrequencyCtxBased> worker : jateRecursiveTaskWorkers) {
+            FrequencyCtxBased feature = worker.join();
+            for(Map.Entry<Integer, Integer> mapDoc2TTF: feature.getMapCtx2TTF().entrySet()){
                 int docId = mapDoc2TTF.getKey();
                 int ttf = mapDoc2TTF.getValue();
                 joined.increment(docId, ttf);
             }
 
-            for(Map.Entry<Integer, Map<String, Integer>> mapDoc2TFID: feature.getMapDoc2TFID().entrySet()){
+            for(Map.Entry<Integer, Map<String, Integer>> mapDoc2TFID: feature.getMapCtx2TFIC().entrySet()){
                 int docId = mapDoc2TFID.getKey();
                 Map<String, Integer> mapT2FID=mapDoc2TFID.getValue();
                 for(Map.Entry<String, Integer> e: mapT2FID.entrySet()){
@@ -60,8 +59,8 @@ public class FrequencyDocBasedFBWorker extends JATERecursiveTaskWorker<BytesRef,
     }
 
     @Override
-    protected FrequencyDocBased computeSingleWorker(List<BytesRef> terms) {
-        FrequencyDocBased feature = new FrequencyDocBased();
+    protected FrequencyCtxBased computeSingleWorker(List<BytesRef> terms) {
+        FrequencyCtxBased feature = new FrequencyCtxBased();
         for (BytesRef luceneTerm : terms) {
             try {
                 PostingsEnum docEnum = MultiFields.getTermDocsEnum(index,
