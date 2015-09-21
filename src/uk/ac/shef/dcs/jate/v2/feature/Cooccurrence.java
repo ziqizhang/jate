@@ -5,7 +5,6 @@ import cern.colt.matrix.tint.IntMatrix1D;
 import cern.colt.matrix.tint.IntMatrix2D;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
