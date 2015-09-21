@@ -8,8 +8,8 @@ import uk.ac.shef.dcs.jate.v2.JATEProperties;
  * Created by zqz on 20/09/2015.
  * todo
  */
-public class CooccurrenceDocBasedFBMaster extends AbstractFeatureBuilder{
-    public CooccurrenceDocBasedFBMaster(IndexReader index, JATEProperties properties) {
+public class CooccurrenceFBMaster extends AbstractFeatureBuilder{
+    public CooccurrenceFBMaster(IndexReader index, JATEProperties properties) {
         super(index, properties);
     }
 

@@ -3,6 +3,7 @@ package uk.ac.shef.dcs.jate.v2.feature;
 import cern.colt.list.tint.IntArrayList;
 import cern.colt.matrix.tint.IntMatrix1D;
 import cern.colt.matrix.tint.IntMatrix2D;
+import cern.colt.matrix.tint.impl.SparseIntMatrix2D;
 
 import java.util.*;
 
@@ -10,38 +11,54 @@ import java.util.*;
  *
  */
 public class Cooccurrence extends AbstractFeature {
-    protected IntMatrix2D coocurrence;
+    protected IntMatrix2D cooccurrence;
     protected Map<Integer, String> mapIdx2Term = new HashMap<>();
     protected Map<String, Integer> mapTerm2Idx = new HashMap<>();
 
-    protected int termCounter =0;
+    protected int termCounter =-1;
 
-    public Cooccurrence(){}
-    public Cooccurrence(Set<String> terms){
-        for(String t: terms){
-            mapIdx2Term.put(termCounter, t);
-            mapTerm2Idx.put(t, termCounter);
-            termCounter++;
-        }
+    public Cooccurrence(int numTerms){
+        cooccurrence =new SparseIntMatrix2D(numTerms, numTerms);
     }
 
-    protected void index(String term){
-        mapIdx2Term.put(termCounter, term);
-        mapTerm2Idx.put(term, termCounter);
-        termCounter++;
+    public int getNumTerms(){
+        return cooccurrence.rows();
+    }
+
+    Set<String> getTerms(){
+        return mapTerm2Idx.keySet();
+    }
+
+    protected int lookupAndIndex(String term){
+        Integer idx = mapTerm2Idx.get(term);
+        if(idx==null) {
+            termCounter++;
+            mapIdx2Term.put(termCounter, term);
+            mapTerm2Idx.put(term, termCounter);
+            return termCounter;
+        }
+        return idx;
+    }
+
+    protected void increment(int term1Idx, int term2Idx, int freq){
+        int newFreq=cooccurrence.getQuick(term1Idx, term2Idx)+freq;
+        cooccurrence.setQuick(term1Idx, term2Idx,
+                newFreq);
+        cooccurrence.setQuick(term2Idx, term1Idx,
+                newFreq);
     }
 
     public String lookup(int index){
         return mapIdx2Term.get(index);
     }
 
-    public int lookup(String term){
-        return mapTerm2Idx.get(term);
+    public Map<Integer, Integer> getCoocurrence(String term){
+        int index= lookupAndIndex(term);
+        return getCooccurrence(index);
     }
 
-    public Map<Integer, Integer> getCoocurrence(String term){
-        int index= lookup(term);
-        IntMatrix1D cooccur=coocurrence.viewRow(index);
+    Map<Integer, Integer> getCooccurrence(int index){
+        IntMatrix1D cooccur= cooccurrence.viewRow(index);
         IntArrayList nzIndexes= new IntArrayList();
         IntArrayList nzValues = new IntArrayList();
         cooccur.getNonZeros(nzIndexes, nzValues);
@@ -55,6 +72,10 @@ public class Cooccurrence extends AbstractFeature {
             result.put(idx, v);
         }
         return result;
+    }
+
+    protected int getCooccurrence(int term1Id, int term2Id){
+        return cooccurrence.getQuick(term1Id, term2Id);
     }
 
 }

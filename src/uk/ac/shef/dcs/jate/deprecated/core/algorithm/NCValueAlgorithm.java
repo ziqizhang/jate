@@ -23,7 +23,7 @@ import uk.ac.shef.dcs.jate.deprecated.util.Utility;
 * An implementation of the NCValue term recognition algorithm. See Frantzi et. al 2000, <i>
 * Automatic recognition of multi-word terms:. the C-value/NC-value method</i>
 */
-
+       @Deprecated
 public class NCValueAlgorithm implements Algorithm{
 	
 	private ContextExtraction contextExtraction;
