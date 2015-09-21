@@ -1,6 +1,5 @@
 package uk.ac.shef.dcs.jate.v2.algorithm;
 
-import org.quartz.ee.jta.JTAAnnotationAwareJobRunShellFactory;
 import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.v2.feature.AbstractFeature;
 import uk.ac.shef.dcs.jate.v2.feature.Cooccurrence;
@@ -39,9 +38,10 @@ public class RAKE extends Algorithm {
             for(String word: elements) {
                 int freq = fFeatureWords.getTTF(word);
                 Map<Integer, Integer> coocurWordIdx2Freq = fFeatureCoocurr.getCoocurrence(word);
-                int degree=0;
+                int degree=freq;
                 for(int f: coocurWordIdx2Freq.values())
                     degree+=f;
+
                 double wScore = (double) degree/freq;
                 score+=wScore;
             }
