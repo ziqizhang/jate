@@ -40,14 +40,14 @@ public class FrequencyCtxDocBasedFBWorker extends JATERecursiveTaskWorker<BytesR
         FrequencyCtxBased joined = new FrequencyCtxBased();
         for (JATERecursiveTaskWorker<BytesRef, FrequencyCtxBased> worker : jateRecursiveTaskWorkers) {
             FrequencyCtxBased feature = worker.join();
-            for(Map.Entry<Integer, Integer> mapDoc2TTF: feature.getMapCtx2TTF().entrySet()){
-                int docId = mapDoc2TTF.getKey();
+            for(Map.Entry<String, Integer> mapDoc2TTF: feature.getMapCtx2TTF().entrySet()){
+                String docId = mapDoc2TTF.getKey();
                 int ttf = mapDoc2TTF.getValue();
                 joined.increment(docId, ttf);
             }
 
-            for(Map.Entry<Integer, Map<String, Integer>> mapDoc2TFID: feature.getMapCtx2TFIC().entrySet()){
-                int docId = mapDoc2TFID.getKey();
+            for(Map.Entry<String, Map<String, Integer>> mapDoc2TFID: feature.getMapCtx2TFIC().entrySet()){
+                String docId = mapDoc2TFID.getKey();
                 Map<String, Integer> mapT2FID=mapDoc2TFID.getValue();
                 for(Map.Entry<String, Integer> e: mapT2FID.entrySet()){
                     joined.increment(docId, e.getKey(), e.getValue());
@@ -69,8 +69,9 @@ public class FrequencyCtxDocBasedFBWorker extends JATERecursiveTaskWorker<BytesR
                 int doc = 0;
                 while ((doc = docEnum.nextDoc()) != PostingsEnum.NO_MORE_DOCS) {
                     int tfid = docEnum.freq();  //tf in document
-                    feature.increment(doc, tfid);
-                    feature.increment(doc, luceneTerm.utf8ToString(), tfid);
+                    String docId = String.valueOf(doc);
+                    feature.increment(docId, tfid);
+                    feature.increment(docId, luceneTerm.utf8ToString(), tfid);
                 }
             } catch (IOException ioe) {
                 StringBuilder sb = new StringBuilder("Unable to build feature for candidate:");

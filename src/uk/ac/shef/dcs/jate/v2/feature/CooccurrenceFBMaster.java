@@ -24,7 +24,7 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
 
     @Override
     public AbstractFeature build() throws JATEException {
-        List<Integer> contextIds = new ArrayList<>(frequencyCtxBased.getMapCtx2TTF().keySet());
+        List<String> contextIds = new ArrayList<>(frequencyCtxBased.getMapCtx2TTF().keySet());
         //start workers
         int cores = Runtime.getRuntime().availableProcessors();
         cores = (int) (cores * properties.getFeatureBuilderMaxCPUsage());

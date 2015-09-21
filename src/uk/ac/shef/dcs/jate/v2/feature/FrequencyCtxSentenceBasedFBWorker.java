@@ -10,9 +10,7 @@ import uk.ac.shef.dcs.jate.v2.JATEProperties;
 import uk.ac.shef.dcs.jate.v2.JATERecursiveTaskWorker;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -46,8 +44,34 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
 
     @Override
     protected FrequencyCtxBased mergeResult(List<JATERecursiveTaskWorker<Integer, FrequencyCtxBased>> jateRecursiveTaskWorkers) {
-        //todo
-        return null;
+        FrequencyCtxBased joined = new FrequencyCtxBased();
+        for (JATERecursiveTaskWorker<Integer, FrequencyCtxBased> worker : jateRecursiveTaskWorkers) {
+            FrequencyCtxBased feature = worker.join();
+            for(Map.Entry<String, Integer> mapCtx2TTF: feature.getMapCtx2TTF().entrySet()){
+                String ctxId = mapCtx2TTF.getKey();
+                int ttf = mapCtx2TTF.getValue();
+                joined.increment(ctxId, ttf);
+            }
+
+            for(Map.Entry<String, Map<String, Integer>> mapCtx2TFIC: feature.getMapCtx2TFIC().entrySet()){
+                String ctxId = mapCtx2TFIC.getKey();
+                Map<String, Integer> mapT2FIC=mapCtx2TFIC.getValue();
+                for(Map.Entry<String, Integer> e: mapT2FIC.entrySet()){
+                    joined.increment(ctxId, e.getKey(), e.getValue());
+                }
+            }
+
+            for(Map.Entry<String, Set<String>> entry: feature.getMapTerm2Ctx().entrySet()){
+                String term = entry.getKey();
+                Set<String> addContexts = entry.getValue();
+                Set<String> contexts=joined.getMapTerm2Ctx().get(term);
+                if(contexts==null)
+                    contexts=new HashSet<>();
+                contexts.addAll(addContexts);
+                joined.getMapTerm2Ctx().put(term, contexts);
+            }
+        }
+        return joined;
     }
 
     @Override
@@ -59,7 +83,7 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                 List<TextUnitOffsets> sentences = collectOffsets(indexReader.getTermVector(docId, sentenceTargetField));
                 int termCursor=0;
                 for(TextUnitOffsets sent: sentences){
-                    int contextId=feature.nextCtxId();
+                    String contextId=docId+"."+feature.nextCtxId();
                     for(int t = termCursor; t<terms.size();t++){
                         TextUnitOffsets term = terms.get(t);
                         if(term.end>sent.end){
@@ -73,7 +97,6 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                             feature.increment(contextId,term.string,1);
                         }
                     }
-                    contextId++;
                 }
             } catch (IOException ioe) {
                 StringBuilder sb = new StringBuilder("Unable to build feature for document id:");
@@ -94,7 +117,6 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
         BytesRef luceneTerm = ti.next();
         while(luceneTerm!=null){
             String tString =luceneTerm.utf8ToString();
-            //todo: null is not acceptable. Fix this
             PostingsEnum postingsEnum=ti.postings(null, PostingsEnum.OFFSETS);
 
             int totalOccurrence=postingsEnum.freq();

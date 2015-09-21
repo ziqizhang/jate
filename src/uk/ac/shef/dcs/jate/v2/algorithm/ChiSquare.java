@@ -42,8 +42,8 @@ public class ChiSquare extends Algorithm {
             Integer n_w = ctxTTFLookup.get(tString);//"the total number of terms in contexts (original paper: sentences)
             // where w appears".
             if (n_w == null) {
-                Set<Integer> ctx_w = fFeatureCtxBased.getContextIds(tString);
-                for (int ctxid : ctx_w) {
+                Set<String> ctx_w = fFeatureCtxBased.getContextIds(tString);
+                for (String ctxid : ctx_w) {
                     for (Integer f : fFeatureCtxBased.getTFIC(ctxid).values())
                         n_w += f;
                 }
@@ -59,8 +59,8 @@ public class ChiSquare extends Algorithm {
 
                 Integer g_w = ctxTTFLookup.get(g_id);
                 if (g_w == null) {
-                    Set<Integer> ctx_g = fFeatureCtxBased.getContextIds(g_term);
-                    for (int ctxid : ctx_g) {
+                    Set<String> ctx_g = fFeatureCtxBased.getContextIds(g_term);
+                    for (String ctxid : ctx_g) {
                         for (Integer f : fFeatureCtxBased.getTFIC(ctxid).values())
                             g_w += f;
                     }

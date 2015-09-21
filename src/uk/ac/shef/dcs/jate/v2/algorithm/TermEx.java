@@ -75,7 +75,7 @@ public class TermEx extends Algorithm{
             Set<Integer> docs = fFeatureTerms.getTermFrequencyInDocument(tString).keySet();
             double sum = 0;
             for (int i : docs) {
-                int tfid = fFeatureDocs.getTFIC(i).get(tString);
+                int tfid = fFeatureDocs.getTFIC(String.valueOf(i)).get(tString);
                 int ttfid = fFeatureDocs.getMapCtx2TTF().get(i);
                 double norm = tfid==0?0: (double)tfid/ttfid;
                 if (norm == 0) sum += 0;

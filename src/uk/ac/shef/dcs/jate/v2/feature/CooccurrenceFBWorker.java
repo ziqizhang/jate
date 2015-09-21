@@ -8,25 +8,25 @@ import java.util.logging.Logger;
 /**
  *
  */
-public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<Integer, Cooccurrence> {
+public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<String, Cooccurrence> {
     private static final Logger LOG = Logger.getLogger(CooccurrenceFBWorker.class.getName());
     protected FrequencyCtxBased frequencyCtxBased;
 
-    public CooccurrenceFBWorker(List<Integer> contextIds, FrequencyCtxBased frequencyCtxBased, int maxTasksPerWorker) {
+    public CooccurrenceFBWorker(List<String> contextIds, FrequencyCtxBased frequencyCtxBased, int maxTasksPerWorker) {
         super(contextIds, maxTasksPerWorker);
         this.frequencyCtxBased = frequencyCtxBased;
     }
 
     @Override
-    protected JATERecursiveTaskWorker<Integer, Cooccurrence> createInstance(List<Integer> contextIdSplit) {
+    protected JATERecursiveTaskWorker<String, Cooccurrence> createInstance(List<String> contextIdSplit) {
         return new CooccurrenceFBWorker(contextIdSplit, frequencyCtxBased, maxTasksPerThread);
     }
 
     @Override
-    protected Cooccurrence mergeResult(List<JATERecursiveTaskWorker<Integer, Cooccurrence>> jateRecursiveTaskWorkers) {
+    protected Cooccurrence mergeResult(List<JATERecursiveTaskWorker<String, Cooccurrence>> jateRecursiveTaskWorkers) {
         List<Cooccurrence> workerOutput = new ArrayList<>();
         Set<String> allTerms = new HashSet<>();
-        for (JATERecursiveTaskWorker<Integer, Cooccurrence> worker : jateRecursiveTaskWorkers) {
+        for (JATERecursiveTaskWorker<String, Cooccurrence> worker : jateRecursiveTaskWorkers) {
             Cooccurrence output = worker.join();
             allTerms.addAll(output.getTerms());
             workerOutput.add(worker.join());
@@ -52,9 +52,9 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<Integer, Coocc
     }
 
     @Override
-    protected Cooccurrence computeSingleWorker(List<Integer> contextIds) {
+    protected Cooccurrence computeSingleWorker(List<String> contextIds) {
         Cooccurrence feature = new Cooccurrence(contextIds.size());
-        for (Integer ctxId : contextIds) {
+        for (String ctxId : contextIds) {
             Map<String, Integer> termsInContext = frequencyCtxBased.getTFIC(ctxId);
 
             for (Map.Entry<String, Integer> entry : termsInContext.entrySet()) {
