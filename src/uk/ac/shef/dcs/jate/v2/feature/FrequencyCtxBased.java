@@ -1,7 +1,9 @@
 package uk.ac.shef.dcs.jate.v2.feature;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by zqz on 21/09/2015.
@@ -11,6 +13,9 @@ public class FrequencyCtxBased extends AbstractFeature {
     private Map<Integer, Integer> ctx2TTF = new HashMap<>();
     //context and its contained term with their Freq In Context
     private Map<Integer, Map<String, Integer>> ctx2TFIC = new HashMap<>();
+
+    //term and set of ctx ids where it appears
+    private Map<String, Set<Integer>> term2Ctx = new HashMap<>();
 
     protected int contextCounter=-1;
 
@@ -30,11 +35,15 @@ public class FrequencyCtxBased extends AbstractFeature {
         return ctx2TFIC;
     }
 
-    public Map<String, Integer> getTFIC(int docId){
-        Map<String, Integer> result = ctx2TFIC.get(docId);
+    public Map<String, Integer> getTFIC(int ctxId){
+        Map<String, Integer> result = ctx2TFIC.get(ctxId);
         if(result==null)
             return new HashMap<>();
         return result;
+    }
+
+    public Set<Integer> getContextIds(String term){
+        return term2Ctx.get(term);
     }
 
     /**
@@ -52,6 +61,12 @@ public class FrequencyCtxBased extends AbstractFeature {
         f+=tf;
         tfidMap.put(term, f);
         ctx2TFIC.put(ctxId, tfidMap);
+
+        Set<Integer> ctxIds = term2Ctx.get(term);
+        if(ctxIds==null)
+            ctxIds = new HashSet<>();
+        ctxIds.add(ctxId);
+        term2Ctx.put(term, ctxIds);
     }
 
     protected void increment(int ctxId, int freq){

@@ -15,11 +15,7 @@ public class Cooccurrence extends AbstractFeature {
     protected Map<Integer, String> mapIdx2Term = new HashMap<>();
     protected Map<String, Integer> mapTerm2Idx = new HashMap<>();
 
-    protected Map<Integer, Set<Integer>> mapTermIdx2CtxIdx = new HashMap<>();
-    protected Map<Integer, Integer> mapCtxIdx2TermFreq = new ConcurrentHashMap<>();
-
     protected int termCounter =0;
-    protected int contextCounter=0;
 
     public Cooccurrence(){}
     public Cooccurrence(Set<String> terms){
@@ -62,18 +58,4 @@ public class Cooccurrence extends AbstractFeature {
         return result;
     }
 
-
-    public Set<Integer> getContexts(int termId){
-        Set<Integer> ctxIds=mapTermIdx2CtxIdx.get(termId);
-        if(ctxIds==null)
-            ctxIds=new HashSet<>();
-        return ctxIds;
-    }
-
-    public int getTTFOfContext(int ctxId){
-        Integer freq = mapCtxIdx2TermFreq.get(ctxId);
-        if(freq==null)
-            freq=0;
-        return freq;
-    }
 }
