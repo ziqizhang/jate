@@ -35,8 +35,8 @@ public class FrequencyCtxBased extends AbstractFeature {
         return ctx2TFIC;
     }
 
-    public Map<String, Integer> getTFIC(int ctxId){
-        Map<String, Integer> result = ctx2TFIC.get(ctxId);
+    public Map<String, Integer> getTFIC(int docId){
+        Map<String, Integer> result = ctx2TFIC.get(docId);
         if(result==null)
             return new HashMap<>();
         return result;
