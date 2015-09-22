@@ -16,6 +16,8 @@ import uk.ac.shef.dcs.jate.v2.model.JATETerm;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +54,52 @@ public class AppATTF extends AbstractApp {
     }
 
     private static List<JATETerm> applyThresholds(List<JATETerm> terms, String t, String n) {
-        return null;
+        List<JATETerm> selected = new ArrayList<>();
+        if(t!=null){
+            try {
+                double threshold = Double.valueOf(t);
+                for(JATETerm jt: terms){
+                    if(jt.getScore()>=threshold)
+                        selected.add(jt);
+                    else
+                        break;
+                }
+            }catch(NumberFormatException nfe){}
+        }
+
+        if(n==null && selected.size()>0)
+            return selected;
+
+        if(selected.size()==0)
+            selected.addAll(terms);
+        double topN;
+        try {
+            topN=Integer.valueOf(n);
+            Iterator<JATETerm> it = selected.iterator();
+            int count=0;
+            while(it.hasNext()){
+                it.next();
+                count++;
+                if(count>=topN)
+                    it.remove();
+            }
+        }catch (NumberFormatException nfe){
+            try{
+                topN=Double.valueOf(n);
+            }catch (NumberFormatException nfe2){
+                topN=DEFAULT_THRESHOLD_N;
+            }
+            int topNInteger =(int) (topN*terms.size());
+            Iterator<JATETerm> it = selected.iterator();
+            int count=0;
+            while(it.hasNext()){
+                it.next();
+                count++;
+                if(count>=topNInteger)
+                    it.remove();
+            }
+        }
+        return selected;
     }
 
     private static void printHelp() {
