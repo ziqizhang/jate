@@ -8,6 +8,7 @@ import java.io.IOException;
  */
 
 
+@Deprecated
 public class JATEProperties {
     private Properties _properties = new Properties();
     private static JATEProperties _ref = null;

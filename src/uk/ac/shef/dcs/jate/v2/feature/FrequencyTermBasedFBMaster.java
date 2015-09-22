@@ -19,7 +19,7 @@ public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
 
     private static final Logger LOG=Logger.getLogger(FrequencyTermBasedFBMaster.class.getName());
 
-    protected int apply2Terms=0; //1 means no= words
+    protected int apply2Terms=0; //1 means no, i.e, words
     public FrequencyTermBasedFBMaster(IndexReader index, JATEProperties properties,
                                       int apply2Terms) {
         super(index, properties);
