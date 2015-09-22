@@ -58,9 +58,9 @@ public class AppATTF extends AbstractApp {
                 .append("\t\t-c\t\t'true' or 'false'. Whether to collect term information, e.g., offsets in documents. Default is false.\n")
                 .append("\t\t-t\t\tA number. Score threshold for selecting terms. If not set then default -n is used.").append("\n")
                 .append("\t\t-n\t\tA number. If an integer is given, top N candidates are selected as terms. \n")
-        .append("\t\t\t\tIf a decimal number is given, top N% of candidates are selected. Default is 0.25.");
+        .append("\t\t\t\tIf a decimal number is given, top N% of candidates are selected. Default is 0.25.\n");
         sb.append("\t\t-o\t\tA file path. If provided, the output is written to the file. \n")
-                .append("Otherwise, output is written to the console.");
+                .append("\t\t\t\tOtherwise, output is written to the console.");
         System.out.println(sb);
     }
 }

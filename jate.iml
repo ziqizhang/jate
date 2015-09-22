@@ -171,6 +171,7 @@
     <orderEntry type="library" name="Maven: com.github.rwl:BTFJ:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: com.github.rwl:AMDJ:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: com.github.rwl:COLAMDJ:1.0.1" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.3.1" level="project" />
   </component>
 </module>
 

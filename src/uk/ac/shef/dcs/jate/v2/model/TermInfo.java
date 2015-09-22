@@ -22,4 +22,5 @@ public class TermInfo {
     public Map<String, Object> getOtherInfo(){
         return otherInfo;
     }
+
 }

@@ -1,10 +1,12 @@
 package uk.ac.shef.dcs.jate.v2.app;
 
+import com.google.gson.Gson;
 import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.v2.model.JATETerm;
 import uk.ac.shef.dcs.jate.v2.util.IOUtil;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
@@ -29,12 +31,15 @@ public class AbstractApp {
         return params;
     }
 
-    public static void write(List<JATETerm> terms, String path) throws FileNotFoundException {
+    public static void write(List<JATETerm> terms, String path) throws IOException {
+        Gson gson = new Gson();
         if(path==null){
-
+            System.out.println(gson.toJson(terms));
         }
         else{
             Writer w = IOUtil.getUTF8Writer(path);
+            gson.toJson(terms,w);
+            w.close();
         }
     }
 }
