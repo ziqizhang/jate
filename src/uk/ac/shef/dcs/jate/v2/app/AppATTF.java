@@ -24,6 +24,8 @@ import java.util.Map;
  */
 public class AppATTF extends AbstractApp {
 
+    private static final double DEFAULT_THRESHOLD_N=0.25;
+
     public static void main(String[] args) throws JATEException, IOException {
         if (args.length < 1) {
             printHelp();
@@ -44,9 +46,13 @@ public class AppATTF extends AbstractApp {
         if(paramValue!=null &&paramValue.equalsIgnoreCase("true"))
             attf.setTermInfoCollector(new TermInfoCollector(indexReader));
         List<JATETerm> terms=attf.execute(feature.getMapTerm2TTF().keySet());
-
+        terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
         paramValue=params.get("-o");
         write(terms,paramValue);
+    }
+
+    private static List<JATETerm> applyThresholds(List<JATETerm> terms, String t, String n) {
+        return null;
     }
 
     private static void printHelp() {
