@@ -291,13 +291,13 @@
 			
 	   <!--##################### JATE Start ######################### -->
 	   <!-- Field to index and store candidate terms -->
-	   <field name="jate_terms_all" type="jate_text_2_terms" indexed="true" stored="true" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
+	   <field name="jate_terms_all" type="jate_text_2_terms" indexed="true" stored="false" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
 	   <!-- Field to index and store words. You only need this if you use algorithms that require
 			word-level features, such as Weirdness, GlossEx, and TermEx-->
-	   <field name="jate_words_all" type="jate_text_2_words" indexed="true" stored="true" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
+	   <field name="jate_words_all" type="jate_text_2_words" indexed="true" stored="false" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
 	   <!-- Field to index and store sentences. You only need this if you use algorithms that require
 			sentence-level features, such as ChiSquare, and NCValue-->
-	   <field name="jate_sentences_all" type="jate_text_2_sentences" indexed="true" stored="true" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
+	   <field name="jate_sentences_all" type="jate_text_2_sentences" indexed="true" stored="false" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
 	   <!--######################## JATE End ########################## -->
 	   
 	   <!-- Dynamic field definitions allow using convention over configuration

@@ -1,155 +1,170 @@
-2015-09-17 14:19:58.815 INFO  (main) [   ] o.e.j.u.log Logging initialized @3818ms
-2015-09-17 14:19:59.634 INFO  (main) [   ] o.e.j.s.Server jetty-9.2.11.v20150529
-2015-09-17 14:19:59.663 WARN  (main) [   ] o.e.j.s.h.RequestLogHandler !RequestLog
-2015-09-17 14:19:59.665 INFO  (main) [   ] o.e.j.d.p.ScanningAppProvider Deployment monitor [file:/D:/Work/jate_github/jate/solr-5.3.0/server/contexts/] at interval 0
-2015-09-17 14:20:00.656 INFO  (main) [   ] o.e.j.w.StandardDescriptorProcessor NO JSP Support for /solr, did not find org.apache.jasper.servlet.JspServlet
-2015-09-17 14:20:00.765 WARN  (main) [   ] o.e.j.s.SecurityHandler ServletContext@o.e.j.w.WebAppContext@e25b2fe{/solr,file:/D:/Work/jate_github/jate/solr-5.3.0/server/solr-webapp/webapp/,STARTING}{D:\Work\jate_github\jate\solr-5.3.0\server/solr-webapp/webapp} has uncovered http methods for path: /
-2015-09-17 14:20:00.792 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter SolrDispatchFilter.init(): WebAppClassLoader=117244645@6fd02e5
-2015-09-17 14:20:00.929 INFO  (main) [   ] o.a.s.c.SolrResourceLoader JNDI not configured for solr (NoInitialContextEx)
-2015-09-17 14:20:00.930 INFO  (main) [   ] o.a.s.c.SolrResourceLoader using system property solr.solr.home: D:\Work\jate_github\jate\solr-5.3.0\server\solr
-2015-09-17 14:20:00.948 INFO  (main) [   ] o.a.s.c.SolrResourceLoader new SolrResourceLoader for directory: 'D:\Work\jate_github\jate\solr-5.3.0\server\solr\'
-2015-09-17 14:20:01.452 INFO  (main) [   ] o.a.s.c.SolrXmlConfig Loading container configuration from D:\Work\jate_github\jate\solr-5.3.0\server\solr\solr.xml
-2015-09-17 14:20:02.198 INFO  (main) [   ] o.a.s.c.CoresLocator Config-defined core root directory: D:\Work\jate_github\jate\solr-5.3.0\server\solr
-2015-09-17 14:20:02.373 INFO  (main) [   ] o.a.s.c.CoreContainer New CoreContainer 543846639
-2015-09-17 14:20:02.374 INFO  (main) [   ] o.a.s.c.CoreContainer Loading cores into CoreContainer [instanceDir=D:\Work\jate_github\jate\solr-5.3.0\server\solr\]
-2015-09-17 14:20:02.374 INFO  (main) [   ] o.a.s.c.CoreContainer loading shared library: D:\Work\jate_github\jate\solr-5.3.0\server\solr\lib
-2015-09-17 14:20:02.375 WARN  (main) [   ] o.a.s.c.SolrResourceLoader Can't find (or read) directory to add to classloader: lib (resolved as: D:\Work\jate_github\jate\solr-5.3.0\server\solr\lib).
-2015-09-17 14:20:02.423 INFO  (main) [   ] o.a.s.h.c.HttpShardHandlerFactory created with socketTimeout : 600000,connTimeout : 60000,maxConnectionsPerHost : 20,maxConnections : 10000,corePoolSize : 0,maximumPoolSize : 2147483647,maxThreadIdleTime : 5,sizeOfQueue : -1,fairnessPolicy : false,useRetries : false,
-2015-09-17 14:20:02.558 INFO  (main) [   ] o.a.s.u.UpdateShardHandler Creating UpdateShardHandler HTTP client with params: socketTimeout=600000&connTimeout=60000&retry=true
-2015-09-17 14:20:02.560 INFO  (main) [   ] o.a.s.l.LogWatcher SLF4J impl is org.slf4j.impl.Log4jLoggerFactory
-2015-09-17 14:20:02.561 INFO  (main) [   ] o.a.s.l.LogWatcher Registering Log Listener [Log4j (org.slf4j.impl.Log4jLoggerFactory)]
-2015-09-17 14:20:02.613 INFO  (main) [   ] o.a.s.c.CoreContainer Security conf doesn't exist. Skipping setup for authorization module.
-2015-09-17 14:20:02.614 INFO  (main) [   ] o.a.s.c.CoreContainer No authentication plugin used.
-2015-09-17 14:20:02.893 INFO  (main) [   ] o.a.s.c.CoresLocator Looking for core definitions underneath D:\Work\jate_github\jate\solr-5.3.0\server\solr
-2015-09-17 14:20:02.915 INFO  (main) [   ] o.a.s.c.SolrCore Created CoreDescriptor: {name=jate, config=solrconfig.xml, transient=false, schema=schema.xml, loadOnStartup=true, configSetProperties=configsetprops.json, instanceDir=D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate, absoluteInstDir=D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\, dataDir=data\}
-2015-09-17 14:20:02.915 INFO  (main) [   ] o.a.s.c.CoresLocator Found core jate in D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\
-2015-09-17 14:20:02.915 INFO  (main) [   ] o.a.s.c.CoresLocator Found 1 core definitions
-2015-09-17 14:20:02.921 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader new SolrResourceLoader for directory: 'D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\'
-2015-09-17 14:20:02.922 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter user.dir=D:\Work\jate_github\jate\solr-5.3.0\server
-2015-09-17 14:20:02.922 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter SolrDispatchFilter.init() done
-2015-09-17 14:20:02.968 INFO  (main) [   ] o.e.j.s.h.ContextHandler Started o.e.j.w.WebAppContext@e25b2fe{/solr,file:/D:/Work/jate_github/jate/solr-5.3.0/server/solr-webapp/webapp/,AVAILABLE}{D:\Work\jate_github\jate\solr-5.3.0\server/solr-webapp/webapp}
-2015-09-17 14:20:03.140 INFO  (main) [   ] o.e.j.s.ServerConnector Started ServerConnector@6892b3b6{HTTP/1.1}{0.0.0.0:8983}
-2015-09-17 14:20:03.141 INFO  (main) [   ] o.e.j.s.Server Started @8148ms
-2015-09-17 14:20:03.169 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrConfig current version of requestparams : 0
-2015-09-17 14:20:03.171 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrConfig Adding specified lib dirs to ClassLoader
-2015-09-17 14:20:03.173 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/apache-mime4j-core-0.7.2.jar' to classloader
-2015-09-17 14:20:03.173 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/apache-mime4j-dom-0.7.2.jar' to classloader
-2015-09-17 14:20:03.174 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/aspectjrt-1.8.0.jar' to classloader
-2015-09-17 14:20:03.174 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/bcmail-jdk15-1.45.jar' to classloader
-2015-09-17 14:20:03.174 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/bcprov-jdk15-1.45.jar' to classloader
-2015-09-17 14:20:03.174 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/boilerpipe-1.1.0.jar' to classloader
-2015-09-17 14:20:03.174 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/commons-compress-1.8.1.jar' to classloader
-2015-09-17 14:20:03.175 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/fontbox-1.8.8.jar' to classloader
-2015-09-17 14:20:03.175 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/icu4j-54.1.jar' to classloader
-2015-09-17 14:20:03.175 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/isoparser-1.0.2.jar' to classloader
-2015-09-17 14:20:03.175 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/java-libpst-0.8.1.jar' to classloader
-2015-09-17 14:20:03.175 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/jdom-1.0.jar' to classloader
-2015-09-17 14:20:03.175 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/jempbox-1.8.8.jar' to classloader
-2015-09-17 14:20:03.175 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/jmatio-1.0.jar' to classloader
-2015-09-17 14:20:03.175 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/juniversalchardet-1.0.3.jar' to classloader
-2015-09-17 14:20:03.176 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/metadata-extractor-2.6.2.jar' to classloader
-2015-09-17 14:20:03.176 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/pdfbox-1.8.8.jar' to classloader
-2015-09-17 14:20:03.176 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/poi-3.11.jar' to classloader
-2015-09-17 14:20:03.176 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/poi-ooxml-3.11.jar' to classloader
-2015-09-17 14:20:03.176 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/poi-ooxml-schemas-3.11.jar' to classloader
-2015-09-17 14:20:03.176 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/poi-scratchpad-3.11.jar' to classloader
-2015-09-17 14:20:03.176 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/rome-1.0.jar' to classloader
-2015-09-17 14:20:03.176 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/tagsoup-1.2.1.jar' to classloader
-2015-09-17 14:20:03.176 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/tika-core-1.7.jar' to classloader
-2015-09-17 14:20:03.177 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/tika-java7-1.7.jar' to classloader
-2015-09-17 14:20:03.177 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/tika-parsers-1.7.jar' to classloader
-2015-09-17 14:20:03.177 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/tika-xmp-1.7.jar' to classloader
-2015-09-17 14:20:03.177 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/vorbis-java-core-0.6.jar' to classloader
-2015-09-17 14:20:03.177 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/vorbis-java-tika-0.6.jar' to classloader
-2015-09-17 14:20:03.177 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/xercesImpl-2.9.1.jar' to classloader
-2015-09-17 14:20:03.177 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/xmlbeans-2.6.0.jar' to classloader
-2015-09-17 14:20:03.177 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/xmpcore-5.1.2.jar' to classloader
-2015-09-17 14:20:03.178 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/xz-1.5.jar' to classloader
-2015-09-17 14:20:03.178 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/dist/solr-cell-5.3.0.jar' to classloader
-2015-09-17 14:20:03.179 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/clustering/lib/attributes-binder-1.2.1.jar' to classloader
-2015-09-17 14:20:03.179 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/clustering/lib/carrot2-mini-3.9.0.jar' to classloader
-2015-09-17 14:20:03.179 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/clustering/lib/hppc-0.5.2.jar' to classloader
-2015-09-17 14:20:03.179 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/clustering/lib/jackson-core-asl-1.9.13.jar' to classloader
-2015-09-17 14:20:03.179 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/clustering/lib/jackson-mapper-asl-1.9.13.jar' to classloader
-2015-09-17 14:20:03.180 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/clustering/lib/mahout-collections-1.0.jar' to classloader
-2015-09-17 14:20:03.180 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/clustering/lib/mahout-math-0.6.jar' to classloader
-2015-09-17 14:20:03.180 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/clustering/lib/simple-xml-2.7.jar' to classloader
-2015-09-17 14:20:03.180 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/dist/solr-clustering-5.3.0.jar' to classloader
-2015-09-17 14:20:03.181 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/langid/lib/jsonic-1.2.7.jar' to classloader
-2015-09-17 14:20:03.181 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/langid/lib/langdetect-1.1-20120112.jar' to classloader
-2015-09-17 14:20:03.181 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/dist/solr-langid-5.3.0.jar' to classloader
-2015-09-17 14:20:03.182 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/velocity/lib/commons-beanutils-1.8.3.jar' to classloader
-2015-09-17 14:20:03.182 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/velocity/lib/commons-collections-3.2.1.jar' to classloader
-2015-09-17 14:20:03.182 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/velocity/lib/velocity-1.7.jar' to classloader
-2015-09-17 14:20:03.182 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/velocity/lib/velocity-tools-2.0.jar' to classloader
-2015-09-17 14:20:03.183 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/dist/solr-velocity-5.3.0.jar' to classloader
-2015-09-17 14:20:05.276 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.u.SolrIndexConfig IndexWriter infoStream solr logging is enabled
-2015-09-17 14:20:05.280 WARN  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.Config Begining with Solr 5.0, <checkIntegrityAtMerge> option is no longer supported and should be removed from solrconfig.xml (these integrity checks are now automatic)
-2015-09-17 14:20:05.290 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrConfig Using Lucene MatchVersion: 4.10.4
-2015-09-17 14:20:05.566 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.Config Loaded SolrConfig: solrconfig.xml
-2015-09-17 14:20:05.572 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.s.IndexSchema Reading Solr Schema from D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\conf\schema.xml
-2015-09-17 14:20:05.611 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.s.IndexSchema [jate] Schema name=jate
-2015-09-17 14:20:05.734 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.s.IndexSchema default search field in schema is text
-2015-09-17 14:20:05.734 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.s.IndexSchema query parser default operator is OR
-2015-09-17 14:20:05.735 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.s.IndexSchema unique key field: id
-2015-09-17 14:20:05.744 ERROR (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.CoreContainer Error creating core [jate]: Could not load conf for core jate: copyField source :'jate_all_text' is not a glob and doesn't match any explicit field or dynamicField.. Schema file is D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\conf\schema.xml
-org.apache.solr.common.SolrException: Could not load conf for core jate: copyField source :'jate_all_text' is not a glob and doesn't match any explicit field or dynamicField.. Schema file is D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\conf\schema.xml
-	at org.apache.solr.core.ConfigSetService.getConfig(ConfigSetService.java:80)
-	at org.apache.solr.core.CoreContainer.create(CoreContainer.java:725)
-	at org.apache.solr.core.CoreContainer$1.call(CoreContainer.java:447)
-	at org.apache.solr.core.CoreContainer$1.call(CoreContainer.java:438)
-	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
-	at org.apache.solr.common.util.ExecutorUtil$MDCAwareThreadPoolExecutor$1.run(ExecutorUtil.java:210)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	at java.lang.Thread.run(Thread.java:745)
-Caused by: org.apache.solr.common.SolrException: copyField source :'jate_all_text' is not a glob and doesn't match any explicit field or dynamicField.. Schema file is D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\conf\schema.xml
-	at org.apache.solr.schema.IndexSchema.readSchema(IndexSchema.java:596)
-	at org.apache.solr.schema.IndexSchema.<init>(IndexSchema.java:175)
-	at org.apache.solr.schema.IndexSchemaFactory.create(IndexSchemaFactory.java:55)
-	at org.apache.solr.schema.IndexSchemaFactory.buildIndexSchema(IndexSchemaFactory.java:69)
-	at org.apache.solr.core.ConfigSetService.createIndexSchema(ConfigSetService.java:104)
-	at org.apache.solr.core.ConfigSetService.getConfig(ConfigSetService.java:75)
-	... 8 more
-Caused by: org.apache.solr.common.SolrException: copyField source :'jate_all_text' is not a glob and doesn't match any explicit field or dynamicField.
-	at org.apache.solr.schema.IndexSchema.registerCopyField(IndexSchema.java:904)
-	at org.apache.solr.schema.IndexSchema.loadCopyFields(IndexSchema.java:740)
-	at org.apache.solr.schema.IndexSchema.readSchema(IndexSchema.java:591)
-	... 13 more
-2015-09-17 14:20:05.829 ERROR (coreContainerWorkExecutor-2-thread-1) [   ] o.a.s.c.CoreContainer Error waiting for SolrCore to be created
-java.util.concurrent.ExecutionException: org.apache.solr.common.SolrException: Unable to create core [jate]
-	at java.util.concurrent.FutureTask.report(FutureTask.java:122)
-	at java.util.concurrent.FutureTask.get(FutureTask.java:192)
-	at org.apache.solr.core.CoreContainer$2.run(CoreContainer.java:476)
-	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
-	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
-	at org.apache.solr.common.util.ExecutorUtil$MDCAwareThreadPoolExecutor$1.run(ExecutorUtil.java:210)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	at java.lang.Thread.run(Thread.java:745)
-Caused by: org.apache.solr.common.SolrException: Unable to create core [jate]
-	at org.apache.solr.core.CoreContainer.create(CoreContainer.java:741)
-	at org.apache.solr.core.CoreContainer$1.call(CoreContainer.java:447)
-	at org.apache.solr.core.CoreContainer$1.call(CoreContainer.java:438)
-	... 5 more
-Caused by: org.apache.solr.common.SolrException: Could not load conf for core jate: copyField source :'jate_all_text' is not a glob and doesn't match any explicit field or dynamicField.. Schema file is D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\conf\schema.xml
-	at org.apache.solr.core.ConfigSetService.getConfig(ConfigSetService.java:80)
-	at org.apache.solr.core.CoreContainer.create(CoreContainer.java:725)
-	... 7 more
-Caused by: org.apache.solr.common.SolrException: copyField source :'jate_all_text' is not a glob and doesn't match any explicit field or dynamicField.. Schema file is D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\conf\schema.xml
-	at org.apache.solr.schema.IndexSchema.readSchema(IndexSchema.java:596)
-	at org.apache.solr.schema.IndexSchema.<init>(IndexSchema.java:175)
-	at org.apache.solr.schema.IndexSchemaFactory.create(IndexSchemaFactory.java:55)
-	at org.apache.solr.schema.IndexSchemaFactory.buildIndexSchema(IndexSchemaFactory.java:69)
-	at org.apache.solr.core.ConfigSetService.createIndexSchema(ConfigSetService.java:104)
-	at org.apache.solr.core.ConfigSetService.getConfig(ConfigSetService.java:75)
-	... 8 more
-Caused by: org.apache.solr.common.SolrException: copyField source :'jate_all_text' is not a glob and doesn't match any explicit field or dynamicField.
-	at org.apache.solr.schema.IndexSchema.registerCopyField(IndexSchema.java:904)
-	at org.apache.solr.schema.IndexSchema.loadCopyFields(IndexSchema.java:740)
-	at org.apache.solr.schema.IndexSchema.readSchema(IndexSchema.java:591)
-	... 13 more
-2015-09-17 14:20:08.347 INFO  (qtp1450821318-22) [   ] o.a.s.s.SolrDispatchFilter [admin] webapp=null path=/admin/info/system params={wt=json} status=0 QTime=241 
-2015-09-17 14:20:16.096 INFO  (ShutdownMonitor) [   ] o.e.j.s.ServerConnector Stopped ServerConnector@6892b3b6{HTTP/1.1}{0.0.0.0:8983}
-2015-09-17 14:20:16.099 INFO  (ShutdownMonitor) [   ] o.a.s.c.CoreContainer Shutting down CoreContainer instance=543846639
-2015-09-17 14:20:16.103 INFO  (ShutdownMonitor) [   ] o.e.j.s.h.ContextHandler Stopped o.e.j.w.WebAppContext@e25b2fe{/solr,file:/D:/Work/jate_github/jate/solr-5.3.0/server/solr-webapp/webapp/,UNAVAILABLE}{D:\Work\jate_github\jate\solr-5.3.0\server/solr-webapp/webapp}
+2015-09-23 10:26:18.776 INFO  (main) [   ] o.e.j.u.log Logging initialized @1211ms
+2015-09-23 10:26:19.090 INFO  (main) [   ] o.e.j.s.Server jetty-9.2.11.v20150529
+2015-09-23 10:26:19.122 WARN  (main) [   ] o.e.j.s.h.RequestLogHandler !RequestLog
+2015-09-23 10:26:19.124 INFO  (main) [   ] o.e.j.d.p.ScanningAppProvider Deployment monitor [file:/D:/Work/jate_github/jate/solr-5.3.0/server/contexts/] at interval 0
+2015-09-23 10:26:19.919 INFO  (main) [   ] o.e.j.w.StandardDescriptorProcessor NO JSP Support for /solr, did not find org.apache.jasper.servlet.JspServlet
+2015-09-23 10:26:19.952 WARN  (main) [   ] o.e.j.s.SecurityHandler ServletContext@o.e.j.w.WebAppContext@e25b2fe{/solr,file:/D:/Work/jate_github/jate/solr-5.3.0/server/solr-webapp/webapp/,STARTING}{D:\Work\jate_github\jate\solr-5.3.0\server/solr-webapp/webapp} has uncovered http methods for path: /
+2015-09-23 10:26:19.966 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter SolrDispatchFilter.init(): WebAppClassLoader=117244645@6fd02e5
+2015-09-23 10:26:20.059 INFO  (main) [   ] o.a.s.c.SolrResourceLoader JNDI not configured for solr (NoInitialContextEx)
+2015-09-23 10:26:20.060 INFO  (main) [   ] o.a.s.c.SolrResourceLoader using system property solr.solr.home: D:\Work\jate_github\jate\solr-5.3.0\server\solr
+2015-09-23 10:26:20.076 INFO  (main) [   ] o.a.s.c.SolrResourceLoader new SolrResourceLoader for directory: 'D:\Work\jate_github\jate\solr-5.3.0\server\solr\'
+2015-09-23 10:26:20.371 INFO  (main) [   ] o.a.s.c.SolrXmlConfig Loading container configuration from D:\Work\jate_github\jate\solr-5.3.0\server\solr\solr.xml
+2015-09-23 10:26:20.541 INFO  (main) [   ] o.a.s.c.CoresLocator Config-defined core root directory: D:\Work\jate_github\jate\solr-5.3.0\server\solr
+2015-09-23 10:26:20.642 INFO  (main) [   ] o.a.s.c.CoreContainer New CoreContainer 543846639
+2015-09-23 10:26:20.642 INFO  (main) [   ] o.a.s.c.CoreContainer Loading cores into CoreContainer [instanceDir=D:\Work\jate_github\jate\solr-5.3.0\server\solr\]
+2015-09-23 10:26:20.643 INFO  (main) [   ] o.a.s.c.CoreContainer loading shared library: D:\Work\jate_github\jate\solr-5.3.0\server\solr\lib
+2015-09-23 10:26:20.643 WARN  (main) [   ] o.a.s.c.SolrResourceLoader Can't find (or read) directory to add to classloader: lib (resolved as: D:\Work\jate_github\jate\solr-5.3.0\server\solr\lib).
+2015-09-23 10:26:20.712 INFO  (main) [   ] o.a.s.h.c.HttpShardHandlerFactory created with socketTimeout : 600000,connTimeout : 60000,maxConnectionsPerHost : 20,maxConnections : 10000,corePoolSize : 0,maximumPoolSize : 2147483647,maxThreadIdleTime : 5,sizeOfQueue : -1,fairnessPolicy : false,useRetries : false,
+2015-09-23 10:26:20.854 INFO  (main) [   ] o.a.s.u.UpdateShardHandler Creating UpdateShardHandler HTTP client with params: socketTimeout=600000&connTimeout=60000&retry=true
+2015-09-23 10:26:20.857 INFO  (main) [   ] o.a.s.l.LogWatcher SLF4J impl is org.slf4j.impl.Log4jLoggerFactory
+2015-09-23 10:26:20.857 INFO  (main) [   ] o.a.s.l.LogWatcher Registering Log Listener [Log4j (org.slf4j.impl.Log4jLoggerFactory)]
+2015-09-23 10:26:20.859 INFO  (main) [   ] o.a.s.c.CoreContainer Security conf doesn't exist. Skipping setup for authorization module.
+2015-09-23 10:26:20.859 INFO  (main) [   ] o.a.s.c.CoreContainer No authentication plugin used.
+2015-09-23 10:26:22.043 INFO  (main) [   ] o.a.s.c.CoresLocator Looking for core definitions underneath D:\Work\jate_github\jate\solr-5.3.0\server\solr
+2015-09-23 10:26:22.117 INFO  (main) [   ] o.a.s.c.SolrCore Created CoreDescriptor: {name=jate, config=solrconfig.xml, transient=false, schema=schema.xml, loadOnStartup=true, configSetProperties=configsetprops.json, instanceDir=D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate, absoluteInstDir=D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\, dataDir=data\}
+2015-09-23 10:26:22.118 INFO  (main) [   ] o.a.s.c.CoresLocator Found core jate in D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\
+2015-09-23 10:26:22.119 INFO  (main) [   ] o.a.s.c.CoresLocator Found 1 core definitions
+2015-09-23 10:26:22.127 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader new SolrResourceLoader for directory: 'D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\'
+2015-09-23 10:26:22.127 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter user.dir=D:\Work\jate_github\jate\solr-5.3.0\server
+2015-09-23 10:26:22.128 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter SolrDispatchFilter.init() done
+2015-09-23 10:26:22.170 INFO  (main) [   ] o.e.j.s.h.ContextHandler Started o.e.j.w.WebAppContext@e25b2fe{/solr,file:/D:/Work/jate_github/jate/solr-5.3.0/server/solr-webapp/webapp/,AVAILABLE}{D:\Work\jate_github\jate\solr-5.3.0\server/solr-webapp/webapp}
+2015-09-23 10:26:22.256 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrConfig current version of requestparams : 0
+2015-09-23 10:26:22.269 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrConfig Adding specified lib dirs to ClassLoader
+2015-09-23 10:26:22.271 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/apache-mime4j-core-0.7.2.jar' to classloader
+2015-09-23 10:26:22.274 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/apache-mime4j-dom-0.7.2.jar' to classloader
+2015-09-23 10:26:22.274 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/aspectjrt-1.8.0.jar' to classloader
+2015-09-23 10:26:22.274 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/bcmail-jdk15-1.45.jar' to classloader
+2015-09-23 10:26:22.274 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/bcprov-jdk15-1.45.jar' to classloader
+2015-09-23 10:26:22.275 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/boilerpipe-1.1.0.jar' to classloader
+2015-09-23 10:26:22.275 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/commons-compress-1.8.1.jar' to classloader
+2015-09-23 10:26:22.275 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/fontbox-1.8.8.jar' to classloader
+2015-09-23 10:26:22.275 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/icu4j-54.1.jar' to classloader
+2015-09-23 10:26:22.275 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/isoparser-1.0.2.jar' to classloader
+2015-09-23 10:26:22.275 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/java-libpst-0.8.1.jar' to classloader
+2015-09-23 10:26:22.276 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/jdom-1.0.jar' to classloader
+2015-09-23 10:26:22.276 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/jempbox-1.8.8.jar' to classloader
+2015-09-23 10:26:22.276 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/jmatio-1.0.jar' to classloader
+2015-09-23 10:26:22.276 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/juniversalchardet-1.0.3.jar' to classloader
+2015-09-23 10:26:22.276 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/metadata-extractor-2.6.2.jar' to classloader
+2015-09-23 10:26:22.276 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/pdfbox-1.8.8.jar' to classloader
+2015-09-23 10:26:22.276 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/poi-3.11.jar' to classloader
+2015-09-23 10:26:22.276 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/poi-ooxml-3.11.jar' to classloader
+2015-09-23 10:26:22.277 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/poi-ooxml-schemas-3.11.jar' to classloader
+2015-09-23 10:26:22.277 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/poi-scratchpad-3.11.jar' to classloader
+2015-09-23 10:26:22.277 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/rome-1.0.jar' to classloader
+2015-09-23 10:26:22.277 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/tagsoup-1.2.1.jar' to classloader
+2015-09-23 10:26:22.277 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/tika-core-1.7.jar' to classloader
+2015-09-23 10:26:22.277 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/tika-java7-1.7.jar' to classloader
+2015-09-23 10:26:22.277 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/tika-parsers-1.7.jar' to classloader
+2015-09-23 10:26:22.277 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/tika-xmp-1.7.jar' to classloader
+2015-09-23 10:26:22.278 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/vorbis-java-core-0.6.jar' to classloader
+2015-09-23 10:26:22.278 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/vorbis-java-tika-0.6.jar' to classloader
+2015-09-23 10:26:22.278 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/xercesImpl-2.9.1.jar' to classloader
+2015-09-23 10:26:22.278 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/xmlbeans-2.6.0.jar' to classloader
+2015-09-23 10:26:22.278 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/xmpcore-5.1.2.jar' to classloader
+2015-09-23 10:26:22.278 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/extraction/lib/xz-1.5.jar' to classloader
+2015-09-23 10:26:22.280 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/dist/solr-cell-5.3.0.jar' to classloader
+2015-09-23 10:26:22.281 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/clustering/lib/attributes-binder-1.2.1.jar' to classloader
+2015-09-23 10:26:22.281 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/clustering/lib/carrot2-mini-3.9.0.jar' to classloader
+2015-09-23 10:26:22.281 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/clustering/lib/hppc-0.5.2.jar' to classloader
+2015-09-23 10:26:22.281 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/clustering/lib/jackson-core-asl-1.9.13.jar' to classloader
+2015-09-23 10:26:22.281 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/clustering/lib/jackson-mapper-asl-1.9.13.jar' to classloader
+2015-09-23 10:26:22.281 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/clustering/lib/mahout-collections-1.0.jar' to classloader
+2015-09-23 10:26:22.282 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/clustering/lib/mahout-math-0.6.jar' to classloader
+2015-09-23 10:26:22.282 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/clustering/lib/simple-xml-2.7.jar' to classloader
+2015-09-23 10:26:22.283 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/dist/solr-clustering-5.3.0.jar' to classloader
+2015-09-23 10:26:22.283 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/langid/lib/jsonic-1.2.7.jar' to classloader
+2015-09-23 10:26:22.284 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/langid/lib/langdetect-1.1-20120112.jar' to classloader
+2015-09-23 10:26:22.285 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/dist/solr-langid-5.3.0.jar' to classloader
+2015-09-23 10:26:22.285 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/velocity/lib/commons-beanutils-1.8.3.jar' to classloader
+2015-09-23 10:26:22.285 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/velocity/lib/commons-collections-3.2.1.jar' to classloader
+2015-09-23 10:26:22.286 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/velocity/lib/velocity-1.7.jar' to classloader
+2015-09-23 10:26:22.286 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/contrib/velocity/lib/velocity-tools-2.0.jar' to classloader
+2015-09-23 10:26:22.287 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/D:/Work/jate_github/jate/solr-5.3.0/dist/solr-velocity-5.3.0.jar' to classloader
+2015-09-23 10:26:22.299 INFO  (main) [   ] o.e.j.s.ServerConnector Started ServerConnector@6892b3b6{HTTP/1.1}{0.0.0.0:8983}
+2015-09-23 10:26:22.299 INFO  (main) [   ] o.e.j.s.Server Started @4738ms
+2015-09-23 10:26:22.386 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.u.SolrIndexConfig IndexWriter infoStream solr logging is enabled
+2015-09-23 10:26:22.391 WARN  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.Config Begining with Solr 5.0, <checkIntegrityAtMerge> option is no longer supported and should be removed from solrconfig.xml (these integrity checks are now automatic)
+2015-09-23 10:26:22.397 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrConfig Using Lucene MatchVersion: 4.10.4
+2015-09-23 10:26:22.570 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.Config Loaded SolrConfig: solrconfig.xml
+2015-09-23 10:26:22.583 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.s.IndexSchema Reading Solr Schema from D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\conf\schema.xml
+2015-09-23 10:26:22.611 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.s.IndexSchema [jate] Schema name=jate
+2015-09-23 10:26:22.740 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.s.IndexSchema default search field in schema is text
+2015-09-23 10:26:22.741 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.s.IndexSchema query parser default operator is OR
+2015-09-23 10:26:22.741 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.s.IndexSchema unique key field: id
+2015-09-23 10:26:22.846 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.ConfigSetProperties Did not find ConfigSet properties, assuming default properties: Can't find resource 'configsetprops.json' in classpath or 'D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\conf'
+2015-09-23 10:26:22.846 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.CoreContainer Creating SolrCore 'jate' using configuration from instancedir D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\
+2015-09-23 10:26:22.847 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.SolrCore solr.NRTCachingDirectoryFactory
+2015-09-23 10:26:22.860 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.SolrCore [[jate] ] Opening new SolrCore at [D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\], dataDir=[null]
+2015-09-23 10:26:22.862 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.JmxMonitoredMap No JMX servers found, not exposing Solr information with JMX.
+2015-09-23 10:26:22.866 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.SolrCore [[jate] ] Added SolrEventListener for newSearcher: [org.apache.solr.core.QuerySenderListener{queries=[]}]
+2015-09-23 10:26:22.866 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.SolrCore [[jate] ] Added SolrEventListener for firstSearcher: [org.apache.solr.core.QuerySenderListener{queries=[{q=static firstSearcher warming in solrconfig.xml}]}]
+2015-09-23 10:26:22.877 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.CachingDirectoryFactory return new directory for D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\data
+2015-09-23 10:26:22.878 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.SolrCore New index directory detected: old=null new=D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\data\index/
+2015-09-23 10:26:22.880 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.CachingDirectoryFactory return new directory for D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\data\index
+2015-09-23 10:26:22.893 INFO  (OldIndexDirectoryCleanupThreadForCore-jate) [   x:jate] o.a.s.c.SolrCore Looking for old index directories to cleanup for core jate in D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\data\
+2015-09-23 10:26:22.897 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.PluginBag queryResponseWriter : 'velocity' created with startup=lazy 
+2015-09-23 10:26:22.901 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.r.XSLTResponseWriter xsltCacheLifetimeSeconds=5
+2015-09-23 10:26:23.006 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.u.p.UpdateRequestProcessorChain creating updateRequestProcessorChain "langid"
+2015-09-23 10:26:23.020 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.u.p.UpdateRequestProcessorChain inserting DistributedUpdateProcessorFactory into updateRequestProcessorChain "langid"
+2015-09-23 10:26:23.021 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.SolrCore no updateRequestProcessorChain defined as default, creating implicit default
+2015-09-23 10:26:23.060 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.h.l.XMLLoader xsltCacheLifetimeSeconds=60
+2015-09-23 10:26:23.079 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.h.l.XMLLoader xsltCacheLifetimeSeconds=60
+2015-09-23 10:26:23.080 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.h.l.XMLLoader xsltCacheLifetimeSeconds=60
+2015-09-23 10:26:23.081 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.h.l.XMLLoader xsltCacheLifetimeSeconds=60
+2015-09-23 10:26:23.107 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.PluginBag requestHandler : '/update/extract' created with startup=lazy 
+2015-09-23 10:26:23.108 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.PluginBag requestHandler : '/analysis/field' created with startup=lazy 
+2015-09-23 10:26:23.108 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.PluginBag requestHandler : '/analysis/document' created with startup=lazy 
+2015-09-23 10:26:23.111 WARN  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.SolrResourceLoader Solr loaded a deprecated plugin/analysis class [solr.admin.AdminHandlers]. Please consult documentation how to replace it accordingly.
+2015-09-23 10:26:23.114 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.PluginBag requestHandler : '/spell' created with startup=lazy 
+2015-09-23 10:26:23.114 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.PluginBag requestHandler : '/tvrh' created with startup=lazy 
+2015-09-23 10:26:23.115 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.PluginBag requestHandler : '/terms' created with startup=lazy 
+2015-09-23 10:26:23.115 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.PluginBag requestHandler : '/elevate' created with startup=lazy 
+2015-09-23 10:26:23.115 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.RequestHandlers Registered paths: /admin/mbeans,/browse,/update/json/docs,/admin/luke,/export,/get,/admin/properties,/elevate,/update/json,/admin/threads,/query,/analysis/field,/analysis/document,/spell,/update/csv,/tvrh,/select,/admin/segments,/admin/system,/replication,/config,/schema,/admin/plugins,/admin/logging,/admin,/admin/ping,/update,/admin/file,/debug/dump,/terms,/update/extract
+2015-09-23 10:26:23.117 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.SolrCore Using default statsCache cache: org.apache.solr.search.stats.LocalStatsCache
+2015-09-23 10:26:23.128 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.u.UpdateHandler Using UpdateLog implementation: org.apache.solr.update.UpdateLog
+2015-09-23 10:26:23.128 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.u.UpdateLog Initializing UpdateLog: dataDir= defaultSyncLevel=FLUSH numRecordsToKeep=100 maxNumLogsToKeep=10 numVersionBuckets=65536
+2015-09-23 10:26:23.147 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.SolrCore Hard AutoCommit: if uncommited for 15000ms; 
+2015-09-23 10:26:23.148 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.SolrCore Soft AutoCommit: disabled
+2015-09-23 10:26:23.238 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.SolrCore SolrDeletionPolicy.onInit: commits: num=1
+	commit{dir=NRTCachingDirectory(MMapDirectory@D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\data\index lockFactory=org.apache.lucene.store.NativeFSLockFactory@43260ab3; maxCacheMB=48.0 maxMergeSizeMB=4.0),segFN=segments_3,generation=3}
+2015-09-23 10:26:23.239 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.SolrCore newest commit generation = 3
+2015-09-23 10:26:23.301 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.s.SolrIndexSearcher Opening Searcher@5d59df7c[jate] main
+2015-09-23 10:26:23.327 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.r.ManagedResourceStorage File-based storage initialized to use dir: D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\conf
+2015-09-23 10:26:23.327 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.r.RestManager Initializing RestManager with initArgs: {storageDir=D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\conf}
+2015-09-23 10:26:23.345 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.r.ManagedResourceStorage Reading _rest_managed.json using file:dir=D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\conf
+2015-09-23 10:26:23.346 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.r.RestManager Initializing 0 registered ManagedResources
+2015-09-23 10:26:23.363 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.h.c.SpellCheckComponent Initializing spell checkers
+2015-09-23 10:26:23.373 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.s.DirectSolrSpellChecker init: {name=default,field=text,classname=solr.DirectSolrSpellChecker,distanceMeasure=internal,accuracy=0.5,maxEdits=2,minPrefix=1,maxInspections=5,minQueryLength=4,maxQueryFrequency=0.01}
+2015-09-23 10:26:23.380 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.h.c.SpellCheckComponent No queryConverter defined, using default converter
+2015-09-23 10:26:23.382 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.h.c.QueryElevationComponent Loading QueryElevation from: D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\conf\elevate.xml
+2015-09-23 10:26:23.396 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.h.ReplicationHandler Commits will be reserved for  10000
+2015-09-23 10:26:23.397 WARN  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.h.a.AdminHandlers <requestHandler name="/admin/" 
+ class="solr.admin.AdminHandlers" /> is deprecated . It is not required anymore
+2015-09-23 10:26:23.398 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.u.UpdateLog Looking up max value of version field to seed version buckets
+2015-09-23 10:26:23.399 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.u.VersionInfo Refreshing highest value of _version_ for 65536 version buckets from index
+2015-09-23 10:26:23.399 INFO  (searcherExecutor-7-thread-1-processing-x:jate) [   x:jate] o.a.s.c.SolrCore QuerySenderListener sending requests to Searcher@5d59df7c[jate] main{ExitableDirectoryReader(UninvertingDirectoryReader(Uninverting(_0(5.3.0):C10) Uninverting(_1(5.3.0):C9) Uninverting(_2(5.3.0):C1)))}
+2015-09-23 10:26:23.423 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.u.VersionInfo Found MAX value 1513099226219806720 from Terms for _version_ in index
+2015-09-23 10:26:23.427 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.u.UpdateLog Took 28 ms to seed version buckets with highest version 1513099226219806720
+2015-09-23 10:26:23.428 INFO  (coreLoadExecutor-6-thread-1) [   x:jate] o.a.s.c.CoreContainer registering core: jate
+2015-09-23 10:26:23.563 INFO  (searcherExecutor-7-thread-1-processing-x:jate) [   x:jate] o.a.s.c.S.Request [jate] webapp=null path=null params={q=static+firstSearcher+warming+in+solrconfig.xml&distrib=false&event=firstSearcher} hits=20 status=0 QTime=155 
+2015-09-23 10:26:23.611 INFO  (searcherExecutor-7-thread-1-processing-x:jate) [   x:jate] o.a.s.c.SolrCore QuerySenderListener done.
+2015-09-23 10:26:23.611 INFO  (searcherExecutor-7-thread-1-processing-x:jate) [   x:jate] o.a.s.h.c.SpellCheckComponent Loading spell index for spellchecker: default
+2015-09-23 10:26:23.611 INFO  (searcherExecutor-7-thread-1-processing-x:jate) [   x:jate] o.a.s.h.c.SpellCheckComponent Loading spell index for spellchecker: wordbreak
+2015-09-23 10:26:23.611 INFO  (searcherExecutor-7-thread-1-processing-x:jate) [   x:jate] o.a.s.c.SolrCore [jate] Registered new searcher Searcher@5d59df7c[jate] main{ExitableDirectoryReader(UninvertingDirectoryReader(Uninverting(_0(5.3.0):C10) Uninverting(_1(5.3.0):C9) Uninverting(_2(5.3.0):C1)))}
+2015-09-23 10:26:26.534 INFO  (qtp1450821318-16) [   ] o.a.s.s.SolrDispatchFilter [admin] webapp=null path=/admin/info/system params={wt=json} status=0 QTime=21 
+2015-09-23 10:26:45.961 INFO  (qtp1450821318-16) [   x:jate] o.a.s.c.S.Request [jate] webapp=/solr path=/select params={q=*:*} hits=20 status=0 QTime=15 
+2015-09-23 10:28:14.663 INFO  (ShutdownMonitor) [   ] o.e.j.s.ServerConnector Stopped ServerConnector@6892b3b6{HTTP/1.1}{0.0.0.0:8983}
+2015-09-23 10:28:14.663 INFO  (ShutdownMonitor) [   ] o.a.s.c.CoreContainer Shutting down CoreContainer instance=543846639
+2015-09-23 10:28:14.663 INFO  (ShutdownMonitor) [   x:jate] o.a.s.c.SolrCore [jate]  CLOSING SolrCore org.apache.solr.core.SolrCore@322e471a
+2015-09-23 10:28:14.664 INFO  (ShutdownMonitor) [   x:jate] o.a.s.u.UpdateHandler closing DirectUpdateHandler2{commits=0,autocommit maxTime=15000ms,autocommits=0,soft autocommits=0,optimizes=0,rollbacks=0,expungeDeletes=0,docsPending=0,adds=0,deletesById=0,deletesByQuery=0,errors=0,cumulative_adds=0,cumulative_deletesById=0,cumulative_deletesByQuery=0,cumulative_errors=0,transaction_logs_total_size=2653416,transaction_logs_total_number=2}
+2015-09-23 10:28:14.665 INFO  (ShutdownMonitor) [   x:jate] o.a.s.u.SolrCoreState Closing SolrCoreState
+2015-09-23 10:28:14.665 INFO  (ShutdownMonitor) [   x:jate] o.a.s.u.DefaultSolrCoreState SolrCoreState ref count has reached 0 - closing IndexWriter
+2015-09-23 10:28:14.665 INFO  (ShutdownMonitor) [   x:jate] o.a.s.u.DefaultSolrCoreState closing IndexWriter with IndexWriterCloser
+2015-09-23 10:28:14.669 INFO  (ShutdownMonitor) [   x:jate] o.a.s.c.SolrCore [jate] Closing main searcher on request.
+2015-09-23 10:28:14.672 INFO  (ShutdownMonitor) [   x:jate] o.a.s.c.CachingDirectoryFactory Closing NRTCachingDirectoryFactory - 2 directories currently being tracked
+2015-09-23 10:28:14.673 INFO  (ShutdownMonitor) [   x:jate] o.a.s.c.CachingDirectoryFactory looking to close D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\data [CachedDir<<refCount=0;path=D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\data;done=false>>]
+2015-09-23 10:28:14.673 INFO  (ShutdownMonitor) [   x:jate] o.a.s.c.CachingDirectoryFactory Closing directory: D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\data
+2015-09-23 10:28:14.673 INFO  (ShutdownMonitor) [   x:jate] o.a.s.c.CachingDirectoryFactory looking to close D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\data\index [CachedDir<<refCount=0;path=D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\data\index;done=false>>]
+2015-09-23 10:28:14.673 INFO  (ShutdownMonitor) [   x:jate] o.a.s.c.CachingDirectoryFactory Closing directory: D:\Work\jate_github\jate\solr-5.3.0\server\solr\jate\data\index
+2015-09-23 10:28:14.675 INFO  (ShutdownMonitor) [   x:jate] o.e.j.s.h.ContextHandler Stopped o.e.j.w.WebAppContext@e25b2fe{/solr,file:/D:/Work/jate_github/jate/solr-5.3.0/server/solr-webapp/webapp/,UNAVAILABLE}{D:\Work\jate_github\jate\solr-5.3.0\server/solr-webapp/webapp}
