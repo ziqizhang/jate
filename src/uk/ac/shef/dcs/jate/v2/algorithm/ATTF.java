@@ -7,13 +7,16 @@ import uk.ac.shef.dcs.jate.v2.model.JATETerm;
 import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Average Total Term Frequency = TTF/ doc freq
  */
 public class ATTF extends Algorithm{
+    private static Logger LOG = Logger.getLogger(ATTF.class.getName());
     @Override
     public List<JATETerm> execute(Set<String> candidates) throws JATEException {
+        LOG.info("Calculating ATTF for "+candidates.size()+" candidate terms.");
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);
 
@@ -37,6 +40,7 @@ public class ATTF extends Algorithm{
             result.add(term);
         }
         Collections.sort(result);
+        LOG.info("Complete calculating ATTF");
         return result;
     }
 }

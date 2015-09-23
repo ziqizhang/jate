@@ -69,7 +69,11 @@ public class FrequencyTermBased extends AbstractFeature {
      * @param i
      */
     protected void increment(String term, int i) {
-        term2TTF.put(term, i);
+        Integer freq = term2TTF.get(term);
+        if(freq==null)
+            freq=0;
+        freq+=i;
+        term2TTF.put(term, freq);
     }
 
 

@@ -63,6 +63,8 @@ class FrequencyTermBasedFBWorker extends JATERecursiveTaskWorker<BytesRef, int[]
                     feature.incrementTermFrequencyInDocument(term, doc, tfid);
                 }
                 totalSuccess++;
+                /*if(totalSuccess%2000==0)
+                    LOG.info(totalSuccess+"/"+terms.size());*/
             } catch (IOException ioe) {
                 StringBuilder sb = new StringBuilder("Unable to build feature for candidate:");
                 sb.append(luceneTerm.utf8ToString()).append("\n");
@@ -70,6 +72,7 @@ class FrequencyTermBasedFBWorker extends JATERecursiveTaskWorker<BytesRef, int[]
                 LOG.severe(sb.toString());
             }
         }
+        LOG.info(totalSuccess+"/"+terms.size());
         return new int[]{totalSuccess, terms.size()};
     }
 }
