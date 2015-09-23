@@ -1,6 +1,5 @@
 package uk.ac.shef.dcs.jate.deprecated.test;
 
-import net.didion.jwnl.JWNLException;
 import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.core.algorithm.AbstractFeatureWrapper;
 import uk.ac.shef.dcs.jate.deprecated.core.algorithm.Algorithm;
@@ -60,7 +59,7 @@ public class TestWeirdness {
 		}
 	}
 
-	public static void main(String[] args) throws IOException, JATEException, JWNLException {
+	public static void main(String[] args) throws IOException, JATEException {
 
 		if (args.length < 3) {
 			System.out.println("Usage: java TestWeirdness [path_to_corpus] [path_to_reference_corpus_stats] [output_folder]");

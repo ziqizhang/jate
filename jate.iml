@@ -54,9 +54,7 @@
     <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-svnexe:1.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-svn-commons:1.4" level="project" />
     <orderEntry type="library" name="Maven: regexp:regexp:1.3" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.opennlp:opennlp-tools:1.5.3" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.opennlp:opennlp-maxent:3.0.3" level="project" />
-    <orderEntry type="library" name="Maven: net.sf.jwordnet:jwnl:1.3.3" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.opennlp:opennlp-tools:1.6.0" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-exec:1.3" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />

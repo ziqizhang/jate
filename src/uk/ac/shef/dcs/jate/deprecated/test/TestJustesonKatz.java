@@ -1,6 +1,5 @@
 package uk.ac.shef.dcs.jate.deprecated.test;
 
-import net.didion.jwnl.JWNLException;
 import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.core.algorithm.JustesonAlgorithm;
 import uk.ac.shef.dcs.jate.deprecated.core.feature.FeatureBuilderCorpusTermFrequency;
@@ -20,7 +19,7 @@ import java.io.IOException;
 import java.util.Date;
 
 public class TestJustesonKatz {
-	public static void main(String[] args) throws IOException, JATEException, JWNLException {
+	public static void main(String[] args) throws IOException, JATEException {
 
 
         String path_to_corpus = args[0];

@@ -111,6 +111,27 @@ public class JATEProperties {
         }
     }
 
+    public int getFeatureBuilderMaxDocsPerWorker(){
+        int defaultMax=50;
+        try{
+            int v= getInt("featurebuilder_max_docs_per_worker");
+            if(v<1) {
+                LOG.warning("'featurebuilder_max_docs_per_worker' illegal value:"+v+". Default=50 is used.");
+                v = defaultMax;
+            }
+            return v;
+        }catch (NumberFormatException nfe){
+            StringBuilder sb = new StringBuilder("'featurebuilder_max_docs_per_worker' illegal value. Default=50 is used.");
+            sb.append("\n").append(ExceptionUtils.getFullStackTrace(nfe));
+            LOG.warning(sb.toString());
+            return defaultMax;
+        }catch(NullPointerException ne){
+            StringBuilder sb = new StringBuilder("'featurebuilder_max_docs_per_worker' illegal value. Default=50 is used.");
+            sb.append("\n").append(ExceptionUtils.getFullStackTrace(ne));
+            LOG.warning(sb.toString());
+            return defaultMax;
+        }
+    }
 
     public int getFeatureBuilderMaxTermsPerWorker(){
         int defaultMax=100;

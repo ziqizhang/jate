@@ -1,8 +1,5 @@
 package uk.ac.shef.dcs.jate.deprecated.util.control;
 
-import net.didion.jwnl.JWNLException;
-import opennlp.tools.coref.mention.JWNLDictionary;
-import uk.ac.shef.dcs.jate.deprecated.JATEProperties;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
@@ -28,9 +25,8 @@ public class Lemmatizer extends Normalizer {
      * This constant is a pattern that matches potential token separator used by the opennlp dictionary based lemmatizer
      */
     protected static final Pattern JWNLDICTIONARY_POSSIBLE_TOKEN_SEPARATOR = Pattern.compile("[\\-\\.\\s+]");
-    private JWNLDictionary dict;
 
-	public Lemmatizer() throws IOException, JWNLException {
+	public Lemmatizer() throws IOException {
 		init();
 	}
 
@@ -40,7 +36,7 @@ public class Lemmatizer extends Normalizer {
 	 * @return the lemma of original word
 	 */
 	private String getLemma(String word, String pos) {
-        String[] norms=dict.getLemmas(word.toLowerCase(),pos);
+        String[] norms=new String[0];
         if(norms.length==0)
             return word;
         return norms[0];
@@ -126,8 +122,8 @@ public class Lemmatizer extends Normalizer {
 	}
 
 
-	private void init() throws IOException, JWNLException {
-		dict = new JWNLDictionary(JATEProperties.getInstance().getNLPPath()+"/wordnet_dict");
+	private void init() throws IOException {
+
 	}
 
 }

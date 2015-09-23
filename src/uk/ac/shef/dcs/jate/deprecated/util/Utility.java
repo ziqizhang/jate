@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.didion.jwnl.JWNLException;
 import uk.ac.shef.dcs.jate.deprecated.JATEProperties;
 import uk.ac.shef.dcs.jate.deprecated.core.extractor.CandidateTermExtractor;
 import uk.ac.shef.dcs.jate.deprecated.util.control.Lemmatizer;
@@ -31,7 +30,7 @@ public class Utility{
         Lemmatizer lemmatizer = null;
         try {
             lemmatizer = new Lemmatizer();
-        } catch (JWNLException e) {
+        } catch (Exception e) {
             throw new IOException(e);
         }
         String stopremoved = CandidateTermExtractor.applyTrimStopwords(context.trim(), stoplist, lemmatizer,true,true);
@@ -86,7 +85,7 @@ public class Utility{
         Lemmatizer lemmatizer = null;
         try {
             lemmatizer = new Lemmatizer();
-        } catch (JWNLException e) {
+        } catch (Exception e) {
             throw new IOException(e);
         }
         Set<String> LemmatizedWordSet = new HashSet<String>();

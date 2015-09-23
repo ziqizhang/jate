@@ -13,8 +13,6 @@ import java.util.logging.Logger;
  * Created by zqz on 21/09/2015.
  */
 public class FrequencyCtxSentenceBasedFBMaster extends AbstractFeatureBuilder {
-    private JATEProperties properties;
-    private IndexReader indexReader;
     private String termTargetField;
     private String sentenceTargetField;
 
@@ -39,11 +37,15 @@ public class FrequencyCtxSentenceBasedFBMaster extends AbstractFeatureBuilder {
         cores = cores == 0 ? 1 : cores;
         FrequencyCtxSentenceBasedFBWorker worker = new
                 FrequencyCtxSentenceBasedFBWorker(properties, allDocs,
-                indexReader, properties.getFeatureBuilderMaxTermsPerWorker(), termTargetField,
+                indexReader, properties.getFeatureBuilderMaxDocsPerWorker(), termTargetField,
                 sentenceTargetField);
+        StringBuilder sb = new StringBuilder("Building features using cpu cores=");
+        sb.append(cores).append(", total docs=").append(allDocs.size()).append(", max per worker=")
+                .append(properties.getFeatureBuilderMaxDocsPerWorker());
+        LOG.info(sb.toString());
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
         FrequencyCtxBased feature = forkJoinPool.invoke(worker);
-        StringBuilder sb = new StringBuilder("Complete building features. Total=");
+        sb = new StringBuilder("Complete building features. Total sentence ctx=");
         sb.append(feature.getMapCtx2TTF().size());
         LOG.info(sb.toString());
 

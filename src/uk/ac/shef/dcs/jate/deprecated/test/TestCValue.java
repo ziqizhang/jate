@@ -1,6 +1,5 @@
 package uk.ac.shef.dcs.jate.deprecated.test;
 
-import net.didion.jwnl.JWNLException;
 import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.core.algorithm.AbstractFeatureWrapper;
 import uk.ac.shef.dcs.jate.deprecated.core.algorithm.Algorithm;
@@ -53,12 +52,12 @@ public class TestCValue {
 		}
 	}
 
-	public static void main(String[] args) throws IOException, JATEException, JWNLException {
+	public static void main(String[] args) throws IOException, JATEException {
 
 		TestCValue.CValueTester(args);
 	}
 	
-	public static AlgorithmTester CValueTester(String[] args) throws IOException, JATEException, JWNLException {
+	public static AlgorithmTester CValueTester(String[] args) throws IOException, JATEException {
 		
 		
 		String path_to_corpus= args[0];

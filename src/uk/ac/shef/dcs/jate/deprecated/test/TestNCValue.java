@@ -4,7 +4,6 @@ Test file for NC-Value Algorithm.
 
 package uk.ac.shef.dcs.jate.deprecated.test;
 
-import net.didion.jwnl.JWNLException;
 import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.core.algorithm.NCValueAlgorithm;
 import uk.ac.shef.dcs.jate.deprecated.core.algorithm.NCValueFeatureWrapper;
@@ -16,7 +15,7 @@ import java.util.Map;
 
 public class TestNCValue {
 
-	public static void main(String[] args) throws IOException, JATEException, JWNLException {
+	public static void main(String[] args) throws IOException, JATEException {
 		
 			System.out.println("Started "+ TestNCValue.class+"at: " + new Date() + "... For detailed progress see log file jate.log.");
 			String[] argument = new String[]{args[0], args[1]};

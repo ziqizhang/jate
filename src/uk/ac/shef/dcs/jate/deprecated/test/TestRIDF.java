@@ -1,6 +1,5 @@
 package uk.ac.shef.dcs.jate.deprecated.test;
 
-import net.didion.jwnl.JWNLException;
 import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.core.algorithm.*;
 import uk.ac.shef.dcs.jate.deprecated.core.feature.FeatureBuilderCorpusTermFrequency;
@@ -48,7 +47,7 @@ public class TestRIDF {
 		}
 	}
 
-	public static void main(String[] args) throws IOException, JATEException, JWNLException {
+	public static void main(String[] args) throws IOException, JATEException {
 
 		String path_to_corpus= args[0];
 		String path_to_output= args[1];

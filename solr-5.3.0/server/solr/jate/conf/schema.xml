@@ -261,9 +261,7 @@
 			-->
 		<fieldType name="jate_text_2_sentences" class="solr.TextField" positionIncrementGap="100">
 			<analyzer type="index">
-				<tokenizer class="solr.StandardTokenizerFactory" />
-				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
-				<filter class="solr.LowerCaseFilterFactory" />				
+				<tokenizer class="solr.PatternTokenizerFactory" pattern="(\S.+?[.!?;]|[.!?;][&apos;&quot;])(?&lt;!Mr.|Mrs.|Ms.|Jr.|Dr.|Prof.|Sr.|[A-Z].)(?=|\s+|$)" />				
 			</analyzer>
 			<!-- no analyzer for query-->
 		</fieldType>

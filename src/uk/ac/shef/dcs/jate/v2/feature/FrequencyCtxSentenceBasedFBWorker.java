@@ -119,15 +119,17 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
             String tString =luceneTerm.utf8ToString();
             PostingsEnum postingsEnum=ti.postings(null, PostingsEnum.OFFSETS);
 
-            int totalOccurrence=postingsEnum.freq();
-            for(int i=0; i<totalOccurrence; i++) {
-                postingsEnum.nextPosition();
-                int start=postingsEnum.startOffset();
-                int end=postingsEnum.endOffset();
-                result.add(new TextUnitOffsets(tString, start, end));
+            int doc=postingsEnum.nextDoc(); //this should be just 1 doc, i.e., the constraint for getting this TV
+            if(doc!= PostingsEnum.NO_MORE_DOCS) {
+                int totalOccurrence = postingsEnum.freq();
+                for (int i = 0; i < totalOccurrence; i++) {
+                    postingsEnum.nextPosition();
+                    int start = postingsEnum.startOffset();
+                    int end = postingsEnum.endOffset();
+                    result.add(new TextUnitOffsets(tString, start, end));
+                }
             }
-
-            luceneTerm=ti.next();
+            luceneTerm = ti.next();
         }
         Collections.sort(result);
         return result;

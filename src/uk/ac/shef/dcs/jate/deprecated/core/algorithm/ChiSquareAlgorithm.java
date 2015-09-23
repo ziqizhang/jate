@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import net.didion.jwnl.JWNLException;
 import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.deprecated.JATEProperties;
 import uk.ac.shef.dcs.jate.deprecated.core.nlptools.NLPToolsControllerOpenNLP;
@@ -46,7 +45,7 @@ public class ChiSquareAlgorithm implements Algorithm {
 	Lemmatizer lemmatizer;
     private String inputCorpus;
 
-	public ChiSquareAlgorithm(String input) throws IOException, JWNLException {
+	public ChiSquareAlgorithm(String input) throws IOException {
 		ngrams = new ArrayList<Term>();
 		cooccurence_map = new HashMap<String, Integer>();
 		frequentTerms_variants_Map = new HashMap<String, Set<String>>() ;

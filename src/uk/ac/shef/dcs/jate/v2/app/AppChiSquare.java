@@ -14,12 +14,15 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by zqz on 23/09/2015.
  */
 public class AppChiSquare extends AbstractApp {
     public static void main(String[] args) throws JATEException, IOException {
+
         if (args.length < 1) {
             printHelp();
             System.exit(1);
