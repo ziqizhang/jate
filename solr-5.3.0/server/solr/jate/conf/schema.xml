@@ -228,10 +228,12 @@
 			 change the field name in the request.
 		 -->
 		<fieldType name="random" class="solr.RandomSortField" indexed="true" />
+		
+		<!--------------------------JATE Start --------------------------------------->
 		<!-- A text field for terminology recognition. Any text put into this field will be
 			processed by JATE to extract candidate terms. 
-			Based on text_general setting with additional tokenized ngram filter -->
-		<fieldType name="jate_processable_text" class="solr.TextField" positionIncrementGap="100">
+			This is an example fieldType definition that extracts n-gram as candidates -->
+		<fieldType name="jate_text_2_terms" class="solr.TextField" positionIncrementGap="100">
 			<analyzer type="index">
 				<tokenizer class="solr.StandardTokenizerFactory" />
 				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
@@ -239,14 +241,33 @@
 				<filter class="solr.ShingleFilterFactory" minShingleSize="2" maxShingleSize="5"
 						outputUnigrams="true" outputUnigramsIfNoShingles="false" tokenSeparator=" "/>
 			</analyzer>
-			<analyzer type="query">
-				<!--<tokenizer class="solr.StandardTokenizerFactory" />-->
-				<tokenizer class="solr.WhitespaceTokenizerFactory"/>
-				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
-				<filter class="solr.LowerCaseFilterFactory" />
-				<filter class="solr.ASCIIFoldingFilterFactory"/>
-			</analyzer>
+			<!-- no analyzer for query-->
 		</fieldType>
+		<!-- A text field for terminology recognition. Any text put into this field will be
+			processed by JATE to extract words. This is used by some algorithms, such as 
+			Weirdness, GlossEx and TermEx.
+			-->
+		<fieldType name="jate_text_2_words" class="solr.TextField" positionIncrementGap="100">
+			<analyzer type="index">
+				<tokenizer class="solr.StandardTokenizerFactory" />
+				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
+				<filter class="solr.LowerCaseFilterFactory" />				
+			</analyzer>
+			<!-- no analyzer for query-->
+		</fieldType>
+		<!-- A text field for terminology recognition. Any text put into this field will be
+			processed by JATE to extract sentences. This is used by some algorithms, such as 
+			ChiSquare, NCValue
+			-->
+		<fieldType name="jate_text_2_sentences" class="solr.TextField" positionIncrementGap="100">
+			<analyzer type="index">
+				<tokenizer class="solr.StandardTokenizerFactory" />
+				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
+				<filter class="solr.LowerCaseFilterFactory" />				
+			</analyzer>
+			<!-- no analyzer for query-->
+		</fieldType>
+		<!--------------------------JATE End ----------------------------------------->
 	</types>
 
 	<fields>
@@ -267,22 +288,32 @@
 			NOTE: This field is not indexed by default, since it is also copied to "text"
 			using copyField below. This is to save space. Use this field for returning and
 			highlighting document content. Use the "text" field to search the content. -->
-	   <field name="jate_text_all" type="jate_processable_text" indexed="true" stored="true" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
-	
+			
+	   <!----------------------------- JATE Start ------------------------------------------>
+	   <!-- Field to index and store candidate terms -->
+	   <field name="jate_terms_all" type="jate_text_2_terms" indexed="true" stored="true" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
+	   <!-- Field to index and store words. You only need this if you use algorithms that require
+			word-level features, such as Weirdness, GlossEx, and TermEx-->
+	   <field name="jate_words_all" type="jate_text_2_words" indexed="true" stored="true" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
+	   <!-- Field to index and store sentences. You only need this if you use algorithms that require
+			sentence-level features, such as ChiSquare, and NCValue-->
+	   <field name="jate_sentences_all" type="jate_text_2_sentence" indexed="true" stored="true" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
+	   <!----------------------------- JATE End   ------------------------------------------>
+	   
 	   <!-- Dynamic field definitions allow using convention over configuration
        for fields via the specification of patterns to match field names. 
        EXAMPLE:  name="*_i" will match any field ending in _i (like myid_i, z_i)
        RESTRICTION: the glob-like pattern in the name attribute must have
        a "*" only at the start or the end.  -->
 	   
-	   <!-- OPTIONAL: a jate_f*_text records text from a particular *field* (similar to the 'field' concept
-			in SOLR) of a document, e.g., title, links, first paragraph etc. Such fields are defined and required
+	   <!-- OPTIONAL: a jate_terms_f* text records text from a particular position (similar to the 'field' concept
+			in SOLR) of a document, e.g., title, links, first paragraph etc. Such positions are defined and required
 			by each individual ATR algorithm. 
-			These fields are processed by JATE to extract and store candidate terms. They are not indexed for each. 
+			These positions are processed by JATE to extract and store candidate terms. They are not indexed for each. 
 			They only provide a way to trace the part of a document that a candidate term is found. Such 
 			information can be used by some ATR algorithms. However most ATR algorithms do not 
 			use such information. -->
-	   <dynamicField name="jate_text_f*"  type="jate_processable_text" indexed="false"  stored="true"/>
+	   <dynamicField name="jate_terms_f*"  type="jate_text_2_terms" indexed="false"  stored="true"/>
 	   
        <dynamicField name="*_i"  type="int"    indexed="true"  stored="true"/>
 	   <dynamicField name="*_is" type="int"    indexed="true"  stored="true"  multiValued="true"/>
