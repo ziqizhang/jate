@@ -229,7 +229,7 @@
 		 -->
 		<fieldType name="random" class="solr.RandomSortField" indexed="true" />
 		
-		<!--------------------------JATE Start --------------------------------------->
+		<!-- ###################### JATE Start #############################-->
 		<!-- A text field for terminology recognition. Any text put into this field will be
 			processed by JATE to extract candidate terms. 
 			This is an example fieldType definition that extracts n-gram as candidates -->
@@ -267,7 +267,7 @@
 			</analyzer>
 			<!-- no analyzer for query-->
 		</fieldType>
-		<!--------------------------JATE End ----------------------------------------->
+		<!-- ########################## JATE End ############################################ -->
 	</types>
 
 	<fields>
@@ -289,7 +289,7 @@
 			using copyField below. This is to save space. Use this field for returning and
 			highlighting document content. Use the "text" field to search the content. -->
 			
-	   <!----------------------------- JATE Start ------------------------------------------>
+	   <!--##################### JATE Start ######################### -->
 	   <!-- Field to index and store candidate terms -->
 	   <field name="jate_terms_all" type="jate_text_2_terms" indexed="true" stored="true" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
 	   <!-- Field to index and store words. You only need this if you use algorithms that require
@@ -297,8 +297,8 @@
 	   <field name="jate_words_all" type="jate_text_2_words" indexed="true" stored="true" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
 	   <!-- Field to index and store sentences. You only need this if you use algorithms that require
 			sentence-level features, such as ChiSquare, and NCValue-->
-	   <field name="jate_sentences_all" type="jate_text_2_sentence" indexed="true" stored="true" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
-	   <!----------------------------- JATE End   ------------------------------------------>
+	   <field name="jate_sentences_all" type="jate_text_2_sentences" indexed="true" stored="true" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
+	   <!--######################## JATE End ########################## -->
 	   
 	   <!-- Dynamic field definitions allow using convention over configuration
        for fields via the specification of patterns to match field names. 
@@ -337,7 +337,7 @@
         is added to the index.  It's used either to index the same field differently,
         or to add multiple fields to the same field for easier/faster searching.  -->
 		
-	   <copyField source="jate_all_text" dest="text" />		     
+	   <copyField source="jate_terms_all" dest="text" />		     
 	</fields>
 
 	<uniqueKey>id</uniqueKey>
