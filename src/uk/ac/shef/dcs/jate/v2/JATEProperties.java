@@ -26,6 +26,13 @@ public class JATEProperties {
         return fieldnameID;
     }
 
+    public String getSolrHome() throws JATEException{
+        String fieldnameID = getString("solrhome");
+        if (fieldnameID == null)
+            throw new JATEException("'solrhome' not defined in jate.properties");
+        return fieldnameID;
+    }
+
     public String getSolrFieldnameID() throws JATEException {
         String fieldnameID = getString("fieldname_id");
         if (fieldnameID == null)
@@ -54,6 +61,51 @@ public class JATEProperties {
         String string = prop.getProperty(propertyName);
         return string;
     }
+
+    public int getIndexerMaxDocsPerWorker(){
+        int defaultMax=100;
+        try{
+            int v= getInt("indexer_max_docs_per_worker");
+            if(v<1) {
+                LOG.warning("'indexer_max_docs_per_worker' illegal value:"+v+". Default=100 is used.");
+                v = defaultMax;
+            }
+            return v;
+        }catch (NumberFormatException nfe){
+            StringBuilder sb = new StringBuilder("'indexer_max_docs_per_worker' illegal value. Default=100 is used.");
+            sb.append("\n").append(ExceptionUtils.getFullStackTrace(nfe));
+            LOG.warning(sb.toString());
+            return defaultMax;
+        }catch(NullPointerException ne){
+            StringBuilder sb = new StringBuilder("'indexer_max_docs_per_worker' illegal value. Default=100 is used.");
+            sb.append("\n").append(ExceptionUtils.getFullStackTrace(ne));
+            LOG.warning(sb.toString());
+            return defaultMax;
+        }
+    }
+
+    public int getIndexerMaxUnitsToCommit(){
+        int defaultMax=500;
+        try{
+            int v= getInt("indexer_max_units_to_commit");
+            if(v<1) {
+                LOG.warning("'indexer_max_units_to_commit' illegal value:"+v+". Default=500 is used.");
+                v = defaultMax;
+            }
+            return v;
+        }catch (NumberFormatException nfe){
+            StringBuilder sb = new StringBuilder("'indexer_max_units_to_commit' illegal value. Default=500 is used.");
+            sb.append("\n").append(ExceptionUtils.getFullStackTrace(nfe));
+            LOG.warning(sb.toString());
+            return defaultMax;
+        }catch(NullPointerException ne){
+            StringBuilder sb = new StringBuilder("'indexer_max_units_to_commit' illegal value. Default=500 is used.");
+            sb.append("\n").append(ExceptionUtils.getFullStackTrace(ne));
+            LOG.warning(sb.toString());
+            return defaultMax;
+        }
+    }
+
 
     public int getFeatureBuilderMaxTermsPerWorker(){
         int defaultMax=100;
@@ -85,19 +137,19 @@ public class JATEProperties {
     public double getFeatureBuilderMaxCPUsage(){
         double defaultMax=1.0;
         try{
-            double v= getDouble("featurebuilder_max_cpu_usage");
+            double v= getDouble("max_cpu_usage");
             if(v<=0) {
-                LOG.warning("'featurebuilder_max_cpu_usage' illegal value:"+v+". Default=1.0 is used.");
+                LOG.warning("'max_cpu_usage' illegal value:"+v+". Default=1.0 is used.");
                 v = defaultMax;
             }
             return v;
         }catch (NumberFormatException nfe){
-            StringBuilder sb = new StringBuilder("'featurebuilder_max_cpu_usage' illegal value. Default=100 is used.");
+            StringBuilder sb = new StringBuilder("'max_cpu_usage' illegal value. Default=100 is used.");
             sb.append("\n").append(ExceptionUtils.getFullStackTrace(nfe));
             LOG.warning(sb.toString());
             return defaultMax;
         }catch(NullPointerException ne){
-            StringBuilder sb = new StringBuilder("'featurebuilder_max_cpu_usage' illegal value. Default=100 is used.");
+            StringBuilder sb = new StringBuilder("'max_cpu_usage' illegal value. Default=100 is used.");
             sb.append("\n").append(ExceptionUtils.getFullStackTrace(ne));
             LOG.warning(sb.toString());
             return defaultMax;

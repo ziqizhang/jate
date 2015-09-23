@@ -30,7 +30,9 @@ public class SolrParallelIndexingMaster {
         cores = (int) (cores*cpuUsage);
         cores=cores==0?1:cores;
 
-        LOG.info("Beginning indexing dataset using cores="+cores);
+        StringBuilder msg = new StringBuilder("Beginning indexing dataset using cores=");
+        msg.append(cores).append(", total docs="+tasks.size());
+        LOG.info(msg.toString());
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
         if(properties.getSolrFieldnameJATEWordsAll()==null)
             LOG.info("'fieldname_jate_words_all' undefined. If you do not use GlossEx or TermEx this is ok.");
@@ -44,17 +46,5 @@ public class SolrParallelIndexingMaster {
             String message = "CANNOT CLOSE SOLR: \n";
             LOG.severe(message+ExceptionUtils.getStackTrace(e));
         }
-    }
-
-    public static void main(String[] args) throws IOException, JATEException {
-        JATEProperties prop = new JATEProperties("");
-        SolrClient solrClient =
-                new EmbeddedSolrServer(Paths.get("D:\\Work\\jate_github\\jate\\solr-5.3.0\\server\\solr"),
-                       prop.getSolrCorename());
-        SolrParallelIndexingMaster m = new SolrParallelIndexingMaster();
-        List<String> files = new ArrayList<>();
-        for(File f: new File("D:\\Work\\jate_github\\jate\\sample\\input").listFiles())
-            files.add(f.toString());
-        m.index(files, 10,5,new TikaSimpleDocumentCreator(),solrClient, 0.5,prop);
     }
 }
