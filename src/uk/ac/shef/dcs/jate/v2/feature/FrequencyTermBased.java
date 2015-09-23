@@ -65,16 +65,16 @@ public class FrequencyTermBased extends AbstractFeature {
     /**
      * increment the number of occurrences of term by i
      *
-     * @param luceneTerm
+     * @param term
      * @param i
      */
-    protected void add(String luceneTerm, int i) {
-        term2TTF.put(luceneTerm, i);
+    protected void increment(String term, int i) {
+        term2TTF.put(term, i);
     }
 
 
 
-    protected void addTermFrequencyInDocument(String term, int luceneDocId, int freq){
+    protected void incrementTermFrequencyInDocument(String term, int luceneDocId, int freq){
         Map<Integer, Integer> freqMap = term2FID.get(term);
         if(freqMap==null)
             freqMap = new HashMap<>();

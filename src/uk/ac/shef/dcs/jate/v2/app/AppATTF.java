@@ -49,6 +49,7 @@ public class AppATTF extends AbstractApp {
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
         paramValue=params.get("-o");
         write(terms,paramValue);
+        indexReader.close();
     }
 
     private static List<JATETerm> applyThresholds(List<JATETerm> terms, String t, String n) {

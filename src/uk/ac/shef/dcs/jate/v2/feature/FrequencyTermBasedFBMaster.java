@@ -35,14 +35,16 @@ public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
             Fields fields = MultiFields.getFields(indexReader);
             boolean foundJATETextField = false;
             for (String field : fields) {
-                foundJATETextField = true;
+                if(foundJATETextField)
+                    break;
                 if (field.equals(targetField)) {
+                    foundJATETextField = true;
                     List<BytesRef> allLuceneTerms = new ArrayList<>();
                     Terms terms = fields.terms(field);
                     TermsEnum termsEnum = terms.iterator();
                     while (termsEnum.next() != null) {
                         BytesRef t = termsEnum.term();
-                        allLuceneTerms.add(t);
+                        allLuceneTerms.add(BytesRef.deepCopyOf(t));
                     }
                     //start workers
                     int cores = Runtime.getRuntime().availableProcessors();

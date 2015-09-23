@@ -54,7 +54,7 @@ public class TTFReferenceFeatureFileBuilder extends AbstractFeatureBuilder {
                 line = line.trim();
                 String[] elements = line.split("\\s+");
                 if (Integer.valueOf(elements[0]) < 2) continue;
-                feature.add(elements[1].trim(), Integer.valueOf(elements[0]));
+                feature.increment(elements[1].trim(), Integer.valueOf(elements[0]));
             }
 
         } catch (IOException e) {

@@ -51,6 +51,7 @@ class FrequencyTermBasedFBWorker extends JATERecursiveTaskWorker<BytesRef, int[]
     protected int[] computeSingleWorker(List<BytesRef> terms) {
         int totalSuccess = 0;
         for (BytesRef luceneTerm : terms) {
+            String term =luceneTerm.utf8ToString();
             try {
                 PostingsEnum docEnum = MultiFields.getTermDocsEnum(index,
                         targetField, luceneTerm);
@@ -58,7 +59,8 @@ class FrequencyTermBasedFBWorker extends JATERecursiveTaskWorker<BytesRef, int[]
                 int doc = 0;
                 while ((doc = docEnum.nextDoc()) != PostingsEnum.NO_MORE_DOCS) {
                     int tfid = docEnum.freq();  //tf in document
-                    feature.addTermFrequencyInDocument(luceneTerm.utf8ToString(), doc, tfid);
+                    feature.increment(term, tfid);
+                    feature.incrementTermFrequencyInDocument(term, doc, tfid);
                 }
                 totalSuccess++;
             } catch (IOException ioe) {
