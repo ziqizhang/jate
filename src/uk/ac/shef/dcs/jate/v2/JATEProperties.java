@@ -52,6 +52,11 @@ public class JATEProperties {
         return fieldnameID;
     }
 
+    public String getSolrFieldnameJATESentencesAll() {
+        String fieldnameID = getString("fieldname_jate_sentences_all");
+        return fieldnameID;
+    }
+
     public String getSolrFieldnameJATETermsF(){
         String fieldnameID = getString("fieldname_jate_terms_f");
         return fieldnameID;

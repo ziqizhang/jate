@@ -34,8 +34,12 @@ public class SolrParallelIndexingMaster {
         msg.append(cores).append(", total docs="+tasks.size());
         LOG.info(msg.toString());
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
-        if(properties.getSolrFieldnameJATEWordsAll()==null)
-            LOG.info("'fieldname_jate_words_all' undefined. If you do not use GlossEx or TermEx this is ok.");
+        if(properties.getSolrFieldnameJATEWordsAll()==null||
+                properties.getSolrFieldnameJATEWordsAll().equals(""))
+            LOG.warning("'fieldname_jate_words_all' undefined. If your algorithms (e.g., GlossEx, TermEx, Weirdness) do not use word-level features this is ok.");
+        if(properties.getSolrFieldnameJATESentencesAll()==null||
+                properties.getSolrFieldnameJATESentencesAll().equals(""))
+            LOG.warning("'fieldname_jate_sentences_all' undefined. If your algorithms (e.g., Chi-Square, NC-value) do not use sentence-level features this is ok.");
         SolrParallelIndexingWorker idxWorker = new SolrParallelIndexingWorker(tasks,
                 maxTaskPerWorker, batchSize, docCreator, solrClient,properties);
         int total= forkJoinPool.invoke(idxWorker);

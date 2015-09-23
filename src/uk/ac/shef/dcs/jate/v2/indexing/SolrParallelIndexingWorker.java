@@ -66,7 +66,10 @@ public class SolrParallelIndexingWorker extends JATERecursiveTaskWorker<String, 
     @Override
     protected Integer computeSingleWorker(List<String> tasks) {
         int total = 0, batches=0;
-        boolean indexJATEWords = properties.getSolrFieldnameJATEWordsAll()!=null;
+        boolean indexJATEWords = properties.getSolrFieldnameJATEWordsAll()!=null &&
+                !properties.getSolrFieldnameJATEWordsAll().equals("");
+        boolean indexJATESentences = properties.getSolrFieldnameJATESentencesAll()!=null &&
+                !properties.getSolrFieldnameJATESentencesAll().equals("");
         for(String task: tasks){
             try {
                 JATEDocument doc = docCreator.create(task);
@@ -76,6 +79,8 @@ public class SolrParallelIndexingWorker extends JATERecursiveTaskWorker<String, 
                 solrDoc.addField(properties.getSolrFieldnameJATETermsAll(), doc.getContent());
                 if(indexJATEWords)
                     solrDoc.addField(properties.getSolrFieldnameJATEWordsAll(), doc.getContent());
+                if(indexJATESentences)
+                    solrDoc.addField(properties.getSolrFieldnameJATESentencesAll(), doc.getContent());
                 for(Map.Entry<String, String> field2Value : doc.getMapField2Content().entrySet()){
                     String field = field2Value.getKey();
                     String value = field2Value.getValue();
