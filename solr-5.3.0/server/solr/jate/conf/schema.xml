@@ -261,7 +261,8 @@
 			-->
 		<fieldType name="jate_text_2_sentences" class="solr.TextField" positionIncrementGap="100">
 			<analyzer type="index">
-				<tokenizer class="solr.PatternTokenizerFactory" pattern="(\S.+?[.!?;]|[.!?;][&apos;&quot;])(?&lt;!Mr.|Mrs.|Ms.|Jr.|Dr.|Prof.|Sr.|[A-Z].)(?=|\s+|$)" />				
+				<!--tokenizer class="solr.PatternTokenizerFactory" pattern="(\S.+?[.!?;]|[.!?;][&apos;&quot;])(?&lt;!Mr.|Mrs.|Ms.|Jr.|Dr.|Prof.|Sr.|[A-Z].)(?=|\s+|$)" /-->	
+				<tokenizer class="uk.ac.shef.dcs.jate.v2.lucene.tokenizer.WholeSentenceTokenizerFactory"/>					
 			</analyzer>
 			<!-- no analyzer for query-->
 		</fieldType>
