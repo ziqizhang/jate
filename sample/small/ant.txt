@@ -1,0 +1,642 @@
+Ant
+===
+
+ant
+
+Meat eater ant feeding on honey
+
+
+
+Kingdom: Animalia
+
+Phylum: Arthropoda
+
+Class: Insecta
+
+Order: Hymenoptera
+
+Suborder: Apocrita
+
+Superfamily: Vespoidea
+
+Family: Formicidae
+Latreille, 1809
+
+* Aenictogitoninae
+* Agroecomyrmecinae
+* Amblyoponinae (incl. "Apomyrminae")
+* Aneuretinae
+* Cerapachyinae
+* Dolichoderinae
+* Ecitoninae (incl. "Dorylinae" and "Aenictinae")
+* Ectatomminae
+* Formicinae
+* Heteroponerinae
+* Leptanillinae
+* Leptanilloidinae
+* Myrmeciinae (incl. "Nothomyrmeciinae")
+* Myrmicinae
+* Ponerinae (incl. Paraponera)
+* Proceratiinae
+* Pseudomyrmecinae
+
+
+Ants are eusocial insects that belong to the same order as wasps and bees. They are of particular
+interest because of their highly organized colonies or nests which sometimes consist of millions
+of individuals. Individuals are divided into infertile females ("workers") and fertile males
+("drones") and females ("queens"). Colonies can occupy and use a wide area of land to support
+them. Ant colonies are sometimes described as superorganisms because the colony appears to operate
+as a single entity.
+
+Ants have colonized almost every landmass on Earth. The only places lacking indigenous ant species
+are Antarctica, Greenland, Iceland, and the Hawaiian Islands.[1] They may constitute up to 15 to
+25% of the total animal biomass.[2] Up to a third (33%) of the terrestrial animal biomass has been
+estimated to be made up of ants and termites.[3]
+
+There are about 11,880 known ant species, most of which are tropical.
+
+Termites, sometimes called white ants, though similar in social structure are not closely related
+to ants. They comprise the more primitive order Isoptera and are more closely related to
+cockroaches. Velvet ants, although resembling large ants, are wingless female wasps.
+
+Contents
+========
+
+
+
+* Evolution
+* Morphology
+* Development
+* Polymorphism
+* Behavior and ecology
+  o Communication
+  o Defense
+  o Learning
+  o Nest construction
+  o Food cultivation
+  o Navigation
+  o Locomotion
+
+* Ant cooperation and competition
+* Diversity
+* Relationships with other species
+* Humans and ants
+  o Ant eating
+  o Ants as pests
+  o Ants in culture
+  o Ant inspired technology
+
+* See also
+* Cited references
+* External links
+
+ Evolution
+================
+
+
+Ants are classified as a family, Formicidae, belonging to the order Hymenoptera which also
+includes sawflies, bees and wasps. Ants are a lineage derived from within the vespoid wasps.
+Phylogenetic analysis indicates that ants evolved from vespoids in the mid-Cretaceous period about
+120 to 170 million years ago. After the rise of angiosperms about 100 million years ago, ant
+evolution also showed rapid change, and by about 60 million years ago ants had moved to ecological
+dominance.[4][5] Several fossils from the Cretaceous are intermediate in form between wasps and
+ants, further confirming the wasp ancestry of ants. Like other Hymenoptera, the genetic system
+found in ants is haplodiploidy.
+
+In 1966 E. O. Wilson, et al. obtained the first amber fossil remains of an ant (Sphecomyrma freyi)
+from the Cretaceous era. The specimen was trapped in amber from New Jersey that was more than 80
+million years old. This species provides the clearest evidence of a link between modern ants and
+non-social wasps. Cretaceous ants shared a couple of wasp-like traits together with modern
+ant-like characteristics.[6]
+
+During the Cretaceous era, representatives of only a few species of primitive ants ranged widely
+on what was the super-continent Laurasia (the northern hemisphere). They were scarce in comparison
+to other insects (about only 1%). It was adaptive radiation which gave ants the dominance at the
+beginning of the Tertiary Period. Of the species extant in the Cretaceous and Eocene eras, only 1
+of about 10 genera is now extinct. 56% of the genera represented on the Baltic amber fossils
+(early Oligocene), and 96% of the genera represented in the Dominican amber fossils (apparently
+early Miocene) still survive today.[4]
+
+ Morphology
+=================
+
+Diagram of a worker ant (Pachycondyla verenae)
+
+This closeup shows the prominent mandibles and the comparatively small compound eyes.
+
+
+
+Ants are distinguished from other insects by the following traits: elbowed antennae; a strongly
+constricted second abdominal segment forming a distinct node-like petiole; and the petiole can be
+formed by one or two "parts" or segments (only the second, or the second and third abdominal
+segments can form it). Ants have a wingless worker caste; the presence of a metapleural gland is
+also distinctive.
+
+Ant bodies, like other insects, have an exoskeleton, meaning their bodies are externally covered
+in a protective casing, as opposed to the internal skeletal framework of humans and other
+vertebrates. Ants do not have lungs. Oxygen passes through tiny pores, the spiracles, in their
+exoskeleton - the same holes through which carbon dioxide leaves their body. Nor do they have a
+heart; a colorless blood, the hemolymph, runs from their head to rear and back again along a long
+tube. Their nervous system is much like a human spinal cord in that it is a continuous cord, the
+ventral nerve cord, from head to rear with branches into each extremity.
+
+The three main divisions of the ant body are the head, mesosoma and metasoma.
+
+The head of an ant has many important parts. Ant eyes are compound eyes, similar to fly eyes: they
+have many smaller eyes attached together which enables them to see movement very well. Most ants
+have poor to mediocre eyesight; some are blind altogether. A few have exceptional vision though,
+such as Australia's bulldog ant. Also attached to the head of an ant are two feelers. The feelers
+are special smelling organs that help ants communicate. Ants release pheromones (chemicals that
+have different smells) to communicate with each other and the feelers pick up these smells as
+signals. The head also has two strong pinchers, the mandibles, which are used to carry food,
+manipulate objects, construct nests, and to defend. There is also a small pocket inside the mouth
+where ants can store food and give to others.
+
+The thorax of the ant is where all six legs are attached. At the end of each leg is a sharp claw
+that helps ants climb and hang onto things. Most queens and male ants have wings, which they drop
+after the nuptial flight; however wingless queens (ergatoids) and males can occur.
+
+The metasoma of the ant houses many of the important internal organs. Some species of ants have
+stingers used for subduing prey and defending their nests.
+
+ Development
+==================
+
+Polymorphic castes
+
+Meat eater ant nest during swarming
+
+Fertilized queen ant beginning to dig a new colony
+
+
+
+The life of an ant starts with an egg. If the egg is fertilized, the ant will be female (diploid);
+if not, it will be male (haploid). Ants are holometabolous, and develop by complete metamorphosis,
+passing through larval and pupal stages (with the pupae being exarate) before they become adults.
+The larval stage is particularly helpless – for instance it lacks legs entirely – and cannot
+care for itself. The difference between queens and workers (which are both female), and between
+different castes of workers when they exist, is determined by the feeding in the larval stage.
+Food is given to the larvae by a process called trophallaxis in which an ant regurgitates food
+previously held in its crop for communal storage. This is also how adults distribute food amongst
+themselves. Larvae and pupae need to be kept at fairly constant temperatures to ensure proper
+development, and so are often moved around various brood chambers within the colony.
+
+A new worker spends the first few days of its adult life caring for the queen and young. After
+that it graduates to digging and other nest work, and then to foraging and defense of the nest.
+These changes are fairly abrupt and define what are called temporal castes. One theory of why this
+occurs is because foraging has a high death rate, so ants only participate in it when they are
+older and closer to death anyway. In a few ants there are also physical castes – workers come in
+a spectrum of sizes, called minor, median, and major workers, the latter beginning foraging
+sooner. Often the larger ants will have disproportionately larger heads, and correspondingly
+stronger mandibles. Such individuals are sometimes called "soldier" ants because their stronger
+mandibles make them more effective in fighting other creatures, although they are still in fact
+worker ants and their "duties" typically do not vary greatly from the minor or median workers. In
+a few species the median workers have disappeared, creating a sharp divide and clear physical
+difference between the minors and majors.
+
+Most of the common ant species breed in the same way. Only the queen and breeding females have the
+ability to mate. Contrary to popular belief, some ant nests have multiple queens. The male ants,
+called drones, along with the breeding females emerge from pupation with wings (although some
+species, like army ants, don't produce winged queens), and do nothing throughout their life except
+eat, until the time for mating comes. At this time, all breeding ants, excluding the queen, are
+carried outside where other colonies of similar species are doing the same. Then, all the winged
+breeding ants take flight. Mating occurs in flight and the males die shortly afterward. The
+females that survive land and seek a suitable place to begin a colony. There, they break off their
+own wings and begin to lay eggs, which they care for. Sperm obtained during their nuptial flight
+is stored and used to fertilize all future eggs produced. The first workers to hatch are weak and
+smaller than later workers, but they begin to serve the colony immediately. They enlarge the nest,
+forage for food and care for the other eggs. This is how most new colonies start. A few species
+that have multiple queens can start a new colony as a queen from the old nest takes a number of
+workers to a new site and founds a colony there.
+
+Ant colonies can be long-lived. The queens themselves can live for up to 30 years, while workers
+live from 1 to 3 years. Males, however, are short lived and live for only a few weeks.[7]
+
+ Polymorphism
+===================
+
+Myrmecocystus (Honeypot) ants store food to prevent colony famine.
+
+
+
+Ants show a wide range of morphological differences between the castes. While in some species,
+these differences are small, they are large in others. In some ant species there can be several
+size variants within the worker castes.[8] The gonads in the workers are not functional, and
+sometimes they are even strongly reduced.
+
+Some ants, called honeypot ants, have special workers called repletes who simply store food for
+the rest of the colony, generally becoming immobile with greatly enlarged abdomens. In hot, dry
+places, even deserts, in Africa, North America, and Australia where they live, they are considered
+by some people to be a great delicacy.
+
+ Behavior and ecology
+===========================
+
+ Communication
+====================
+
+Acrobat ant (Crematogaster - Myrmecidinae)
+
+Ant mound holes prevent water from entering the nest during rain.
+
+Ant hole in a flurry of activity during swarming
+
+
+
+Ant communication is accomplished primarily through chemicals called pheromones. Because most ants
+spend their time in direct contact with the ground, these chemical messages are more developed
+than in other hymenopterans. So for instance, when a forager finds food, she will leave a
+pheromone trail along the ground on her way home. In a short time other ants will follow this
+pheromone trail. Home is often located through the use of remembered landmarks and the position of
+the sun as detected with compound eyes and also by means of special sky polarization-detecting
+fibers within the eyes.[9][10]Returning home, they reinforce this same trail which in turn
+attracts more ants until the food is exhausted, after which the trail is no longer reinforced and
+so slowly dissipates. This behavior helps ants adapt to changes in their environment. When an
+established path to a food source is blocked by a new obstacle, the foragers leave the path to
+explore new routes. If successful, the returning ant leaves a new trail marking the shortest
+route. Since each ant prefers to follow a path richer in pheromone rather than poorer, the
+resulting route is also the shortest available.
+
+Ants make use of pheromones for other purposes as well. A crushed ant, for example, will emit an
+alarm pheromone which in high concentration sends nearby ants into an attack frenzy; and in lower
+concentration, merely attracts them. To confuse their enemies several ant species even employ
+"propaganda pheromones", which cause their enemies to fight among themselves.[11]
+
+Like other insects, ants smell with their antennae, which are long and thin. These are fairly
+mobile, having a distinct elbow joint after an elongated first segment; and since they come in
+pairs--rather like binocular vision or stereophonic sound equipment--they provide information
+about direction as well as intensity. Pheromones are also exchanged as compounds mixed with food
+and passed in trophallaxis, giving the ants information about one another's health and nutrition.
+Ants can also detect what task group (e.g. foraging or nest maintenance) to which other ants
+belong. Of special note, the queen produces a certain pheromone without which the workers would
+begin raising new queens.
+
+Some ants also produce sounds by stridulation using the gaster segments and also using their
+mandibles. They may serve to communicate among colony members as well as in interactions with
+other species.[12][13][14]
+
+ Defense
+==============
+
+A weaver ant in fighting position, mandibles wide open
+
+Weaver ants collaborating to dismember a red ant (the two at the extremities are pulling the red
+ant, while the middle one cuts the red ant until she snaps)
+
+
+
+Ants attack and defend themselves by biting and in many species, stinging, often injecting
+chemicals like formic acid. Bullet ants (the genus Paraponera), located in Central and South
+America, are considered to have the most painful sting among insects, although these are usually
+non-fatal. They are given the highest rating on the Schmidt Sting Pain Index. Jack jumper ants,
+Myrmecia pilosula, located in Australia have stings that cause fatality to a small number of
+people in the population, and cause hospitalizations each year.
+
+Fire ants, Solenopsis spp., are unique in having a poison sac containing piperidine alkaloids.[15]
+
+Some ants of the genus Odontomachus are equipped with mandibles called trap-jaws. This snap-jaw
+mechanism, or catapult mechanism, is possible because energy is stored in the large closing
+muscles. The blow is incredibly fast, about 0.5?ms in the genus Mystrium. Before the strike, the
+mandibles open wide and are locked in the open position by the labrum, which functions as a latch.
+The attack is triggered by stimulation of sensory hairs at the side of the mandibles. The
+mandibles are also able to function as a tool for more finely adjusted tasks. Two similar groups
+are Odontomachus and Dacetini - examples of convergent evolution.
+
+ Learning
+===============
+
+
+While many types of animals can learn behaviors by imitating other animals, ants may be the only
+group of animals besides primates and some other mammals in which interactive teaching behavior
+has been observed. Knowledgeable forager ants of the species Temnothorax albipennis directly lead
+naïve nest-mates to newly discovered food sources by the excruciatingly slow (and time-costly)
+process of tandem running. The follower thereby obtains knowledge that it would not have, had it
+not been tutored, and this is at the expense of its nest-mate teacher. Both leader and follower
+are acutely sensitive to the progress of their partner. For example, the leader slows down when
+the follower lags too far behind, and speeds up when the follower gets too close, while the
+follower does the opposite.[16]
+
+ Nest construction
+========================
+
+
+While some ants form complex nests and galleries, other species are nomadic and do not build
+permanent structures. Some species form subterranean nests, while others build nests on trees. The
+materials used for construction include soil and plant matter.
+
+Leaf nest of weaver ants, Pamalican, Philippines
+
+
+
+Some of the more advanced ants are the army ants and driver ants, from South America and Africa
+respectively. Unlike most species which have permanent nests, army and driver ants do not form
+permanent nests, but instead alternate between nomadic stages and stages where the workers form a
+temporary nest (bivouac) out of their own bodies. Colonies reproduce either through nuptial
+flights as described above, or by fission, where a group of workers simply dig a new hole and
+raise new queens. Colony members are distinguished by smell, and other intruders are usually
+attacked.
+
+Weaver ants (Oecophylla) build nests in trees by attaching leaves together, first pulling them
+together with bridges of workers and then sewing them together by pressing silk-producing larvae
+against them in alternation.
+
+ Food cultivation
+=======================
+
+
+
+        Main article: Ant-fungus mutualism
+
+Leafcutter ants (Atta and Acromyrmex) feed exclusively on a special fungus that lives only within
+their colonies. They continually collect leaves which they cut into tiny pieces for the fungus to
+grow on. These ants have several differently sized castes especially for cutting up the pieces
+they are supplied with into even smaller pieces. Leaf cutter ants are sensitive enough to adapt to
+the fungi's reaction to different plant material, apparently detecting chemical signals from the
+fungus. If a particular type of leaf is toxic to the fungus the colony will no longer collect it.
+The ants grow the fungus because it produces special structures called gongylidia which are fed on
+by the ants. They create antibiotics on their exterior surfaces with the aid of symbiotic
+bacteria, and subsist entirely on this farming of the fungus.
+
+ Navigation
+=================
+
+
+Desert ants Cataglyphis fortis make use of visual landmarks in combination with other cues to
+navigate.[17]
+
+In the absence of visual landmarks, Sahara desert ants have been shown to navigate by keeping
+track of direction as well as distance travelled, like an internal pedometer that keeps tracks of
+how many steps they take, and use this information to find the shortest routes back to their
+nests.[18]
+
+ Locomotion
+=================
+
+
+Ants usually lose, or never develop, their wings. Therefore, unlike their wasp ancestors, most
+ants travel by walking.
+
+The more cooperative species of ants sometimes form chains to bridge gaps, whether that be over
+water, underground, or through spaces in arboreal paths.
+
+Harpegnathos saltator
+
+
+
+Among their reproductive members, most species of ant do not retain wings beyond their mating
+flight; most females remove their own wings when returning to the ground to lay eggs, while the
+males almost invariably die after that maiden flight.
+
+Some ants are even capable of leaping. A particularly notable species is Jerdon's jumping ant,
+Harpegnathos saltator. This is achieved by synchronized action of the mid and hind pair of
+legs.[19]
+
+Polyrhachis sokolova, a species of ant found in Australian mangrove swamps, can swim and lives in
+nests that are submerged underwater. They make use of trapped pockets of air in the submerged
+nests.[20]
+
+There are several species of gliding ant including Cephalotes atratus. In fact this may be a
+common trait among most arboreal ants. Ants with this ability are able to direct the direction of
+their descent while falling.[21]
+
+ Ant cooperation and competition
+======================================
+
+Meat eater ants feeding on honey - social ants cooperate and collectively gather food.
+
+
+
+Not all ants have the same kind of societies. The Australian bulldog ants are among the biggest
+and most primitive of ants. The individual hunts alone, using its large eyes instead of its
+chemical senses to find prey. Like all ants they are social, but their social behavior is poorly
+developed compared to more advanced species. The Australian bulldog ant, Myrmecia pilosula, has
+only a single pair of chromosomes and males have just one chromosome as they are haploid.
+
+Some species of ants are known for attacking and taking over the colonies of other ant species.
+Others are less expansionist but nonetheless just as aggressive; they attack colonies to steal
+eggs or larvae, which they either eat or raise as workers/slaves. Some ants, such as the Amazon
+ants, are incapable of feeding themselves, but must rely on captured worker ants to care for them.
+In some cases ant colonies may have other species of ants or termites within the same nest.[22]
+
+The pavement ant is famous for its urge to increase its territory. In early spring, colonies
+attempt to conquer new areas and often attack the nearest enemy colony. These result in huge
+sidewalk battles, sometimes leaving thousands of ants dead. Because of their aggressive nature,
+they often invade and colonize seemingly impenetrable areas.
+
+Ants identify kin and nestmates through their scents, a hydrocarbon-laced secretion that coats
+their exoskeletons. If an ant is separated from its original colony, it will eventually lose the
+colony scent. Any ant that enters a colony with a different scent than that of the colony will be
+attacked.[23] (See also Kin selection)
+
+ Diversity
+================
+
+There is a great diversity among ants and their behaviors. They range in size from 2 to about
+25?mm (about 0.08 to 1?inch). Their color may vary; most are red or black, but other colors can
+also be seen, including some tropical groups with a metallic luster. (See also ant genera).
+Numerous species of ant continue to be added in present times and taxonomic studies continue to
+resolve the classification and systematics of ants. Online databases of ant species include
+AntBase and the Hymenoptera Name Server.[24]
+
+Ants have been used as indicator species in biodiversity studies.[25][26]
+
+ Relationships with other species
+=======================================
+
+
+Ants are associated with other species in a wide variety of ways. These associations include
+mutualistic and parasitic relationships as well as interactions with more than one species which
+are not fully understood. Well known relationships are between other insects, especially those
+that secrete honeydew and those with plants and fungi.
+
+Aphids secrete a sweet liquid called honeydew. The sugars provide a high-energy food source, which
+many ant species use. Normally this is allowed to fall to the ground, but around ants it is kept
+for them to collect. The ants in turn keep predators away and will move the aphids around to
+better feeding locations. Upon migrating to a new area, many colonies will take new aphids with
+them, to ensure that they have a supply of honeydew in the new area. Ants also tend mealybugs to
+harvest their honeydew. Mealybugs can become a serious pest of pineapple if ants are present to
+protect mealybugs from natural enemies.[27][28]
+
+Meat ant tending a common jassid nymph
+
+A lycaenid larva and an ant
+
+An ant collects honeydew from an aphid.
+
+
+
+Myrmecophilous (ant-loving) caterpillars of the family Lycaenidae (e.g., blues, coppers, or
+hairstreaks) are herded by the ants, led to feeding areas in the daytime, and brought inside the
+ants' nest at night. The caterpillars have a gland which secretes honeydew when the ants massage
+them. Some caterpillars are known to produce vibrations and sounds that are sensed by the
+ants.[29] Some caterpillars have evolved from being ant-loving to ant-eating and these
+myrmecophagous caterpillars secrete a pheromone which makes the ants think that the caterpillar's
+larva is one of their own. The larva will then be taken into the ants' nest where it can feed on
+the ant larvae.
+
+Fungus-growing ants that make up the tribe attini, including leafcutter ants, actively cultivate
+certain species of fungus in the Leucoagaricus or Leucocoprinus genera of the Agaricaceae family.
+In this ant-fungus mutualism, both species depend on each other for survival. Allomerus
+decemarticulatus has evolved a tripartite association with their host plant Hirtella physophora
+(Chrysobalanaceae), and a fungus in order to ambush and obtain protein nutrition from prey
+insects.[30]
+
+Lemon ants make Devil's gardens by killing all surrounding plants besides lemon ant trees. Many
+trees have extrafloral nectaries that provide food for ants and the ants in turn protect the plant
+from herbivorous insects. Some species like the bullhorn acacia, Acacia cornigera, in Central
+America have hollow thorns that serve to house colonies of stinging ants, Pseudomyrmex ferruginea,
+that defend the tree against insects, browsing mammals, and epiphytic vines. In return, the ants
+obtain food from protein-lipid Beltian bodies. Another example of this type of ectosymbiosis comes
+from the Macaranga tree which have stems adapted to house colonies of Crematogaster ants. Many
+tropical tree species have seeds that are dispersed by ants.[31]
+
+Calliphoridae in the Old World genus Bengalia are kleptoparasites and predators on ants and often
+snatch prey or brood from the adult ants.[32] A Malaysian phorid fly Vestigipoda myrmolarvoidea
+has females that are wingless and legless and they live in the nests of ants of the genus
+Aenictus, being fed and cared for by the ants.[32]
+
+Many species of birds show a peculiar behaviour called anting that is as yet not fully understood.
+Here birds may rest on ant nests or pick and drop ants onto their wings and feathers, presumably
+to rid themselves of ectoparasites.
+
+A fungus, Cordyceps, has been known to infect ants, causing them to climb up plants and sinking
+their mandibles into the plant tissue. The fungus kills and engulfs the ant and produces its
+fruiting body. A theory is that the fungus alters the behaviour of the ant and benefits by helping
+in dispersal of the spores that emerge from the ant as it is engulfed by the growing fungus.[33]
+
+Some South American frogs in the genus Dendrobates feed primarily on ants and the toxins on their
+skin may be derived from the ants.[34]
+
+Brown bears (Ursus arctos) have been found to feed on ants, with as much as 12, 16, and 4% of
+their fecal volume in spring, summer, and autumn, respectively being made up of ants.[35]
+
+Many species of mammals such as anteaters, pangolins and several marsupial species in Australia
+have special adaptations for living on a primary diet of ants. These adaptations include long
+sticky tongues to pick the ants and strong claws to break into the ant nests. Some South American
+birds such as the antpittas are also ant predators.
+
+ Humans and ants
+======================
+
+Ants nesting
+
+Ants in a Sumatran rainforest
+
+
+
+Ants are useful for clearing out insect pests and aerating the soil. On the other hand, they can
+become annoyances when they invade homes, yards, gardens and fields. Carpenter ants damage wood by
+hollowing it out for nesting.
+
+In some parts of the world large ants, especially army ants, are said to be used as sutures by
+pressing the wound together and applying ants along it. The ant in defensive attitude seizes the
+edges in its mandibles and locks in place. The body is then cut off and the head and mandibles can
+remain in place, closing the wound.[36]
+
+Some species, called killer ants, have a tendency to attack much larger animals during foraging or
+in defending their nests. Attacks on humans are rare, but the stings and bites can be quite
+painful and in large enough numbers can be disabling.
+
+The Masai of Africa had an abiding respect for the Siafu ants, voracious predators that consume a
+large amount of insects and are welcomed for the benefit they bring to farmers, as they will
+eliminate all pests from a crop and quickly move on.
+
+ Ant eating
+=================
+
+
+
+        Main article: Entomophagy
+
+Ants and their larvae are eaten in different parts of the world. In the Colombian department of
+Santander Hormigas Culonas (lit.?: "fatass ants") Atta laevigata are toasted alive and eaten.[37]
+This tradition has come down from the native Guanes. In parts of Thailand, ants are prepared and
+eaten in various ways. Khorat ant eggs and diced flying ants are eaten as an appetizer. Weaver ant
+eggs and larvae as well as the ants themselves may be used in a Thai salad, yum (ยำ), in a
+dish called yum khai mod daeng (ยำไข่มด�?ดง) or red ant egg salad, a dish that
+comes from the Issan or north-eastern region of Thailand. In South Africa, ants are used to help
+in rooibos, Aspalathus linearis, cultivation: They collect the plant's seeds which can then be
+easily harvested by planters.
+
+Charles Thomas Bingham notes that in parts of India, and throughout Burma and Siam, a paste of the
+green weaver ant, Oecophylla smaragdina, is served as a condiment with curry. Saville Kent, in the
+Naturalist in Australia wrote "Beauty, in the case of the green ant, is more than skin-deep. Their
+attractive, almost sweetmeat-like translucency possibly invited the first essays at their
+consumption by the human species." Mashed up in water, after the manner of lemon squash, "these
+ants form a pleasant acid drink which is held in high favor by the natives of North Queensland,
+and is even appreciated by many European palates."[38]
+
+John Muir, in his First Summer in the Sierra notes that the Digger Indians of California ate the
+tickly acid gasters of the large jet-black carpenter ants. The Mexican Indians eat the replete
+workers, or living honey-pots, of the honey ant (Myrmecocystus).[38]
+
+ Ants as pests
+====================
+
+
+Modern society considers the ant a pest, and due to the adaptive nature of ant colonies,
+eliminating one is near impossible. Pest control with regard to ants is more a matter of
+controlling local populations than eliminating an entire colony. Attempts to control ant
+populations of any kind are temporary solutions.
+
+Typical ants that are classified as pests include pavement ants (otherwise known as the sugar
+ant), Pharaoh ants, carpenter ants, Argentine ants, and the red imported fire ant. Control of
+species populations are usually done with bait insecticides, which are either in the form of small
+granules, or as a sticky liquid that is gathered by the ants as food and then brought back to the
+nest where the poison is inadvertently spread to other members of the brood — a system that can
+severely reduce the numbers in a colony if used properly. Boric acid and borax are often used as
+insecticides that are relatively safe for humans. With the recent insurgence of the red imported
+fire ant, a tactic called broadcast baiting has been employed, by which the substance (usually a
+granule bait designed specifically for fire ants) is spread across a large area, such as a lawn,
+in order to control populations. Nests may be destroyed by tracing the ants' trails back to the
+nest, then pouring boiling water into it to kill the queen. (Killing individual ants is less than
+effective due to the secretion of pheromones mentioned above).
+
+Ants that tend other insects can indirectly cause pest infestations. Many homopteran insects that
+are considered as horticultural pests are controlled by the use of grease rings on the trunks of
+the trees. These rings cut off the routes for ants and make the pest species vulnerable to
+parasites and predators.
+
+ Ants in culture
+======================
+
+
+Ants have often been used in fables and children's stories to represent industriousness and
+cooperative effort, as well as aggressiveness and vindictiveness. They are also mentioned in
+religious texts.[39][40] In parts of Africa, ants are the messengers of the gods. Ant bites are
+often said to have curative properties. Some Native American religions, such as Hopi mythology,
+recognize ants as the very first animals. Others use ant bites in initiation ceremonies as a test
+of endurance.
+
+The Japanese word for ant, ari, is represented by an ideograph formed of the character for insect
+combined with the character signifying moral rectitude, propriety (giri). So the Chinese character
+could possibly be read as The Propriety-Insect. Its actual etymology is likely to be different
+however.[41]
+
+Ant society has always fascinated humans and has been written about both humorously and seriously
+by writers. Mark Twain wrote about ants in his A Tramp Abroad. In more recent times, animated
+cartoons featuring ants have been produced include Antz, A Bug's Life, The Ant Bully, The Ant and
+the Aardvark and Atom Ant.
+
+ Ant inspired technology
+==============================
+
+
+The successful techniques used by ant colonies has been widely studied especially in computer
+science and robotics to produce distributed and fault-tolerant systems for solving problems. This
+area of biomimetics has led to studies of ant locomotion, search engines which make use of
+foraging trails and fault tolerant storage and networking algorithms.[42] (See also Langton's ant,
+Ant colony optimization)
+
+ See also
+===============
+
+
+* Ant-hill
+* Anteater
+* Ant farm
+* British ants
+* Indian ants
+* Myrmecology
+* Ant mimicry
+

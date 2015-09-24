@@ -30,29 +30,41 @@ public class ContainmentFBMaster extends AbstractFeatureBuilder {
             for (String field : fields) {
                 foundJATETextField = true;
                 if (field.equals(properties.getSolrFieldnameJATETermsAll())) {
-                    Map<String, Integer> term2NumTokens = new HashMap<>();
+                    Map<Integer, Set<String>> numTokens2Terms = new HashMap<>();
                     Terms terms = fields.terms(field);
                     TermsEnum termsEnum = terms.iterator();
                     while (termsEnum.next() != null) {
                         String t = termsEnum.term().utf8ToString();
                         int tokens = t.split("\\s+").length;
-                        term2NumTokens.put(t, tokens);
+                        Set<String> ts = numTokens2Terms.get(tokens);
+                        if(ts==null) {
+                            ts = new HashSet<>();
+                            ts.add(t);
+                            numTokens2Terms.put(tokens, ts);
+                        }else
+                            ts.add(t);
                     }
                     //start workers
                     int cores = Runtime.getRuntime().availableProcessors();
                     cores = (int) (cores * properties.getFeatureBuilderMaxCPUsage());
                     cores = cores == 0 ? 1 : cores;
-                    List<String> termSorted = new ArrayList<>(term2NumTokens.keySet());
-                    Collections.sort(termSorted);
+                    Set<String> uniqueTerms = new HashSet<>();
+                    for(Set<String> v: numTokens2Terms.values())
+                        uniqueTerms.addAll(v);
+                    StringBuilder sb = new StringBuilder("Building features using cpu cores=");
+                    sb.append(cores).append(", total terms=").append(uniqueTerms.size()).append(", max per worker=")
+                            .append(properties.getFeatureBuilderMaxTermsPerWorker());
+                    LOG.info(sb.toString());
                     ContainmentFBWorker worker = new
-                            ContainmentFBWorker(properties, termSorted,
-                            term2NumTokens,
+                            ContainmentFBWorker(properties, new ArrayList<>(uniqueTerms),
+                            numTokens2Terms,
                             feature, properties.getFeatureBuilderMaxTermsPerWorker());
                     ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
                     int[] total = forkJoinPool.invoke(worker);
-                    StringBuilder sb = new StringBuilder("Complete building features. Total=");
+                    sb = new StringBuilder("Complete building features. Total=");
                     sb.append(total[1]).append(" success=").append(total[0]);
                     LOG.info(sb.toString());
+                    break;
                 }
             }
 

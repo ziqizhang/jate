@@ -5,6 +5,7 @@ import uk.ac.shef.dcs.jate.v2.JATERecursiveTaskWorker;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -14,21 +15,21 @@ import java.util.regex.Pattern;
 class ContainmentFBWorker extends JATERecursiveTaskWorker<String, int[]> {
     private static final Logger LOG = Logger.getLogger(FrequencyTermBasedFBWorker.class.getName());
     private JATEProperties properties;
-    private Map<String, Integer> term2NumTokens;
+    private Map<Integer, Set<String>> numTokens2Terms;
     private Containment feature;
 
     ContainmentFBWorker(JATEProperties properties, List<String> taskTerms,
-                        Map<String, Integer> term2NumTokens,
+                        Map<Integer, Set<String>> numTokens2Terms,
                         Containment feature, int maxTasksPerWorker) {
         super(taskTerms, maxTasksPerWorker);
         this.properties = properties;
         this.feature = feature;
-        this.term2NumTokens = term2NumTokens;
+        this.numTokens2Terms = numTokens2Terms;
     }
 
     @Override
     protected JATERecursiveTaskWorker<String, int[]> createInstance(List<String> termSplit) {
-        return new ContainmentFBWorker(properties, termSplit, term2NumTokens,
+        return new ContainmentFBWorker(properties, termSplit, numTokens2Terms,
                 feature, maxTasksPerThread);
     }
 
@@ -46,21 +47,25 @@ class ContainmentFBWorker extends JATERecursiveTaskWorker<String, int[]> {
     @Override
     protected int[] computeSingleWorker(List<String> taskTerms) {
         int count = 0;
-
+        LOG.info("Total terms to process="+taskTerms.size());
         for (String termString : taskTerms) {
-            int tokens = term2NumTokens.get(termString);
+            int tokens = termString.split(" ").length;
             StringBuilder pStr = new StringBuilder("\\b(");
             pStr.append(termString).append(")\\b");
             Pattern pattern = Pattern.compile(pStr.toString());
 
-            for (Map.Entry<String, Integer> entry : term2NumTokens.entrySet()){
-                if(tokens>=entry.getValue())
+            for (Map.Entry<Integer, Set<String>> entry : numTokens2Terms.entrySet()){
+                if(entry.getKey()<=tokens)
                     continue;
-                if (pattern.matcher(entry.getKey()).find()) {  //ref term contains term
-                    count++;
-                    feature.add(termString, entry.getKey());
+                for(String pterm: entry.getValue()) {
+                    if (pattern.matcher(pterm).find()) {  //ref term contains term
+                        feature.add(termString, pterm);
+                    }
                 }
             }
+            count++;
+            if(count%1000==0)
+                LOG.info(count+"/"+taskTerms.size());
         }
         return new int[]{count, taskTerms.size()};
     }

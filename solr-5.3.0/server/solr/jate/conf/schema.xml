@@ -238,8 +238,9 @@
 				<tokenizer class="solr.StandardTokenizerFactory" />
 				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
 				<filter class="solr.LowerCaseFilterFactory" />
-				<filter class="solr.ShingleFilterFactory" minShingleSize="2" maxShingleSize="5"
+				<filter class="solr.ShingleFilterFactory" minShingleSize="2" maxShingleSize="3"
 						outputUnigrams="true" outputUnigramsIfNoShingles="false" tokenSeparator=" "/>
+				<filter class="solr.PatternReplaceFilterFactory" pattern=".*_.*" replacement=""/>
 			</analyzer>
 			<!-- no analyzer for query-->
 		</fieldType>

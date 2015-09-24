@@ -10,22 +10,20 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
-/**
- * Created by zqz on 22/09/2015.
+/**.
  */
 public class App {
     protected static final double DEFAULT_THRESHOLD_N=0.25;
 
     public static Map<String, String> getParams(String[] args) throws JATEException {
         Map<String, String> params = new HashMap<>();
-        if((args.length)%2!=0){
-            throw new JATEException("The number of parameters is not valid. Run app without parameters for help.");
-        }
         for(int i=0; i< args.length; i++){
-            String param=args[i];
-            String value=args[i+1];
-            i++;
-            params.put(param, value);
+            if(i+1<args.length) {
+                String param = args[i];
+                String value = args[i + 1];
+                i++;
+                params.put(param, value);
+            }
         }
         return params;
     }

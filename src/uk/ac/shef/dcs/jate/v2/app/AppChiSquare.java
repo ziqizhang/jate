@@ -15,9 +15,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by zqz on 23/09/2015.
- */
 public class AppChiSquare extends App {
     public static void main(String[] args) throws JATEException, IOException {
         if (args.length < 1) {
