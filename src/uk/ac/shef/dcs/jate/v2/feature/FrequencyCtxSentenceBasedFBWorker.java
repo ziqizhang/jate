@@ -1,6 +1,7 @@
 package uk.ac.shef.dcs.jate.v2.feature;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.PostingsEnum;
 import org.apache.lucene.index.Terms;
@@ -79,19 +80,19 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
         FrequencyCtxBased feature = new FrequencyCtxBased();
         for (int docId : docIds) {
             try {
-                List<TextUnitOffsets> terms = collectOffsets(indexReader.getTermVector(docId, termTargetField));
-                List<TextUnitOffsets> sentences = collectOffsets(indexReader.getTermVector(docId, sentenceTargetField));
+                List<TextUnitOffsets> terms = collectTermOffsets(indexReader.getTermVector(docId, termTargetField));
+                List<int[]> sentences = collectSentenceOffsets(indexReader, sentenceTargetField, docId);
                 int termCursor=0;
-                for(TextUnitOffsets sent: sentences){
+                for(int[] sent: sentences){
                     String contextId=docId+"."+feature.nextCtxId();
                     for(int t = termCursor; t<terms.size();t++){
                         TextUnitOffsets term = terms.get(t);
-                        if(term.end>sent.end){
+                        if(term.end>sent[1]){
                             termCursor=t;
                             break;
                         }
 
-                        if(term.start>=sent.start){ //term within sentence boundary
+                        if(term.start>=sent[0]){ //term within sentence boundary
                             feature.increment(contextId,1);
                             feature.increment(contextId,term.string,1);
                         }
@@ -109,7 +110,25 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
         return feature;
     }
 
-    private List<TextUnitOffsets> collectOffsets(Terms termVector) throws IOException {
+    private List<int[]> collectSentenceOffsets(IndexReader indexReader, String fieldname, int docId) throws IOException {
+        Document doc = indexReader.document(docId);
+        String[] values  = doc.getValues(fieldname);
+        List<int[]> rs = new ArrayList<>();
+        for(String v: values){
+            String[] offsets = v.split(",");
+            rs.add(new int[]{Integer.valueOf(offsets[0]), Integer.valueOf(offsets[1])});
+        }
+        Collections.sort(rs, (o1, o2) -> {
+            int compare = Integer.valueOf(o1[0]).compareTo(o2[0]);
+            if (compare == 0) {
+                return Integer.valueOf(o1[1]).compareTo(o2[1]);
+            }
+            return compare;
+        });
+        return rs;
+    }
+
+    private List<TextUnitOffsets> collectTermOffsets(Terms termVector) throws IOException {
         List<TextUnitOffsets> result = new ArrayList<>();
         if (termVector == null)
             return result;

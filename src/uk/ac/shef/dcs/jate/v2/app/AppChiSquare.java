@@ -47,7 +47,7 @@ public class AppChiSquare extends AbstractApp {
 
         ChiSquare chi = new ChiSquare();
         chi.registerFeature(FrequencyTermBased.class.getName(), ftb);
-        chi.registerFeature(FrequencyCtxBased.class.getName(), fcsb);
+        chi.registerFeature(FrequencyCtxBased.class.getName()+ChiSquare.SUFFIX_SENTENCE, fcsb);
         chi.registerFeature(Cooccurrence.class.getName(), co);
 
         String paramValue=params.get("-c");
