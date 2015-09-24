@@ -8,11 +8,23 @@ import uk.ac.shef.dcs.jate.v2.model.JATETerm;
 import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 
 import java.util.*;
+import java.util.concurrent.ForkJoinPool;
+import java.util.logging.Logger;
 
 /**
  * Created by zqz on 19/09/2015.
  */
 public class CValue extends Algorithm {
+    private static final Logger LOG = Logger.getLogger(CValue.class.getName());
+
+    protected int maxPerWorker = 1000;
+
+    public CValue() {
+    }
+
+    public CValue(int maxTermsPerWorker) {
+        this.maxPerWorker = maxTermsPerWorker;
+    }
 
     @Override
     public List<JATETerm> execute(Set<String> candidates) throws JATEException {
@@ -25,45 +37,17 @@ public class CValue extends Algorithm {
         validateFeature(feature2, Containment.class);
         Containment cFeature = (Containment) feature2;
 
-        boolean collectInfo = termInfoCollector != null;
-        List<JATETerm> result = new ArrayList<>();
-        for (String tString: candidates) {
-            int ttf = fFeature.getTTF(tString);
-            JATETerm term = new JATETerm(tString);
-
-            double score;
-            double log2a = Math.log((double) tString.split(" ").length + 0.1) / Math.log(2.0); //Anurag mods for log (a), log(a + 0.1)
-            double freqa = (double) ttf;
-
-            Set<String> parentTerms = cFeature.getTermParents(tString);
-            double pTa = (double) parentTerms.size();
-            double sumFreqb = 0.0;
-
-            for (String parentTerm : parentTerms) {
-                sumFreqb += (double) fFeature.getTTF(parentTerm);
-                //todo ask jerry to help check the following code
-                /*Set<String> tps = cFeature.getTermParents(parentTerm);
-                Set<String> tps_already_considered = new HashSet<>();
-                for (String tp : tps) {
-                    if (!tps_already_considered.contains(tp)) {
-                        sumFreqb -= (double) fFeature.getTTF(tp);
-                        for (String t : cFeature.getTermParents(tp))
-                            tps_already_considered.add(t);
-                    }
-                }*/
-            }
-
-            score = pTa == 0 ? log2a * freqa : log2a * (freqa - (sumFreqb / pTa));
-            term.setScore(score);
-
-            if (collectInfo) {
-                TermInfo termInfo = termInfoCollector.collect(tString);
-                term.setTermInfo(termInfo);
-            }
-            result.add(term);
-        }
+        int cores = Runtime.getRuntime().availableProcessors();
+        StringBuilder msg = new StringBuilder("Beginning computing CValue, cores=");
+        msg.append(cores).append(", total terms=" + candidates.size()).append(",").
+                append(" max terms per worker thread=").append(maxPerWorker);
+        LOG.info(msg.toString());
+        ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
+        CValueWorker worker = new CValueWorker(new ArrayList<>(candidates), maxPerWorker, fFeature,
+                cFeature,
+                termInfoCollector);
+        List<JATETerm> result = forkJoinPool.invoke(worker);
         Collections.sort(result);
-
         return result;
     }
 }

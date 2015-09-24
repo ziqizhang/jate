@@ -9,6 +9,8 @@ import uk.ac.shef.dcs.jate.v2.model.JATETerm;
 import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 
 import java.util.*;
+import java.util.concurrent.ForkJoinPool;
+import java.util.logging.Logger;
 
 /**
  * An implementation of the Chi Square algorithm. See Matsuo, Y., Ishizuka, M. </i>
@@ -16,79 +18,41 @@ import java.util.*;
  * Proc. 16th Intl. Florida AI Research Society, 2003, 392-396.
  */
 public class ChiSquare extends Algorithm {
+    private static final Logger LOG = Logger.getLogger(ChiSquare.class.getName());
+    public static final String SUFFIX_SENTENCE = "_SENTENCE";
 
-    public static final String SUFFIX_SENTENCE="_SENTENCE";
+    protected int maxPerWorker = 1000;
+
+    public ChiSquare() {
+    }
+
+    public ChiSquare(int maxTermsPerWorker) {
+        this.maxPerWorker = maxTermsPerWorker;
+    }
 
     @Override
     public List<JATETerm> execute(Set<String> candidates) throws JATEException {
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeatureTerms = (FrequencyTermBased) feature;
-        int totalTermsInCorpus = fFeatureTerms.getCorpusTotal();
         AbstractFeature feature2 = features.get(Cooccurrence.class.getName());
         validateFeature(feature2, Cooccurrence.class);
         Cooccurrence fFeatureCoocurr = (Cooccurrence) feature2;
 
-        AbstractFeature feature3 = features.get(FrequencyCtxBased.class.getName()+SUFFIX_SENTENCE);
+        AbstractFeature feature3 = features.get(FrequencyCtxBased.class.getName() + SUFFIX_SENTENCE);
         validateFeature(feature3, FrequencyCtxBased.class);
         FrequencyCtxBased fFeatureCtxBased = (FrequencyCtxBased) feature3;
 
-        List<JATETerm> result = new ArrayList<>();
-        boolean collectInfo = termInfoCollector != null;
-
-        Map<String, Integer> ctxTTFLookup = new HashMap<>();//X lookup: the sum of the total number of terms in sentences where X appears
-
-        for (String tString : candidates) {
-            Integer n_w = ctxTTFLookup.get(tString);//"the total number of terms in contexts (original paper: sentences)
-            // where w appears".
-            if (n_w == null) {
-                Set<String> ctx_w = fFeatureCtxBased.getContextIds(tString);
-                if(ctx_w==null){
-                    continue;//this is possible if during co-occurrence computing this term is skipped
-                    //because it did not satisfy minimum thresholds
-                }
-                for (String ctxid : ctx_w) {
-                    for (Integer f : fFeatureCtxBased.getTFIC(ctxid).values())
-                        n_w += f;
-                }
-                ctxTTFLookup.put(tString, n_w);
-            }
-
-            double sumChiSquare_w = 0.0, maxChiSquare = 0.0;
-            Map<Integer, Integer> coocurTermIdx2Freq = fFeatureCoocurr.getCoocurrence(tString);
-            for (Map.Entry<Integer, Integer> entry : coocurTermIdx2Freq.entrySet()) {
-                int g_id = entry.getKey();
-                String g_term = fFeatureCoocurr.lookup(g_id);
-                int freq_wg = entry.getValue();
-
-                Integer g_w = ctxTTFLookup.get(g_id);
-                if (g_w == null) {
-                    Set<String> ctx_g = fFeatureCtxBased.getContextIds(g_term);
-                    for (String ctxid : ctx_g) {
-                        for (Integer f : fFeatureCtxBased.getTFIC(ctxid).values())
-                            g_w += f;
-                    }
-                    ctxTTFLookup.put(g_term, g_w);
-                }
-                double p_g = (double) g_w / totalTermsInCorpus;
-
-                double prod = n_w * p_g;
-                double diff = freq_wg - prod;
-                double chiSquare_w = diff * diff / prod;
-                sumChiSquare_w += chiSquare_w;
-                if (chiSquare_w > maxChiSquare)
-                    maxChiSquare = chiSquare_w;
-            }
-
-            double score = sumChiSquare_w - maxChiSquare;
-            JATETerm term = new JATETerm(tString, score);
-            if (collectInfo) {
-                TermInfo termInfo = termInfoCollector.collect(tString);
-                term.setTermInfo(termInfo);
-            }
-            result.add(term);
-        }
-
+        int cores = Runtime.getRuntime().availableProcessors();
+        StringBuilder msg = new StringBuilder("Beginning computing ChiSquare, cores=");
+        msg.append(cores).append(", total terms=" + candidates.size()).append(",").
+                append(" max terms per worker thread=").append(maxPerWorker);
+        LOG.info(msg.toString());
+        ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
+        ChiSquareWorker worker = new ChiSquareWorker(new ArrayList<>(candidates), maxPerWorker, fFeatureTerms, fFeatureCtxBased, fFeatureCoocurr,
+                termInfoCollector);
+        List<JATETerm> result = forkJoinPool.invoke(worker);
+        Collections.sort(result);
         return result;
     }
 }
