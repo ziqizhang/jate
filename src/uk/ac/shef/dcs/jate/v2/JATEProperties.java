@@ -186,4 +186,11 @@ public class JATEProperties {
         String string = prop.getProperty(propertyName);
         return Double.valueOf(string);
     }
+
+    public String getSentenceSplitterClass() {
+        return getString("nlp_sentence_splitter_class");
+    }
+    public String getSentenceSplitterParams() {
+        return getString("nlp_sentence_splitter_params");
+    }
 }
