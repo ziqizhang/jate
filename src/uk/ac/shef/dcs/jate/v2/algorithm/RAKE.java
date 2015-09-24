@@ -21,12 +21,14 @@ public class RAKE extends Algorithm {
 
     @Override
     public List<JATETerm> execute(Set<String> candidates) throws JATEException {
+        candidates.remove("");
+
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName()+SUFFIX_WORD);
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeatureWords = (FrequencyTermBased) feature;
 
         AbstractFeature feature2 = features.get(Cooccurrence.class.getName()+SUFFIX_WORD);
-        validateFeature(feature, Cooccurrence.class);
+        validateFeature(feature2, Cooccurrence.class);
         Cooccurrence fFeatureCoocurr = (Cooccurrence) feature2;
 
         List<JATETerm> result = new ArrayList<>();

@@ -30,6 +30,10 @@ public class AppRAKE extends App{
 
         IndexReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(indexPath)));
         JATEProperties properties = new JATEProperties(args[args.length - 1]);
+        FrequencyTermBasedFBMaster featureBuilder = new
+                FrequencyTermBasedFBMaster(indexReader, properties, 0);
+        FrequencyTermBased feature = (FrequencyTermBased)featureBuilder.build();
+
         FrequencyTermBasedFBMaster fwbb = new
                 FrequencyTermBasedFBMaster(indexReader, properties, 1);
         FrequencyTermBased fwb = (FrequencyTermBased)fwbb.build();
@@ -61,7 +65,7 @@ public class AppRAKE extends App{
         String paramValue=params.get("-c");
         if(paramValue!=null &&paramValue.equalsIgnoreCase("true"))
             rake.setTermInfoCollector(new TermInfoCollector(indexReader));
-        List<JATETerm> terms=rake.execute(co.getTerms());
+        List<JATETerm> terms=rake.execute(feature.getMapTerm2TTF().keySet());
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
         paramValue=params.get("-o");
         write(terms,paramValue);
