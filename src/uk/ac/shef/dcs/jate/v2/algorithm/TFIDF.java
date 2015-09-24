@@ -6,10 +6,7 @@ import uk.ac.shef.dcs.jate.v2.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.v2.model.JATETerm;
 import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by zqz on 19/09/2015.
@@ -17,6 +14,8 @@ import java.util.Set;
 public class TFIDF extends Algorithm {
     @Override
     public List<JATETerm> execute(Set<String> candidates) throws JATEException {
+        candidates.remove("");
+
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeature = (FrequencyTermBased) feature;
@@ -38,7 +37,7 @@ public class TFIDF extends Algorithm {
             }
             result.add(term);
         }
-
+        Collections.sort(result);
         return result;
     }
 }

@@ -8,6 +8,7 @@ import uk.ac.shef.dcs.jate.v2.model.JATETerm;
 import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +37,8 @@ public class TermEx extends Algorithm{
 
     @Override
     public List<JATETerm> execute(Set<String> candidates) throws JATEException {
+        candidates.remove("");
+
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeatureTerms = (FrequencyTermBased) feature;
@@ -76,7 +79,7 @@ public class TermEx extends Algorithm{
             double sum = 0;
             for (int i : docs) {
                 int tfid = fFeatureDocs.getTFIC(String.valueOf(i)).get(tString);
-                int ttfid = fFeatureDocs.getMapCtx2TTF().get(i);
+                int ttfid = fFeatureDocs.getMapCtx2TTF().get(String.valueOf(i));
                 double norm = tfid==0?0: (double)tfid/ttfid;
                 if (norm == 0) sum += 0;
                 else {
@@ -98,6 +101,7 @@ public class TermEx extends Algorithm{
             result.add(term);
         }
 
+        Collections.sort(result);
         return result;
     }
 }

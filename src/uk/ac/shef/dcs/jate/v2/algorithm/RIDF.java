@@ -6,10 +6,7 @@ import uk.ac.shef.dcs.jate.v2.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.v2.model.JATETerm;
 import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by zqz on 19/09/2015.
@@ -46,7 +43,7 @@ public class RIDF extends Algorithm{
             }
             result.add(term);
         }
-
+        Collections.sort(result);
         return result;
     }
 }

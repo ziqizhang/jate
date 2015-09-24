@@ -40,7 +40,7 @@ public class FrequencyCtxDocBasedFBMaster extends AbstractFeatureBuilder {
                     TermsEnum termsEnum = terms.iterator();
                     while (termsEnum.next() != null) {
                         BytesRef t = termsEnum.term();
-                        allLuceneTerms.add(t);
+                        allLuceneTerms.add(BytesRef.deepCopyOf(t));
                     }
                     //start workers
                     int cores = Runtime.getRuntime().availableProcessors();
@@ -54,6 +54,8 @@ public class FrequencyCtxDocBasedFBMaster extends AbstractFeatureBuilder {
                     StringBuilder sb = new StringBuilder("Complete building features. Total=");
                     sb.append(feature.getMapCtx2TTF().size());
                     LOG.info(sb.toString());
+
+                    break;
                 }
             }
 
