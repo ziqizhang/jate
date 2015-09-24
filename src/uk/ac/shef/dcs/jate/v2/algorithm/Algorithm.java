@@ -29,7 +29,7 @@ public abstract class Algorithm {
     public abstract List<JATETerm> execute(Set<String> candidates) throws JATEException;
 
     protected void validateFeature(AbstractFeature feature, Class type) throws JATEException {
-        if (feature == null || !(feature instanceof FrequencyTermBased)) {
+        if (feature == null || !(feature.getClass().equals(type))) {
             StringBuilder sb = new StringBuilder();
             sb.append("requires feature type:").append(type).append(",")
                     .append(" provided:");

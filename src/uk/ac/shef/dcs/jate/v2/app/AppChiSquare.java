@@ -45,11 +45,11 @@ public class AppChiSquare extends AbstractApp {
         int minTTF = 0, minTCF=0;
         String minTTFStr=params.get("-mttf");
         if(minTTFStr!=null){
-            try{Integer.valueOf(minTTFStr);}
+            try{minTTF=Integer.valueOf(minTTFStr);}
             catch (NumberFormatException n){}}
         String minTCFStr=params.get("-mtcf");
         if(minTCFStr!=null){
-            try{Integer.valueOf(minTCFStr);}
+            try{minTCF=Integer.valueOf(minTCFStr);}
             catch (NumberFormatException n){}}
 
         CooccurrenceFBMaster cb = new CooccurrenceFBMaster(indexReader, properties, ftb, minTTF, fcsb,
@@ -64,7 +64,7 @@ public class AppChiSquare extends AbstractApp {
         String paramValue=params.get("-c");
         if(paramValue!=null &&paramValue.equalsIgnoreCase("true"))
             chi.setTermInfoCollector(new TermInfoCollector(indexReader));
-        List<JATETerm> terms=chi.execute(ftb.getMapTerm2TTF().keySet());
+        List<JATETerm> terms=chi.execute(co.getTerms());
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
         paramValue=params.get("-o");
         write(terms,paramValue);
@@ -82,7 +82,7 @@ public class AppChiSquare extends AbstractApp {
                 .append("\t\t-n\t\tA number. If an integer is given, top N candidates are selected as terms. \n")
                 .append("\t\t\t\tIf a decimal number is given, top N% of candidates are selected. Default is 0.25.\n");
         sb.append("\t\t-o\t\tA file path. If provided, the output is written to the file. \n")
-                .append("\t\t\t\tOtherwise, output is written to the console.")
+                .append("\t\t\t\tOtherwise, output is written to the console.\n")
                 .append("\t\t-mttf\t\tA number. Min total fequency of a term for it to be considered for co-occurrence computation. \n")
                 .append("\t\t-mtcf\t\tA number. Min frequency of a term appearing in different context for it to be considered for co-occurrence computation. \n")
         ;

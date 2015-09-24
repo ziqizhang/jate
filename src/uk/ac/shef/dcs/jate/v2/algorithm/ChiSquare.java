@@ -43,6 +43,10 @@ public class ChiSquare extends Algorithm {
             // where w appears".
             if (n_w == null) {
                 Set<String> ctx_w = fFeatureCtxBased.getContextIds(tString);
+                if(ctx_w==null){
+                    continue;//this is possible if during co-occurrence computing this term is skipped
+                    //because it did not satisfy minimum thresholds
+                }
                 for (String ctxid : ctx_w) {
                     for (Integer f : fFeatureCtxBased.getTFIC(ctxid).values())
                         n_w += f;

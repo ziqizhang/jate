@@ -44,6 +44,7 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<String, Cooccu
             workerOutput.add(output);
         }
 
+        LOG.info("Joining output from multiple workers, #="+jateRecursiveTaskWorkers.size());
         Cooccurrence joined = new Cooccurrence(allTerms.size());
         for (Cooccurrence output : workerOutput) {
             for (int term1Id = 0; term1Id < output.getNumTerms(); term1Id++) {
@@ -73,7 +74,7 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<String, Cooccu
                 unique.addAll(termsInContext.keySet());
             else {
                 for (String term : termsInContext.keySet()) {
-                    if (frequencyTermBased.getTTF(term) > minTTF && frequencyCtxBased.getContextIds(term).size() > minTCF)
+                    if (frequencyTermBased.getTTF(term) >= minTTF && frequencyCtxBased.getContextIds(term).size() >= minTCF)
                         unique.add(term);
                 }
             }
@@ -89,8 +90,8 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<String, Cooccu
 
             for (Map.Entry<String, Integer> entry : termsInContext.entrySet()) {
                 String targetTerm = entry.getKey();
-                if (minTTF > 0 && frequencyTermBased.getTTF(targetTerm) < minTTF
-                        && minTCF>0&& frequencyCtxBased.getContextIds(targetTerm).size() < minTCF)
+                if ((minTTF > 0 && frequencyTermBased.getTTF(targetTerm) < minTTF)
+                        || (minTCF>0&& frequencyCtxBased.getContextIds(targetTerm).size() < minTCF))
                     continue;
 
                 int targetFIC = entry.getValue(); //frequency of term in this context
@@ -98,6 +99,9 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<String, Cooccu
                 for (Map.Entry<String, Integer> en : termsInContext.entrySet()) {
                     String refTerm = en.getKey();
                     if (refTerm.equals(targetTerm))
+                        continue;
+                    if ((minTTF > 0 && frequencyTermBased.getTTF(refTerm) < minTTF)
+                            || (minTCF>0&& frequencyCtxBased.getContextIds(refTerm).size() < minTCF))
                         continue;
 
                     int refTermFIC = en.getValue();

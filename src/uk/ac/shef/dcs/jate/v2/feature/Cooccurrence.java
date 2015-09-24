@@ -25,7 +25,7 @@ public class Cooccurrence extends AbstractFeature {
         return cooccurrence.rows();
     }
 
-    Set<String> getTerms(){
+    public Set<String> getTerms(){
         return mapTerm2Idx.keySet();
     }
 
@@ -63,12 +63,11 @@ public class Cooccurrence extends AbstractFeature {
         IntArrayList nzValues = new IntArrayList();
         cooccur.getNonZeros(nzIndexes, nzValues);
         Map<Integer, Integer> result = new HashMap<>();
-
         List index_elements=nzIndexes.toList();
         //System.out.println("\t"+getCurrentTimeStamp() + "row="+currentRow+" "+index_elements.size()+" non-zeros");
         for(int i=0; i<index_elements.size(); i++){
             int idx=(int)index_elements.get(i);
-            int v = nzValues.get(idx);
+            int v = nzValues.get(i);
             result.put(idx, v);
         }
         return result;
