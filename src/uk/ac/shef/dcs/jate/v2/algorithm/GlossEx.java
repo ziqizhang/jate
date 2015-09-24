@@ -29,6 +29,8 @@ public class GlossEx extends Algorithm {
     }
 
     public List<JATETerm> execute(Set<String> candidates) throws JATEException {
+        candidates.remove("");
+
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeatureTerms = (FrequencyTermBased) feature;
@@ -54,7 +56,7 @@ public class GlossEx extends Algorithm {
 
             for (int i = 0; i < T; i++) {
                 String wi = elements[i];
-                SUMwi += /*Math.log(*/(double) fFeatureWords.getTTF(wi) / totalWordsInCorpus / fFeatureRef.getTTFNorm(wi)/*)*/;
+                SUMwi += /*Math.log(*/(double) (fFeatureWords.getTTF(wi)+1) / totalWordsInCorpus / (fFeatureRef.getTTFNorm(wi)+1)/*)*/;
                 SUMfwi += (double) fFeatureWords.getTTF(wi);
             }
 

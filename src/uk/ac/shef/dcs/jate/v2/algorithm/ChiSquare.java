@@ -32,6 +32,8 @@ public class ChiSquare extends Algorithm {
 
     @Override
     public List<JATETerm> execute(Set<String> candidates) throws JATEException {
+        candidates.remove("");
+
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeatureTerms = (FrequencyTermBased) feature;

@@ -56,7 +56,7 @@ public class AppNCValue extends App {
 
         CooccurrenceFBMaster ccb = new CooccurrenceFBMaster(indexReader, properties, ftb, minTTF, fcsb,
                 minTCF);
-        Cooccurrence co = (Cooccurrence)cb.build();
+        Cooccurrence co = (Cooccurrence)ccb.build();
 
         NCValue ncvalue = new NCValue();
         ncvalue.registerFeature(FrequencyTermBased.class.getName(), ftb);
