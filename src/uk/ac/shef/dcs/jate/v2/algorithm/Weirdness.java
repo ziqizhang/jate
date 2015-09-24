@@ -21,11 +21,13 @@ public class Weirdness extends Algorithm {
 
     @Override
     public List<JATETerm> execute(Set<String> candidates) throws JATEException {
-        AbstractFeature feature1 = features.get(FrequencyTermBased.class.getName()+"_"+SUFFIX_WORD);
+        candidates.remove("");
+
+        AbstractFeature feature1 = features.get(FrequencyTermBased.class.getName()+SUFFIX_WORD);
         validateFeature(feature1, FrequencyTermBased.class);
         FrequencyTermBased fFeatureWords = (FrequencyTermBased) feature1;
 
-        AbstractFeature feature2 = features.get(FrequencyTermBased.class.getName()+"_"+ SUFFIX_REF);
+        AbstractFeature feature2 = features.get(FrequencyTermBased.class.getName()+ SUFFIX_REF);
         validateFeature(feature2, FrequencyTermBased.class);
         FrequencyTermBased fFeatureRef = (FrequencyTermBased) feature2;
         List<JATETerm> result = new ArrayList<>();
@@ -40,7 +42,7 @@ public class Weirdness extends Algorithm {
 
             for (int i = 0; i < T; i++) {
                 String wi = elements[i];
-                double v = (double) fFeatureWords.getTTF(wi) / totalWordsInCorpus / fFeatureRef.getTTFNorm(wi);
+                double v = (double) (fFeatureWords.getTTF(wi)+1) / totalWordsInCorpus / (fFeatureRef.getTTFNorm(wi)+1);
                 //SUMwi += Math.log((double) gFeatureStore.getWordFreq(wi) / (double) gFeatureStore.getTotalCorpusWordFreq() / gFeatureStore.getRefWordFreqNorm(wi));
                 SUMwi += Math.log(v);
             }
