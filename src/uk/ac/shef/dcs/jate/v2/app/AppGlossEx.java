@@ -5,7 +5,8 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.store.FSDirectory;
 import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.v2.JATEProperties;
-import uk.ac.shef.dcs.jate.v2.algorithm.ChiSquare;
+import uk.ac.shef.dcs.jate.v2.algorithm.CValue;
+import uk.ac.shef.dcs.jate.v2.algorithm.GlossEx;
 import uk.ac.shef.dcs.jate.v2.algorithm.TermInfoCollector;
 import uk.ac.shef.dcs.jate.v2.feature.*;
 import uk.ac.shef.dcs.jate.v2.model.JATETerm;
@@ -16,9 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by zqz on 23/09/2015.
  */
-public class AppChiSquare extends App {
+public class AppGlossEx extends App {
     public static void main(String[] args) throws JATEException, IOException {
         if (args.length < 1) {
             printHelp();
@@ -33,35 +33,23 @@ public class AppChiSquare extends App {
                 FrequencyTermBasedFBMaster(indexReader, properties, 0);
         FrequencyTermBased ftb = (FrequencyTermBased)ftbb.build();
 
-        FrequencyCtxSentenceBasedFBMaster fcsbb = new
-                FrequencyCtxSentenceBasedFBMaster(indexReader, properties,
-                properties.getSolrFieldnameJATETermsAll(),
-                properties.getSolrFieldnameJATESentencesAll());
-        FrequencyCtxBased fcsb = (FrequencyCtxBased)fcsbb.build();
+        FrequencyTermBasedFBMaster fwbb = new
+                FrequencyTermBasedFBMaster(indexReader, properties, 1);
+        FrequencyTermBased fwb = (FrequencyTermBased)fwbb.build();
 
-        int minTTF = 0, minTCF=0;
-        String minTTFStr=params.get("-mttf");
-        if(minTTFStr!=null){
-            try{minTTF=Integer.valueOf(minTTFStr);}
-            catch (NumberFormatException n){}}
-        String minTCFStr=params.get("-mtcf");
-        if(minTCFStr!=null){
-            try{minTCF=Integer.valueOf(minTCFStr);}
-            catch (NumberFormatException n){}}
+        TTFReferenceFeatureFileBuilder ftrb = new
+                TTFReferenceFeatureFileBuilder(args[args.length-3]);
+        FrequencyTermBased frb = ftrb.build();
 
-        CooccurrenceFBMaster cb = new CooccurrenceFBMaster(indexReader, properties, ftb, minTTF, fcsb,
-                minTCF);
-        Cooccurrence co = (Cooccurrence)cb.build();
-
-        ChiSquare chi = new ChiSquare();
-        chi.registerFeature(FrequencyTermBased.class.getName(), ftb);
-        chi.registerFeature(FrequencyCtxBased.class.getName()+ChiSquare.SUFFIX_SENTENCE, fcsb);
-        chi.registerFeature(Cooccurrence.class.getName(), co);
+        GlossEx glossex = new GlossEx();
+        glossex.registerFeature(FrequencyTermBased.class.getName(), ftb);
+        glossex.registerFeature(FrequencyTermBased.class.getName()+GlossEx.SUFFIX_WORD, fwb);
+        glossex.registerFeature(FrequencyTermBased.class.getName()+GlossEx.SUFFIX_REF, frb);
 
         String paramValue=params.get("-c");
         if(paramValue!=null &&paramValue.equalsIgnoreCase("true"))
-            chi.setTermInfoCollector(new TermInfoCollector(indexReader));
-        List<JATETerm> terms=chi.execute(co.getTerms());
+            glossex.setTermInfoCollector(new TermInfoCollector(indexReader));
+        List<JATETerm> terms=glossex.execute(ftb.getMapTerm2TTF().keySet());
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
         paramValue=params.get("-o");
         write(terms,paramValue);
@@ -69,21 +57,17 @@ public class AppChiSquare extends App {
     }
 
     protected static void printHelp() {
-        StringBuilder sb = new StringBuilder("Chi-Square, usage:\n");
+        StringBuilder sb = new StringBuilder("GlossEx Usage:\n");
         sb.append("java -cp '[CLASSPATH]' ").append(AppATTF.class.getName())
-                .append(" [OPTIONS] ").append("[LUCENE_INDEX_PATH] [JATE_PROPERTY_FILE]").append("\nE.g.:\n");
-        sb.append("java -cp '/libs/*' -t 20 /solr/server/solr/jate/data jate.properties\n\n");
+                .append(" [OPTIONS] ").append("[REF_TERM_TF_FILE] [LUCENE_INDEX_PATH] [JATE_PROPERTY_FILE]").append("\nE.g.:\n");
+        sb.append("java -cp '/libs/*' -t 20 /resource/bnc_unifrqs.normal /solr/server/solr/jate/data jate.properties ...\n\n");
         sb.append("[OPTIONS]:\n")
                 .append("\t\t-c\t\t'true' or 'false'. Whether to collect term information, e.g., offsets in documents. Default is false.\n")
                 .append("\t\t-t\t\tA number. Score threshold for selecting terms. If not set then default -n is used.").append("\n")
                 .append("\t\t-n\t\tA number. If an integer is given, top N candidates are selected as terms. \n")
                 .append("\t\t\t\tIf a decimal number is given, top N% of candidates are selected. Default is 0.25.\n");
         sb.append("\t\t-o\t\tA file path. If provided, the output is written to the file. \n")
-                .append("\t\t\t\tOtherwise, output is written to the console.\n")
-                .append("\t\t-mttf\t\tA number. Min total fequency of a term for it to be considered for co-occurrence computation. \n")
-                .append("\t\t-mtcf\t\tA number. Min frequency of a term appearing in different context for it to be considered for co-occurrence computation. \n")
-        ;
+                .append("\t\t\t\tOtherwise, output is written to the console.");
         System.out.println(sb);
     }
-
 }

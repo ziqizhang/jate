@@ -8,7 +8,6 @@ import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -17,8 +16,8 @@ public class GlossEx extends Algorithm {
     protected final double _alpha;
     protected final double _beta;
 
-    public static final String PREFIX_REF ="REF_";
-    public static final String PREFIX_WORD="WORD_";
+    public static final String SUFFIX_REF ="_REF";
+    public static final String SUFFIX_WORD ="_WORD";
 
     public GlossEx(){
         this(0.2,0.8);
@@ -34,11 +33,11 @@ public class GlossEx extends Algorithm {
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeatureTerms = (FrequencyTermBased) feature;
 
-        AbstractFeature feature2 = features.get(FrequencyTermBased.class.getName()+"_"+PREFIX_WORD);
+        AbstractFeature feature2 = features.get(FrequencyTermBased.class.getName()+ SUFFIX_WORD);
         validateFeature(feature2, FrequencyTermBased.class);
         FrequencyTermBased fFeatureWords = (FrequencyTermBased) feature2;
 
-        AbstractFeature feature3 = features.get(FrequencyTermBased.class.getName()+"_"+PREFIX_REF);
+        AbstractFeature feature3 = features.get(FrequencyTermBased.class.getName()+ SUFFIX_REF);
         validateFeature(feature3, FrequencyTermBased.class);
         FrequencyTermBased fFeatureRef = (FrequencyTermBased) feature3;
 

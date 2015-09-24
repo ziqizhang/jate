@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * Created by zqz on 22/09/2015.
  */
-public abstract class AbstractApp {
+public class App {
     protected static final double DEFAULT_THRESHOLD_N=0.25;
 
     public static Map<String, String> getParams(String[] args) throws JATEException {
@@ -92,10 +92,10 @@ public abstract class AbstractApp {
     }
 
     protected static void printHelp() {
-        StringBuilder sb = new StringBuilder("Chi-Square, usage:\n");
+        StringBuilder sb = new StringBuilder("Usage:\n");
         sb.append("java -cp '[CLASSPATH]' ").append(AppATTF.class.getName())
                 .append(" [OPTIONS] ").append("[LUCENE_INDEX_PATH] [JATE_PROPERTY_FILE]").append("\nE.g.:\n");
-        sb.append("java -cp '/libs/*' -t 20 /solr/server/solr/jate/data jate.properties\n\n");
+        sb.append("java -cp '/libs/*' -t 20 /solr/server/solr/jate/data jate.properties ...\n\n");
         sb.append("[OPTIONS]:\n")
                 .append("\t\t-c\t\t'true' or 'false'. Whether to collect term information, e.g., offsets in documents. Default is false.\n")
                 .append("\t\t-t\t\tA number. Score threshold for selecting terms. If not set then default -n is used.").append("\n")

@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * Created by zqz on 24/09/2015.
  */
-public class AppCValue extends AbstractApp {
+public class AppCValue extends App {
     public static void main(String[] args) throws JATEException, IOException {
         if (args.length < 1) {
             printHelp();

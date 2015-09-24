@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * Created by zqz on 22/09/2015.
  */
-public class AppATTF extends AbstractApp {
+public class AppATTF extends App {
 
     public static void main(String[] args) throws JATEException, IOException {
         if (args.length < 1) {

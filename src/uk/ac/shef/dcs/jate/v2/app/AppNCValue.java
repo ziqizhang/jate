@@ -5,7 +5,8 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.store.FSDirectory;
 import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.v2.JATEProperties;
-import uk.ac.shef.dcs.jate.v2.algorithm.ChiSquare;
+import uk.ac.shef.dcs.jate.v2.algorithm.CValue;
+import uk.ac.shef.dcs.jate.v2.algorithm.NCValue;
 import uk.ac.shef.dcs.jate.v2.algorithm.TermInfoCollector;
 import uk.ac.shef.dcs.jate.v2.feature.*;
 import uk.ac.shef.dcs.jate.v2.model.JATETerm;
@@ -16,9 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by zqz on 23/09/2015.
+ * Created by zqz on 24/09/2015.
  */
-public class AppChiSquare extends App {
+public class AppNCValue extends App {
     public static void main(String[] args) throws JATEException, IOException {
         if (args.length < 1) {
             printHelp();
@@ -32,6 +33,10 @@ public class AppChiSquare extends App {
         FrequencyTermBasedFBMaster ftbb = new
                 FrequencyTermBasedFBMaster(indexReader, properties, 0);
         FrequencyTermBased ftb = (FrequencyTermBased)ftbb.build();
+
+        ContainmentFBMaster cb = new
+                ContainmentFBMaster(indexReader, properties);
+        Containment cf = (Containment)cb.build();
 
         FrequencyCtxSentenceBasedFBMaster fcsbb = new
                 FrequencyCtxSentenceBasedFBMaster(indexReader, properties,
@@ -49,19 +54,19 @@ public class AppChiSquare extends App {
             try{minTCF=Integer.valueOf(minTCFStr);}
             catch (NumberFormatException n){}}
 
-        CooccurrenceFBMaster cb = new CooccurrenceFBMaster(indexReader, properties, ftb, minTTF, fcsb,
+        CooccurrenceFBMaster ccb = new CooccurrenceFBMaster(indexReader, properties, ftb, minTTF, fcsb,
                 minTCF);
         Cooccurrence co = (Cooccurrence)cb.build();
 
-        ChiSquare chi = new ChiSquare();
-        chi.registerFeature(FrequencyTermBased.class.getName(), ftb);
-        chi.registerFeature(FrequencyCtxBased.class.getName()+ChiSquare.SUFFIX_SENTENCE, fcsb);
-        chi.registerFeature(Cooccurrence.class.getName(), co);
+        NCValue ncvalue = new NCValue();
+        ncvalue.registerFeature(FrequencyTermBased.class.getName(), ftb);
+        ncvalue.registerFeature(Containment.class.getName(), cf);
+        ncvalue.registerFeature(Cooccurrence.class.getName(), co);
 
         String paramValue=params.get("-c");
         if(paramValue!=null &&paramValue.equalsIgnoreCase("true"))
-            chi.setTermInfoCollector(new TermInfoCollector(indexReader));
-        List<JATETerm> terms=chi.execute(co.getTerms());
+            ncvalue.setTermInfoCollector(new TermInfoCollector(indexReader));
+        List<JATETerm> terms=ncvalue.execute(co.getTerms());
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
         paramValue=params.get("-o");
         write(terms,paramValue);
@@ -69,7 +74,7 @@ public class AppChiSquare extends App {
     }
 
     protected static void printHelp() {
-        StringBuilder sb = new StringBuilder("Chi-Square, usage:\n");
+        StringBuilder sb = new StringBuilder("NCValue, usage:\n");
         sb.append("java -cp '[CLASSPATH]' ").append(AppATTF.class.getName())
                 .append(" [OPTIONS] ").append("[LUCENE_INDEX_PATH] [JATE_PROPERTY_FILE]").append("\nE.g.:\n");
         sb.append("java -cp '/libs/*' -t 20 /solr/server/solr/jate/data jate.properties\n\n");
@@ -85,5 +90,4 @@ public class AppChiSquare extends App {
         ;
         System.out.println(sb);
     }
-
 }

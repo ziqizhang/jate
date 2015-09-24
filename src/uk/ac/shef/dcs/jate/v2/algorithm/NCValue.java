@@ -53,5 +53,6 @@ public class NCValue extends Algorithm {
         List<JATETerm> result = forkJoinPool.invoke(worker);
         Collections.sort(result);
         return result;
+
     }
 }
