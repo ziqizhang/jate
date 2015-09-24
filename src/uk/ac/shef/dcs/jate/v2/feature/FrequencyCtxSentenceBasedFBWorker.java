@@ -93,6 +93,8 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                     String contextId=docId+"."+feature.nextCtxId();
                     for(int t = termCursor; t<terms.size();t++){
                         TextUnitOffsets term = terms.get(t);
+                       /* if(term.string.equals("acutely"))
+                            System.out.println();*/
                         if(term.end>sent[1]){
                             termCursor=t;
                             break;
@@ -144,6 +146,8 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
         BytesRef luceneTerm = ti.next();
         while(luceneTerm!=null){
             String tString =luceneTerm.utf8ToString();
+           /* if(tString.equals("acutely"))
+                System.out.println();*/
             PostingsEnum postingsEnum=ti.postings(null, PostingsEnum.OFFSETS);
 
             int doc=postingsEnum.nextDoc(); //this should be just 1 doc, i.e., the constraint for getting this TV
