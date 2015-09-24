@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * Created by zqz on 22/09/2015.
  */
-public class AbstractApp {
+public abstract class AbstractApp {
     protected static final double DEFAULT_THRESHOLD_N=0.25;
 
     public static Map<String, String> getParams(String[] args) throws JATEException {

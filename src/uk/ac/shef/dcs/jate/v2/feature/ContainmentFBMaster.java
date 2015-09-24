@@ -13,11 +13,11 @@ import java.util.logging.Logger;
 /**
  * Created by zqz on 17/09/2015.
  */
-public class ContainmentFBMater extends AbstractFeatureBuilder {
+public class ContainmentFBMaster extends AbstractFeatureBuilder {
 
-    private static final Logger LOG = Logger.getLogger(ContainmentFBMater.class.getName());
+    private static final Logger LOG = Logger.getLogger(ContainmentFBMaster.class.getName());
 
-    public ContainmentFBMater(IndexReader index, JATEProperties properties) {
+    public ContainmentFBMaster(IndexReader index, JATEProperties properties) {
         super(index, properties);
     }
 
