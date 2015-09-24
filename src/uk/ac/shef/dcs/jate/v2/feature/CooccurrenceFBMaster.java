@@ -15,11 +15,20 @@ import java.util.logging.Logger;
 public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
     private static final Logger LOG = Logger.getLogger(CooccurrenceFBMaster.class.getName());
     protected FrequencyCtxBased frequencyCtxBased;
+    protected FrequencyTermBased frequencyTermBased;
+    protected int minTTF;
+    protected int minTCF;
 
     public CooccurrenceFBMaster(IndexReader index, JATEProperties properties,
-                                FrequencyCtxBased contextFeature) {
+                                FrequencyTermBased termFeature,
+                                int minTTF,
+                                FrequencyCtxBased contextFeature,
+                                int minTCF) {
         super(index, properties);
         this.frequencyCtxBased = contextFeature;
+        this.frequencyTermBased=termFeature;
+        this.minTTF=minTTF;
+        this.minTCF=minTCF;
     }
 
     @Override
@@ -29,11 +38,15 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
         int cores = Runtime.getRuntime().availableProcessors();
         cores = (int) (cores * properties.getFeatureBuilderMaxCPUsage());
         cores = cores == 0 ? 1 : cores;
+        StringBuilder sb = new StringBuilder("Building features using cpu cores=");
+        sb.append(cores).append(", total ctx=").append(contextIds.size()).append(", max per worker=")
+                .append(properties.getFeatureBuilderMaxDocsPerWorker());
+        LOG.info(sb.toString());
         CooccurrenceFBWorker worker = new
-                CooccurrenceFBWorker(contextIds, frequencyCtxBased, properties.getFeatureBuilderMaxTermsPerWorker());
+                CooccurrenceFBWorker(contextIds, frequencyTermBased, minTTF, frequencyCtxBased, minTCF,properties.getFeatureBuilderMaxTermsPerWorker());
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
         Cooccurrence feature = forkJoinPool.invoke(worker);
-        StringBuilder sb = new StringBuilder("Complete building features.");
+        sb = new StringBuilder("Complete building features.");
         LOG.info(sb.toString());
 
         return feature;

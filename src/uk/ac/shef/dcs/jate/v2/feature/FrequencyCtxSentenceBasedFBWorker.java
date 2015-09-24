@@ -77,11 +77,17 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
 
     @Override
     protected FrequencyCtxBased computeSingleWorker(List<Integer> docIds) {
+        LOG.info("Total docs to process="+docIds.size());
         FrequencyCtxBased feature = new FrequencyCtxBased();
+        int count=0;
         for (int docId : docIds) {
+            count++;
             try {
                 List<TextUnitOffsets> terms = collectTermOffsets(indexReader.getTermVector(docId, termTargetField));
                 List<int[]> sentences = collectSentenceOffsets(indexReader, sentenceTargetField, docId);
+                StringBuilder sb = new StringBuilder("#");
+                sb.append(count).append(", docId=").append(docId).append(", total terms=").append(terms.size())
+                        .append(", total sentences=").append(sentences);
                 int termCursor=0;
                 for(int[] sent: sentences){
                     String contextId=docId+"."+feature.nextCtxId();
@@ -96,7 +102,8 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                             feature.increment(contextId,1);
                             feature.increment(contextId,term.string,1);
                         }
-                        else{//todo a term is not within sentence boundary. this is likely for n-gram
+                        else{//a term is not within sentence boundary. this is likely for n-gram which are created
+                            //across sentence boundaries
                         }
                     }
                 }
