@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 /**
- * Created by zqz on 15/09/2015.
+ *
  */
 public class SolrParallelIndexingWorker extends JATERecursiveTaskWorker<String, Integer> {
 

@@ -91,10 +91,11 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                             break;
                         }
 
-                        //term within sentence boundary
-                        if(term.start>=sent.start){
+                        if(term.start>=sent.start){ //term within sentence boundary
                             feature.increment(contextId,1);
                             feature.increment(contextId,term.string,1);
+                        }
+                        else{//todo a term is not within sentence boundary. this is likely for n-gram
                         }
                     }
                 }
