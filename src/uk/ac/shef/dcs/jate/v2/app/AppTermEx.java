@@ -6,6 +6,7 @@ import org.apache.lucene.store.FSDirectory;
 import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.v2.JATEProperties;
 import uk.ac.shef.dcs.jate.v2.algorithm.GlossEx;
+import uk.ac.shef.dcs.jate.v2.algorithm.TermEx;
 import uk.ac.shef.dcs.jate.v2.algorithm.TermInfoCollector;
 import uk.ac.shef.dcs.jate.v2.feature.*;
 import uk.ac.shef.dcs.jate.v2.model.JATETerm;
@@ -16,8 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Created by zqz on 24/09/2015.
  */
-public class AppGlossEx extends App {
+public class AppTermEx extends App {
     public static void main(String[] args) throws JATEException, IOException {
         if (args.length < 1) {
             printHelp();
@@ -40,15 +42,20 @@ public class AppGlossEx extends App {
                 TTFReferenceFeatureFileBuilder(args[args.length-3]);
         FrequencyTermBased frb = ftrb.build();
 
-        GlossEx glossex = new GlossEx();
-        glossex.registerFeature(FrequencyTermBased.class.getName(), ftb);
-        glossex.registerFeature(FrequencyTermBased.class.getName()+GlossEx.SUFFIX_WORD, fwb);
-        glossex.registerFeature(FrequencyTermBased.class.getName()+GlossEx.SUFFIX_REF, frb);
+        FrequencyCtxDocBasedFBMaster fdbb = new
+                FrequencyCtxDocBasedFBMaster(indexReader, properties, 0);
+        FrequencyCtxBased fdb = (FrequencyCtxBased) fdbb.build();
+
+        TermEx termex = new TermEx();
+        termex.registerFeature(FrequencyTermBased.class.getName(), ftb);
+        termex.registerFeature(FrequencyTermBased.class.getName()+TermEx.SUFFIX_WORD, fwb);
+        termex.registerFeature(FrequencyTermBased.class.getName()+TermEx.SUFFIX_REF, frb);
+        termex.registerFeature(FrequencyCtxBased.class.getName()+TermEx.SUFFIX_DOC, fdb);
 
         String paramValue=params.get("-c");
         if(paramValue!=null &&paramValue.equalsIgnoreCase("true"))
-            glossex.setTermInfoCollector(new TermInfoCollector(indexReader));
-        List<JATETerm> terms=glossex.execute(ftb.getMapTerm2TTF().keySet());
+            termex.setTermInfoCollector(new TermInfoCollector(indexReader));
+        List<JATETerm> terms=termex.execute(ftb.getMapTerm2TTF().keySet());
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
         paramValue=params.get("-o");
         write(terms,paramValue);
@@ -56,7 +63,7 @@ public class AppGlossEx extends App {
     }
 
     protected static void printHelp() {
-        StringBuilder sb = new StringBuilder("GlossEx Usage:\n");
+        StringBuilder sb = new StringBuilder("TermEx Usage:\n");
         sb.append("java -cp '[CLASSPATH]' ").append(AppATTF.class.getName())
                 .append(" [OPTIONS] ").append("[REF_TERM_TF_FILE] [LUCENE_INDEX_PATH] [JATE_PROPERTY_FILE]").append("\nE.g.:\n");
         sb.append("java -cp '/libs/*' -t 20 /resource/bnc_unifrqs.normal /solr/server/solr/jate/data jate.properties ...\n\n");
