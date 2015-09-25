@@ -35,6 +35,8 @@ public class ContainmentFBMaster extends AbstractFeatureBuilder {
                     TermsEnum termsEnum = terms.iterator();
                     while (termsEnum.next() != null) {
                         String t = termsEnum.term().utf8ToString();
+                        if(t.length()==0)
+                            continue;
                         int tokens = t.split("\\s+").length;
                         Set<String> ts = numTokens2Terms.get(tokens);
                         if(ts==null) {

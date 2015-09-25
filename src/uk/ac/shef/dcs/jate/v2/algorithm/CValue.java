@@ -12,7 +12,8 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Logger;
 
 /**
- * Created by zqz on 19/09/2015.
+ * An implementation of the CValue term recognition algorithm. See Frantzi et. al 2000, <i>
+ * Automatic recognition of multi-word terms:. the C-value/NC-value method</i>
  */
 public class CValue extends Algorithm {
     private static final Logger LOG = Logger.getLogger(CValue.class.getName());
@@ -28,8 +29,6 @@ public class CValue extends Algorithm {
 
     @Override
     public List<JATETerm> execute(Set<String> candidates) throws JATEException {
-        candidates.remove("");
-
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeature = (FrequencyTermBased) feature;
