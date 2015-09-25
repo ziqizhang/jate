@@ -10,13 +10,13 @@ import java.util.Map;
  *
  * todo: should allow filtering stopwords using dictionary and rules (e.g., 1 character words, numbers etc)
  */
-public class StopFilterFactory extends TokenFilterFactory{
+public class CustomStopFilterFactory extends TokenFilterFactory{
     /**
      * Initialize this factory via a set of key-value pairs.
      *
      * @param args
      */
-    protected StopFilterFactory(Map<String, String> args) {
+    protected CustomStopFilterFactory(Map<String, String> args) {
         super(args);
     }
 

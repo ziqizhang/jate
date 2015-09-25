@@ -36,8 +36,8 @@ public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
             Fields fields = MultiFields.getFields(indexReader);
             boolean foundJATETextField = false;
             for (String field : fields) {
-                if (foundJATETextField)
-                    break;
+                /*if (foundJATETextField)
+                    break;*/
                 if (field.equals(targetField)) {
                     foundJATETextField = true;
                     List<BytesRef> allLuceneTerms = new ArrayList<>();
@@ -45,6 +45,8 @@ public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
                     TermsEnum termsEnum = terms.iterator();
                     while (termsEnum.next() != null) {
                         BytesRef t = termsEnum.term();
+                        if(t.length==0)
+                            continue;
                         allLuceneTerms.add(BytesRef.deepCopyOf(t));
                     }
                     //start workers
@@ -63,6 +65,7 @@ public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
                     sb = new StringBuilder("Complete building features. Total=");
                     sb.append(total[1]).append(" success=").append(total[0]);
                     LOG.info(sb.toString());
+                    break;
                 }
             }
 

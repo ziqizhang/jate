@@ -10,13 +10,14 @@ import java.util.*;
 import java.util.logging.Logger;
 
 /**
- * Average Total Term Frequency = TTF/ doc freq
+ * Average Total Term Frequency (ATTF). Compute the total frequency of a term in a corpus (ttf), and total document frequency (tdf).
+ * Then divide ttf by tdf
  */
 public class ATTF extends Algorithm{
     private static Logger LOG = Logger.getLogger(ATTF.class.getName());
     @Override
     public List<JATETerm> execute(Set<String> candidates) throws JATEException {
-        candidates.remove("");
+        //candidates.remove("");
 
         LOG.info("Calculating ATTF for "+candidates.size()+" candidate terms.");
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
