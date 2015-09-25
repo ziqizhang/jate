@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * An implementation of the GlossEx term recognition algorithm. See Park, et. al 2002, <i>
@@ -28,7 +29,7 @@ public class GlossEx extends ReferenceBased {
     protected final double alpha;
     protected final double beta;
 
-
+    private static final Logger LOG = Logger.getLogger(GlossEx.class.getName());
     public static final String SUFFIX_REF ="_REF";
     public static final String SUFFIX_WORD ="_WORD";
 
@@ -60,6 +61,7 @@ public class GlossEx extends ReferenceBased {
         List<JATETerm> result = new ArrayList<>();
         boolean collectInfo = termInfoCollector != null;
         double totalWordsInCorpus = fFeatureWords.getCorpusTotal();
+        LOG.info("Calculating GlossEx for "+candidates.size()+" candidate terms.");
         for (String tString : candidates) {
             int ttf = fFeatureTerms.getTTF(tString);
             double score;
@@ -93,6 +95,7 @@ public class GlossEx extends ReferenceBased {
         }
 
         Collections.sort(result);
+        LOG.info("Complete");
         return result;
     }
 

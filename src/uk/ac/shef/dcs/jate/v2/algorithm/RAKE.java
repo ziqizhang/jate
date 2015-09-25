@@ -8,18 +8,20 @@ import uk.ac.shef.dcs.jate.v2.model.JATETerm;
 import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
- * Created by zqz on 20/09/2015.
+ * Rose, S., Engel, D., Cramer, N., & Cowley, W. (2010).
+ * Automatic Keyword Extraction from Individual Documents. In M. W. Berry & J. Kogan (Eds.),
+ * Text Mining: Theory and Applications: John Wiley & Sons.
  */
 public class RAKE extends Algorithm {
 
+    private static final Logger LOG = Logger.getLogger(RAKE.class.getName());
     public static final String SUFFIX_WORD = "_WORD";
 
     @Override
     public List<JATETerm> execute(Set<String> candidates) throws JATEException {
-        candidates.remove("");
-
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName() + SUFFIX_WORD);
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeatureWords = (FrequencyTermBased) feature;
@@ -32,6 +34,9 @@ public class RAKE extends Algorithm {
         boolean collectInfo = termInfoCollector != null;
 
         Set<String> cooccurrenceDictionary = fFeatureCoocurr.getTerms();
+        StringBuilder msg = new StringBuilder("Beginning computing RAKE values,");
+        msg.append(", total terms=" + candidates.size());
+        LOG.info(msg.toString());
         for (String tString : candidates) {
             String[] elements = tString.split(" ");
             double score = 0;
@@ -57,6 +62,7 @@ public class RAKE extends Algorithm {
         }
 
         Collections.sort(result);
+        LOG.info("Complete");
         return result;
     }
 }

@@ -10,6 +10,9 @@ import java.util.logging.Logger;
 
 /**
  * NC-Value, see Frantzi et al., Automatic Recognition of Multi-Word Terms: the C-value/NC-value Method
+ *
+ * In this implementation, the notion of "context words" is just candidate terms that co-occur with a target term within
+ * the same sentence. No filter is applied to the selection of context words. All candidate terms are considered.
  */
 public class NCValue extends Algorithm {
     private static final Logger LOG = Logger.getLogger(NCValue.class.getName());
@@ -54,6 +57,7 @@ public class NCValue extends Algorithm {
                 termInfoCollector, weightCValue, weightContext);
         List<JATETerm> result = forkJoinPool.invoke(worker);
         Collections.sort(result);
+        LOG.info("Complete");
         return result;
 
     }

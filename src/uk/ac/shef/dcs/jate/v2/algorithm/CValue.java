@@ -48,6 +48,7 @@ public class CValue extends Algorithm {
                 termInfoCollector);
         List<JATETerm> result = forkJoinPool.invoke(worker);
         Collections.sort(result);
+        LOG.info("Complete");
         return result;
     }
 }

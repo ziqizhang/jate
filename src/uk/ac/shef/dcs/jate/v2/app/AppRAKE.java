@@ -5,7 +5,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.store.FSDirectory;
 import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.v2.JATEProperties;
-import uk.ac.shef.dcs.jate.v2.algorithm.ChiSquare;
+
 import uk.ac.shef.dcs.jate.v2.algorithm.RAKE;
 import uk.ac.shef.dcs.jate.v2.algorithm.TermInfoCollector;
 import uk.ac.shef.dcs.jate.v2.feature.*;

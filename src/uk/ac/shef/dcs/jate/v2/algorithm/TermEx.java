@@ -11,12 +11,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  *
  */
-public class TermEx extends Algorithm{
-
+public class TermEx extends ReferenceBased{
+    private static final Logger LOG = Logger.getLogger(TermEx.class.getName());
     private final double alpha;
     private final double beta;
     private final double zeta;
@@ -26,10 +27,11 @@ public class TermEx extends Algorithm{
     public static final String SUFFIX_DOC="_DOC";
 
     public TermEx() {
-        this(0.33,0.33,0.34);
+        this(0.33,0.33,0.34,true);
     }
 
-    public TermEx(double alpha, double beta, double zeta) {
+    public TermEx(double alpha, double beta, double zeta, boolean matchOOM) {
+        super(matchOOM);
         this.alpha = alpha;
         this.beta = beta;
         this.zeta = zeta;
@@ -37,8 +39,6 @@ public class TermEx extends Algorithm{
 
     @Override
     public List<JATETerm> execute(Set<String> candidates) throws JATEException {
-        candidates.remove("");
-
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeatureTerms = (FrequencyTermBased) feature;
@@ -58,6 +58,9 @@ public class TermEx extends Algorithm{
         List<JATETerm> result = new ArrayList<>();
         boolean collectInfo = termInfoCollector != null;
         double totalWordsInCorpus = fFeatureWords.getCorpusTotal();
+        StringBuilder msg = new StringBuilder("Beginning computing TermEx values,");
+        msg.append(", total terms=" + candidates.size());
+        LOG.info(msg.toString());
         for(String tString: candidates) {
             String[] elements = tString.split(" ");
             double T = (double) elements.length;
@@ -102,6 +105,7 @@ public class TermEx extends Algorithm{
         }
 
         Collections.sort(result);
+        LOG.info("Complete");
         return result;
     }
 }
