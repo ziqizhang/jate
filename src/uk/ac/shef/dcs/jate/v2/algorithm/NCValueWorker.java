@@ -9,9 +9,7 @@ import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 
 import java.util.*;
 
-/**
- * Created by zqz on 24/09/2015.
- */
+
 class NCValueWorker extends JATERecursiveTaskWorker<String, List<JATETerm>>{
 
     protected FrequencyTermBased fFeature;

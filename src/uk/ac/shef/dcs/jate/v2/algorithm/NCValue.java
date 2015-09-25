@@ -3,34 +3,34 @@ package uk.ac.shef.dcs.jate.v2.algorithm;
 import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.v2.feature.*;
 import uk.ac.shef.dcs.jate.v2.model.JATETerm;
-import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Logger;
 
 /**
- * Created by zqz on 21/09/2015.
+ * NC-Value, see Frantzi et al., Automatic Recognition of Multi-Word Terms: the C-value/NC-value Method
  */
 public class NCValue extends Algorithm {
     private static final Logger LOG = Logger.getLogger(NCValue.class.getName());
 
-    protected static final double WEIGHT_CVALUE=0.8;
-    protected static final double WEIGHT_CONTEXT=0.2;
+    protected double weightCValue =0.8;
+    protected double weightContext =0.2;
 
     protected int maxPerWorker = 1000;
 
     public NCValue() {
     }
-
+    public NCValue(double weightCValue, double weightContext) {
+        this.weightCValue =weightCValue;
+        this.weightContext =weightContext;
+    }
     public NCValue(int maxTermsPerWorker) {
         this.maxPerWorker = maxTermsPerWorker;
     }
 
     @Override
     public List<JATETerm> execute(Set<String> candidates) throws JATEException {
-        candidates.remove("");
-
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeature = (FrequencyTermBased) feature;
@@ -51,7 +51,7 @@ public class NCValue extends Algorithm {
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
         NCValueWorker worker = new NCValueWorker(new ArrayList<>(candidates), maxPerWorker, fFeature,
                 cFeature,fFeatureCoocurr,
-                termInfoCollector, WEIGHT_CVALUE, WEIGHT_CONTEXT);
+                termInfoCollector, weightCValue, weightContext);
         List<JATETerm> result = forkJoinPool.invoke(worker);
         Collections.sort(result);
         return result;
