@@ -27,7 +27,6 @@ import java.util.Locale;
 
 import opennlp.tools.chunker.Chunker;
 import opennlp.tools.postag.POSTagger;
-import opennlp.tools.util.Span;
 
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
@@ -122,7 +121,7 @@ public final class OpenNLPFilter extends TokenFilter {
     }
 
     private String[] walkTokens() throws IOException {
-        List<String> wordList = new ArrayList<String>();
+        List<String> wordList = new ArrayList<>();
         while (input.incrementToken()) {
             CharTermAttribute textAtt = input.getAttribute(CharTermAttribute.class);
             OffsetAttribute offsetAtt = input.getAttribute(OffsetAttribute.class);
