@@ -86,25 +86,25 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<String, Cooccu
 
         Cooccurrence feature = new Cooccurrence(unique.size());
         for (String ctxId : contextIds) {
-            Map<String, Integer> termsInContext = frequencyCtxBased.getTFIC(ctxId);
-
-            for (Map.Entry<String, Integer> entry : termsInContext.entrySet()) {
-                String targetTerm = entry.getKey();
+            Map<String, Integer> term2TFIC = frequencyCtxBased.getTFIC(ctxId);
+            List<String> terms = new ArrayList<>(term2TFIC.keySet());
+            for(int i=0; i<terms.size(); i++){
+                String targetTerm = terms.get(i);
                 if ((minTTF > 0 && frequencyTermBased.getTTF(targetTerm) < minTTF)
                         || (minTCF>0&& frequencyCtxBased.getContextIds(targetTerm).size() < minTCF))
                     continue;
 
-                int targetFIC = entry.getValue(); //frequency of term in this context
+                int targetFIC = term2TFIC.get(targetTerm); //frequency of term in this context
                 int targetIdx = feature.lookupAndIndex(targetTerm);
-                for (Map.Entry<String, Integer> en : termsInContext.entrySet()) {
-                    String refTerm = en.getKey();
+                for(int j=i+1; j<terms.size(); j++){
+                    String refTerm = terms.get(j);
                     if (refTerm.equals(targetTerm))
                         continue;
                     if ((minTTF > 0 && frequencyTermBased.getTTF(refTerm) < minTTF)
                             || (minTCF>0&& frequencyCtxBased.getContextIds(refTerm).size() < minTCF))
                         continue;
 
-                    int refTermFIC = en.getValue();
+                    int refTermFIC = term2TFIC.get(refTerm);
                     int refIdx = feature.lookupAndIndex(refTerm);
 
                     int coocurringFreq = targetFIC < refTermFIC ? targetFIC : refTermFIC;

@@ -96,8 +96,11 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                        /* if(term.string.equals("acutely"))
                             System.out.println();*/
                         if(term.end>sent[1]){
-                            termCursor=t;
-                            break;
+                            if(term.start>sent[1]) {
+                                termCursor = t;
+                                break;
+                            }else
+                                continue;
                         }
 
                         if(term.start>=sent[0]){ //term within sentence boundary
@@ -145,6 +148,10 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
         TermsEnum ti = termVector.iterator();
         BytesRef luceneTerm = ti.next();
         while(luceneTerm!=null){
+            if(luceneTerm.length==0) {
+                luceneTerm = ti.next();
+                continue;
+            }
             String tString =luceneTerm.utf8ToString();
            /* if(tString.equals("acutely"))
                 System.out.println();*/
@@ -184,6 +191,9 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                 return Integer.valueOf(end).compareTo(o.end);
             }
             return compare;
+        }
+        public String toString(){
+            return string+","+start;
         }
     }
 }
