@@ -49,6 +49,7 @@ public class AppTermEx extends App {
         TermEx termex = new TermEx();
         termex.registerFeature(FrequencyTermBased.class.getName(), ftb);
         termex.registerFeature(FrequencyTermBased.class.getName()+TermEx.SUFFIX_WORD, fwb);
+        //you can register multiple reference feature, as long as the key has prefix = FrequencyTermBased.class.getName()+TermEx.SUFFIX_REF
         termex.registerFeature(FrequencyTermBased.class.getName()+TermEx.SUFFIX_REF, frb);
         termex.registerFeature(FrequencyCtxBased.class.getName()+TermEx.SUFFIX_DOC, fdb);
 

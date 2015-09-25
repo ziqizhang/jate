@@ -40,6 +40,8 @@ public class FrequencyCtxDocBasedFBMaster extends AbstractFeatureBuilder {
                     TermsEnum termsEnum = terms.iterator();
                     while (termsEnum.next() != null) {
                         BytesRef t = termsEnum.term();
+                        if(t.length==0)
+                            continue;
                         allLuceneTerms.add(BytesRef.deepCopyOf(t));
                     }
                     //start workers

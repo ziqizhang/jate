@@ -6,23 +6,29 @@ import uk.ac.shef.dcs.jate.v2.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.v2.model.JATETerm;
 import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.logging.Logger;
 
 /**
- * Created by zqz on 19/09/2015.
+ * An implementation of the word weirdness algorithm applied to term recognition algorithm. See
+ * Ahmad et al 1999, <i>Surrey Participation in TREC8: Weirdness Indexing for Logical Document Extrapolation
+ * and Retrieval</i>
  */
-public class Weirdness extends Algorithm {
-
+public class Weirdness extends ReferenceBased {
+    private static final Logger LOG = Logger.getLogger(Weirdness.class.getName());
     public static final String SUFFIX_REF ="_REF";
     public static final String SUFFIX_WORD ="_WORD";
 
+    public Weirdness(){
+        super(true);
+    }
+
+    public Weirdness(boolean matchOOM){
+        super(matchOOM);
+    }
+
     @Override
     public List<JATETerm> execute(Set<String> candidates) throws JATEException {
-        candidates.remove("");
-
         AbstractFeature feature1 = features.get(FrequencyTermBased.class.getName()+SUFFIX_WORD);
         validateFeature(feature1, FrequencyTermBased.class);
         FrequencyTermBased fFeatureWords = (FrequencyTermBased) feature1;
@@ -33,6 +39,14 @@ public class Weirdness extends Algorithm {
         List<JATETerm> result = new ArrayList<>();
         boolean collectInfo = termInfoCollector != null;
         double totalWordsInCorpus = fFeatureWords.getCorpusTotal();
+
+        StringBuilder msg = new StringBuilder("Beginning computing TermEx values,");
+        msg.append(", total terms=" + candidates.size());
+        LOG.info(msg.toString());
+
+        nullWordProbInReference = setNullWordProbInReference(fFeatureRef);
+        double refScalar = matchOrdersOfMagnitude(fFeatureWords, fFeatureRef);
+
         for(String tString: candidates) {
             JATETerm term = new JATETerm(tString);
 
@@ -42,7 +56,12 @@ public class Weirdness extends Algorithm {
 
             for (int i = 0; i < T; i++) {
                 String wi = elements[i];
-                double v = (double) (fFeatureWords.getTTF(wi)+1) / totalWordsInCorpus / (fFeatureRef.getTTFNorm(wi)+1);
+                double pc_wi = fFeatureRef.getTTFNorm(wi);
+                if (pc_wi == 0)
+                    pc_wi = nullWordProbInReference; //
+                pc_wi*=refScalar;
+
+                double v = (double) fFeatureWords.getTTF(wi) / totalWordsInCorpus / pc_wi;
                 //SUMwi += Math.log((double) gFeatureStore.getWordFreq(wi) / (double) gFeatureStore.getTotalCorpusWordFreq() / gFeatureStore.getRefWordFreqNorm(wi));
                 SUMwi += Math.log(v);
             }
@@ -56,6 +75,8 @@ public class Weirdness extends Algorithm {
             }
             result.add(term);
         }
+        Collections.sort(result);
+        LOG.info("Complete");
         return result;
     }
 

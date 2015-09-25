@@ -7,15 +7,15 @@ import uk.ac.shef.dcs.jate.v2.model.JATETerm;
 import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
- * Created by zqz on 19/09/2015.
+ * tfidf modified to work at corpus level. Namely, "tf" is now "ttf"=total term frequency in the corpus
  */
 public class TFIDF extends Algorithm {
+    private static final Logger LOG = Logger.getLogger(TFIDF.class.getName());
     @Override
     public List<JATETerm> execute(Set<String> candidates) throws JATEException {
-        candidates.remove("");
-
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeature = (FrequencyTermBased) feature;
@@ -24,6 +24,9 @@ public class TFIDF extends Algorithm {
         boolean collectInfo = termInfoCollector != null;
         List<JATETerm> result = new ArrayList<>();
 
+        StringBuilder msg = new StringBuilder("Beginning computing TermEx values,");
+        msg.append(", total terms=" + candidates.size());
+        LOG.info(msg.toString());
         for (String tString: candidates) {
             JATETerm term = new JATETerm(tString);
             double tf = fFeature.getTTFNorm(tString);
@@ -38,6 +41,7 @@ public class TFIDF extends Algorithm {
             result.add(term);
         }
         Collections.sort(result);
+        LOG.info("Complete");
         return result;
     }
 }

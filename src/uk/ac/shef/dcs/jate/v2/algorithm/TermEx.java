@@ -7,14 +7,18 @@ import uk.ac.shef.dcs.jate.v2.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.v2.model.JATETerm;
 import uk.ac.shef.dcs.jate.v2.model.TermInfo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
+ * An implementation of the TermEx term recognition algorithm. See Sclano e. al 2007, <i>
+ * TermExtractor: a Web application to learn the shared terminology of emergent web communities</i>
+ * <p>
+ * In the formula w(t,Di ) =a* DR + B* DC + Y* LC, default values of a, B, and Y are 0.33.
+ * </p>
  *
+ * This is the implementation of the scoring formula <b>only</b> and does not include the analysis of document structure
+ * as discussed in the paper.
  */
 public class TermEx extends ReferenceBased{
     private static final Logger LOG = Logger.getLogger(TermEx.class.getName());
@@ -47,13 +51,23 @@ public class TermEx extends ReferenceBased{
         validateFeature(feature2, FrequencyTermBased.class);
         FrequencyTermBased fFeatureWords = (FrequencyTermBased) feature2;
 
-        AbstractFeature feature3 = features.get(FrequencyTermBased.class.getName()+ SUFFIX_REF);
-        validateFeature(feature3, FrequencyTermBased.class);
-        FrequencyTermBased fFeatureRef = (FrequencyTermBased) feature3;
-
         AbstractFeature feature4 = features.get(FrequencyCtxBased.class.getName()+SUFFIX_DOC);
         validateFeature(feature4, FrequencyCtxBased.class);
         FrequencyCtxBased fFeatureDocs = (FrequencyCtxBased) feature4;
+
+        List<FrequencyTermBased> referenceFeatures = new ArrayList<>();
+        Map<FrequencyTermBased, Double> mapNullWordProbInReference = new HashMap<>();
+        Map<FrequencyTermBased, Double> mapRefScalars = new HashMap<>();
+        for(Map.Entry<String, AbstractFeature> en: features.entrySet()){
+            if(en.getKey().startsWith(FrequencyTermBased.class.getName()+ SUFFIX_REF)){
+                validateFeature(en.getValue(), FrequencyTermBased.class);
+                FrequencyTermBased fFeatureRef = (FrequencyTermBased) en.getValue();
+                referenceFeatures.add(fFeatureRef);
+                mapNullWordProbInReference.put(fFeatureRef, setNullWordProbInReference(fFeatureRef));
+                mapRefScalars.put(fFeatureRef, matchOrdersOfMagnitude(fFeatureWords, fFeatureRef));
+            }
+        }
+
 
         List<JATETerm> result = new ArrayList<>();
         boolean collectInfo = termInfoCollector != null;
@@ -67,13 +81,28 @@ public class TermEx extends ReferenceBased{
             double SUMwi = 0.0;
             double SUMfwi = 0.0;
 
+            //the original paper looks up the term directly (tString). But in many case, technical terms
+            //are unlikely to be found in reference corpus. So we break term into component words and look up words
+            //then combine the scores
             for (int i = 0; i < T; i++) {
                 String wi = elements[i];
-                /*
-                This term is modified to ensure DP within the range of 0~1.0
-                 */
+
+                double max_freq_t_dj_norm=0;
+                FrequencyTermBased selectedRefFeature=referenceFeatures.get(0);
+                for(FrequencyTermBased refFeature: referenceFeatures){
+                    double freqNorm=refFeature.getTTFNorm(wi);
+                    if(freqNorm>max_freq_t_dj_norm){
+                        max_freq_t_dj_norm=freqNorm;
+                        selectedRefFeature=refFeature;
+                    }
+                }
+                if (max_freq_t_dj_norm == 0)
+                    max_freq_t_dj_norm = mapNullWordProbInReference.get(selectedRefFeature);
+                double refScalar = mapRefScalars.get(selectedRefFeature);
+                max_freq_t_dj_norm*=refScalar;
+
                 SUMwi += (double) fFeatureWords.getTTF(wi) / totalWordsInCorpus /
-                        (fFeatureRef.getTTFNorm(wi) + ((double) fFeatureWords.getTTF(wi) / totalWordsInCorpus));
+                        max_freq_t_dj_norm;
                 SUMfwi += (double) fFeatureWords.getTTF(wi);
             }
 
@@ -90,7 +119,7 @@ public class TermEx extends ReferenceBased{
                 }
             }
 
-            double DP = SUMwi;
+            double DP = SUMwi; //this term has been changed to ensure they are in the range of 0 and 1
             double DC = sum;
             double LC = (T * Math.log(fFeatureTerms.getTTF(tString) + 1) * fFeatureTerms.getTTF(tString)) / SUMfwi;
 
