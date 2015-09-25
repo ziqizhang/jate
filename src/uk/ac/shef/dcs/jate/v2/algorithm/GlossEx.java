@@ -11,6 +11,17 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * An implementation of the GlossEx term recognition algorithm. See Park, et. al 2002, <i>
+ * Automatic Glossary Extraction: beyond terminology identification</i>
+ *. This is the implementation of the scoring formula <b>only</b>, and does not include the filtering algorithm as mentioned
+ * in the paper.
+ * <p>
+ * In the equation C(T) = a* TD(T) + B*TC(T), default a=0.2, B = 0.8.
+ * </p>
+ *
+ * You might need to modify the value of B by increasing it substaintially when the reference corpus is relatively
+ * much bigger than the target corpus, such as the BNC corpus. For details, please refer to the paper.
+ *
  */
 public class GlossEx extends Algorithm {
     protected final double _alpha;
@@ -29,8 +40,6 @@ public class GlossEx extends Algorithm {
     }
 
     public List<JATETerm> execute(Set<String> candidates) throws JATEException {
-        candidates.remove("");
-
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeatureTerms = (FrequencyTermBased) feature;
