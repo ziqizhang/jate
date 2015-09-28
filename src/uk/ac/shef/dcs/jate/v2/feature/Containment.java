@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by zqz on 17/09/2015.
+ *
  */
 public class Containment extends AbstractFeature {
     private Map<String, Set<String>> term2Parents = new ConcurrentHashMap<>();

@@ -75,7 +75,7 @@ public final class OpenNLPFilter extends TokenFilter {
     public OpenNLPFilter(
             TokenStream input,
             POSTagger posTaggerOp,
-            Chunker chunkerOp) throws IOException {
+            Chunker chunkerOp){
         super(input);
         this.posTaggerOp = posTaggerOp;
         this.chunkerOp = chunkerOp;

@@ -27,6 +27,8 @@ import opennlp.tools.util.Span;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.util.AttributeFactory;
+import org.apache.sis.util.iso.AbstractFactory;
 
 /**
  * Run OpenNLP SentenceDetector and Tokenizer.
@@ -51,9 +53,8 @@ public final class OpenNLPTokenizer extends Tokenizer {
     private SentenceDetector sentenceOp = null;
     private opennlp.tools.tokenize.Tokenizer tokenizerOp = null;
 
-    public OpenNLPTokenizer(Reader input, SentenceDetector sentenceOp, opennlp.tools.tokenize.Tokenizer tokenizerOp, boolean splitPunctuation) throws IOException {
-        //todo not sure how to adapt this
-        //super(input);
+    public OpenNLPTokenizer(AttributeFactory factory, SentenceDetector sentenceOp, opennlp.tools.tokenize.Tokenizer tokenizerOp){
+        super(factory);
         termAtt.resizeBuffer(DEFAULT_BUFFER_SIZE);
         if (sentenceOp == null && tokenizerOp == null) {
             throw new IllegalArgumentException("OpenNLPTokenizer: need one or both of Sentence Detector and Tokenizer");
