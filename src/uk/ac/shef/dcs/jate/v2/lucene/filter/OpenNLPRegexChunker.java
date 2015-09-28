@@ -46,7 +46,6 @@ public class OpenNLPRegexChunker extends TokenFilter {
 
     @Override
     public boolean incrementToken() throws IOException {
-        clearAttributes();
         if (first) {
             //gather all tokens from doc
             String[] words = walkTokens();
@@ -70,16 +69,12 @@ public class OpenNLPRegexChunker extends TokenFilter {
             return false;
         }
 
-        if(chunkSpans.containsKey(tokenIdx)) { //at the beginning of a new chunk
-            chunkStart=tokenIdx;
-            chunkEnd=chunkSpans.get(tokenIdx);
-            tokenIdx++;
-            return true;
-        }else if(chunkStart!=-1&& tokenIdx==chunkEnd){  //already found a new chunk and now we found its end
+        if(chunkStart!=-1&& tokenIdx==chunkEnd){  //already found a new chunk and now we found its end
+            clearAttributes();
             AttributeSource start = tokenAttrs.get(chunkStart);
-            AttributeSource end=tokenAttrs.get(chunkEnd);
+            AttributeSource end=tokenAttrs.get(chunkEnd-1);
             StringBuilder phrase=new StringBuilder();
-            for(int i=chunkStart; i<chunkEnd; i++){
+            for(int i=chunkStart; i<=chunkEnd-1; i++){
                 phrase.append(tokenAttrs.get(i).getAttribute(CharTermAttribute.class).buffer()).append(" ");
             }
             termAtt.setEmpty().append(phrase.toString().trim());
@@ -87,10 +82,18 @@ public class OpenNLPRegexChunker extends TokenFilter {
                     end.getAttribute(OffsetAttribute.class).endOffset());
             typeAtt.setType(chunkTypes.get(chunkStart));
 
+            chunkStart=-1;
+            chunkEnd=-1;
+            //do not increment token index here because end span is exclusive
+            return true;
+        }
+        if(chunkSpans.containsKey(tokenIdx)) { //at the beginning of a new chunk
+            chunkStart=tokenIdx;
+            chunkEnd=chunkSpans.get(tokenIdx);
             tokenIdx++;
             return true;
-
-        }else{ //a token that is not part of a chunk
+        }
+        else{ //a token that is not part of a chunk
             tokenIdx++;
             return true;
         }
