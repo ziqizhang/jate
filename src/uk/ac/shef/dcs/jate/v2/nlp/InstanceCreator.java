@@ -8,11 +8,20 @@ import java.lang.reflect.InvocationTargetException;
  * Created by zqz on 24/09/2015.
  */
 public class InstanceCreator {
-    public static SentenceSplitter create(String className, String params)
+    public static SentenceSplitter createSentenceSplitter(String className, String params)
             throws ClassNotFoundException, NoSuchMethodException,
             IllegalAccessException, InvocationTargetException, InstantiationException {
         if(className.equals(SentenceSplitterOpenNLP.class.getName())){
             return (SentenceSplitter) Class.forName(className).getDeclaredConstructor(String.class).newInstance(params);
+        }
+        return null;
+    }
+
+    public static POSTagger createPOSTagger(String className, String params)
+            throws ClassNotFoundException, NoSuchMethodException,
+            IllegalAccessException, InvocationTargetException, InstantiationException {
+        if(className.equals(SentenceSplitterOpenNLP.class.getName())){
+            return (POSTagger) Class.forName(className).getDeclaredConstructor(String.class).newInstance(params);
         }
         return null;
     }

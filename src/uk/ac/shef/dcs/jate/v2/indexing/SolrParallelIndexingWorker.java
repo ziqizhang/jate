@@ -45,7 +45,7 @@ public class SolrParallelIndexingWorker extends JATERecursiveTaskWorker<String, 
                 !properties.getSolrFieldnameJATESentencesAll().equals("");
         if(indexJATESentences) {
             try {
-                sentenceSplitter = InstanceCreator.create(properties.getSentenceSplitterClass(),
+                sentenceSplitter = InstanceCreator.createSentenceSplitter(properties.getSentenceSplitterClass(),
                         properties.getSentenceSplitterParams());
             }catch (Exception e){
                 StringBuilder msg = new StringBuilder("Cannot instantiate NLP sentence splitter, which will be null. Error trace:\n");

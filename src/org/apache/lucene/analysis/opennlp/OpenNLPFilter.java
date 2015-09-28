@@ -51,8 +51,7 @@ import org.apache.lucene.util.BytesRef;
  * hack #1: EN POS tagger sometimes tags last word as a period if no period at the end
  * hack #2: tokenizer needs to split words with punctuation and it doesn't
  */
-public final class OpenNLPFilter extends TokenFilter {
-
+public class OpenNLPFilter extends TokenFilter {
     // TODO: if there's an ICU for this, that's great
     private static String SENTENCE_BREAK = "[.?!]";
 
@@ -191,7 +190,8 @@ public final class OpenNLPFilter extends TokenFilter {
     }
 
     @Override
-    public final void end() {
+    public final void end() throws IOException {
+        super.end();
         clearAttributes();
         OffsetAttribute offsetAtt = getAttribute(OffsetAttribute.class);
         offsetAtt.setOffset(finalOffset, finalOffset);
