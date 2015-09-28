@@ -30,7 +30,7 @@ public class OpenNLPRegexChunkerFactory extends TokenFilterFactory {
      *
      * @param args
      */
-    protected OpenNLPRegexChunkerFactory(Map<String, String> args) {
+    public OpenNLPRegexChunkerFactory(Map<String, String> args) {
         super(args);
         String taggerClass = args.get("posTaggerClass");
         if (taggerClass == null)
@@ -68,7 +68,7 @@ public class OpenNLPRegexChunkerFactory extends TokenFilterFactory {
             LineIterator li = FileUtils.lineIterator(f);
             while(li.hasNext()){
                 String lineStr=li.next();
-                String[] parts = lineStr.split("\t",1);
+                String[] parts = lineStr.split("\t",2);
                 List<Pattern> pats = m.get(parts[0]);
                 if(pats==null)
                     pats=new ArrayList<>();
