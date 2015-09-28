@@ -46,6 +46,7 @@ public class OpenNLPRegexChunker extends TokenFilter {
 
     @Override
     public boolean incrementToken() throws IOException {
+        clearAttributes();
         if (first) {
             //gather all tokens from doc
             String[] words = walkTokens();
@@ -70,7 +71,6 @@ public class OpenNLPRegexChunker extends TokenFilter {
         }
 
         if(chunkStart!=-1&& tokenIdx==chunkEnd){  //already found a new chunk and now we found its end
-            clearAttributes();
             AttributeSource start = tokenAttrs.get(chunkStart);
             AttributeSource end=tokenAttrs.get(chunkEnd-1);
             StringBuilder phrase=new StringBuilder();

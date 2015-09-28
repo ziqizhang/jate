@@ -239,10 +239,10 @@
 				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
 				<filter class="solr.LowerCaseFilterFactory" />
 				<filter class="solr.ShingleFilterFactory" minShingleSize="2" maxShingleSize="3"
-						outputUnigrams="true" outputUnigramsIfNoShingles="false" tokenSeparator=" "/>
+						outputUnigrams="false" outputUnigramsIfNoShingles="false" tokenSeparator=" "/>
 				<filter class="solr.PatternReplaceFilterFactory" pattern=".*_.*" replacement=""/>
 			</analyzer>
-		</fieldType -->
+		</fieldType-->
 		<!-- A text field for terminology recognition. Any text put into this field will be
 			processed by JATE to extract candidate terms. 
 			This is an example fieldType definition that extracts phrases based on POS patterns as candidates -->
@@ -257,7 +257,6 @@
 							patterns="D:/Work/jate_github/jate/jate.candidate.patterns"/>
 				<filter class="solr.LowerCaseFilterFactory" />				
 			</analyzer>
-			<!-- no analyzer for query-->
 		</fieldType>
 		<!-- A text field for terminology recognition. Any text put into this field will be
 			processed by JATE to extract words. This is used by some algorithms, such as 
