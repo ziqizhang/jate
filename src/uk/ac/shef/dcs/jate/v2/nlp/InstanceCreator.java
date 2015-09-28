@@ -1,5 +1,6 @@
 package uk.ac.shef.dcs.jate.v2.nlp;
 
+import uk.ac.shef.dcs.jate.v2.nlp.opennlp.POSTaggerOpenNLP;
 import uk.ac.shef.dcs.jate.v2.nlp.opennlp.SentenceSplitterOpenNLP;
 
 import java.lang.reflect.InvocationTargetException;
@@ -20,7 +21,7 @@ public class InstanceCreator {
     public static POSTagger createPOSTagger(String className, String params)
             throws ClassNotFoundException, NoSuchMethodException,
             IllegalAccessException, InvocationTargetException, InstantiationException {
-        if(className.equals(SentenceSplitterOpenNLP.class.getName())){
+        if(className.equals(POSTaggerOpenNLP.class.getName())){
             return (POSTagger) Class.forName(className).getDeclaredConstructor(String.class).newInstance(params);
         }
         return null;

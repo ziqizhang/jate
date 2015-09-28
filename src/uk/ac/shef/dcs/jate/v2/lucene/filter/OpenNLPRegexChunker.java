@@ -43,14 +43,6 @@ public class OpenNLPRegexChunker extends TokenFilter {
         this.posTagger = posTaggerOp;
         regexChunker=new RegexNameFinder(patterns);
     }
-    /**
-     * Construct a token stream filtering the given input.
-     *
-     * @param input
-     */
-    protected OpenNLPRegexChunker(TokenStream input) {
-        super(input);
-    }
 
     @Override
     public boolean incrementToken() throws IOException {
