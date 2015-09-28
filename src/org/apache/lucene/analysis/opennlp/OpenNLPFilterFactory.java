@@ -6,14 +6,8 @@ import opennlp.tools.chunker.ChunkerModel;
 import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTagger;
 import opennlp.tools.postag.POSTaggerME;
-import opennlp.tools.sentdetect.SentenceDetectorME;
-import opennlp.tools.sentdetect.SentenceModel;
-import opennlp.tools.tokenize.TokenizerME;
-import opennlp.tools.tokenize.TokenizerModel;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.util.TokenFilterFactory;
 
 import java.io.File;
@@ -32,25 +26,29 @@ public class OpenNLPFilterFactory extends TokenFilterFactory {
      *
      * @param args
      */
-    protected OpenNLPFilterFactory(Map<String, String> args) {
+    public OpenNLPFilterFactory(Map<String, String> args) {
         super(args);
         String posModel = args.get("posTaggerModel");
         String chunkModel =args.get("chunkerModel");
-        try{
-            posTaggerOp = new POSTaggerME(new POSModel(new File(posModel)));
-        }catch (Exception e){
-            StringBuilder msg = new StringBuilder("Required parameter invalid:");
-            msg.append("posTaggerModel=").append(posModel).append("\n");
-            msg.append(ExceptionUtils.getFullStackTrace(e));
-            throw new IllegalArgumentException(msg.toString());
+        if(posModel!=null) {
+            try {
+                posTaggerOp = new POSTaggerME(new POSModel(new File(posModel)));
+            } catch (IOException e) {
+                StringBuilder msg = new StringBuilder("Required parameter invalid:");
+                msg.append("posTaggerModel=").append(posModel).append("\n");
+                msg.append(ExceptionUtils.getFullStackTrace(e));
+                throw new IllegalArgumentException(msg.toString());
+            }
         }
-        try{
-            chunkerOp = new ChunkerME(new ChunkerModel(new File(chunkModel)));
-        }catch (Exception e){
-            StringBuilder msg = new StringBuilder("Required parameter invalid:");
-            msg.append("chunkerModel=").append(posModel).append("\n");
-            msg.append(ExceptionUtils.getFullStackTrace(e));
-            throw new IllegalArgumentException(msg.toString());
+        if(chunkModel!=null) {
+            try {
+                chunkerOp = new ChunkerME(new ChunkerModel(new File(chunkModel)));
+            } catch (IOException e) {
+                StringBuilder msg = new StringBuilder("Required parameter invalid:");
+                msg.append("chunkerModel=").append(posModel).append("\n");
+                msg.append(ExceptionUtils.getFullStackTrace(e));
+                throw new IllegalArgumentException(msg.toString());
+            }
         }
     }
 
