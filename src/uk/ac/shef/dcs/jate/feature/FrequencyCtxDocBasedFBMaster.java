@@ -55,7 +55,7 @@ public class FrequencyCtxDocBasedFBMaster extends AbstractFeatureBuilder {
             FrequencyCtxDocBasedFBWorker worker = new
                     FrequencyCtxDocBasedFBWorker(properties, allLuceneTerms,
                     indexReader, properties.getFeatureBuilderMaxTermsPerWorker(), targetField,
-                    info.iterator());
+                    info);
             ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
             feature = forkJoinPool.invoke(worker);
             StringBuilder sb = new StringBuilder("Complete building features. Total=");

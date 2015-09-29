@@ -24,6 +24,7 @@ import java.util.Arrays;
 import opennlp.tools.sentdetect.SentenceDetector;
 import opennlp.tools.util.Span;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -149,7 +150,8 @@ public final class OpenNLPTokenizer extends Tokenizer {
     }
 
     void fillBuffer() throws IOException {
-        int offset = 0;
+        fullText= IOUtils.toCharArray(input);
+        /*int offset = 0;
         int size = 10000;
         fullText = new char[size];
         int length = input.read(fullText);
@@ -159,7 +161,7 @@ public final class OpenNLPTokenizer extends Tokenizer {
             offset += size;
             length = input.read(fullText, offset, size);
         }
-        fullText = Arrays.copyOf(fullText, offset + length);
+        fullText = Arrays.copyOf(fullText, offset + length);*/
     }
 
     @Override

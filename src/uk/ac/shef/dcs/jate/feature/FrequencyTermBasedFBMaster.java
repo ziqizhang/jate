@@ -35,8 +35,8 @@ public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
         try {
             Fields fields = MultiFields.getFields(indexReader);
 
-            Terms info = fields.terms(properties.getSolrFieldnameJATENGramInfo());
-            if (info == null)
+            Terms ngramInfo = fields.terms(properties.getSolrFieldnameJATENGramInfo());
+            if (ngramInfo == null)
                 throw new JATEException("Cannot find expected field: " + properties.getSolrFieldnameJATENGramInfo());
             Terms terms = fields.terms(targetField);
             if (terms == null)
@@ -63,7 +63,7 @@ public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
                     FrequencyTermBasedFBWorker(properties, allLuceneTerms,
                     indexReader, feature, properties.getFeatureBuilderMaxTermsPerWorker(),
                     targetField,
-                    info.iterator());
+                    ngramInfo);
             ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
             int[] total = forkJoinPool.invoke(worker);
             sb = new StringBuilder("Complete building features. Total=");

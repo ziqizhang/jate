@@ -20,23 +20,23 @@ public class FrequencyCtxDocBasedFBWorker extends JATERecursiveTaskWorker<BytesR
     private JATEProperties properties;
     private IndexReader index;
     private String targetField;
-    private TermsEnum candidateInfoFieldIterator;
+    private Terms ngramInfo;
 
     FrequencyCtxDocBasedFBWorker(JATEProperties properties, List<BytesRef> luceneTerms, IndexReader index,
                                  int maxTasksPerWorker,
                                  String targetField,
-                                 TermsEnum candidateInfoFieldIterator) {
+                                 Terms ngramInfo) {
         super(luceneTerms, maxTasksPerWorker);
         this.properties = properties;
         this.index = index;
         this.targetField = targetField;
-        this.candidateInfoFieldIterator=candidateInfoFieldIterator;
+        this.ngramInfo =ngramInfo;
     }
 
     @Override
     protected JATERecursiveTaskWorker<BytesRef, FrequencyCtxBased> createInstance(List<BytesRef> termSplits) {
         return new FrequencyCtxDocBasedFBWorker(properties, termSplits, index, maxTasksPerThread,
-                targetField, candidateInfoFieldIterator);
+                targetField, ngramInfo);
     }
 
     @Override
@@ -65,24 +65,37 @@ public class FrequencyCtxDocBasedFBWorker extends JATERecursiveTaskWorker<BytesR
     @Override
     protected FrequencyCtxBased computeSingleWorker(List<BytesRef> terms) {
         FrequencyCtxBased feature = new FrequencyCtxBased();
-        for (BytesRef luceneTerm : terms) {
-            try {
-                if(candidateInfoFieldIterator.seekExact(luceneTerm)){
-                    PostingsEnum docEnum = candidateInfoFieldIterator.postings(null);
-                    int doc = 0;
-                    while ((doc = docEnum.nextDoc()) != PostingsEnum.NO_MORE_DOCS) {
-                        int tfid = docEnum.freq();  //tf in document
-                        String docId = String.valueOf(doc);
-                        feature.increment(docId, tfid);
-                        feature.increment(docId, luceneTerm.utf8ToString(), tfid);
+        TermsEnum ngramInfoIterator;
+        try {
+            ngramInfoIterator = ngramInfo.iterator();
+            for (BytesRef luceneTerm : terms) {
+                try {
+                    if (ngramInfoIterator.seekExact(luceneTerm)) {
+                        PostingsEnum docEnum = ngramInfoIterator.postings(null);
+                        int doc = 0;
+                        while ((doc = docEnum.nextDoc()) != PostingsEnum.NO_MORE_DOCS) {
+                            int tfid = docEnum.freq();  //tf in document
+                            String docId = String.valueOf(doc);
+                            feature.increment(docId, tfid);
+                            feature.increment(docId, luceneTerm.utf8ToString(), tfid);
+                        }
+                    }else {
+                        StringBuilder msg = new StringBuilder(luceneTerm.utf8ToString());
+                        msg.append(" is a candidate term, but not indexed in the n-gram information field. It's score may be mis-computed.");
+                        msg.append(" (You may have used different text analysis process (e.g., different tokenizers) for the two fields.) ");
+                        LOG.warning(msg.toString());
                     }
+                } catch (IOException ioe) {
+                    StringBuilder sb = new StringBuilder("Unable to build feature for candidate:");
+                    sb.append(luceneTerm.utf8ToString()).append("\n");
+                    sb.append(ExceptionUtils.getFullStackTrace(ioe));
+                    LOG.severe(sb.toString());
                 }
-            } catch (IOException ioe) {
-                StringBuilder sb = new StringBuilder("Unable to build feature for candidate:");
-                sb.append(luceneTerm.utf8ToString()).append("\n");
-                sb.append(ExceptionUtils.getFullStackTrace(ioe));
-                LOG.severe(sb.toString());
             }
+        } catch (IOException e) {
+            StringBuilder sb = new StringBuilder("Unable to read ngram information field:");
+            sb.append(ExceptionUtils.getFullStackTrace(e));
+            LOG.severe(sb.toString());
         }
         return feature;
     }

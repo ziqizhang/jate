@@ -84,7 +84,6 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
         for (int docId : docIds) {
             count++;
             try {
-
                 Terms lookupVector = indexReader.getTermVector(docId, properties.getSolrFieldnameJATENGramInfo());
                 if (lookupVector == null)
                     throw new JATEException("Required term vector in field but missing:");
