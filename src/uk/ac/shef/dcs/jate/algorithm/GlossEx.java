@@ -59,7 +59,6 @@ public class GlossEx extends ReferenceBased {
         double refScalar = matchOrdersOfMagnitude(fFeatureWords, fFeatureRef);
 
         List<JATETerm> result = new ArrayList<>();
-        boolean collectInfo = termInfoCollector != null;
         double totalWordsInCorpus = fFeatureWords.getCorpusTotal();
         LOG.info("Calculating GlossEx for "+candidates.size()+" candidate terms.");
         for (String tString : candidates) {
@@ -87,10 +86,7 @@ public class GlossEx extends ReferenceBased {
             else score = alpha * TD + beta * TC;
 
             JATETerm term = new JATETerm(tString, score);
-            if (collectInfo) {
-                TermInfo termInfo = termInfoCollector.collect(tString);
-                term.setTermInfo(termInfo);
-            }
+
             result.add(term);
         }
 

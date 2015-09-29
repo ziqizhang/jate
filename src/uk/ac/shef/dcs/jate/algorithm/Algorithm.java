@@ -15,14 +15,9 @@ import java.util.Set;
 public abstract class Algorithm {
 
     protected Map<String, AbstractFeature> features = new HashMap<>();
-    protected TermInfoCollector termInfoCollector;
 
     public void registerFeature(String featureClassName, AbstractFeature feature){
         features.put(featureClassName, feature);
-    }
-
-    public void setTermInfoCollector(TermInfoCollector tiCollector){
-        this.termInfoCollector=tiCollector;
     }
 
     public abstract List<JATETerm> execute(Set<String> candidates) throws JATEException;

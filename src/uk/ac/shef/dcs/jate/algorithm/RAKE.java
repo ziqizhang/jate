@@ -31,8 +31,6 @@ public class RAKE extends Algorithm {
         Cooccurrence fFeatureCoocurr = (Cooccurrence) ccFeature;
 
         List<JATETerm> result = new ArrayList<>();
-        boolean collectInfo = termInfoCollector != null;
-
         Set<String> cooccurrenceDictionary = fFeatureCoocurr.getTerms();
         StringBuilder msg = new StringBuilder("Beginning computing RAKE values,");
         msg.append(", total terms=" + candidates.size());
@@ -54,10 +52,6 @@ public class RAKE extends Algorithm {
             }
 
             JATETerm term = new JATETerm(tString, score);
-            if (collectInfo) {
-                TermInfo termInfo = termInfoCollector.collect(tString);
-                term.setTermInfo(termInfo);
-            }
             result.add(term);
         }
 

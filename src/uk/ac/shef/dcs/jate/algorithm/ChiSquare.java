@@ -48,8 +48,8 @@ public class ChiSquare extends Algorithm {
                 append(" max terms per worker thread=").append(maxPerWorker);
         LOG.info(msg.toString());
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
-        ChiSquareWorker worker = new ChiSquareWorker(new ArrayList<>(candidates), maxPerWorker, fFeatureTerms, fFeatureCtxBased, fFeatureCoocurr,
-                termInfoCollector);
+        ChiSquareWorker worker = new ChiSquareWorker(new ArrayList<>(candidates), maxPerWorker, fFeatureTerms, fFeatureCtxBased, fFeatureCoocurr
+                );
         List<JATETerm> result = forkJoinPool.invoke(worker);
         Collections.sort(result);
         LOG.info("Complete");

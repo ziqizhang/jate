@@ -22,7 +22,6 @@ public class RIDF extends Algorithm{
         FrequencyTermBased fFeature = (FrequencyTermBased) feature;
 
         double totalDocs = (double) fFeature.getTotalDocs();
-        boolean collectInfo=termInfoCollector!=null;
         List<JATETerm> result = new ArrayList<>();
 
         StringBuilder msg = new StringBuilder("Beginning computing RIDF values,");
@@ -41,10 +40,6 @@ public class RIDF extends Algorithm{
             }
             double ridf = Math.log(nominator / denominator) / Math.log(2.0);
             term.setScore(ridf);
-            if(collectInfo){
-                TermInfo termInfo =termInfoCollector.collect(tString);
-                term.setTermInfo(termInfo);
-            }
             result.add(term);
         }
         Collections.sort(result);

@@ -14,7 +14,6 @@ class NCValueWorker extends JATERecursiveTaskWorker<String, List<JATETerm>>{
 
     protected FrequencyTermBased fFeature;
     protected Containment cFeature;
-    protected TermInfoCollector termInfoCollector;
     protected Cooccurrence ccFeature;
     protected double weightCValue;
     protected double weightContext;
@@ -22,13 +21,11 @@ class NCValueWorker extends JATERecursiveTaskWorker<String, List<JATETerm>>{
                          FrequencyTermBased fFeature,
                          Containment cFeature,
                          Cooccurrence ccFeature,
-                         TermInfoCollector termInfoCollector,
                          double weightCValue, double weightContext) {
         super(tasks, maxTasksPerWorker);
         this.fFeature=fFeature;
         this.cFeature=cFeature;
         this.ccFeature=ccFeature;
-        this.termInfoCollector=termInfoCollector;
         this.weightCValue=weightCValue;
         this.weightContext=weightContext;
     }
@@ -37,7 +34,7 @@ class NCValueWorker extends JATERecursiveTaskWorker<String, List<JATETerm>>{
     protected JATERecursiveTaskWorker<String, List<JATETerm>> createInstance(List<String> candidates) {
         return new NCValueWorker(candidates,maxTasksPerThread,
                 fFeature, cFeature, ccFeature,
-                termInfoCollector, weightCValue, weightContext);
+                weightCValue, weightContext);
     }
 
     @Override
@@ -96,10 +93,6 @@ class NCValueWorker extends JATERecursiveTaskWorker<String, List<JATETerm>>{
             }
 
             JATETerm jTerm = new JATETerm(term, cvalue*weightCValue+ctxScore*weightContext);
-            if (termInfoCollector!=null) {
-                TermInfo termInfo = termInfoCollector.collect(term);
-                jTerm.setTermInfo(termInfo);
-            }
             result.add(jTerm);
         }
         return result;

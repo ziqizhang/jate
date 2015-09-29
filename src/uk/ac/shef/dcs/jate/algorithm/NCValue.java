@@ -54,7 +54,7 @@ public class NCValue extends Algorithm {
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
         NCValueWorker worker = new NCValueWorker(new ArrayList<>(candidates), maxPerWorker, fFeature,
                 cFeature,fFeatureCoocurr,
-                termInfoCollector, weightCValue, weightContext);
+                weightCValue, weightContext);
         List<JATETerm> result = forkJoinPool.invoke(worker);
         Collections.sort(result);
         LOG.info("Complete");

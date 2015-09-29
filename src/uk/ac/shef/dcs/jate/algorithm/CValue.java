@@ -43,8 +43,8 @@ public class CValue extends Algorithm {
         LOG.info(msg.toString());
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
         CValueWorker worker = new CValueWorker(new ArrayList<>(candidates), maxPerWorker, fFeature,
-                cFeature,
-                termInfoCollector);
+                cFeature
+                );
         List<JATETerm> result = forkJoinPool.invoke(worker);
         Collections.sort(result);
         LOG.info("Complete");

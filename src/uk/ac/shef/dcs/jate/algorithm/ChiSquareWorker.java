@@ -14,25 +14,22 @@ import java.util.*;
 class ChiSquareWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> {
     protected FrequencyCtxBased fFeatureCtxBased;
     protected Cooccurrence fFeatureCoocurr;
-    protected TermInfoCollector termInfoCollector;
     protected FrequencyTermBased fFeatureTerms;
 
     public ChiSquareWorker(List<String> terms, int maxTasksPerWorker,
                            FrequencyTermBased frequencyTermBased,
-                           FrequencyCtxBased fFeatureCtxBased, Cooccurrence fFeatureCoocurr,
-                           TermInfoCollector termInfoCollector) {
+                           FrequencyCtxBased fFeatureCtxBased, Cooccurrence fFeatureCoocurr) {
         super(terms, maxTasksPerWorker);
         this.fFeatureTerms = frequencyTermBased;
         this.fFeatureCoocurr = fFeatureCoocurr;
         this.fFeatureCtxBased = fFeatureCtxBased;
-        this.termInfoCollector = termInfoCollector;
     }
 
     @Override
     protected JATERecursiveTaskWorker<String, List<JATETerm>> createInstance(List<String> terms) {
         return new ChiSquareWorker(terms, maxTasksPerThread,
-                fFeatureTerms, fFeatureCtxBased, fFeatureCoocurr,
-                termInfoCollector);
+                fFeatureTerms, fFeatureCtxBased, fFeatureCoocurr
+                );
     }
 
     @Override
@@ -98,10 +95,6 @@ class ChiSquareWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> {
 
             double score = sumChiSquare_w - maxChiSquare;
             JATETerm term = new JATETerm(tString, score);
-            if (termInfoCollector != null) {
-                TermInfo termInfo = termInfoCollector.collect(tString);
-                term.setTermInfo(termInfo);
-            }
             result.add(term);
         }
         return result;

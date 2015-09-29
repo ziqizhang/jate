@@ -21,7 +21,6 @@ public class TFIDF extends Algorithm {
         FrequencyTermBased fFeature = (FrequencyTermBased) feature;
 
         double totalDocs = (double) fFeature.getTotalDocs();
-        boolean collectInfo = termInfoCollector != null;
         List<JATETerm> result = new ArrayList<>();
 
         StringBuilder msg = new StringBuilder("Beginning computing TermEx values,");
@@ -34,10 +33,6 @@ public class TFIDF extends Algorithm {
             double idf = Math.log(totalDocs / df);
 
             term.setScore(tf * idf);
-            if (collectInfo) {
-                TermInfo termInfo = termInfoCollector.collect(tString);
-                term.setTermInfo(termInfo);
-            }
             result.add(term);
         }
         Collections.sort(result);

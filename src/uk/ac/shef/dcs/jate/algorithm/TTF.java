@@ -19,7 +19,6 @@ public class TTF extends Algorithm {
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeature = (FrequencyTermBased) feature;
-        boolean collectInfo=termInfoCollector!=null;
         List<JATETerm> result = new ArrayList<>();
 
         StringBuilder msg = new StringBuilder("Beginning computing TermEx values,");
@@ -28,10 +27,6 @@ public class TTF extends Algorithm {
         for(String tString: candidates){
             JATETerm term = new JATETerm(tString, (double)fFeature.getTTF(tString));
 
-            if(collectInfo){
-                TermInfo termInfo =termInfoCollector.collect(tString);
-                term.setTermInfo(termInfo);
-            }
             result.add(term);
         }
         Collections.sort(result);

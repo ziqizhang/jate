@@ -70,7 +70,6 @@ public class TermEx extends ReferenceBased{
 
 
         List<JATETerm> result = new ArrayList<>();
-        boolean collectInfo = termInfoCollector != null;
         double totalWordsInCorpus = fFeatureWords.getCorpusTotal();
         StringBuilder msg = new StringBuilder("Beginning computing TermEx values,");
         msg.append(", total terms=" + candidates.size());
@@ -126,10 +125,6 @@ public class TermEx extends ReferenceBased{
             //System.out.println(DR+"------"+DC+"------"+LC);
             double score = alpha * DP + beta * DC + zeta * LC;
             JATETerm term = new JATETerm(tString, score);
-            if (collectInfo) {
-                TermInfo termInfo = termInfoCollector.collect(tString);
-                term.setTermInfo(termInfo);
-            }
             result.add(term);
         }
 

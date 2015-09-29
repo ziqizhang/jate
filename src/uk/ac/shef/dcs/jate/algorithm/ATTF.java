@@ -22,7 +22,6 @@ public class ATTF extends Algorithm{
         validateFeature(feature, FrequencyTermBased.class);
 
         FrequencyTermBased fFeature = (FrequencyTermBased) feature;
-        boolean collectInfo=termInfoCollector!=null;
         List<JATETerm> result = new ArrayList<>();
         for(String tString: candidates){
             Integer ttf = fFeature.getTTF(tString);
@@ -34,10 +33,6 @@ public class ATTF extends Algorithm{
                 score = (double)ttf/docFrequency;
             JATETerm term = new JATETerm(tString, score);
 
-            if(collectInfo){
-                TermInfo termInfo =termInfoCollector.collect(tString);
-                term.setTermInfo(termInfo);
-            }
             result.add(term);
         }
         Collections.sort(result);

@@ -37,7 +37,6 @@ public class Weirdness extends ReferenceBased {
         validateFeature(feature2, FrequencyTermBased.class);
         FrequencyTermBased fFeatureRef = (FrequencyTermBased) feature2;
         List<JATETerm> result = new ArrayList<>();
-        boolean collectInfo = termInfoCollector != null;
         double totalWordsInCorpus = fFeatureWords.getCorpusTotal();
 
         StringBuilder msg = new StringBuilder("Beginning computing TermEx values,");
@@ -69,10 +68,6 @@ public class Weirdness extends ReferenceBased {
             double TD = SUMwi / T;
             term.setScore(TD);
 
-            if (collectInfo) {
-                TermInfo termInfo = termInfoCollector.collect(tString);
-                term.setTermInfo(termInfo);
-            }
             result.add(term);
         }
         Collections.sort(result);

@@ -16,21 +16,19 @@ import java.util.Set;
 class CValueWorker extends JATERecursiveTaskWorker<String, List<JATETerm>>{
     protected FrequencyTermBased fFeature;
     protected Containment cFeature;
-    protected TermInfoCollector termInfoCollector;
 
     public CValueWorker(List<String> tasks, int maxTasksPerWorker,
-                        FrequencyTermBased fFeature, Containment cFeature,
-                        TermInfoCollector termInfoCollector) {
+                        FrequencyTermBased fFeature, Containment cFeature
+                        ) {
         super(tasks, maxTasksPerWorker);
         this.fFeature=fFeature;
         this.cFeature=cFeature;
-        this.termInfoCollector=termInfoCollector;
     }
 
     @Override
     protected JATERecursiveTaskWorker<String, List<JATETerm>> createInstance(List<String> candidates) {
-        return new CValueWorker(candidates, maxTasksPerThread, fFeature, cFeature,
-                termInfoCollector);
+        return new CValueWorker(candidates, maxTasksPerThread, fFeature, cFeature
+                );
     }
 
     @Override
@@ -65,10 +63,6 @@ class CValueWorker extends JATERecursiveTaskWorker<String, List<JATETerm>>{
             score = pTa == 0 ? log2a * freqa : log2a * (freqa - (sumFreqb / pTa));
             term.setScore(score);
 
-            if (termInfoCollector!=null) {
-                TermInfo termInfo = termInfoCollector.collect(tString);
-                term.setTermInfo(termInfo);
-            }
             result.add(term);
         }
         return result;
