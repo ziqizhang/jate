@@ -156,10 +156,15 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                 luceneTerm = ti.next();
                 continue;
             }
+
+            if(!candidateInfoFieldIterator.seekExact(luceneTerm))
+                continue;
+
+            PostingsEnum postingsEnum = candidateInfoFieldIterator.postings(null, PostingsEnum.OFFSETS);
+
             String tString =luceneTerm.utf8ToString();
            /* if(tString.equals("acutely"))
                 System.out.println();*/
-            PostingsEnum postingsEnum=ti.postings(null, PostingsEnum.OFFSETS);
 
             int doc=postingsEnum.nextDoc(); //this should be just 1 doc, i.e., the constraint for getting this TV
             if(doc!= PostingsEnum.NO_MORE_DOCS) {
