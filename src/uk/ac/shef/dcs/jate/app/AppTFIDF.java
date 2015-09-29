@@ -27,10 +27,19 @@ public class AppTFIDF extends App {
             System.exit(1);
         }
         String indexPath = args[args.length - 2];
+        String jatePropertyFile=args[args.length - 1];
         Map<String, String> params = getParams(args);
 
+        List<JATETerm> terms = new AppCValue().extract(indexPath, jatePropertyFile, params);
+        String paramValue=params.get("-o");
+        write(terms,paramValue);
+
+    }
+
+    @Override
+    public List<JATETerm> extract(String indexPath, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException {
         IndexReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(indexPath)));
-        JATEProperties properties = new JATEProperties(args[args.length - 1]);
+        JATEProperties properties = new JATEProperties(jatePropertyFile);
         FrequencyTermBasedFBMaster featureBuilder = new
                 FrequencyTermBasedFBMaster(indexReader, properties, 0);
         FrequencyTermBased feature = (FrequencyTermBased)featureBuilder.build();
@@ -43,8 +52,8 @@ public class AppTFIDF extends App {
         if(paramValue!=null &&paramValue.equalsIgnoreCase("true")) {
             collectTermInfo(indexReader, terms);
         }
-        paramValue=params.get("-o");
-        write(terms,paramValue);
+
         indexReader.close();
+        return terms;
     }
 }

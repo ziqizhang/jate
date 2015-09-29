@@ -13,8 +13,10 @@ import java.util.*;
 
 /**.
  */
-public class App {
+public abstract class App {
     protected static final double DEFAULT_THRESHOLD_N=0.25;
+
+    public abstract List<JATETerm> extract(String indexPath, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException;
 
     public static void collectTermInfo(IndexReader indexReader, List<JATETerm> terms){
         TermInfoCollector infoCollector = new TermInfoCollector(indexReader);

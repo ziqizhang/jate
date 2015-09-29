@@ -25,10 +25,19 @@ public class AppTermEx extends App {
             System.exit(1);
         }
         String indexPath = args[args.length - 2];
+        String jatePropertyFile=args[args.length - 1];
         Map<String, String> params = getParams(args);
 
+        List<JATETerm> terms = new AppCValue().extract(indexPath, jatePropertyFile, params);
+        String paramValue=params.get("-o");
+        write(terms,paramValue);
+
+    }
+
+    @Override
+    public List<JATETerm> extract(String indexPath, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException {
         IndexReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(indexPath)));
-        JATEProperties properties = new JATEProperties(args[args.length - 1]);
+        JATEProperties properties = new JATEProperties(jatePropertyFile);
         FrequencyTermBasedFBMaster ftbb = new
                 FrequencyTermBasedFBMaster(indexReader, properties, 0);
         FrequencyTermBased ftb = (FrequencyTermBased)ftbb.build();
@@ -38,7 +47,7 @@ public class AppTermEx extends App {
         FrequencyTermBased fwb = (FrequencyTermBased)fwbb.build();
 
         TTFReferenceFeatureFileBuilder ftrb = new
-                TTFReferenceFeatureFileBuilder(args[args.length-3]);
+                TTFReferenceFeatureFileBuilder(params.get("-r"));
         FrequencyTermBased frb = ftrb.build();
 
         FrequencyCtxDocBasedFBMaster fdbb = new
@@ -58,16 +67,16 @@ public class AppTermEx extends App {
         if(paramValue!=null &&paramValue.equalsIgnoreCase("true")) {
             collectTermInfo(indexReader, terms);
         }
-        paramValue=params.get("-o");
-        write(terms,paramValue);
+
         indexReader.close();
+        return terms;
     }
 
     protected static void printHelp() {
         StringBuilder sb = new StringBuilder("TermEx Usage:\n");
         sb.append("java -cp '[CLASSPATH]' ").append(AppATTF.class.getName())
-                .append(" [OPTIONS] ").append("[REF_TERM_TF_FILE] [LUCENE_INDEX_PATH] [JATE_PROPERTY_FILE]").append("\nE.g.:\n");
-        sb.append("java -cp '/libs/*' -t 20 /resource/bnc_unifrqs.normal /solr/server/solr/jate/data jate.properties ...\n\n");
+                .append(" [OPTIONS] ").append("-r [REF_TERM_TF_FILE] [LUCENE_INDEX_PATH] [JATE_PROPERTY_FILE]").append("\nE.g.:\n");
+        sb.append("java -cp '/libs/*' -t 20 -r /resource/bnc_unifrqs.normal /solr/server/solr/jate/data jate.properties ...\n\n");
         sb.append("[OPTIONS]:\n")
                 .append("\t\t-c\t\t'true' or 'false'. Whether to collect term information, e.g., offsets in documents. Default is false.\n")
                 .append("\t\t-t\t\tA number. Score threshold for selecting terms. If not set then default -n is used.").append("\n")
