@@ -163,8 +163,13 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                 continue;
             }
 
-            if (!tiRef.seekExact(luceneTerm))
+            if (!tiRef.seekExact(luceneTerm)) {
+                StringBuilder msg = new StringBuilder(luceneTerm.utf8ToString());
+                msg.append(" is a candidate term, but not indexed in the n-gram information field. It's score may be mis-computed.");
+                msg.append(" (You may have used different text analysis process (e.g., different tokenizers) for the two fields.) ");
+                LOG.warning(msg.toString());
                 continue;
+            }
 
             PostingsEnum postingsEnum = tiRef.postings(null, PostingsEnum.OFFSETS);
             //PostingsEnum postingsEnum = ti.postings(null, PostingsEnum.OFFSETS);
