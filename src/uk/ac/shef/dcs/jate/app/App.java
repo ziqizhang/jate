@@ -18,7 +18,7 @@ public abstract class App {
 
     public abstract List<JATETerm> extract(String indexPath, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException;
 
-    public static void collectTermInfo(IndexReader indexReader, List<JATETerm> terms){
+    public static void collectTermInfo(IndexReader indexReader, List<JATETerm> terms) throws IOException {
         TermInfoCollector infoCollector = new TermInfoCollector(indexReader);
         for(JATETerm jt: terms)
             jt.setTermInfo(infoCollector.collect(jt.getString()));
