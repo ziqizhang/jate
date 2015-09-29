@@ -1,16 +1,11 @@
 package uk.ac.shef.dcs.jate.v2.indexing;
 
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.tika.utils.ExceptionUtils;
-import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.v2.JATEProperties;
 import uk.ac.shef.dcs.jate.v2.io.DocumentCreator;
-import uk.ac.shef.dcs.jate.v2.io.TikaSimpleDocumentCreator;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Logger;
@@ -34,11 +29,11 @@ public class SolrParallelIndexingMaster {
         msg.append(cores).append(", total docs="+tasks.size());
         LOG.info(msg.toString());
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
-        if(properties.getSolrFieldnameJATEWordsAll()==null||
-                properties.getSolrFieldnameJATEWordsAll().equals(""))
+        if(properties.getSolrFieldnameJATEWords()==null||
+                properties.getSolrFieldnameJATEWords().equals(""))
             LOG.warning("'fieldname_jate_words_all' undefined. If your algorithms (e.g., GlossEx, TermEx, Weirdness) do not use word-level features this is ok.");
-        if(properties.getSolrFieldnameJATESentencesAll()==null||
-                properties.getSolrFieldnameJATESentencesAll().equals(""))
+        if(properties.getSolrFieldnameJATESentences()==null||
+                properties.getSolrFieldnameJATESentences().equals(""))
             LOG.warning("'fieldname_jate_sentences_all' undefined. If your algorithms (e.g., Chi-Square, NC-value) do not use sentence-level features this is ok.");
         SolrParallelIndexingWorker idxWorker = new SolrParallelIndexingWorker(tasks,
                 maxTaskPerWorker, batchSize, docCreator, solrClient,properties);

@@ -293,13 +293,13 @@
 			
 	   <!--##################### JATE Start ######################### -->
 	   <!-- Field to index and store candidate terms -->
-	   <field name="jate_terms_all" type="jate_text_2_terms" indexed="true" stored="false" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
+	   <field name="jate_cterms" type="jate_text_2_terms" indexed="true" stored="false" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
 	   <!-- Field to index and store words. You only need this if you use algorithms that require
 			word-level features, such as Weirdness, GlossEx, and TermEx-->
-	   <field name="jate_words_all" type="jate_text_2_words" indexed="true" stored="false" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
+	   <field name="jate_words" type="jate_text_2_words" indexed="true" stored="false" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
 	   <!-- Field to store sentence offsets. You only need this if you use algorithms that require
 			sentence-level features, such as ChiSquare, and NCValue-->
-	   <field name="jate_sentences_all" type="string" indexed="false" stored="true" multiValued="true"/>
+	   <field name="jate_sentences" type="string" indexed="false" stored="true" multiValued="true"/>
 	   <!--######################## JATE End ########################## -->
 	   
 	   <!-- Dynamic field definitions allow using convention over configuration
@@ -315,7 +315,7 @@
 			They only provide a way to trace the part of a document that a candidate term is found. Such 
 			information can be used by some ATR algorithms. However most ATR algorithms do not 
 			use such information. -->
-	   <dynamicField name="jate_terms_f*"  type="jate_text_2_terms" indexed="false"  stored="true"/>
+	   <dynamicField name="jate_cterms_f*"  type="jate_text_2_terms" indexed="false"  stored="true"/>
 	   
        <dynamicField name="*_i"  type="int"    indexed="true"  stored="true"/>
 	   <dynamicField name="*_is" type="int"    indexed="true"  stored="true"  multiValued="true"/>

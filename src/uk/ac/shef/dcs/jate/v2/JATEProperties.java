@@ -40,25 +40,32 @@ public class JATEProperties {
         return fieldnameID;
     }
 
-    public String getSolrFieldnameJATETermsAll() throws JATEException {
-        String fieldnameID = getString("fieldname_jate_terms_all");
+    public String getSolrFieldnameJATETermInfo() throws JATEException {
+        String fieldnameID = getString("fieldname_jate_terminfo");
         if (fieldnameID == null)
-            throw new JATEException("'fieldname_jate_terms_all' not defined in jate.properties");
+            throw new JATEException("'fieldname_jate_terminfo' not defined in jate.properties");
         return fieldnameID;
     }
 
-    public String getSolrFieldnameJATEWordsAll() {
-        String fieldnameID = getString("fieldname_jate_words_all");
+    public String getSolrFieldnameJATECTerms() throws JATEException {
+        String fieldnameID = getString("fieldname_jate_cterms");
+        if (fieldnameID == null)
+            throw new JATEException("'fieldname_jate_cterms' not defined in jate.properties");
         return fieldnameID;
     }
 
-    public String getSolrFieldnameJATESentencesAll() {
-        String fieldnameID = getString("fieldname_jate_sentences_all");
+    public String getSolrFieldnameJATEWords() {
+        String fieldnameID = getString("fieldname_jate_words");
         return fieldnameID;
     }
 
-    public String getSolrFieldnameJATETermsF(){
-        String fieldnameID = getString("fieldname_jate_terms_f");
+    public String getSolrFieldnameJATESentences() {
+        String fieldnameID = getString("fieldname_jate_sentences");
+        return fieldnameID;
+    }
+
+    public String getSolrFieldnameJATECTermsF(){
+        String fieldnameID = getString("fieldname_jate_cterms_f");
         return fieldnameID;
     }
 

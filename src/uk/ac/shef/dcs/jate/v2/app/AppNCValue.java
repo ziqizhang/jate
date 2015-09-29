@@ -5,7 +5,6 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.store.FSDirectory;
 import uk.ac.shef.dcs.jate.v2.JATEException;
 import uk.ac.shef.dcs.jate.v2.JATEProperties;
-import uk.ac.shef.dcs.jate.v2.algorithm.CValue;
 import uk.ac.shef.dcs.jate.v2.algorithm.NCValue;
 import uk.ac.shef.dcs.jate.v2.algorithm.TermInfoCollector;
 import uk.ac.shef.dcs.jate.v2.feature.*;
@@ -40,8 +39,8 @@ public class AppNCValue extends App {
 
         FrequencyCtxSentenceBasedFBMaster fcsbb = new
                 FrequencyCtxSentenceBasedFBMaster(indexReader, properties,
-                properties.getSolrFieldnameJATETermsAll(),
-                properties.getSolrFieldnameJATESentencesAll());
+                properties.getSolrFieldnameJATECTerms(),
+                properties.getSolrFieldnameJATESentences());
         FrequencyCtxBased fcsb = (FrequencyCtxBased)fcsbb.build();
 
         int minTTF = 0, minTCF=0;

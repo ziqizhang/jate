@@ -19,21 +19,25 @@ class FrequencyTermBasedFBWorker extends JATERecursiveTaskWorker<BytesRef, int[]
     private JATEProperties properties;
     private IndexReader index;
     private FrequencyTermBased feature;
-    private String targetField;
+    private String candidateField;
+    private TermsEnum candidateInfoFieldIterator;
 
     FrequencyTermBasedFBWorker(JATEProperties properties, List<BytesRef> luceneTerms, IndexReader index,
                                FrequencyTermBased feature, int maxTasksPerWorker,
-                               String targetField) {
+                               String candidateField,
+                               TermsEnum candidateInfoFieldIterator) {
         super(luceneTerms, maxTasksPerWorker);
         this.properties = properties;
         this.feature = feature;
         this.index = index;
-        this.targetField = targetField;
+        this.candidateField = candidateField;
+        this.candidateInfoFieldIterator=candidateInfoFieldIterator;
     }
 
     @Override
     protected JATERecursiveTaskWorker<BytesRef, int[]> createInstance(List<BytesRef> termSplit) {
-        return new FrequencyTermBasedFBWorker(properties, termSplit, index, feature, maxTasksPerThread, targetField);
+        return new FrequencyTermBasedFBWorker(properties, termSplit, index, feature, maxTasksPerThread, candidateField,
+                candidateInfoFieldIterator);
     }
 
     @Override
@@ -53,16 +57,16 @@ class FrequencyTermBasedFBWorker extends JATERecursiveTaskWorker<BytesRef, int[]
         for (BytesRef luceneTerm : terms) {
             String term =luceneTerm.utf8ToString();
             try {
-                PostingsEnum docEnum = MultiFields.getTermDocsEnum(index,
-                        targetField, luceneTerm);
-
-                int doc = 0;
-                while ((doc = docEnum.nextDoc()) != PostingsEnum.NO_MORE_DOCS) {
-                    int tfid = docEnum.freq();  //tf in document
-                    feature.increment(term, tfid);
-                    feature.incrementTermFrequencyInDocument(term, doc, tfid);
+                if(candidateInfoFieldIterator.seekExact(luceneTerm)){
+                    PostingsEnum docEnum = candidateInfoFieldIterator.postings(null);
+                    int doc = 0;
+                    while ((doc = docEnum.nextDoc()) != PostingsEnum.NO_MORE_DOCS) {
+                        int tfid = docEnum.freq();  //tf in document
+                        feature.increment(term, tfid);
+                        feature.incrementTermFrequencyInDocument(term, doc, tfid);
+                    }
+                    totalSuccess++;
                 }
-                totalSuccess++;
                 /*if(totalSuccess%2000==0)
                     LOG.info(totalSuccess+"/"+terms.size());*/
             } catch (IOException ioe) {

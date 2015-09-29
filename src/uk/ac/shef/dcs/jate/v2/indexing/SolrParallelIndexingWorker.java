@@ -2,7 +2,6 @@ package uk.ac.shef.dcs.jate.v2.indexing;
 
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.tika.utils.ExceptionUtils;
 import uk.ac.shef.dcs.jate.v2.JATEException;
@@ -41,8 +40,8 @@ public class SolrParallelIndexingWorker extends JATERecursiveTaskWorker<String, 
         this.docCreator = docCreator;
         this.solrClient=solrClient;
         this.properties=properties;
-        boolean indexJATESentences = properties.getSolrFieldnameJATESentencesAll()!=null &&
-                !properties.getSolrFieldnameJATESentencesAll().equals("");
+        boolean indexJATESentences = properties.getSolrFieldnameJATESentences()!=null &&
+                !properties.getSolrFieldnameJATESentences().equals("");
         if(indexJATESentences) {
             try {
                 sentenceSplitter = InstanceCreator.createSentenceSplitter(properties.getSentenceSplitterClass(),
@@ -82,8 +81,8 @@ public class SolrParallelIndexingWorker extends JATERecursiveTaskWorker<String, 
     @Override
     protected Integer computeSingleWorker(List<String> tasks) {
         int total = 0, batches=0;
-        boolean indexJATEWords = properties.getSolrFieldnameJATEWordsAll()!=null &&
-                !properties.getSolrFieldnameJATEWordsAll().equals("");
+        boolean indexJATEWords = properties.getSolrFieldnameJATEWords()!=null &&
+                !properties.getSolrFieldnameJATEWords().equals("");
 
         for(String task: tasks){
             try {
@@ -91,11 +90,12 @@ public class SolrParallelIndexingWorker extends JATERecursiveTaskWorker<String, 
                 total++;
                 SolrInputDocument solrDoc = new SolrInputDocument();
                 solrDoc.addField(properties.getSolrFieldnameID(), doc.getId());
-                solrDoc.addField(properties.getSolrFieldnameJATETermsAll(), doc.getContent());
+                solrDoc.addField(properties.getSolrFieldnameJATETermInfo(), doc.getContent());
+                solrDoc.addField(properties.getSolrFieldnameJATECTerms(), doc.getContent());
                 if(indexJATEWords)
-                    solrDoc.addField(properties.getSolrFieldnameJATEWordsAll(), doc.getContent());
+                    solrDoc.addField(properties.getSolrFieldnameJATEWords(), doc.getContent());
                 if(sentenceSplitter!=null) {
-                    indexSentenceOffsets(solrDoc, properties.getSolrFieldnameJATESentencesAll(), doc.getContent());
+                    indexSentenceOffsets(solrDoc, properties.getSolrFieldnameJATESentences(), doc.getContent());
                 }
                 for(Map.Entry<String, String> field2Value : doc.getMapField2Content().entrySet()){
                     String field = field2Value.getKey();
@@ -137,6 +137,6 @@ public class SolrParallelIndexingWorker extends JATERecursiveTaskWorker<String, 
             int[] offset = offsets.get(i);
             values[i]=offset[0]+","+offset[1];
         }
-        solrDoc.addField(properties.getSolrFieldnameJATESentencesAll(), values);
+        solrDoc.addField(properties.getSolrFieldnameJATESentences(), values);
     }
 }

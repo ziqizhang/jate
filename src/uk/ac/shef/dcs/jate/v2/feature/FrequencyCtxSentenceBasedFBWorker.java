@@ -24,23 +24,27 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
     private IndexReader indexReader;
     private String termTargetField;
     private String sentenceTargetField;
+    private TermsEnum candidateInfoFieldIterator;
 
     public FrequencyCtxSentenceBasedFBWorker(JATEProperties properties,
                                              List<Integer> docIds,
                                              IndexReader indexReader,
                                              int maxTasksPerWorker,
-                                             String termTargetField, String sentenceTargetField) {
+                                             String termTargetField, String sentenceTargetField,
+                                             TermsEnum candidateInfoFieldIterator) {
         super(docIds, maxTasksPerWorker);
         this.properties = properties;
         this.indexReader = indexReader;
         this.termTargetField = termTargetField;
         this.sentenceTargetField = sentenceTargetField;
+        this.candidateInfoFieldIterator=candidateInfoFieldIterator;
     }
 
     @Override
     protected JATERecursiveTaskWorker<Integer, FrequencyCtxBased> createInstance(List<Integer> docIdSplit) {
         return new FrequencyCtxSentenceBasedFBWorker(properties, docIdSplit,
-                indexReader, maxTasksPerThread, termTargetField, sentenceTargetField);
+                indexReader, maxTasksPerThread, termTargetField, sentenceTargetField,
+                candidateInfoFieldIterator);
     }
 
     @Override

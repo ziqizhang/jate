@@ -20,19 +20,23 @@ public class FrequencyCtxDocBasedFBWorker extends JATERecursiveTaskWorker<BytesR
     private JATEProperties properties;
     private IndexReader index;
     private String targetField;
+    private TermsEnum candidateInfoFieldIterator;
 
     FrequencyCtxDocBasedFBWorker(JATEProperties properties, List<BytesRef> luceneTerms, IndexReader index,
                                  int maxTasksPerWorker,
-                                 String targetField) {
+                                 String targetField,
+                                 TermsEnum candidateInfoFieldIterator) {
         super(luceneTerms, maxTasksPerWorker);
         this.properties = properties;
         this.index = index;
         this.targetField = targetField;
+        this.candidateInfoFieldIterator=candidateInfoFieldIterator;
     }
 
     @Override
     protected JATERecursiveTaskWorker<BytesRef, FrequencyCtxBased> createInstance(List<BytesRef> termSplits) {
-        return new FrequencyCtxDocBasedFBWorker(properties, termSplits, index, maxTasksPerThread, targetField);
+        return new FrequencyCtxDocBasedFBWorker(properties, termSplits, index, maxTasksPerThread,
+                targetField, candidateInfoFieldIterator);
     }
 
     @Override
@@ -63,15 +67,15 @@ public class FrequencyCtxDocBasedFBWorker extends JATERecursiveTaskWorker<BytesR
         FrequencyCtxBased feature = new FrequencyCtxBased();
         for (BytesRef luceneTerm : terms) {
             try {
-                PostingsEnum docEnum = MultiFields.getTermDocsEnum(index,
-                        targetField, luceneTerm);
-
-                int doc = 0;
-                while ((doc = docEnum.nextDoc()) != PostingsEnum.NO_MORE_DOCS) {
-                    int tfid = docEnum.freq();  //tf in document
-                    String docId = String.valueOf(doc);
-                    feature.increment(docId, tfid);
-                    feature.increment(docId, luceneTerm.utf8ToString(), tfid);
+                if(candidateInfoFieldIterator.seekExact(luceneTerm)){
+                    PostingsEnum docEnum = candidateInfoFieldIterator.postings(null);
+                    int doc = 0;
+                    while ((doc = docEnum.nextDoc()) != PostingsEnum.NO_MORE_DOCS) {
+                        int tfid = docEnum.freq();  //tf in document
+                        String docId = String.valueOf(doc);
+                        feature.increment(docId, tfid);
+                        feature.increment(docId, luceneTerm.utf8ToString(), tfid);
+                    }
                 }
             } catch (IOException ioe) {
                 StringBuilder sb = new StringBuilder("Unable to build feature for candidate:");

@@ -32,8 +32,8 @@ public class AppChiSquare extends App {
 
         FrequencyCtxSentenceBasedFBMaster fcsbb = new
                 FrequencyCtxSentenceBasedFBMaster(indexReader, properties,
-                properties.getSolrFieldnameJATETermsAll(),
-                properties.getSolrFieldnameJATESentencesAll());
+                properties.getSolrFieldnameJATECTerms(),
+                properties.getSolrFieldnameJATESentences());
         FrequencyCtxBased fcsb = (FrequencyCtxBased)fcsbb.build();
 
         int minTTF = 0, minTCF=0;
