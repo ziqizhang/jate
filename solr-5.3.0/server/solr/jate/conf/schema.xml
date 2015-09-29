@@ -389,9 +389,7 @@
    
 	   <!-- copyField commands copy one field to another at the time a document
         is added to the index.  It's used either to index the same field differently,
-        or to add multiple fields to the same field for easier/faster searching.  -->
-		
-	   <copyField source="jate_terms_all" dest="text" />		     
+        or to add multiple fields to the same field for easier/faster searching.  -->	     
 	</fields>
 
 	<uniqueKey>id</uniqueKey>
