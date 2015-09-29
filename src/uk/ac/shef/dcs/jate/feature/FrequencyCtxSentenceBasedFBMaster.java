@@ -51,7 +51,7 @@ public class FrequencyCtxSentenceBasedFBMaster extends AbstractFeatureBuilder {
             FrequencyCtxSentenceBasedFBWorker worker = new
                     FrequencyCtxSentenceBasedFBWorker(properties, allDocs,
                     indexReader, properties.getFeatureBuilderMaxDocsPerWorker(), termTargetField,
-                    sentenceTargetField, info.iterator());
+                    sentenceTargetField);
             StringBuilder sb = new StringBuilder("Building features using cpu cores=");
             sb.append(cores).append(", total docs=").append(allDocs.size()).append(", max per worker=")
                     .append(properties.getFeatureBuilderMaxDocsPerWorker());

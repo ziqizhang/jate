@@ -7,6 +7,7 @@ import org.apache.lucene.index.PostingsEnum;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.util.BytesRef;
+import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.JATERecursiveTaskWorker;
 
@@ -24,27 +25,23 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
     private IndexReader indexReader;
     private String termTargetField;
     private String sentenceTargetField;
-    private TermsEnum candidateInfoFieldIterator;
 
     public FrequencyCtxSentenceBasedFBWorker(JATEProperties properties,
                                              List<Integer> docIds,
                                              IndexReader indexReader,
                                              int maxTasksPerWorker,
-                                             String termTargetField, String sentenceTargetField,
-                                             TermsEnum candidateInfoFieldIterator) {
+                                             String termTargetField, String sentenceTargetField) {
         super(docIds, maxTasksPerWorker);
         this.properties = properties;
         this.indexReader = indexReader;
         this.termTargetField = termTargetField;
         this.sentenceTargetField = sentenceTargetField;
-        this.candidateInfoFieldIterator=candidateInfoFieldIterator;
     }
 
     @Override
     protected JATERecursiveTaskWorker<Integer, FrequencyCtxBased> createInstance(List<Integer> docIdSplit) {
         return new FrequencyCtxSentenceBasedFBWorker(properties, docIdSplit,
-                indexReader, maxTasksPerThread, termTargetField, sentenceTargetField,
-                candidateInfoFieldIterator);
+                indexReader, maxTasksPerThread, termTargetField, sentenceTargetField);
     }
 
     @Override
@@ -52,26 +49,26 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
         FrequencyCtxBased joined = new FrequencyCtxBased();
         for (JATERecursiveTaskWorker<Integer, FrequencyCtxBased> worker : jateRecursiveTaskWorkers) {
             FrequencyCtxBased feature = worker.join();
-            for(Map.Entry<String, Integer> mapCtx2TTF: feature.getMapCtx2TTF().entrySet()){
+            for (Map.Entry<String, Integer> mapCtx2TTF : feature.getMapCtx2TTF().entrySet()) {
                 String ctxId = mapCtx2TTF.getKey();
                 int ttf = mapCtx2TTF.getValue();
                 joined.increment(ctxId, ttf);
             }
 
-            for(Map.Entry<String, Map<String, Integer>> mapCtx2TFIC: feature.getMapCtx2TFIC().entrySet()){
+            for (Map.Entry<String, Map<String, Integer>> mapCtx2TFIC : feature.getMapCtx2TFIC().entrySet()) {
                 String ctxId = mapCtx2TFIC.getKey();
-                Map<String, Integer> mapT2FIC=mapCtx2TFIC.getValue();
-                for(Map.Entry<String, Integer> e: mapT2FIC.entrySet()){
+                Map<String, Integer> mapT2FIC = mapCtx2TFIC.getValue();
+                for (Map.Entry<String, Integer> e : mapT2FIC.entrySet()) {
                     joined.increment(ctxId, e.getKey(), e.getValue());
                 }
             }
 
-            for(Map.Entry<String, Set<String>> entry: feature.getMapTerm2Ctx().entrySet()){
+            for (Map.Entry<String, Set<String>> entry : feature.getMapTerm2Ctx().entrySet()) {
                 String term = entry.getKey();
                 Set<String> addContexts = entry.getValue();
-                Set<String> contexts=joined.getMapTerm2Ctx().get(term);
-                if(contexts==null)
-                    contexts=new HashSet<>();
+                Set<String> contexts = joined.getMapTerm2Ctx().get(term);
+                if (contexts == null)
+                    contexts = new HashSet<>();
                 contexts.addAll(addContexts);
                 joined.getMapTerm2Ctx().put(term, contexts);
             }
@@ -81,37 +78,42 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
 
     @Override
     protected FrequencyCtxBased computeSingleWorker(List<Integer> docIds) {
-        LOG.info("Total docs to process="+docIds.size());
+        LOG.info("Total docs to process=" + docIds.size());
         FrequencyCtxBased feature = new FrequencyCtxBased();
-        int count=0;
+        int count = 0;
         for (int docId : docIds) {
             count++;
             try {
-                List<TextUnitOffsets> terms = collectTermOffsets(indexReader.getTermVector(docId, termTargetField));
+
+                Terms lookupVector = indexReader.getTermVector(docId, properties.getSolrFieldnameJATENGramInfo());
+                if (lookupVector == null)
+                    throw new JATEException("Required term vector in field but missing:");
+
+                List<TextUnitOffsets> terms = collectTermOffsets(indexReader.getTermVector(docId, termTargetField),
+                        lookupVector);
                 List<int[]> sentences = collectSentenceOffsets(indexReader, sentenceTargetField, docId);
                 StringBuilder sb = new StringBuilder("#");
                 sb.append(count).append(", docId=").append(docId).append(", total terms=").append(terms.size())
                         .append(", total sentences=").append(sentences);
-                int termCursor=0;
-                for(int[] sent: sentences){
-                    String contextId=docId+"."+feature.nextCtxId();
-                    for(int t = termCursor; t<terms.size();t++){
+                int termCursor = 0;
+                for (int[] sent : sentences) {
+                    String contextId = docId + "." + feature.nextCtxId();
+                    for (int t = termCursor; t < terms.size(); t++) {
                         TextUnitOffsets term = terms.get(t);
                        /* if(term.string.equals("acutely"))
                             System.out.println();*/
-                        if(term.end>sent[1]){
-                            if(term.start>sent[1]) {
+                        if (term.end > sent[1]) {
+                            if (term.start > sent[1]) {
                                 termCursor = t;
                                 break;
-                            }else
+                            } else
                                 continue;
                         }
 
-                        if(term.start>=sent[0]){ //term within sentence boundary
-                            feature.increment(contextId,1);
-                            feature.increment(contextId,term.string,1);
-                        }
-                        else{//a term is not within sentence boundary. this is likely for n-gram which are created
+                        if (term.start >= sent[0]) { //term within sentence boundary
+                            feature.increment(contextId, 1);
+                            feature.increment(contextId, term.string, 1);
+                        } else {//a term is not within sentence boundary. this is likely for n-gram which are created
                             //across sentence boundaries
                         }
                     }
@@ -121,6 +123,11 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                 sb.append(docId).append("\n");
                 sb.append(ExceptionUtils.getFullStackTrace(ioe));
                 LOG.severe(sb.toString());
+            } catch (JATEException je) {
+                StringBuilder sb = new StringBuilder("Unable to build feature for document id:");
+                sb.append(docId).append("\n");
+                sb.append(ExceptionUtils.getFullStackTrace(je));
+                LOG.severe(sb.toString());
             }
         }
         return feature;
@@ -128,9 +135,9 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
 
     private List<int[]> collectSentenceOffsets(IndexReader indexReader, String fieldname, int docId) throws IOException {
         Document doc = indexReader.document(docId);
-        String[] values  = doc.getValues(fieldname);
+        String[] values = doc.getValues(fieldname);
         List<int[]> rs = new ArrayList<>();
-        for(String v: values){
+        for (String v : values) {
             String[] offsets = v.split(",");
             rs.add(new int[]{Integer.valueOf(offsets[0]), Integer.valueOf(offsets[1])});
         }
@@ -144,30 +151,31 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
         return rs;
     }
 
-    private List<TextUnitOffsets> collectTermOffsets(Terms termVector) throws IOException {
+    private List<TextUnitOffsets> collectTermOffsets(Terms termVector, Terms termVectorLookup) throws IOException {
         List<TextUnitOffsets> result = new ArrayList<>();
         if (termVector == null)
             return result;
-
+        TermsEnum tiRef= termVectorLookup.iterator();
         TermsEnum ti = termVector.iterator();
         BytesRef luceneTerm = ti.next();
-        while(luceneTerm!=null){
-            if(luceneTerm.length==0) {
+        while (luceneTerm != null) {
+            if (luceneTerm.length == 0) {
                 luceneTerm = ti.next();
                 continue;
             }
 
-            if(!candidateInfoFieldIterator.seekExact(luceneTerm))
+            if (!tiRef.seekExact(luceneTerm))
                 continue;
 
-            PostingsEnum postingsEnum = candidateInfoFieldIterator.postings(null, PostingsEnum.OFFSETS);
+            PostingsEnum postingsEnum = tiRef.postings(null, PostingsEnum.OFFSETS);
+            //PostingsEnum postingsEnum = ti.postings(null, PostingsEnum.OFFSETS);
 
-            String tString =luceneTerm.utf8ToString();
+            String tString = luceneTerm.utf8ToString();
            /* if(tString.equals("acutely"))
                 System.out.println();*/
 
-            int doc=postingsEnum.nextDoc(); //this should be just 1 doc, i.e., the constraint for getting this TV
-            if(doc!= PostingsEnum.NO_MORE_DOCS) {
+            int doc = postingsEnum.nextDoc(); //this should be just 1 doc, i.e., the constraint for getting this TV
+            if (doc != PostingsEnum.NO_MORE_DOCS) {
                 int totalOccurrence = postingsEnum.freq();
                 for (int i = 0; i < totalOccurrence; i++) {
                     postingsEnum.nextPosition();
@@ -201,8 +209,9 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
             }
             return compare;
         }
-        public String toString(){
-            return string+","+start;
+
+        public String toString() {
+            return string + "," + start;
         }
     }
 }
