@@ -307,8 +307,8 @@
 							sentenceModel="D:/Work/jate_github/jate/resource/en-sent.bin"
 							tokenizerModel="D:/Work/jate_github/jate/resource/en-token.bin"/>
 				<filter class="solr.ASCIIFoldingFilterFactory"/>
-				<filter class="uk.ac.shef.dcs.jate.v2.lucene.filter.OpenNLPRegexChunkerFactory"
-							posTaggerClass="uk.ac.shef.dcs.jate.v2.nlp.opennlp.POSTaggerOpenNLP"
+				<filter class="uk.ac.shef.dcs.jate.lucene.filter.OpenNLPRegexChunkerFactory"
+							posTaggerClass="uk.ac.shef.dcs.jate.nlp.opennlp.POSTaggerOpenNLP"
 							posTaggerModel="D:/Work/jate_github/jate/resource/en-pos-maxent.bin"
 							patterns="D:/Work/jate_github/jate/jate.candidate.patterns"/>
 				<filter class="solr.LowerCaseFilterFactory" />					

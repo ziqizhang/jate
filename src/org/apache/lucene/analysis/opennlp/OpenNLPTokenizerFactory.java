@@ -10,7 +10,6 @@ import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.util.TokenizerFactory;
 import org.apache.lucene.util.AttributeFactory;
-import uk.ac.shef.dcs.jate.v2.JATEException;
 
 import java.io.File;
 import java.util.Map;
