@@ -36,11 +36,12 @@ public class AppATTF extends App {
         Algorithm attf = new ATTF();
         attf.registerFeature(FrequencyTermBased.class.getName(), feature);
 
-        String paramValue=params.get("-c");
-        if(paramValue!=null &&paramValue.equalsIgnoreCase("true"))
-            attf.setTermInfoCollector(new TermInfoCollector(indexReader));
         List<JATETerm> terms=attf.execute(feature.getMapTerm2TTF().keySet());
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
+        String paramValue=params.get("-c");
+        if(paramValue!=null &&paramValue.equalsIgnoreCase("true")) {
+            collectTermInfo(indexReader, terms);
+        }
         paramValue=params.get("-o");
         write(terms,paramValue);
         indexReader.close();

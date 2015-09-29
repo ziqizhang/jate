@@ -47,11 +47,12 @@ public class AppWeirdness extends App {
         weirdness.registerFeature(FrequencyTermBased.class.getName()+Weirdness.SUFFIX_WORD, fwb);
         weirdness.registerFeature(FrequencyTermBased.class.getName()+Weirdness.SUFFIX_REF, frb);
 
-        String paramValue=params.get("-c");
-        if(paramValue!=null &&paramValue.equalsIgnoreCase("true"))
-            weirdness.setTermInfoCollector(new TermInfoCollector(indexReader));
         List<JATETerm> terms=weirdness.execute(ftb.getMapTerm2TTF().keySet());
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
+        String paramValue=params.get("-c");
+        if(paramValue!=null &&paramValue.equalsIgnoreCase("true")) {
+            collectTermInfo(indexReader, terms);
+        }
         paramValue=params.get("-o");
         write(terms,paramValue);
         indexReader.close();

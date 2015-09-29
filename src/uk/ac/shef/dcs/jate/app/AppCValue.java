@@ -41,11 +41,12 @@ public class AppCValue extends App {
         cvalue.registerFeature(FrequencyTermBased.class.getName(), ftb);
         cvalue.registerFeature(Containment.class.getName(), cf);
 
-        String paramValue=params.get("-c");
-        if(paramValue!=null &&paramValue.equalsIgnoreCase("true"))
-            cvalue.setTermInfoCollector(new TermInfoCollector(indexReader));
         List<JATETerm> terms=cvalue.execute(ftb.getMapTerm2TTF().keySet());
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
+        String paramValue=params.get("-c");
+        if(paramValue!=null &&paramValue.equalsIgnoreCase("true")) {
+            collectTermInfo(indexReader, terms);
+        }
         paramValue=params.get("-o");
         write(terms,paramValue);
         indexReader.close();

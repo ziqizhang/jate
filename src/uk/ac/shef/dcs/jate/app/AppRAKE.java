@@ -62,11 +62,12 @@ public class AppRAKE extends App{
         rake.registerFeature(FrequencyTermBased.class.getName()+RAKE.SUFFIX_WORD, fwb);
         rake.registerFeature(Cooccurrence.class.getName()+RAKE.SUFFIX_WORD, co);
 
-        String paramValue=params.get("-c");
-        if(paramValue!=null &&paramValue.equalsIgnoreCase("true"))
-            rake.setTermInfoCollector(new TermInfoCollector(indexReader));
         List<JATETerm> terms=rake.execute(feature.getMapTerm2TTF().keySet());
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
+        String paramValue=params.get("-c");
+        if(paramValue!=null &&paramValue.equalsIgnoreCase("true")) {
+            collectTermInfo(indexReader, terms);
+        }
         paramValue=params.get("-o");
         write(terms,paramValue);
         indexReader.close();

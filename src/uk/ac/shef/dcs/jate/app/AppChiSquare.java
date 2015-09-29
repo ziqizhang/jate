@@ -55,11 +55,12 @@ public class AppChiSquare extends App {
         chi.registerFeature(FrequencyCtxBased.class.getName()+ChiSquare.SUFFIX_SENTENCE, fcsb);
         chi.registerFeature(Cooccurrence.class.getName(), co);
 
-        String paramValue=params.get("-c");
-        if(paramValue!=null &&paramValue.equalsIgnoreCase("true"))
-            chi.setTermInfoCollector(new TermInfoCollector(indexReader));
         List<JATETerm> terms=chi.execute(co.getTerms());
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
+        String paramValue=params.get("-c");
+        if(paramValue!=null &&paramValue.equalsIgnoreCase("true")) {
+            collectTermInfo(indexReader, terms);
+        }
         paramValue=params.get("-o");
         write(terms,paramValue);
         indexReader.close();

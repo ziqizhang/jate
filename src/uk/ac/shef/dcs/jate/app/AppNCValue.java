@@ -62,11 +62,12 @@ public class AppNCValue extends App {
         ncvalue.registerFeature(Containment.class.getName(), cf);
         ncvalue.registerFeature(Cooccurrence.class.getName(), co);
 
-        String paramValue=params.get("-c");
-        if(paramValue!=null &&paramValue.equalsIgnoreCase("true"))
-            ncvalue.setTermInfoCollector(new TermInfoCollector(indexReader));
         List<JATETerm> terms=ncvalue.execute(co.getTerms());
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
+        String paramValue=params.get("-c");
+        if(paramValue!=null &&paramValue.equalsIgnoreCase("true")) {
+            collectTermInfo(indexReader, terms);
+        }
         paramValue=params.get("-o");
         write(terms,paramValue);
         indexReader.close();

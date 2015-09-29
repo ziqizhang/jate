@@ -1,7 +1,9 @@
 package uk.ac.shef.dcs.jate.app;
 
 import com.google.gson.Gson;
+import org.apache.lucene.index.IndexReader;
 import uk.ac.shef.dcs.jate.JATEException;
+import uk.ac.shef.dcs.jate.algorithm.TermInfoCollector;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 import uk.ac.shef.dcs.jate.util.IOUtil;
 
@@ -13,6 +15,12 @@ import java.util.*;
  */
 public class App {
     protected static final double DEFAULT_THRESHOLD_N=0.25;
+
+    public static void collectTermInfo(IndexReader indexReader, List<JATETerm> terms){
+        TermInfoCollector infoCollector = new TermInfoCollector(indexReader);
+        for(JATETerm jt: terms)
+            jt.setTermInfo(infoCollector.collect(jt.getString()));
+    }
 
     public static Map<String, String> getParams(String[] args) throws JATEException {
         Map<String, String> params = new HashMap<>();

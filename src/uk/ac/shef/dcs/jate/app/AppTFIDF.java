@@ -37,11 +37,12 @@ public class AppTFIDF extends App {
         Algorithm tfidf = new TFIDF();
         tfidf.registerFeature(FrequencyTermBased.class.getName(), feature);
 
-        String paramValue=params.get("-c");
-        if(paramValue!=null &&paramValue.equalsIgnoreCase("true"))
-            tfidf.setTermInfoCollector(new TermInfoCollector(indexReader));
         List<JATETerm> terms=tfidf.execute(feature.getMapTerm2TTF().keySet());
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
+        String paramValue=params.get("-c");
+        if(paramValue!=null &&paramValue.equalsIgnoreCase("true")) {
+            collectTermInfo(indexReader, terms);
+        }
         paramValue=params.get("-o");
         write(terms,paramValue);
         indexReader.close();

@@ -45,11 +45,12 @@ public class AppGlossEx extends App {
         glossex.registerFeature(FrequencyTermBased.class.getName()+GlossEx.SUFFIX_WORD, fwb);
         glossex.registerFeature(FrequencyTermBased.class.getName()+GlossEx.SUFFIX_REF, frb);
 
-        String paramValue=params.get("-c");
-        if(paramValue!=null &&paramValue.equalsIgnoreCase("true"))
-            glossex.setTermInfoCollector(new TermInfoCollector(indexReader));
         List<JATETerm> terms=glossex.execute(ftb.getMapTerm2TTF().keySet());
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
+        String paramValue=params.get("-c");
+        if(paramValue!=null &&paramValue.equalsIgnoreCase("true")) {
+            collectTermInfo(indexReader, terms);
+        }
         paramValue=params.get("-o");
         write(terms,paramValue);
         indexReader.close();
