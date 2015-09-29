@@ -166,9 +166,9 @@ public class OpenNLPRegexChunker extends TokenFilter {
 
     public static void main(String[] args) {
         Map<String, Pattern[]> patterns = new HashMap<>();
-        patterns.put("NP",new Pattern[]{Pattern.compile("(NN)+")});
+        patterns.put("NP",new Pattern[]{Pattern.compile("[JJ]*\\s[NN]+")});
         RegexNameFinder rnf = new RegexNameFinder(patterns);
-        String[] tokPOS = new String[]{"DT","NNS","NN","DT","NN","OT"};
+        String[] tokPOS = new String[]{"DT","JJ","NN","DT","NN","OT"};
         Span[] rs=rnf.find(tokPOS);
         System.out.println(rs);
     }

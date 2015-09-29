@@ -276,7 +276,9 @@
 			(default=jate_text_2_ngrams) AND THAT FOR YOUR word FIELD (default=jate_text_2_words)
 			USE THE SAME SET OF filters
 			
-			This is an example fieldType definition that extracts n-gram as candidates 
+			This is an example fieldType definition that extracts n-gram as candidates (n=1 to 3),
+			but removes any candidates that contain a stopword. So "Tower of London" and "of London"
+			are removed. 
 			-->
 		<!--fieldType name="jate_text_2_terms" class="solr.TextField" positionIncrementGap="100">
 			<analyzer type="index">
@@ -286,7 +288,7 @@
 				<filter class="solr.EnglishMinimalStemFilterFactory"/>
 				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
 				<filter class="solr.ShingleFilterFactory" minShingleSize="2" maxShingleSize="3"
-						outputUnigrams="false" outputUnigramsIfNoShingles="false" tokenSeparator=" "/>
+						outputUnigrams="true" outputUnigramsIfNoShingles="false" tokenSeparator=" "/>
 				<filter class="solr.PatternReplaceFilterFactory" pattern=".*_.*" replacement=""/>				
 			</analyzer>
 		</fieldType-->
@@ -343,7 +345,7 @@
 	   <!-- Field to index and store token-n-grams. These are used as a field to lookup information
 	     including frequency, offsets, etc. for candidate terms from the candidate term's field 
 		 (default=jate_cterms) -->
-	   <field name="jate_ngraminfo" type="jate_text_2_terms" indexed="true" stored="false" multiValued="false"/>
+	   <field name="jate_ngraminfo" type="jate_text_2_ngrams" indexed="true" stored="false" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
 	   <!-- Field to index and store candidate terms -->
 	   <field name="jate_cterms" type="jate_text_2_terms" indexed="true" stored="false" multiValued="false"/>
 	   <!-- Field to index and store words. You only need this if you use algorithms that require
