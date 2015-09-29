@@ -230,47 +230,95 @@
 		<fieldType name="random" class="solr.RandomSortField" indexed="true" />
 		
 		<!-- ###################### JATE Start #############################-->
-		<!-- A text field for terminology recognition. Any text put into this field will be
-			processed by JATE to extract candidate terms. 
-			This is an example fieldType definition that extracts n-gram as candidates -->
+		<!-- A field type for terminology recognition. Any text put into this type of field is
+			processed to extract token-n-grams (not candidates). The text field that uses
+			this type should store the following information: start/end offsets, term vector
+			These token-n-grams are used for lookup of such information of candidate terms,
+			which should be handled by a different field (see below). 
+			
+			WARNING: YOU MUST ENSURE YOUR fieldType DEFINITION FOR YOUR CANDIDATE TERM (and/or)
+			WORD FIELDS(s) USE THE SAME PROCESSING PIPELINE (i.e., LIST OF filters) 
+			-->
+		<fieldType name="jate_text_2_ngrams" class="solr.TextField" positionIncrementGap="100">
+			<analyzer type="index">
+				<tokenizer class="solr.StandardTokenizerFactory" />
+				<filter class="solr.ASCIIFoldingFilterFactory"/>
+				<filter class="solr.LowerCaseFilterFactory" />				
+				<filter class="solr.EnglishMinimalStemFilterFactory"/>
+				<filter class="solr.ShingleFilterFactory" minShingleSize="2" maxShingleSize="5"
+						outputUnigrams="true" outputUnigramsIfNoShingles="false" tokenSeparator=" "/>
+				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
+			</analyzer>
+		</fieldType>		
+		<!-- A field type for terminology recognition. Any text put into this type of field is
+			tokenized into words. Some algorithms require word-level features in addition to 
+			candidate terms. For example, Weirdness, GlossEx and TermEx use frequency of a 
+			candidate term, as well as frequencies of the term's composing words. In this case,
+			word level features are stored in this field. 
+			
+			WARNING: YOU MUST ENSURE YOUR fieldType DEFINITION FOR YOUR CANDIDATE TERM FIELD
+			USE THE SAME PROCESSING PIPELINE (i.e., LIST OF filters)
+			-->
+		<fieldType name="jate_text_2_words" class="solr.TextField" positionIncrementGap="100">
+			<analyzer type="index">
+				<tokenizer class="solr.StandardTokenizerFactory" />
+				<filter class="solr.ASCIIFoldingFilterFactory"/>
+				<filter class="solr.LowerCaseFilterFactory" />				
+				<filter class="solr.EnglishMinimalStemFilterFactory"/>
+				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
+			</analyzer>
+		</fieldType>	
+		
+		<!-- A field type for terminology recognition. Any text put into this type of field is
+			processed to extract CANDIDATE TERMS to be considered by JATE. 		
+
+			WARNING: YOU MUST ENSURE YOUR fieldType DEFINITION FOR YOUR n-gram information FIELD
+			(default=jate_text_2_ngrams) AND THAT FOR YOUR word FIELD (default=jate_text_2_words)
+			USE THE SAME SET OF filters
+			
+			This is an example fieldType definition that extracts n-gram as candidates 
+			-->
 		<!--fieldType name="jate_text_2_terms" class="solr.TextField" positionIncrementGap="100">
 			<analyzer type="index">
 				<tokenizer class="solr.StandardTokenizerFactory" />
-				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
+				<filter class="solr.ASCIIFoldingFilterFactory"/>
 				<filter class="solr.LowerCaseFilterFactory" />
+				<filter class="solr.EnglishMinimalStemFilterFactory"/>
+				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
 				<filter class="solr.ShingleFilterFactory" minShingleSize="2" maxShingleSize="3"
 						outputUnigrams="false" outputUnigramsIfNoShingles="false" tokenSeparator=" "/>
-				<filter class="solr.PatternReplaceFilterFactory" pattern=".*_.*" replacement=""/>
+				<filter class="solr.PatternReplaceFilterFactory" pattern=".*_.*" replacement=""/>				
 			</analyzer>
 		</fieldType-->
-		<!-- A text field for terminology recognition. Any text put into this field will be
-			processed by JATE to extract candidate terms. 
-			This is an example fieldType definition that extracts phrases based on POS patterns as candidates -->
+		
+		<!-- A field type for terminology recognition. Any text put into this type of field is
+			processed to extract CANDIDATE TERMS to be considered by JATE.
+		    
+			This is an example fieldType definition that extracts phrases matching certain Part-
+			of-Speech patterns. 
+			
+			WARNING: YOU MUST ENSURE YOUR fieldType DEFINITION FOR YOUR n-gram information FIELD
+			(default=jate_text_2_ngrams) AND THAT FOR YOUR word FIELD (default=jate_text_2_words)
+			USE THE SAME SET OF filters
+			-->
 		<fieldType name="jate_text_2_terms" class="solr.TextField" positionIncrementGap="100">
 			<analyzer type="index">
 				<tokenizer class="org.apache.lucene.analysis.opennlp.OpenNLPTokenizerFactory"
 							sentenceModel="D:/Work/jate_github/jate/resource/en-sent.bin"
 							tokenizerModel="D:/Work/jate_github/jate/resource/en-token.bin"/>
+				<filter class="solr.ASCIIFoldingFilterFactory"/>
 				<filter class="uk.ac.shef.dcs.jate.v2.lucene.filter.OpenNLPRegexChunkerFactory"
 							posTaggerClass="uk.ac.shef.dcs.jate.v2.nlp.opennlp.POSTaggerOpenNLP"
 							posTaggerModel="D:/Work/jate_github/jate/resource/en-pos-maxent.bin"
 							patterns="D:/Work/jate_github/jate/jate.candidate.patterns"/>
-				<filter class="solr.LowerCaseFilterFactory" />				
-			</analyzer>
-		</fieldType>
-		<!-- A text field for terminology recognition. Any text put into this field will be
-			processed by JATE to extract words. This is used by some algorithms, such as 
-			Weirdness, GlossEx and TermEx.
-			-->
-		<fieldType name="jate_text_2_words" class="solr.TextField" positionIncrementGap="100">
-			<analyzer type="index">
-				<tokenizer class="solr.StandardTokenizerFactory" />
+				<filter class="solr.LowerCaseFilterFactory" />					
+				<filter class="solr.EnglishMinimalStemFilterFactory"/>
 				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
-				<filter class="solr.LowerCaseFilterFactory" />				
 			</analyzer>
-			<!-- no analyzer for query-->
-		</fieldType>		
+		</fieldType>	
+		<!-- ###################### JATE End #############################-->		
 	</types>
+	
 
 	<fields>
 	    <!-- field names should consist of alphanumeric or underscore characters only and
@@ -292,8 +340,12 @@
 			highlighting document content. Use the "text" field to search the content. -->
 			
 	   <!--##################### JATE Start ######################### -->
+	   <!-- Field to index and store token-n-grams. These are used as a field to lookup information
+	     including frequency, offsets, etc. for candidate terms from the candidate term's field 
+		 (default=jate_cterms) -->
+	   <field name="jate_ngraminfo" type="jate_text_2_terms" indexed="true" stored="false" multiValued="false"/>
 	   <!-- Field to index and store candidate terms -->
-	   <field name="jate_cterms" type="jate_text_2_terms" indexed="true" stored="false" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
+	   <field name="jate_cterms" type="jate_text_2_terms" indexed="true" stored="false" multiValued="false"/>
 	   <!-- Field to index and store words. You only need this if you use algorithms that require
 			word-level features, such as Weirdness, GlossEx, and TermEx-->
 	   <field name="jate_words" type="jate_text_2_words" indexed="true" stored="false" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
