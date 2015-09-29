@@ -346,8 +346,8 @@
 	     including frequency, offsets, etc. for candidate terms from the candidate term's field 
 		 (default=jate_cterms) -->
 	   <field name="jate_ngraminfo" type="jate_text_2_ngrams" indexed="true" stored="false" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
-	   <!-- Field to index and store candidate terms -->
-	   <field name="jate_cterms" type="jate_text_2_terms" indexed="true" stored="false" multiValued="false"/>
+	   <!-- Field to index and store candidate terms. Must be indexed, and termVectors set to true-->
+	   <field name="jate_cterms" type="jate_text_2_terms" indexed="true" stored="false" multiValued="false" termVectors="true"/>
 	   <!-- Field to index and store words. You only need this if you use algorithms that require
 			word-level features, such as Weirdness, GlossEx, and TermEx-->
 	   <field name="jate_words" type="jate_text_2_words" indexed="true" stored="false" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"/>
