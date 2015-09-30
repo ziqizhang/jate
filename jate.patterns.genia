@@ -1,0 +1,4 @@
+#c/nc-value paper
+default	<NN|NNP|NNS> <NN|NNP|NNS>
+default	<NN|NNP|NNS|JJ>+ <NN|NNP|NNS>
+default	<JJ|NN|NNP|NNS>* <IN>? <JJ|NN|NNP|NNS>* <NN|NNP|NNS>

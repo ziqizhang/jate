@@ -67,6 +67,8 @@ public class OpenNLPRegexChunkerFactory extends TokenFilterFactory {
             LineIterator li = FileUtils.lineIterator(f);
             while(li.hasNext()){
                 String lineStr=li.next();
+                if(lineStr.trim().length()==0||lineStr.startsWith("#"))
+                    continue;
                 String[] parts = lineStr.split("\t",2);
                 List<Pattern> pats = m.get(parts[0]);
                 if(pats==null)
