@@ -10,6 +10,7 @@ import uk.ac.shef.dcs.jate.util.IOUtil;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**.
  */
@@ -18,10 +19,19 @@ public abstract class App {
 
     public abstract List<JATETerm> extract(String indexPath, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException;
 
-    public static void collectTermInfo(IndexReader indexReader, List<JATETerm> terms) throws IOException {
-        TermInfoCollector infoCollector = new TermInfoCollector(indexReader);
-        for(JATETerm jt: terms)
+    public void collectTermInfo(IndexReader indexReader, List<JATETerm> terms,
+                                       String ngramInfoFieldname, String idFieldname) throws IOException {
+        Logger log = Logger.getLogger(this.getClass().getName());
+        TermInfoCollector infoCollector = new TermInfoCollector(indexReader, ngramInfoFieldname, idFieldname);
+
+        log.info("Gathering term information (e.g., provenance and offsets). This may take a while. Total="+terms.size());
+        int count=0;
+        for(JATETerm jt: terms) {
             jt.setTermInfo(infoCollector.collect(jt.getString()));
+            count++;
+            if(count%500==0)
+                log.info("done "+count);
+        }
     }
 
     public static Map<String, String> getParams(String[] args) throws JATEException {

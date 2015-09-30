@@ -48,7 +48,8 @@ public class AppATTF extends App {
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
         String paramValue=params.get("-c");
         if(paramValue!=null &&paramValue.equalsIgnoreCase("true")) {
-            collectTermInfo(indexReader, terms);
+            collectTermInfo(indexReader, terms, properties.getSolrFieldnameJATENGramInfo(),
+                    properties.getSolrFieldnameID());
         }
         indexReader.close();
         return terms;
