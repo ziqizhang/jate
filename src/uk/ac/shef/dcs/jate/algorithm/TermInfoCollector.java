@@ -29,16 +29,17 @@ public class TermInfoCollector {
 
     public TermInfo collect(String term) throws IOException {
         TermInfo info = new TermInfo();
+        BytesRef luceneTerm =  new BytesRef(term.getBytes());
         //this gives documents in which the term is found, but no offset information can be retrieved
         PostingsEnum postings =
-                MultiFields.getTermDocsEnum(indexReader, ngramInfoFieldname, new BytesRef(term.getBytes()));
+                MultiFields.getTermDocsEnum(indexReader, ngramInfoFieldname,luceneTerm);
         //now go through each document
         int docId = postings.nextDoc();
         while (docId != PostingsEnum.NO_MORE_DOCS) {
             //get the term vector for that document.
             TermsEnum it = indexReader.getTermVector(docId, ngramInfoFieldname).iterator();
             //find the term of interest
-            it.seekExact(new BytesRef(term.getBytes()));
+            it.seekExact(luceneTerm);
             //get its posting info. this will contain offset info
             PostingsEnum postingsInDoc = it.postings(null, PostingsEnum.OFFSETS);
             postingsInDoc.nextDoc();
