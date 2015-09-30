@@ -1,7 +1,6 @@
 *.html
 *.class
 .idea/*
-target/*
 .iml
 *.asc
 *.gif
