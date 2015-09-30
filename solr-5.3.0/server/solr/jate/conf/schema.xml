@@ -314,7 +314,8 @@
 				<filter class="uk.ac.shef.dcs.jate.lucene.filter.OpenNLPRegexChunkerFactory"
 							posTaggerClass="uk.ac.shef.dcs.jate.nlp.opennlp.POSTaggerOpenNLP"
 							posTaggerModel="D:/Work/jate_github/jate/resource/en-pos-maxent.bin"
-							patterns="D:/Work/jate_github/jate/jate.candidate.patterns"/>
+							patterns="D:/Work/jate_github/jate/jate.candidate.patterns"
+							maxPhraseSize="5"/>
 				<filter class="solr.LowerCaseFilterFactory" />					
 				<filter class="solr.EnglishMinimalStemFilterFactory"/>
 				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />

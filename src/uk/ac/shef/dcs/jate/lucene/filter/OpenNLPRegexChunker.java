@@ -31,6 +31,7 @@ public class OpenNLPRegexChunker extends TokenFilter {
     private int chunkStart=-1;
     private int chunkEnd=-1;
     private int tokenIdx =0;
+    private int maxPhraseSize;
 
     private POSTagger posTagger;
     private RegexNameFinder regexChunker;
@@ -38,10 +39,12 @@ public class OpenNLPRegexChunker extends TokenFilter {
     public OpenNLPRegexChunker(
             TokenStream input,
             POSTagger posTaggerOp,
-            Map<String, Pattern[]> patterns){
+            Map<String, Pattern[]> patterns,
+            int maxPhraseSize){
         super(input);
         this.posTagger = posTaggerOp;
         regexChunker=new RegexNameFinder(patterns);
+        this.maxPhraseSize=maxPhraseSize;
     }
 
     @Override
@@ -57,6 +60,7 @@ public class OpenNLPRegexChunker extends TokenFilter {
             String[] pos = createTags(words);
             //chunking
             Span[] chunks=regexChunker.find(pos);
+            chunks= prune(chunks);
             for(Span sp: chunks) {
                 chunkSpans.put(sp.getStart(), sp.getEnd());
                 chunkTypes.put(sp.getStart(), sp.getType());
@@ -97,6 +101,31 @@ public class OpenNLPRegexChunker extends TokenFilter {
             tokenIdx++;
             return true;
         }
+    }
+
+    private Span[] prune(Span[] chunks) {
+        Set<String> existing=new HashSet<>();
+        List<Span> list = Arrays.asList(chunks);
+        Iterator<Span> it = list.iterator();
+        while(it.hasNext()){
+            Span span=it.next();
+            if(span.getEnd()-span.getStart()>maxPhraseSize) {
+                it.remove();
+                continue;
+            }
+            String lookup=span.getStart()+","+span.getEnd();
+            if(existing.contains(lookup)) {
+                it.remove();
+                continue;
+            }
+        }
+        Collections.sort(list, (o1, o2) -> {
+            int c = Integer.valueOf(o1.getStart()).compareTo(o2.getStart());
+            if(c==0)
+                return Integer.valueOf(o1.getEnd()).compareTo(o2.getEnd());
+            return c;
+        });
+        return list.toArray(new Span[0]);
     }
 
     private void resetParams() {
@@ -164,12 +193,4 @@ public class OpenNLPRegexChunker extends TokenFilter {
         resetParams();
     }
 
-    public static void main(String[] args) {
-        Map<String, Pattern[]> patterns = new HashMap<>();
-        patterns.put("NP",new Pattern[]{Pattern.compile("[JJ]*\\s[NN]+")});
-        RegexNameFinder rnf = new RegexNameFinder(patterns);
-        String[] tokPOS = new String[]{"DT","JJ","NN","DT","NN","OT"};
-        Span[] rs=rnf.find(tokPOS);
-        System.out.println(rs);
-    }
 }

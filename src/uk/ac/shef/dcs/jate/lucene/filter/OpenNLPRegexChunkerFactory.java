@@ -1,5 +1,7 @@
 package uk.ac.shef.dcs.jate.lucene.filter;
 
+import opennlp.tools.namefind.RegexNameFinder;
+import opennlp.tools.util.Span;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -23,6 +25,7 @@ public class OpenNLPRegexChunkerFactory extends TokenFilterFactory {
 
     private POSTagger tagger;
     private Map<String, Pattern[]> patterns = new HashMap<>();
+    private int maxPhraseSize=5;
 
     /**
      * Initialize this factory via a set of key-value pairs.
@@ -31,6 +34,14 @@ public class OpenNLPRegexChunkerFactory extends TokenFilterFactory {
      */
     public OpenNLPRegexChunkerFactory(Map<String, String> args) {
         super(args);
+        String max = args.get("maxPhraseSize");
+        if (max == null)
+            throw new IllegalArgumentException("Parameter 'maxPhraseSize' is missing.");
+        try {
+            maxPhraseSize = Integer.valueOf(max);
+        }catch (NumberFormatException n){
+            throw new IllegalArgumentException("Parameter 'maxPhraseSize' is invalid. Expected: integer. Provided:"+max);
+        }
         String taggerClass = args.get("posTaggerClass");
         if (taggerClass == null)
             throw new IllegalArgumentException("Parameter 'class' for POS tagger is missing.");
@@ -40,7 +51,7 @@ public class OpenNLPRegexChunkerFactory extends TokenFilterFactory {
         } else {
             try {
                 initPatterns(patternStr, patterns);
-            }catch (IOException ioe){
+            } catch (IOException ioe) {
                 StringBuilder sb = new StringBuilder("Initiating ");
                 sb.append(this.getClass().getName()).append(" failed due to patterns. Details:\n");
                 sb.append(ExceptionUtils.getFullStackTrace(ioe));
@@ -65,18 +76,18 @@ public class OpenNLPRegexChunkerFactory extends TokenFilterFactory {
         if (f.exists()) {
             Map<String, List<Pattern>> m = new HashMap<>();
             LineIterator li = FileUtils.lineIterator(f);
-            while(li.hasNext()){
-                String lineStr=li.next();
-                if(lineStr.trim().length()==0||lineStr.startsWith("#"))
+            while (li.hasNext()) {
+                String lineStr = li.next();
+                if (lineStr.trim().length() == 0 || lineStr.startsWith("#"))
                     continue;
-                String[] parts = lineStr.split("\t",2);
+                String[] parts = lineStr.split("\t", 2);
                 List<Pattern> pats = m.get(parts[0]);
-                if(pats==null)
-                    pats=new ArrayList<>();
+                if (pats == null)
+                    pats = new ArrayList<>();
                 pats.add(Pattern.compile(parts[1]));
                 m.put(parts[0], pats);
             }
-            for(Map.Entry<String, List<Pattern>> en: m.entrySet()){
+            for (Map.Entry<String, List<Pattern>> en : m.entrySet()) {
                 patterns.put(en.getKey(), en.getValue().toArray(new Pattern[0]));
             }
         } else {
@@ -86,6 +97,7 @@ public class OpenNLPRegexChunkerFactory extends TokenFilterFactory {
 
     @Override
     public TokenStream create(TokenStream input) {
-        return new OpenNLPRegexChunker(input, tagger, patterns);
+        return new OpenNLPRegexChunker(input, tagger, patterns,maxPhraseSize);
     }
+
 }
