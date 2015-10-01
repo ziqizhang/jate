@@ -42,7 +42,7 @@ public class SolrParallelIndexingWorker extends JATERecursiveTaskWorker<String, 
         this.properties=properties;
         boolean indexJATESentences = properties.getSolrFieldnameJATESentences()!=null &&
                 !properties.getSolrFieldnameJATESentences().equals("");
-        if(indexJATESentences) {
+        if(indexJATESentences &&sentenceSplitter==null) {
             try {
                 sentenceSplitter = InstanceCreator.createSentenceSplitter(properties.getSentenceSplitterClass(),
                         properties.getSentenceSplitterParams());
@@ -106,7 +106,7 @@ public class SolrParallelIndexingWorker extends JATERecursiveTaskWorker<String, 
                 solrClient.add(solrDoc);
                 if(total%batchSize==0) {
                     batches++;
-                    LOG.info("Done batches: "+batches);
+                    LOG.info("Done batches: "+batches*batchSize);
                     SolrUtil.commit(solrClient,LOG,String.valueOf(batches), String.valueOf(batchSize));
                 }
             } catch (JATEException e) {

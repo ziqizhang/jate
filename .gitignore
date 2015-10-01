@@ -2,6 +2,7 @@
 *.class
 .idea/*
 target/*
+libs/*
 .iml
 *.asc
 *.gif

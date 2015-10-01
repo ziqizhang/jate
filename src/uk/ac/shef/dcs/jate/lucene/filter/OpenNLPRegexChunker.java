@@ -105,7 +105,7 @@ public class OpenNLPRegexChunker extends TokenFilter {
 
     private Span[] prune(Span[] chunks) {
         Set<String> existing=new HashSet<>();
-        List<Span> list = Arrays.asList(chunks);
+        List<Span> list = new ArrayList<>(Arrays.asList(chunks));
         Iterator<Span> it = list.iterator();
         while(it.hasNext()){
             Span span=it.next();

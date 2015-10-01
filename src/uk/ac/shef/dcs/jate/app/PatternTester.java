@@ -24,9 +24,11 @@ public class PatternTester {
 
         RegexNameFinder rnf = new RegexNameFinder(patterns);
         String[] testGeniaPatterns = new String[]{
-                "JJ","NN","NNS","NNP",".",
-                "IN","JJ","NN","NNS","NNP",".",
-                "NN","JJ","IN","JJ","NN","NNS","NNP"
+               // "JJ","NN","NNS","NNP",".",
+                //"IN","JJ","NN","NNS","NNP",".",
+              //  "NN","JJ","IN","JJ","NN","NNS","NNP"
+
+                "DT","NN","NN","CC","NNP","NNP","NN","IN","DT","VBZ","JJ","NN","NN","IN","JJ","."
         };
         Span[] rs = rnf.find(testGeniaPatterns);
         System.out.println(rs);

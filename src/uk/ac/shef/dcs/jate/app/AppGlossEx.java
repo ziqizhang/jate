@@ -27,7 +27,7 @@ public class AppGlossEx extends App {
         String jatePropertyFile=args[args.length - 1];
         Map<String, String> params = getParams(args);
 
-        List<JATETerm> terms = new AppCValue().extract(indexPath, jatePropertyFile, params);
+        List<JATETerm> terms = new AppGlossEx().extract(indexPath, jatePropertyFile, params);
         String paramValue=params.get("-o");
         write(terms,paramValue);
     }
