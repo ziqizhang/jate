@@ -60,7 +60,10 @@ public class Weirdness extends ReferenceBased {
                     pc_wi = nullWordProbInReference; //
                 pc_wi*=refScalar;
 
-                double v = (double) fFeatureWords.getTTF(wi) / totalWordsInCorpus / pc_wi;
+                int freq=fFeatureWords.getTTF(wi);
+                if(freq==0)
+                    continue;//composing words can be stopwords and no frequency will be recorded
+                double v = (double) freq / totalWordsInCorpus / pc_wi;
                 //SUMwi += Math.log((double) gFeatureStore.getWordFreq(wi) / (double) gFeatureStore.getTotalCorpusWordFreq() / gFeatureStore.getRefWordFreqNorm(wi));
                 SUMwi += Math.log(v);
             }

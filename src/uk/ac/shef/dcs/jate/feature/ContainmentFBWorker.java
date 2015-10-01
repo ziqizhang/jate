@@ -50,8 +50,9 @@ class ContainmentFBWorker extends JATERecursiveTaskWorker<String, int[]> {
         LOG.info("Total terms to process="+taskTerms.size());
         for (String termString : taskTerms) {
             int tokens = termString.split(" ").length;
-            StringBuilder pStr = new StringBuilder("\\b(");
-            pStr.append(termString).append(")\\b");
+
+            StringBuilder pStr = new StringBuilder("(?<!\\w)");
+            pStr.append(Pattern.quote(termString)).append("(?!\\w)");
             Pattern pattern = Pattern.compile(pStr.toString());
 
             for (Map.Entry<Integer, Set<String>> entry : numTokens2Terms.entrySet()){

@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public class PatternTester {
     public static void main(String[] args) throws IOException {
         Map<String, Pattern[]> patterns = new HashMap<>();
-        initPatterns("D:\\Work\\jate_github\\jate\\example\\patterns/genia.patterns",
+        initPatterns("D:\\Work\\jate_github\\jate\\example\\patterns/aclrdtec.patterns",
                 patterns);
 
         RegexNameFinder rnf = new RegexNameFinder(patterns);

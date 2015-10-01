@@ -33,13 +33,16 @@ public class RAKE extends Algorithm {
         List<JATETerm> result = new ArrayList<>();
         Set<String> cooccurrenceDictionary = fFeatureCoocurr.getTerms();
         StringBuilder msg = new StringBuilder("Beginning computing RAKE values,");
-        msg.append(", total terms=" + candidates.size());
+        msg.append(" total terms=" + candidates.size());
+        int count=0;
         LOG.info(msg.toString());
         for (String tString : candidates) {
             String[] elements = tString.split(" ");
             double score = 0;
             for (String word : elements) {
                 int freq = fFeatureWords.getTTF(word);
+                if(freq==0)    //composing word can be stop words that have been filtered
+                    continue;
                 int degree = freq;
                 if (cooccurrenceDictionary.contains(word)) {
                     Map<Integer, Integer> coocurWordIdx2Freq = fFeatureCoocurr.getCoocurrence(word);
@@ -53,6 +56,9 @@ public class RAKE extends Algorithm {
 
             JATETerm term = new JATETerm(tString, score);
             result.add(term);
+            count++;
+            if(count%1000==0)
+                LOG.info("done batch="+count);
         }
 
         Collections.sort(result);

@@ -21,6 +21,14 @@ public class Test {
     }
 
     public static void main(String[] args) {
+
+        String str="and this";
+        String pstr = "(?<!\\w)"+Pattern.quote(str)+"(?!\\w)";
+        Pattern pat=Pattern.compile(pstr);
+        Matcher mm = pat.matcher("oh and this is");
+        System.out.println(mm.find());
+        System.exit(1);
+
         String test="This is sentence one. Sentence two! " +
                 "Sentence three? " +
                 "Sentence \"four\". " +
