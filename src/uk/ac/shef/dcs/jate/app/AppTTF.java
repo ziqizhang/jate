@@ -2,7 +2,7 @@ package uk.ac.shef.dcs.jate.app;
 
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.NIOFSDirectory;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.algorithm.Algorithm;
@@ -11,6 +11,7 @@ import uk.ac.shef.dcs.jate.algorithm.TermInfoCollector;
 import uk.ac.shef.dcs.jate.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.feature.FrequencyTermBasedFBMaster;
 import uk.ac.shef.dcs.jate.model.JATETerm;
+import uk.ac.shef.dcs.jate.util.SolrUtil;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -38,7 +39,7 @@ public class AppTTF extends App {
 
     @Override
     public List<JATETerm> extract(String indexPath, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException {
-        IndexReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(indexPath)));
+        IndexReader indexReader = SolrUtil.getIndexReader(indexPath);
         JATEProperties properties = new JATEProperties(jatePropertyFile);
         FrequencyTermBasedFBMaster featureBuilder = new
                 FrequencyTermBasedFBMaster(indexReader, properties, 0);
