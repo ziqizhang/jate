@@ -77,6 +77,8 @@ class NCValueWorker extends JATERecursiveTaskWorker<String, List<JATETerm>>{
             String term = entry.getKey();
             double cvalue = entry.getValue();
             Map<Integer, Integer> cooccur=ccFeature.getCoocurrence(term);
+            if(cooccur==null)
+                continue;
             double ctxScore=0.0;
             /*
             If you want to select just top N terms as context words, here is where you

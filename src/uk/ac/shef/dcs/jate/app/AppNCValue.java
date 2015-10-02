@@ -10,6 +10,7 @@ import uk.ac.shef.dcs.jate.feature.*;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -70,7 +71,11 @@ public class AppNCValue extends App {
         ncvalue.registerFeature(Containment.class.getName(), cf);
         ncvalue.registerFeature(Cooccurrence.class.getName(), co);
 
-        List<JATETerm> terms=ncvalue.execute(co.getTerms());
+        List<String> candidates = new ArrayList<>(ftb.getMapTerm2TTF().keySet());
+        int cutoffFreq = getParamCutoffFreq(params);
+        filter(candidates, ftb, cutoffFreq);
+
+        List<JATETerm> terms=ncvalue.execute(candidates);
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
         String paramValue=params.get("-c");
         if(paramValue!=null &&paramValue.equalsIgnoreCase("true")) {

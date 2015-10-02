@@ -20,6 +20,7 @@ import java.util.logging.Logger;
  */
 public abstract class App {
     protected static final double DEFAULT_THRESHOLD_N=0.25;
+    protected Logger log = Logger.getLogger(this.getClass().getName());
 
     public abstract List<JATETerm> extract(SolrCore core, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException;
     public List<JATETerm> extract(String solrHomePath, String coreName, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException {
@@ -46,13 +47,17 @@ public abstract class App {
         }
     }
 
-    protected static void filter(List<String> candidates, FrequencyTermBased fFeature, int cutoff){
+    protected void filter(List<String> candidates, FrequencyTermBased fFeature, int cutoff){
+        StringBuilder s = new StringBuilder("Filter candidates by cutoff frequency=");
+        s.append(cutoff).append(". Before=").append(candidates.size()).append(" After=");
         Iterator<String> it = candidates.iterator();
         while(it.hasNext()){
             String t = it.next();
             if(fFeature.getTTF(t)<cutoff)
                 it.remove();
         }
+        s.append(candidates.size());
+        log.info(s.toString());
     }
 
     protected static Map<String, String> getParams(String[] args) throws JATEException {

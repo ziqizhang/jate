@@ -50,7 +50,7 @@ public class AppRIDF extends App {
         int cutoffFreq = getParamCutoffFreq(params);
         filter(candidates, feature, cutoffFreq);
 
-        List<JATETerm> terms=attf.execute(feature.getMapTerm2TTF().keySet());
+        List<JATETerm> terms=attf.execute(candidates);
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
         String paramValue=params.get("-c");
         if(paramValue!=null &&paramValue.equalsIgnoreCase("true")) {

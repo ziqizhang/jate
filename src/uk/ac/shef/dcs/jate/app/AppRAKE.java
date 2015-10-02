@@ -11,6 +11,7 @@ import uk.ac.shef.dcs.jate.feature.*;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -70,7 +71,11 @@ public class AppRAKE extends App{
         rake.registerFeature(FrequencyTermBased.class.getName()+RAKE.SUFFIX_WORD, fwb);
         rake.registerFeature(Cooccurrence.class.getName()+RAKE.SUFFIX_WORD, co);
 
-        List<JATETerm> terms=rake.execute(feature.getMapTerm2TTF().keySet());
+        List<String> candidates = new ArrayList<>(feature.getMapTerm2TTF().keySet());
+        int cutoffFreq = getParamCutoffFreq(params);
+        filter(candidates, feature, cutoffFreq);
+
+        List<JATETerm> terms=rake.execute(candidates);
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
         String paramValue=params.get("-c");
         if(paramValue!=null &&paramValue.equalsIgnoreCase("true")) {
