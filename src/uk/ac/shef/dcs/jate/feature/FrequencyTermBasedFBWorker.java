@@ -18,26 +18,26 @@ class FrequencyTermBasedFBWorker extends JATERecursiveTaskWorker<BytesRef, int[]
 
     private static final Logger LOG = Logger.getLogger(FrequencyTermBasedFBWorker.class.getName());
     private JATEProperties properties;
-    private IndexReader index;
+    private SolrIndexSearcher solrIndexSearcher;
     private FrequencyTermBased feature;
     private String candidateField;
     private Terms ngramInfo;
 
-    FrequencyTermBasedFBWorker(JATEProperties properties, List<BytesRef> luceneTerms, IndexReader index,
+    FrequencyTermBasedFBWorker(JATEProperties properties, List<BytesRef> luceneTerms, SolrIndexSearcher solrIndexSearcher,
                                FrequencyTermBased feature, int maxTasksPerWorker,
                                String candidateField,
                                Terms ngramInfo) {
         super(luceneTerms, maxTasksPerWorker);
         this.properties = properties;
         this.feature = feature;
-        this.index = index;
+        this.solrIndexSearcher = solrIndexSearcher;
         this.candidateField = candidateField;
         this.ngramInfo = ngramInfo;
     }
 
     @Override
     protected JATERecursiveTaskWorker<BytesRef, int[]> createInstance(List<BytesRef> termSplit) {
-        return new FrequencyTermBasedFBWorker(properties, termSplit, index, feature, maxTasksPerThread, candidateField,
+        return new FrequencyTermBasedFBWorker(properties, termSplit, solrIndexSearcher, feature, maxTasksPerThread, candidateField,
                 ngramInfo);
     }
 

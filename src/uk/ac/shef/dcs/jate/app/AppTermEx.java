@@ -1,16 +1,13 @@
 package uk.ac.shef.dcs.jate.app;
 
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.store.NIOFSDirectory;
+import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
+import org.apache.solr.core.SolrCore;
+import org.apache.solr.search.SolrIndexSearcher;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.algorithm.TermEx;
-import uk.ac.shef.dcs.jate.algorithm.TermInfoCollector;
 import uk.ac.shef.dcs.jate.feature.*;
 import uk.ac.shef.dcs.jate.model.JATETerm;
-import uk.ac.shef.dcs.jate.util.SolrUtil;
-
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
@@ -25,26 +22,30 @@ public class AppTermEx extends App {
             printHelp();
             System.exit(1);
         }
-        String indexPath = args[args.length - 2];
+        String solrHomePath = args[args.length - 3];
+        String solrCoreName=args[args.length-2];
         String jatePropertyFile=args[args.length - 1];
         Map<String, String> params = getParams(args);
 
-        List<JATETerm> terms = new AppTermEx().extract(indexPath, jatePropertyFile, params);
+        List<JATETerm> terms = new AppTermEx().extract(solrHomePath,solrCoreName, jatePropertyFile, params);
         String paramValue=params.get("-o");
         write(terms,paramValue);
 
     }
 
     @Override
-    public List<JATETerm> extract(String indexPath, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException {
-        IndexReader indexReader = SolrUtil.getIndexReader(indexPath);
+    public List<JATETerm> extract(String solrHomePath, String coreName, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException {
+        EmbeddedSolrServer solrServer= new EmbeddedSolrServer(Paths.get(solrHomePath), coreName);
+        SolrCore core = solrServer.getCoreContainer().getCore(coreName);
+        SolrIndexSearcher searcher = core.getSearcher().get();
+
         JATEProperties properties = new JATEProperties(jatePropertyFile);
         FrequencyTermBasedFBMaster ftbb = new
-                FrequencyTermBasedFBMaster(indexReader, properties, 0);
+                FrequencyTermBasedFBMaster(searcher, properties, 0);
         FrequencyTermBased ftb = (FrequencyTermBased)ftbb.build();
 
         FrequencyTermBasedFBMaster fwbb = new
-                FrequencyTermBasedFBMaster(indexReader, properties, 1);
+                FrequencyTermBasedFBMaster(searcher, properties, 1);
         FrequencyTermBased fwb = (FrequencyTermBased)fwbb.build();
 
         TTFReferenceFeatureFileBuilder ftrb = new
@@ -52,7 +53,7 @@ public class AppTermEx extends App {
         FrequencyTermBased frb = ftrb.build();
 
         FrequencyCtxDocBasedFBMaster fdbb = new
-                FrequencyCtxDocBasedFBMaster(indexReader, properties, 0);
+                FrequencyCtxDocBasedFBMaster(searcher, properties, 0);
         FrequencyCtxBased fdb = (FrequencyCtxBased) fdbb.build();
 
         TermEx termex = new TermEx();
@@ -66,19 +67,21 @@ public class AppTermEx extends App {
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
         String paramValue=params.get("-c");
         if(paramValue!=null &&paramValue.equalsIgnoreCase("true")) {
-            collectTermInfo(indexReader, terms, properties.getSolrFieldnameJATENGramInfo(),
+            collectTermInfo(searcher.getLeafReader(), terms, properties.getSolrFieldnameJATENGramInfo(),
                     properties.getSolrFieldnameID());
         }
 
-        indexReader.close();
+        searcher.close();
+        core.close();
+        solrServer.close();
         return terms;
     }
 
     protected static void printHelp() {
         StringBuilder sb = new StringBuilder("TermEx Usage:\n");
         sb.append("java -cp '[CLASSPATH]' ").append(AppATTF.class.getName())
-                .append(" [OPTIONS] ").append("-r [REF_TERM_TF_FILE] [LUCENE_INDEX_PATH] [JATE_PROPERTY_FILE]").append("\nE.g.:\n");
-        sb.append("java -cp '/libs/*' -t 20 -r /resource/bnc_unifrqs.normal /solr/server/solr/jate/data jate.properties ...\n\n");
+                .append(" [OPTIONS] ").append("-r [REF_TERM_TF_FILE] [SOLR_HOME_PATH] [SOLR_CORE_NAME] [JATE_PROPERTY_FILE]").append("\nE.g.:\n");
+        sb.append("java -cp '/libs/*' -t 20 -r /resource/bnc_unifrqs.normal /solr/server/solr/ jate jate.properties ...\n\n");
         sb.append("[OPTIONS]:\n")
                 .append("\t\t-c\t\t'true' or 'false'. Whether to collect term information, e.g., offsets in documents. Default is false.\n")
                 .append("\t\t-t\t\tA number. Score threshold for selecting terms. If not set then default -n is used.").append("\n")

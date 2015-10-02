@@ -3,7 +3,6 @@ package uk.ac.shef.dcs.jate.algorithm;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.*;
 import org.apache.lucene.util.BytesRef;
-import org.restlet.resource.Post;
 import uk.ac.shef.dcs.jate.model.JATEDocument;
 import uk.ac.shef.dcs.jate.model.TermInfo;
 
@@ -16,11 +15,11 @@ import java.util.Set;
  */
 public class TermInfoCollector {
 
-    protected IndexReader indexReader;
+    protected LeafReader indexReader;
     protected String ngramInfoFieldname;
     protected String idFieldname;
 
-    public TermInfoCollector(IndexReader indexReader, String ngramInfoFieldname,
+    public TermInfoCollector(LeafReader indexReader, String ngramInfoFieldname,
                              String idFieldname) {
         this.indexReader = indexReader;
         this.ngramInfoFieldname=ngramInfoFieldname;

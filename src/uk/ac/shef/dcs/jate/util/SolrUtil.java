@@ -1,15 +1,19 @@
 package uk.ac.shef.dcs.jate.util;
 
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.*;
 import org.apache.lucene.store.FSLockFactory;
 import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.Constants;
 import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
+import org.apache.solr.core.SolrCore;
+import org.apache.solr.search.SolrIndexSearcher;
 import org.apache.tika.utils.ExceptionUtils;
+import uk.ac.shef.dcs.jate.JATEException;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -21,13 +25,33 @@ import java.util.logging.Logger;
  */
 public class SolrUtil {
 
-    public static IndexReader getIndexReader(String indexPath) throws IOException {
-        /*if (Constants.JRE_IS_64BIT && MMapDirectory.UNMAP_SUPPORTED) {
-            return DirectoryReader.open(new MMapDirectory(Paths.get(indexPath), FSLockFactory.getDefault()));
-        } else*/ if (Constants.WINDOWS) {
-            return DirectoryReader.open(new SimpleFSDirectory(Paths.get(indexPath), FSLockFactory.getDefault()));
-        } else {
-            return DirectoryReader.open(new NIOFSDirectory(Paths.get(indexPath), FSLockFactory.getDefault()));
+    public static Terms getTermVector(String fieldname, SolrIndexSearcher solrIndexSearcher) throws JATEException{
+        try {
+            Fields fields = MultiFields.getFields(solrIndexSearcher.getLeafReader());
+
+            Terms vector = fields.terms(fieldname);
+            if (vector == null)
+                throw new JATEException("Cannot find expected field: " + fieldname);
+            return vector;
+        }catch (IOException ioe){
+            StringBuilder sb = new StringBuilder("Cannot find expected field: ");
+            sb.append(fieldname).append(". Error stacktrack:\n");
+            sb.append(org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace(ioe));
+            throw new JATEException(sb.toString());
+        }
+    }
+
+    public static Terms getTermVector(int docId, String fieldname, SolrIndexSearcher solrIndexSearcher) throws JATEException{
+        try {
+            Terms vector=solrIndexSearcher.getLeafReader().getTermVector(docId, fieldname);
+            if (vector == null)
+                throw new JATEException("Cannot find expected field: " + fieldname);
+            return vector;
+        }catch (IOException ioe){
+            StringBuilder sb = new StringBuilder("Cannot find expected field: ");
+            sb.append(fieldname).append(". Error stacktrack:\n");
+            sb.append(org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace(ioe));
+            throw new JATEException(sb.toString());
         }
     }
 

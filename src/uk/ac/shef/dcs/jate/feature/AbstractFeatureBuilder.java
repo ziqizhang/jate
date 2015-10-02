@@ -1,19 +1,20 @@
 package uk.ac.shef.dcs.jate.feature;
 
-import org.apache.lucene.index.IndexReader;
+import org.apache.solr.search.SolrIndexSearcher;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 
 /**
- * Created by zqz on 16/09/2015.
+ *
  */
 public abstract class AbstractFeatureBuilder {
 
-    protected IndexReader indexReader;
+    protected SolrIndexSearcher solrIndexSearcher;
+
     protected JATEProperties properties;
 
-    public AbstractFeatureBuilder(IndexReader index, JATEProperties properties){
-        this.indexReader=index;
+    public AbstractFeatureBuilder(SolrIndexSearcher solrIndexSearcher, JATEProperties properties){
+        this.solrIndexSearcher=solrIndexSearcher;
         this.properties=properties;
     }
 

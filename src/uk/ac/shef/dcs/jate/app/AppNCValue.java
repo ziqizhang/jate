@@ -1,17 +1,13 @@
 package uk.ac.shef.dcs.jate.app;
 
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.NIOFSDirectory;
+import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
+import org.apache.solr.core.SolrCore;
+import org.apache.solr.search.SolrIndexSearcher;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.algorithm.NCValue;
-import uk.ac.shef.dcs.jate.algorithm.TermInfoCollector;
 import uk.ac.shef.dcs.jate.feature.*;
 import uk.ac.shef.dcs.jate.model.JATETerm;
-import uk.ac.shef.dcs.jate.util.SolrUtil;
-
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
@@ -26,29 +22,33 @@ public class AppNCValue extends App {
             printHelp();
             System.exit(1);
         }
-        String indexPath = args[args.length - 2];
+        String solrHomePath = args[args.length - 3];
+        String solrCoreName=args[args.length-2];
         String jatePropertyFile=args[args.length - 1];
         Map<String, String> params = getParams(args);
 
-        List<JATETerm> terms = new AppNCValue().extract(indexPath, jatePropertyFile, params);
+        List<JATETerm> terms = new AppNCValue().extract(solrHomePath, solrCoreName, jatePropertyFile, params);
         String paramValue=params.get("-o");
         write(terms,paramValue);
     }
 
     @Override
-    public List<JATETerm> extract(String indexPath, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException {
-        IndexReader indexReader = SolrUtil.getIndexReader(indexPath);
+    public List<JATETerm> extract(String solrHomePath, String coreName, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException {
+        EmbeddedSolrServer solrServer= new EmbeddedSolrServer(Paths.get(solrHomePath), coreName);
+        SolrCore core = solrServer.getCoreContainer().getCore(coreName);
+        SolrIndexSearcher searcher = core.getSearcher().get();
+
         JATEProperties properties = new JATEProperties(jatePropertyFile);
         FrequencyTermBasedFBMaster ftbb = new
-                FrequencyTermBasedFBMaster(indexReader, properties, 0);
+                FrequencyTermBasedFBMaster(searcher, properties, 0);
         FrequencyTermBased ftb = (FrequencyTermBased)ftbb.build();
 
         ContainmentFBMaster cb = new
-                ContainmentFBMaster(indexReader, properties);
+                ContainmentFBMaster(searcher, properties);
         Containment cf = (Containment)cb.build();
 
         FrequencyCtxSentenceBasedFBMaster fcsbb = new
-                FrequencyCtxSentenceBasedFBMaster(indexReader, properties,
+                FrequencyCtxSentenceBasedFBMaster(searcher, properties,
                 properties.getSolrFieldnameJATECTerms(),
                 properties.getSolrFieldnameJATESentences());
         FrequencyCtxBased fcsb = (FrequencyCtxBased)fcsbb.build();
@@ -63,7 +63,7 @@ public class AppNCValue extends App {
             try{minTCF=Integer.valueOf(minTCFStr);}
             catch (NumberFormatException n){}}
 
-        CooccurrenceFBMaster ccb = new CooccurrenceFBMaster(indexReader, properties, ftb, minTTF, fcsb,
+        CooccurrenceFBMaster ccb = new CooccurrenceFBMaster(searcher, properties, ftb, minTTF, fcsb,
                 minTCF);
         Cooccurrence co = (Cooccurrence)ccb.build();
 
@@ -76,18 +76,20 @@ public class AppNCValue extends App {
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
         String paramValue=params.get("-c");
         if(paramValue!=null &&paramValue.equalsIgnoreCase("true")) {
-            collectTermInfo(indexReader, terms, properties.getSolrFieldnameJATENGramInfo(),
+            collectTermInfo(searcher.getLeafReader(), terms, properties.getSolrFieldnameJATENGramInfo(),
                     properties.getSolrFieldnameID());
         }
-        indexReader.close();
+        searcher.close();
+        core.close();
+        solrServer.close();
         return terms;
     }
 
     protected static void printHelp() {
         StringBuilder sb = new StringBuilder("NCValue, usage:\n");
         sb.append("java -cp '[CLASSPATH]' ").append(AppATTF.class.getName())
-                .append(" [OPTIONS] ").append("[LUCENE_INDEX_PATH] [JATE_PROPERTY_FILE]").append("\nE.g.:\n");
-        sb.append("java -cp '/libs/*' -t 20 /solr/server/solr/jate/data jate.properties\n\n");
+                .append(" [OPTIONS] ").append("[SOLR_HOME_PATH] [SOLR_CORE_NAME] [JATE_PROPERTY_FILE]").append("\nE.g.:\n");
+        sb.append("java -cp '/libs/*' -t 20 /solr/server/solr jate jate.properties\n\n");
         sb.append("[OPTIONS]:\n")
                 .append("\t\t-c\t\t'true' or 'false'. Whether to collect term information, e.g., offsets in documents. Default is false.\n")
                 .append("\t\t-t\t\tA number. Score threshold for selecting terms. If not set then default -n is used.").append("\n")

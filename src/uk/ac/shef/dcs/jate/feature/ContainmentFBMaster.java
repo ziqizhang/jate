@@ -2,8 +2,11 @@ package uk.ac.shef.dcs.jate.feature;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.lucene.index.*;
+import org.apache.solr.core.SolrCore;
+import org.apache.solr.search.SolrIndexSearcher;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
+import uk.ac.shef.dcs.jate.util.SolrUtil;
 
 import java.io.IOException;
 import java.util.*;
@@ -17,18 +20,15 @@ public class ContainmentFBMaster extends AbstractFeatureBuilder {
 
     private static final Logger LOG = Logger.getLogger(ContainmentFBMaster.class.getName());
 
-    public ContainmentFBMaster(IndexReader index, JATEProperties properties) {
-        super(index, properties);
+    public ContainmentFBMaster(SolrIndexSearcher solrIndexSearcher, JATEProperties properties) {
+        super(solrIndexSearcher, properties);
     }
 
     @Override
     public AbstractFeature build() throws JATEException {
         Containment feature = new Containment();
         try {
-            Fields fields = MultiFields.getFields(indexReader);
-            Terms terms = fields.terms(properties.getSolrFieldnameJATECTerms());
-            if (terms == null)
-                throw new JATEException("Cannot find expected field: " + properties.getSolrFieldnameJATECTerms());
+            Terms terms = SolrUtil.getTermVector(properties.getSolrFieldnameJATECTerms(), solrIndexSearcher);
 
             Map<Integer, Set<String>> numTokens2Terms = new HashMap<>();
 

@@ -2,14 +2,15 @@ package uk.ac.shef.dcs.jate.feature;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.PostingsEnum;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.util.BytesRef;
+import org.apache.solr.search.SolrIndexSearcher;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.JATERecursiveTaskWorker;
+import uk.ac.shef.dcs.jate.util.SolrUtil;
 
 import java.io.IOException;
 import java.util.*;
@@ -22,18 +23,18 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
 
     private static final Logger LOG = Logger.getLogger(FrequencyCtxSentenceBasedFBWorker.class.getName());
     private JATEProperties properties;
-    private IndexReader indexReader;
+    private SolrIndexSearcher solrIndexSearcher;
     private String termTargetField;
     private String sentenceTargetField;
 
     public FrequencyCtxSentenceBasedFBWorker(JATEProperties properties,
                                              List<Integer> docIds,
-                                             IndexReader indexReader,
+                                             SolrIndexSearcher solrIndexSearcher,
                                              int maxTasksPerWorker,
                                              String termTargetField, String sentenceTargetField) {
         super(docIds, maxTasksPerWorker);
         this.properties = properties;
-        this.indexReader = indexReader;
+        this.solrIndexSearcher = solrIndexSearcher;
         this.termTargetField = termTargetField;
         this.sentenceTargetField = sentenceTargetField;
     }
@@ -41,7 +42,7 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
     @Override
     protected JATERecursiveTaskWorker<Integer, FrequencyCtxBased> createInstance(List<Integer> docIdSplit) {
         return new FrequencyCtxSentenceBasedFBWorker(properties, docIdSplit,
-                indexReader, maxTasksPerThread, termTargetField, sentenceTargetField);
+                solrIndexSearcher, maxTasksPerThread, termTargetField, sentenceTargetField);
     }
 
     @Override
@@ -84,13 +85,11 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
         for (int docId : docIds) {
             count++;
             try {
-                Terms lookupVector = indexReader.getTermVector(docId, properties.getSolrFieldnameJATENGramInfo());
-                if (lookupVector == null)
-                    throw new JATEException("Required term vector in field but missing:");
-
-                List<TextUnitOffsets> terms = collectTermOffsets(indexReader.getTermVector(docId, termTargetField),
+                Terms lookupVector = SolrUtil.getTermVector(docId, properties.getSolrFieldnameJATENGramInfo(), solrIndexSearcher);
+                List<TextUnitOffsets> terms = collectTermOffsets(
+                        SolrUtil.getTermVector(docId, termTargetField, solrIndexSearcher),
                         lookupVector);
-                List<int[]> sentences = collectSentenceOffsets(indexReader, sentenceTargetField, docId);
+                List<int[]> sentences = collectSentenceOffsets(solrIndexSearcher, sentenceTargetField, docId);
                 StringBuilder sb = new StringBuilder("#");
                 sb.append(count).append(", docId=").append(docId).append(", total terms=").append(terms.size())
                         .append(", total sentences=").append(sentences);
@@ -132,8 +131,8 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
         return feature;
     }
 
-    private List<int[]> collectSentenceOffsets(IndexReader indexReader, String fieldname, int docId) throws IOException {
-        Document doc = indexReader.document(docId);
+    private List<int[]> collectSentenceOffsets(SolrIndexSearcher solrIndexSearcher, String fieldname, int docId) throws IOException {
+        Document doc = solrIndexSearcher.doc(docId);
         String[] values = doc.getValues(fieldname);
         List<int[]> rs = new ArrayList<>();
         for (String v : values) {

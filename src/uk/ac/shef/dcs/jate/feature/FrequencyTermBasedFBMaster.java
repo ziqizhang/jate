@@ -3,8 +3,11 @@ package uk.ac.shef.dcs.jate.feature;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.lucene.index.*;
 import org.apache.lucene.util.BytesRef;
+import org.apache.solr.core.SolrCore;
+import org.apache.solr.search.SolrIndexSearcher;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
+import uk.ac.shef.dcs.jate.util.SolrUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,26 +24,21 @@ public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
 
     protected int apply2Terms = 0; //1 means no, i.e, words
 
-    public FrequencyTermBasedFBMaster(IndexReader index, JATEProperties properties,
+    public FrequencyTermBasedFBMaster(SolrIndexSearcher solrIndexSearcher, JATEProperties properties,
                                       int apply2Terms) {
-        super(index, properties);
+        super(solrIndexSearcher, properties);
         this.apply2Terms = apply2Terms;
     }
 
     @Override
     public AbstractFeature build() throws JATEException {
         FrequencyTermBased feature = new FrequencyTermBased();
-        feature.setTotalDocs(indexReader.numDocs());
+        feature.setTotalDocs((Integer) solrIndexSearcher.getStatistics().get("numDocs"));
+        //solrIndexSearcher.
         String targetField = apply2Terms == 0 ? properties.getSolrFieldnameJATECTerms() : properties.getSolrFieldnameJATEWords();
         try {
-            Fields fields = MultiFields.getFields(indexReader);
-
-            Terms ngramInfo = fields.terms(properties.getSolrFieldnameJATENGramInfo());
-            if (ngramInfo == null)
-                throw new JATEException("Cannot find expected field: " + properties.getSolrFieldnameJATENGramInfo());
-            Terms terms = fields.terms(targetField);
-            if (terms == null)
-                throw new JATEException("Cannot find expected field: " + targetField);
+            Terms ngramInfo = SolrUtil.getTermVector(properties.getSolrFieldnameJATENGramInfo(),solrIndexSearcher);
+            Terms terms =SolrUtil.getTermVector(targetField,solrIndexSearcher);
 
             TermsEnum termsEnum = terms.iterator();
             List<BytesRef> allLuceneTerms = new ArrayList<>();
@@ -61,7 +59,7 @@ public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
             LOG.info(sb.toString());
             FrequencyTermBasedFBWorker worker = new
                     FrequencyTermBasedFBWorker(properties, allLuceneTerms,
-                    indexReader, feature, properties.getFeatureBuilderMaxTermsPerWorker(),
+                    solrIndexSearcher, feature, properties.getFeatureBuilderMaxTermsPerWorker(),
                     targetField,
                     ngramInfo);
             ForkJoinPool forkJoinPool = new ForkJoinPool(cores);

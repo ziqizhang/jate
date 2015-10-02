@@ -1,6 +1,6 @@
 package uk.ac.shef.dcs.jate.feature;
 
-import org.apache.lucene.index.IndexReader;
+import org.apache.solr.search.SolrIndexSearcher;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 
@@ -19,12 +19,12 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
     protected int minTTF;
     protected int minTCF;
 
-    public CooccurrenceFBMaster(IndexReader index, JATEProperties properties,
+    public CooccurrenceFBMaster(SolrIndexSearcher solrIndexSearcher, JATEProperties properties,
                                 FrequencyTermBased termFeature,
                                 int minTTF,
                                 FrequencyCtxBased contextFeature,
                                 int minTCF) {
-        super(index, properties);
+        super(solrIndexSearcher, properties);
         this.frequencyCtxBased = contextFeature;
         this.frequencyTermBased=termFeature;
         this.minTTF=minTTF;

@@ -1,19 +1,15 @@
 package uk.ac.shef.dcs.jate.app;
 
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.NIOFSDirectory;
-import org.apache.lucene.store.SimpleFSDirectory;
+import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
+import org.apache.solr.core.SolrCore;
+import org.apache.solr.search.SolrIndexSearcher;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.algorithm.ATTF;
 import uk.ac.shef.dcs.jate.algorithm.Algorithm;
-import uk.ac.shef.dcs.jate.algorithm.TermInfoCollector;
 import uk.ac.shef.dcs.jate.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.feature.FrequencyTermBasedFBMaster;
 import uk.ac.shef.dcs.jate.model.JATETerm;
-import uk.ac.shef.dcs.jate.util.SolrUtil;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -28,21 +24,26 @@ public class AppATTF extends App {
             printHelp();
             System.exit(1);
         }
-        String indexPath = args[args.length - 2];
-        String jatePropertyFile = args[args.length-1];
+        String solrHomePath = args[args.length - 3];
+        String solrCoreName=args[args.length-2];
+        String jatePropertyFile=args[args.length - 1];
+
         Map<String, String> params = getParams(args);
 
         String paramValue=params.get("-o");
-        List<JATETerm> terms = new AppATTF().extract(indexPath, jatePropertyFile, params);
+        List<JATETerm> terms = new AppATTF().extract(solrHomePath,solrCoreName, jatePropertyFile, params);
         write(terms,paramValue);
     }
 
     @Override
-    public List<JATETerm> extract(String indexPath, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException {
-        IndexReader indexReader = SolrUtil.getIndexReader(indexPath);
+    public List<JATETerm> extract(String solrHomePath, String coreName, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException {
+        EmbeddedSolrServer solrServer= new EmbeddedSolrServer(Paths.get(solrHomePath), coreName);
+        SolrCore core = solrServer.getCoreContainer().getCore(coreName);
+        SolrIndexSearcher searcher = core.getSearcher().get();
+
         JATEProperties properties = new JATEProperties(jatePropertyFile);
         FrequencyTermBasedFBMaster featureBuilder = new
-                FrequencyTermBasedFBMaster(indexReader, properties, 0);
+                FrequencyTermBasedFBMaster(searcher, properties, 0);
         FrequencyTermBased feature = (FrequencyTermBased)featureBuilder.build();
         Algorithm attf = new ATTF();
         attf.registerFeature(FrequencyTermBased.class.getName(), feature);
@@ -51,10 +52,12 @@ public class AppATTF extends App {
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
         String paramValue=params.get("-c");
         if(paramValue!=null &&paramValue.equalsIgnoreCase("true")) {
-            collectTermInfo(indexReader, terms, properties.getSolrFieldnameJATENGramInfo(),
+            collectTermInfo(searcher.getLeafReader(), terms, properties.getSolrFieldnameJATENGramInfo(),
                     properties.getSolrFieldnameID());
         }
-        indexReader.close();
+        searcher.close();
+        core.close();
+        solrServer.close();
         return terms;
     }
 }

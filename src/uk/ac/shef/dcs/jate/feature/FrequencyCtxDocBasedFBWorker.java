@@ -3,6 +3,7 @@ package uk.ac.shef.dcs.jate.feature;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.lucene.index.*;
 import org.apache.lucene.util.BytesRef;
+import org.apache.solr.search.SolrIndexSearcher;
 import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.JATERecursiveTaskWorker;
 
@@ -18,24 +19,24 @@ public class FrequencyCtxDocBasedFBWorker extends JATERecursiveTaskWorker<BytesR
 
     private static final Logger LOG = Logger.getLogger(FrequencyCtxDocBasedFBWorker.class.getName());
     private JATEProperties properties;
-    private IndexReader index;
+    private SolrIndexSearcher solrIndexSearcher;
     private String targetField;
     private Terms ngramInfo;
 
-    FrequencyCtxDocBasedFBWorker(JATEProperties properties, List<BytesRef> luceneTerms, IndexReader index,
+    FrequencyCtxDocBasedFBWorker(JATEProperties properties, List<BytesRef> luceneTerms, SolrIndexSearcher solrIndexSearcher,
                                  int maxTasksPerWorker,
                                  String targetField,
                                  Terms ngramInfo) {
         super(luceneTerms, maxTasksPerWorker);
         this.properties = properties;
-        this.index = index;
+        this.solrIndexSearcher = solrIndexSearcher;
         this.targetField = targetField;
         this.ngramInfo =ngramInfo;
     }
 
     @Override
     protected JATERecursiveTaskWorker<BytesRef, FrequencyCtxBased> createInstance(List<BytesRef> termSplits) {
-        return new FrequencyCtxDocBasedFBWorker(properties, termSplits, index, maxTasksPerThread,
+        return new FrequencyCtxDocBasedFBWorker(properties, termSplits, solrIndexSearcher, maxTasksPerThread,
                 targetField, ngramInfo);
     }
 

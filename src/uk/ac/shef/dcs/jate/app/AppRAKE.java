@@ -1,17 +1,14 @@
 package uk.ac.shef.dcs.jate.app;
 
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.store.NIOFSDirectory;
+import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
+import org.apache.solr.core.SolrCore;
+import org.apache.solr.search.SolrIndexSearcher;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 
 import uk.ac.shef.dcs.jate.algorithm.RAKE;
-import uk.ac.shef.dcs.jate.algorithm.TermInfoCollector;
 import uk.ac.shef.dcs.jate.feature.*;
 import uk.ac.shef.dcs.jate.model.JATETerm;
-import uk.ac.shef.dcs.jate.util.SolrUtil;
-
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
@@ -26,29 +23,33 @@ public class AppRAKE extends App{
             printHelp();
             System.exit(1);
         }
-        String indexPath = args[args.length - 2];
+        String solrHomePath = args[args.length - 3];
+        String solrCoreName=args[args.length-2];
         String jatePropertyFile=args[args.length - 1];
         Map<String, String> params = getParams(args);
 
-        List<JATETerm> terms = new AppRAKE().extract(indexPath, jatePropertyFile, params);
+        List<JATETerm> terms = new AppRAKE().extract(solrHomePath, solrCoreName, jatePropertyFile, params);
         String paramValue=params.get("-o");
         write(terms,paramValue);
     }
 
     @Override
-    public List<JATETerm> extract(String indexPath, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException {
-        IndexReader indexReader = SolrUtil.getIndexReader(indexPath);
+    public List<JATETerm> extract(String solrHomePath, String coreName, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException {
+        EmbeddedSolrServer solrServer= new EmbeddedSolrServer(Paths.get(solrHomePath), coreName);
+        SolrCore core = solrServer.getCoreContainer().getCore(coreName);
+        SolrIndexSearcher searcher = core.getSearcher().get();
+
         JATEProperties properties = new JATEProperties(jatePropertyFile);
         FrequencyTermBasedFBMaster featureBuilder = new
-                FrequencyTermBasedFBMaster(indexReader, properties, 0);
+                FrequencyTermBasedFBMaster(searcher, properties, 0);
         FrequencyTermBased feature = (FrequencyTermBased)featureBuilder.build();
 
         FrequencyTermBasedFBMaster fwbb = new
-                FrequencyTermBasedFBMaster(indexReader, properties, 1);
+                FrequencyTermBasedFBMaster(searcher, properties, 1);
         FrequencyTermBased fwb = (FrequencyTermBased)fwbb.build();
 
         FrequencyCtxSentenceBasedFBMaster fcsbb = new
-                FrequencyCtxSentenceBasedFBMaster(indexReader, properties,
+                FrequencyCtxSentenceBasedFBMaster(searcher, properties,
                 properties.getSolrFieldnameJATEWords(),
                 properties.getSolrFieldnameJATESentences());
         FrequencyCtxBased fcsb = (FrequencyCtxBased)fcsbb.build();
@@ -63,7 +64,7 @@ public class AppRAKE extends App{
             try{minTCF=Integer.valueOf(minTCFStr);}
             catch (NumberFormatException n){}}
 
-        CooccurrenceFBMaster cb = new CooccurrenceFBMaster(indexReader, properties, fwb, minTTF, fcsb,
+        CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, fwb, minTTF, fcsb,
                 minTCF);
         Cooccurrence co = (Cooccurrence)cb.build();
 
@@ -75,10 +76,12 @@ public class AppRAKE extends App{
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
         String paramValue=params.get("-c");
         if(paramValue!=null &&paramValue.equalsIgnoreCase("true")) {
-            collectTermInfo(indexReader, terms, properties.getSolrFieldnameJATENGramInfo(),
+            collectTermInfo(searcher.getLeafReader(), terms, properties.getSolrFieldnameJATENGramInfo(),
                     properties.getSolrFieldnameID());
         }
-        indexReader.close();
+        searcher.close();
+        core.close();
+        solrServer.close();
         return terms;
     }
 
