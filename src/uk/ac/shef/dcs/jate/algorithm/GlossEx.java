@@ -6,10 +6,7 @@ import uk.ac.shef.dcs.jate.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 import uk.ac.shef.dcs.jate.model.TermInfo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -43,7 +40,7 @@ public class GlossEx extends ReferenceBased {
         this.beta = beta;
     }
 
-    public List<JATETerm> execute(Set<String> candidates) throws JATEException {
+    public List<JATETerm> execute(Collection<String> candidates) throws JATEException {
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeatureTerms = (FrequencyTermBased) feature;

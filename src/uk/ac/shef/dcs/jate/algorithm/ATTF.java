@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class ATTF extends Algorithm{
     private static Logger LOG = Logger.getLogger(ATTF.class.getName());
     @Override
-    public List<JATETerm> execute(Set<String> candidates) throws JATEException {
+    public List<JATETerm> execute(Collection<String> candidates) throws JATEException {
         LOG.info("Calculating ATTF for "+candidates.size()+" candidate terms.");
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);

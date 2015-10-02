@@ -4,10 +4,7 @@ import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.feature.AbstractFeature;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  *
@@ -20,7 +17,7 @@ public abstract class Algorithm {
         features.put(featureClassName, feature);
     }
 
-    public abstract List<JATETerm> execute(Set<String> candidates) throws JATEException;
+    public abstract List<JATETerm> execute(Collection<String> candidates) throws JATEException;
 
     protected void validateFeature(AbstractFeature feature, Class type) throws JATEException {
         if (feature == null || !(feature.getClass().equals(type))) {

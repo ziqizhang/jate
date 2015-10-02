@@ -2,13 +2,17 @@ package uk.ac.shef.dcs.jate.app;
 
 import com.google.gson.Gson;
 import org.apache.lucene.index.LeafReader;
+import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
+import org.apache.solr.core.SolrCore;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.algorithm.TermInfoCollector;
+import uk.ac.shef.dcs.jate.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 import uk.ac.shef.dcs.jate.util.IOUtil;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -17,7 +21,15 @@ import java.util.logging.Logger;
 public abstract class App {
     protected static final double DEFAULT_THRESHOLD_N=0.25;
 
-    public abstract List<JATETerm> extract(String solrHomePath, String coreName, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException;
+    public abstract List<JATETerm> extract(SolrCore core, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException;
+    public List<JATETerm> extract(String solrHomePath, String coreName, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException {
+        EmbeddedSolrServer solrServer= new EmbeddedSolrServer(Paths.get(solrHomePath), coreName);
+        SolrCore core = solrServer.getCoreContainer().getCore(coreName);
+        List<JATETerm> result= extract(core, jatePropertyFile, params);
+        solrServer.close();
+        core.close();
+        return result;
+    }
 
     public void collectTermInfo(LeafReader leafReader, List<JATETerm> terms,
                                        String ngramInfoFieldname, String idFieldname) throws IOException {
@@ -34,7 +46,16 @@ public abstract class App {
         }
     }
 
-    public static Map<String, String> getParams(String[] args) throws JATEException {
+    protected static void filter(List<String> candidates, FrequencyTermBased fFeature, int cutoff){
+        Iterator<String> it = candidates.iterator();
+        while(it.hasNext()){
+            String t = it.next();
+            if(fFeature.getTTF(t)<cutoff)
+                it.remove();
+        }
+    }
+
+    protected static Map<String, String> getParams(String[] args) throws JATEException {
         Map<String, String> params = new HashMap<>();
         for(int i=0; i< args.length; i++){
             if(i+1<args.length) {
@@ -47,7 +68,18 @@ public abstract class App {
         return params;
     }
 
-    public static void write(List<JATETerm> terms, String path) throws IOException {
+    protected static int getParamCutoffFreq(Map<String, String> params){
+        String cutoff=params.get("-mttf");
+        int minFreq=0;
+        if(cutoff!=null){
+            try{
+                minFreq=Integer.valueOf(cutoff);
+            }catch (NumberFormatException ne){}
+        }
+        return minFreq;
+    }
+
+    protected static void write(List<JATETerm> terms, String path) throws IOException {
         Gson gson = new Gson();
         if(path==null){
             System.out.println(gson.toJson(terms));

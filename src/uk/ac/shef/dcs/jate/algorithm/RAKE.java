@@ -21,7 +21,7 @@ public class RAKE extends Algorithm {
     public static final String SUFFIX_WORD = "_WORD";
 
     @Override
-    public List<JATETerm> execute(Set<String> candidates) throws JATEException {
+    public List<JATETerm> execute(Collection<String> candidates) throws JATEException {
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName() + SUFFIX_WORD);
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeatureWords = (FrequencyTermBased) feature;

@@ -12,6 +12,7 @@ import uk.ac.shef.dcs.jate.feature.TTFReferenceFeatureFileBuilder;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,9 +37,7 @@ public class AppWeirdness extends App {
     }
 
     @Override
-    public List<JATETerm> extract(String solrHomePath, String coreName, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException {
-        EmbeddedSolrServer solrServer= new EmbeddedSolrServer(Paths.get(solrHomePath), coreName);
-        SolrCore core = solrServer.getCoreContainer().getCore(coreName);
+    public List<JATETerm> extract(SolrCore core, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException {
         SolrIndexSearcher searcher = core.getSearcher().get();
 
         JATEProperties properties = new JATEProperties(jatePropertyFile);
@@ -58,7 +57,11 @@ public class AppWeirdness extends App {
         weirdness.registerFeature(FrequencyTermBased.class.getName() + Weirdness.SUFFIX_WORD, fwb);
         weirdness.registerFeature(FrequencyTermBased.class.getName() + Weirdness.SUFFIX_REF, frb);
 
-        List<JATETerm> terms = weirdness.execute(ftb.getMapTerm2TTF().keySet());
+        List<String> candidates = new ArrayList<>(ftb.getMapTerm2TTF().keySet());
+        int cutoffFreq = getParamCutoffFreq(params);
+        filter(candidates, ftb, cutoffFreq);
+
+        List<JATETerm> terms = weirdness.execute(candidates);
         terms = applyThresholds(terms, params.get("-t"), params.get("-n"));
         String paramValue = params.get("-c");
         if (paramValue != null && paramValue.equalsIgnoreCase("true")) {
@@ -68,7 +71,6 @@ public class AppWeirdness extends App {
 
         searcher.close();
         core.close();
-        solrServer.close();
         return terms;
     }
 

@@ -12,7 +12,7 @@ import uk.ac.shef.dcs.jate.feature.FrequencyTermBasedFBMaster;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import java.io.IOException;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,10 +35,9 @@ public class AppATTF extends App {
         write(terms,paramValue);
     }
 
+
     @Override
-    public List<JATETerm> extract(String solrHomePath, String coreName, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException {
-        EmbeddedSolrServer solrServer= new EmbeddedSolrServer(Paths.get(solrHomePath), coreName);
-        SolrCore core = solrServer.getCoreContainer().getCore(coreName);
+    public List<JATETerm> extract(SolrCore core, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException {
         SolrIndexSearcher searcher = core.getSearcher().get();
 
         JATEProperties properties = new JATEProperties(jatePropertyFile);
@@ -48,7 +47,11 @@ public class AppATTF extends App {
         Algorithm attf = new ATTF();
         attf.registerFeature(FrequencyTermBased.class.getName(), feature);
 
-        List<JATETerm> terms=attf.execute(feature.getMapTerm2TTF().keySet());
+        List<String> candidates = new ArrayList<>(feature.getMapTerm2TTF().keySet());
+        int cutoffFreq = getParamCutoffFreq(params);
+        filter(candidates, feature, cutoffFreq);
+
+        List<JATETerm> terms=attf.execute(candidates);
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
         String paramValue=params.get("-c");
         if(paramValue!=null &&paramValue.equalsIgnoreCase("true")) {
@@ -56,8 +59,7 @@ public class AppATTF extends App {
                     properties.getSolrFieldnameID());
         }
         searcher.close();
-        core.close();
-        solrServer.close();
         return terms;
     }
+
 }

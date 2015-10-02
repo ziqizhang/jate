@@ -28,7 +28,7 @@ public class Weirdness extends ReferenceBased {
     }
 
     @Override
-    public List<JATETerm> execute(Set<String> candidates) throws JATEException {
+    public List<JATETerm> execute(Collection<String> candidates) throws JATEException {
         AbstractFeature feature1 = features.get(FrequencyTermBased.class.getName()+SUFFIX_WORD);
         validateFeature(feature1, FrequencyTermBased.class);
         FrequencyTermBased fFeatureWords = (FrequencyTermBased) feature1;

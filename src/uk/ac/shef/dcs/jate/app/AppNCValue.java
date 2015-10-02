@@ -33,9 +33,7 @@ public class AppNCValue extends App {
     }
 
     @Override
-    public List<JATETerm> extract(String solrHomePath, String coreName, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException {
-        EmbeddedSolrServer solrServer= new EmbeddedSolrServer(Paths.get(solrHomePath), coreName);
-        SolrCore core = solrServer.getCoreContainer().getCore(coreName);
+    public List<JATETerm> extract(SolrCore core, String jatePropertyFile, Map<String, String> params) throws IOException, JATEException {
         SolrIndexSearcher searcher = core.getSearcher().get();
 
         JATEProperties properties = new JATEProperties(jatePropertyFile);
@@ -81,9 +79,9 @@ public class AppNCValue extends App {
         }
         searcher.close();
         core.close();
-        solrServer.close();
         return terms;
     }
+
 
     protected static void printHelp() {
         StringBuilder sb = new StringBuilder("NCValue, usage:\n");

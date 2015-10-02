@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public class TFIDF extends Algorithm {
     private static final Logger LOG = Logger.getLogger(TFIDF.class.getName());
     @Override
-    public List<JATETerm> execute(Set<String> candidates) throws JATEException {
+    public List<JATETerm> execute(Collection<String> candidates) throws JATEException {
         AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeature = (FrequencyTermBased) feature;
