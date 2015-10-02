@@ -74,6 +74,7 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<String, Cooccu
             if (minTTF == 0 && minTCF == 0)
                 unique.addAll(termsInContext.keySet());
             else {
+                LOG.info("Filtering candidates with min.ttf="+minTTF+" min.tcf="+minTCF);
                 for (String term : termsInContext.keySet()) {
                     if (frequencyTermBased.getTTF(term) >= minTTF && frequencyCtxBased.getContextIds(term).size() >= minTCF)
                         unique.add(term);
