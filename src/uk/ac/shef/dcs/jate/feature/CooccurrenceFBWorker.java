@@ -48,7 +48,7 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<String, Cooccu
         Cooccurrence joined = new Cooccurrence(allTerms.size());
         for (Cooccurrence output : workerOutput) {
             for (int term1Id = 0; term1Id < output.getNumTerms(); term1Id++) {
-                LOG.info("worker has terms="+output.getNumTerms());
+                //LOG.info("worker has terms="+output.getNumTerms());
                 Map<Integer, Integer> cooccurrence = output.getCooccurrence(term1Id);
                 String term1 = output.lookup(term1Id);
                 int newTerm1Id = joined.lookupAndIndex(term1);
