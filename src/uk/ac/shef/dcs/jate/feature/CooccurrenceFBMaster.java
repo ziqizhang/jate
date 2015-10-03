@@ -44,6 +44,7 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
         LOG.info(sb.toString());
         CooccurrenceFBWorker worker = new
                 CooccurrenceFBWorker(contextIds, frequencyTermBased, minTTF, frequencyCtxBased, minTCF,properties.getFeatureBuilderMaxTermsPerWorker());
+        LOG.info("Filtering candidates with min.ttf="+minTTF+" min.tcf="+minTCF);
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
         Cooccurrence feature = forkJoinPool.invoke(worker);
         sb = new StringBuilder("Complete building features.");

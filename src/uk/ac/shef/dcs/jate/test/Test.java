@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
  * Created by zqz on 23/09/2015.
  */
 public class Test {
+
+
     public static void printEachBackward(BreakIterator boundary, String source) {
         int end = boundary.last();
         for (int start = boundary.previous();

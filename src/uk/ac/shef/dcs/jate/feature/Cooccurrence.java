@@ -40,6 +40,14 @@ public class Cooccurrence extends AbstractFeature {
         return idx;
     }
 
+    protected int lookup(String term){
+        Integer index= mapTerm2Idx.get(term);
+        if(index==null) {
+            return -1;
+        }
+        return index;
+    }
+
     protected void increment(int term1Idx, int term2Idx, int freq){
         int newFreq=cooccurrence.getQuick(term1Idx, term2Idx)+freq;
         cooccurrence.setQuick(term1Idx, term2Idx,
@@ -52,9 +60,18 @@ public class Cooccurrence extends AbstractFeature {
         return mapIdx2Term.get(index);
     }
 
+    /**
+     * It is possible to have an invalid query term, usually created because of cross-sentence-boundary n-gram,
+     * or phrases matched by POS patterns. In these cases, an empty map is returned
+     *
+     * @param term
+     * @return
+     */
     public Map<Integer, Integer> getCoocurrence(String term){
-        int index= lookupAndIndex(term);
-        return getCooccurrence(index);
+        int termIdx=lookup(term);
+        if(termIdx==-1)
+            return new HashMap<>();
+        return getCooccurrence(termIdx);
     }
 
     Map<Integer, Integer> getCooccurrence(int index){

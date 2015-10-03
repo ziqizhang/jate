@@ -84,8 +84,6 @@ class FrequencyTermBasedFBWorker extends JATERecursiveTaskWorker<BytesRef, int[]
                     sb.append(luceneTerm.utf8ToString()).append("\n");
                     sb.append(ExceptionUtils.getFullStackTrace(ioe));
                     LOG.severe(sb.toString());
-                } catch (ArrayIndexOutOfBoundsException i) {
-                    System.out.println();
                 }
             }
         } catch (IOException e) {

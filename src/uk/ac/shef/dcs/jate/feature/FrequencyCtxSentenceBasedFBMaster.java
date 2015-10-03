@@ -26,7 +26,7 @@ public class FrequencyCtxSentenceBasedFBMaster extends AbstractFeatureBuilder {
 
     @Override
     public AbstractFeature build() throws JATEException {
-        FrequencyCtxBased feature = new FrequencyCtxBased();
+        FrequencyCtxBased feature;
         List<Integer> allDocs = new ArrayList<>();
         for (int i = 0; i < solrIndexSearcher.maxDoc(); i++) {
             allDocs.add(i);

@@ -131,12 +131,13 @@ public class SolrParallelIndexingWorker extends JATERecursiveTaskWorker<String, 
     }
 
     protected void indexSentenceOffsets(SolrInputDocument solrDoc, String solrFieldnameJATESentencesAll, String content) {
+        content=content.replaceAll("\\r","");
         List<int[]> offsets=sentenceSplitter.split(content);
         String[] values= new String[offsets.size()];
         for(int i=0; i<offsets.size(); i++){
             int[] offset = offsets.get(i);
             values[i]=offset[0]+","+offset[1];
         }
-        solrDoc.addField(properties.getSolrFieldnameJATESentences(), values);
+        solrDoc.addField(solrFieldnameJATESentencesAll, values);
     }
 }

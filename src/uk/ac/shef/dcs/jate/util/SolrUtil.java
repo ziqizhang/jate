@@ -1,22 +1,13 @@
 package uk.ac.shef.dcs.jate.util;
 
 import org.apache.lucene.index.*;
-import org.apache.lucene.store.FSLockFactory;
-import org.apache.lucene.store.MMapDirectory;
-import org.apache.lucene.store.NIOFSDirectory;
-import org.apache.lucene.store.SimpleFSDirectory;
-import org.apache.lucene.util.Constants;
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
-import org.apache.solr.core.SolrCore;
 import org.apache.solr.search.SolrIndexSearcher;
 import org.apache.tika.utils.ExceptionUtils;
 import uk.ac.shef.dcs.jate.JATEException;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.logging.Logger;
 

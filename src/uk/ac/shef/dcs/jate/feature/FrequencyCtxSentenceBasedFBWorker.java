@@ -98,8 +98,6 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                     String contextId = docId + "." + feature.nextCtxId();
                     for (int t = termCursor; t < terms.size(); t++) {
                         TextUnitOffsets term = terms.get(t);
-                       /* if(term.string.equals("acutely"))
-                            System.out.println();*/
                         if (term.end > sent[1]) {
                             if (term.start > sent[1]) {
                                 termCursor = t;
@@ -112,7 +110,8 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                             feature.increment(contextId, 1);
                             feature.increment(contextId, term.string, 1);
                         } else {//a term is not within sentence boundary. this is likely for n-gram which are created
-                            //across sentence boundaries
+                            //across sentence boundaries, or phrases extracted based on pos patterns due to incorrect pos
+                            //tagging
                         }
                     }
                 }
@@ -174,8 +173,6 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
             //PostingsEnum postingsEnum = ti.postings(null, PostingsEnum.OFFSETS);
 
             String tString = luceneTerm.utf8ToString();
-           /* if(tString.equals("acutely"))
-                System.out.println();*/
 
             int doc = postingsEnum.nextDoc(); //this should be just 1 doc, i.e., the constraint for getting this TV
             if (doc != PostingsEnum.NO_MORE_DOCS) {

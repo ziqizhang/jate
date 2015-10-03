@@ -248,7 +248,7 @@
 							tokenizerModel="D:/Work/jate_github/jate/resource/en-token.bin"/>
 				<filter class="solr.ASCIIFoldingFilterFactory"/>
 				<filter class="solr.LowerCaseFilterFactory" />								
-				<filter class="solr.ShingleFilterFactory" minShingleSize="2" maxShingleSize="5"
+				<filter class="uk.ac.shef.dcs.jate.lucene.filter.ShingleFilterFactory" minShingleSize="2" maxShingleSize="5"
 						outputUnigrams="true" outputUnigramsIfNoShingles="false" tokenSeparator=" "/>
 				<filter class="solr.EnglishMinimalStemFilterFactory"/>
 				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />

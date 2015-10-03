@@ -93,6 +93,7 @@ class ChiSquareWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> {
                     maxChiSquare = chiSquare_w;
             }
 
+            //if a term has no co-occurrence info, it has a score of 0
             double score = sumChiSquare_w - maxChiSquare;
             JATETerm term = new JATETerm(tString, score);
             result.add(term);

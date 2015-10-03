@@ -77,7 +77,7 @@ class NCValueWorker extends JATERecursiveTaskWorker<String, List<JATETerm>>{
             String term = entry.getKey();
             double cvalue = entry.getValue();
             Map<Integer, Integer> cooccur=ccFeature.getCoocurrence(term);
-            if(cooccur==null)
+            if(cooccur==null||cooccur.size()==0)
                 continue;
             double ctxScore=0.0;
             /*

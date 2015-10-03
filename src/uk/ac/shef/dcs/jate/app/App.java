@@ -147,9 +147,9 @@ public abstract class App {
 
     protected static void printHelp() {
         StringBuilder sb = new StringBuilder("Usage:\n");
-        sb.append("java -cp '[CLASSPATH]' ").append(AppATTF.class.getName())
+        sb.append("java -cp '[CLASSPATH]' ").append("[package].App[Name]")
                 .append(" [OPTIONS] ").append("[SOLR_HOME_PATH] [SOLR_CORE_NAME] [JATE_PROPERTY_FILE]").append("\nE.g.:\n");
-        sb.append("java -cp '/libs/*' -t 20 /solr/server/solr jate jate.properties ...\n\n");
+        sb.append("java -cp '/libs/*b' -t 20 /solr/server/solr jate jate.properties ...\n\n");
         sb.append("[OPTIONS]:\n")
                 .append("\t\t-c\t\t'true' or 'false'. Whether to collect term information, e.g., offsets in documents. Default is false.\n")
                 .append("\t\t-t\t\tA number. Score threshold for selecting terms. If not set then default -n is used.").append("\n")

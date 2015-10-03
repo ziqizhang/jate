@@ -42,10 +42,6 @@ public class AppNCValue extends App {
                 FrequencyTermBasedFBMaster(searcher, properties, 0);
         FrequencyTermBased ftb = (FrequencyTermBased)ftbb.build();
 
-        ContainmentFBMaster cb = new
-                ContainmentFBMaster(searcher, properties);
-        Containment cf = (Containment)cb.build();
-
         FrequencyCtxSentenceBasedFBMaster fcsbb = new
                 FrequencyCtxSentenceBasedFBMaster(searcher, properties,
                 properties.getSolrFieldnameJATECTerms(),
@@ -66,16 +62,16 @@ public class AppNCValue extends App {
                 minTCF);
         Cooccurrence co = (Cooccurrence)ccb.build();
 
+        ContainmentFBMaster cb = new
+                ContainmentFBMaster(searcher, properties);
+        Containment cf = (Containment)cb.build();
+
         NCValue ncvalue = new NCValue();
         ncvalue.registerFeature(FrequencyTermBased.class.getName(), ftb);
         ncvalue.registerFeature(Containment.class.getName(), cf);
         ncvalue.registerFeature(Cooccurrence.class.getName(), co);
 
-        List<String> candidates = new ArrayList<>(ftb.getMapTerm2TTF().keySet());
-        int cutoffFreq = getParamCutoffFreq(params);
-        filter(candidates, ftb, cutoffFreq);
-
-        List<JATETerm> terms=ncvalue.execute(candidates);
+        List<JATETerm> terms=ncvalue.execute(co.getTerms());
         terms=applyThresholds(terms, params.get("-t"), params.get("-n"));
         String paramValue=params.get("-c");
         if(paramValue!=null &&paramValue.equalsIgnoreCase("true")) {
@@ -90,7 +86,7 @@ public class AppNCValue extends App {
 
     protected static void printHelp() {
         StringBuilder sb = new StringBuilder("NCValue, usage:\n");
-        sb.append("java -cp '[CLASSPATH]' ").append(AppATTF.class.getName())
+        sb.append("java -cp '[CLASSPATH]' ").append(AppNCValue.class.getName())
                 .append(" [OPTIONS] ").append("[SOLR_HOME_PATH] [SOLR_CORE_NAME] [JATE_PROPERTY_FILE]").append("\nE.g.:\n");
         sb.append("java -cp '/libs/*' -t 20 /solr/server/solr jate jate.properties\n\n");
         sb.append("[OPTIONS]:\n")

@@ -54,7 +54,7 @@ public final class OpenNLPTokenizer extends Tokenizer {
     private SentenceDetector sentenceOp = null;
     private opennlp.tools.tokenize.Tokenizer tokenizerOp = null;
 
-    public OpenNLPTokenizer(AttributeFactory factory, SentenceDetector sentenceOp, opennlp.tools.tokenize.Tokenizer tokenizerOp){
+    public OpenNLPTokenizer(AttributeFactory factory, SentenceDetector sentenceOp, opennlp.tools.tokenize.Tokenizer tokenizerOp) {
         super(factory);
         termAtt.resizeBuffer(DEFAULT_BUFFER_SIZE);
         if (sentenceOp == null && tokenizerOp == null) {
@@ -107,9 +107,11 @@ public final class OpenNLPTokenizer extends Tokenizer {
             }
             termAtt.setLength(termLength);
             char[] buffer = termAtt.buffer();
+
             finalOffset = correctOffset(sentenceOffset + word.getEnd());
-            offsetAtt.setOffset(correctOffset(word.getStart() + sentenceOffset), finalOffset);
-            for(int i = 0; i < termLength; i++) {
+            int start=correctOffset(word.getStart() + sentenceOffset);
+            offsetAtt.setOffset(start, finalOffset);
+            for (int i = 0; i < termLength; i++) {
                 buffer[i] = fullText[spot + i];
             }
 
@@ -132,7 +134,7 @@ public final class OpenNLPTokenizer extends Tokenizer {
         fillBuffer();
         detectSentences();
         words = new Span[sentences.length][];
-        for(int i = 0; i < sentences.length; i++) {
+        for (int i = 0; i < sentences.length; i++) {
             splitWords(i);
         }
     }
@@ -150,7 +152,7 @@ public final class OpenNLPTokenizer extends Tokenizer {
     }
 
     void fillBuffer() throws IOException {
-        fullText= IOUtils.toCharArray(input);
+        fullText = IOUtils.toCharArray(input);
         /*int offset = 0;
         int size = 10000;
         fullText = new char[size];

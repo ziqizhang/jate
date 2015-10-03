@@ -44,7 +44,7 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<String, Cooccu
             workerOutput.add(output);
         }
 
-        LOG.info("Joining output from multiple workers, #="+jateRecursiveTaskWorkers.size()+", terms="+allTerms.size());
+        LOG.info("Joining output from multiple workers, #="+jateRecursiveTaskWorkers.size()+", combined total terms="+allTerms.size());
         Cooccurrence joined = new Cooccurrence(allTerms.size());
         for (Cooccurrence output : workerOutput) {
             for (int term1Id = 0; term1Id < output.getNumTerms(); term1Id++) {
@@ -62,6 +62,7 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<String, Cooccu
                 }
             }
         }
+        //System.out.println("complete joining, "+joined.getNumTerms()+" terms.");
         return joined;
     }
 
@@ -74,7 +75,6 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<String, Cooccu
             if (minTTF == 0 && minTCF == 0)
                 unique.addAll(termsInContext.keySet());
             else {
-                LOG.info("Filtering candidates with min.ttf="+minTTF+" min.tcf="+minTCF);
                 for (String term : termsInContext.keySet()) {
                     if (frequencyTermBased.getTTF(term) >= minTTF && frequencyCtxBased.getContextIds(term).size() >= minTCF)
                         unique.add(term);
