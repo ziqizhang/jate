@@ -32,6 +32,9 @@ public class OpenNLPRegexChunker extends TokenFilter {
     private int chunkEnd=-1;
     private int tokenIdx =0;
     private int maxPhraseSize;
+    private int minPhraseChar;
+    private int maxPhraseChar;
+    private List<String> leadingStopWords;
 
     private POSTagger posTagger;
     private RegexNameFinder regexChunker;
