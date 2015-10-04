@@ -22,11 +22,10 @@ public class SolrUtil {
 
             Terms vector = fields.terms(fieldname);
             if (vector == null)
-                throw new JATEException("Cannot find expected field: " + fieldname);
+                throw new JATEException(String.format("Cannot find expected field: %s", fieldname));
             return vector;
         }catch (IOException ioe){
-            StringBuilder sb = new StringBuilder("Cannot find expected field: ");
-            sb.append(fieldname).append(". Error stacktrack:\n");
+            StringBuilder sb = new StringBuilder(String.format("Cannot find expected field: %s. Error stacktrack: \n", fieldname));
             sb.append(org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace(ioe));
             throw new JATEException(sb.toString());
         }
@@ -39,9 +38,7 @@ public class SolrUtil {
                 throw new JATEException("Cannot find expected field: " + fieldname);
             return vector;
         }catch (IOException ioe){
-            StringBuilder sb = new StringBuilder("Cannot find expected field: ");
-            sb.append(fieldname).append(". Error stacktrack:\n");
-            sb.append(org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace(ioe));
+            StringBuilder sb = new StringBuilder(String.format("Cannot find expected field: %s. Error stacktrack:\n", fieldname));            sb.append(org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace(ioe));
             throw new JATEException(sb.toString());
         }
     }

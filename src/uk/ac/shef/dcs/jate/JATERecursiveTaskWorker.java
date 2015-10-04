@@ -8,7 +8,10 @@ import java.util.concurrent.RecursiveTask;
  * Created by zqz on 15/09/2015.
  */
 public abstract class JATERecursiveTaskWorker<S, T> extends RecursiveTask<T>{
-    protected List<S> tasks;
+	
+	private static final long serialVersionUID = -5145284438127806541L;
+	
+	protected List<S> tasks;
     protected int maxTasksPerThread;
 
     public JATERecursiveTaskWorker(List<S> tasks, int maxTasksPerWorker){

@@ -4,7 +4,6 @@ import uk.ac.shef.dcs.jate.JATERecursiveTaskWorker;
 import uk.ac.shef.dcs.jate.feature.Containment;
 import uk.ac.shef.dcs.jate.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.model.JATETerm;
-import uk.ac.shef.dcs.jate.model.TermInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,9 @@ import java.util.Set;
  * Created by zqz on 24/09/2015.
  */
 class CValueWorker extends JATERecursiveTaskWorker<String, List<JATETerm>>{
-    protected FrequencyTermBased fFeature;
+	
+	private static final long serialVersionUID = 6429950650560197335L;
+	protected FrequencyTermBased fFeature;
     protected Containment cFeature;
 
     public CValueWorker(List<String> tasks, int maxTasksPerWorker,

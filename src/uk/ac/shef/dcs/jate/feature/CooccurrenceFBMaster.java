@@ -21,9 +21,9 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
 
     public CooccurrenceFBMaster(SolrIndexSearcher solrIndexSearcher, JATEProperties properties,
                                 FrequencyTermBased termFeature,
-                                int minTTF,
+                                Integer minTTF,
                                 FrequencyCtxBased contextFeature,
-                                int minTCF) {
+                                Integer minTCF) {
         super(solrIndexSearcher, properties);
         this.frequencyCtxBased = contextFeature;
         this.frequencyTermBased=termFeature;

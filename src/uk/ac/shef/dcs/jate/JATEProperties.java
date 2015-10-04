@@ -1,18 +1,21 @@
 package uk.ac.shef.dcs.jate;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 /**
  * Created by zqz on 17/09/2015.
  */
 public class JATEProperties {
 
-    private static final Logger LOG = Logger.getLogger(JATEProperties.class.getName());
+    //private static final Logger LOG = Logger.getLogger(JATEProperties.class.getName());
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    
     private Properties prop = new Properties();
 
     public JATEProperties(String propFile) throws IOException {
@@ -27,46 +30,54 @@ public class JATEProperties {
     }
 
     public String getSolrHome() throws JATEException{
-        String fieldnameID = getString("solrhome");
-        if (fieldnameID == null)
+        String solrHome = getString("solrhome");
+        if (solrHome == null)
             throw new JATEException("'solrhome' not defined in jate.properties");
-        return fieldnameID;
+        return solrHome;
     }
 
     public String getSolrFieldnameID() throws JATEException {
-        String fieldnameID = getString("fieldname_id");
-        if (fieldnameID == null)
-            throw new JATEException("'fieldname_id' not defined in jate.properties");
-        return fieldnameID;
+        String idField = getString("solr_field_id");
+        if (idField == null)
+            throw new JATEException("'solr_field_id' not defined in jate.properties");
+        return idField;
     }
 
     public String getSolrFieldnameJATENGramInfo() throws JATEException {
-        String fieldnameID = getString("fieldname_jate_terminfo");
-        if (fieldnameID == null)
-            throw new JATEException("'fieldname_jate_terminfo' not defined in jate.properties");
-        return fieldnameID;
+        String ngramField = getString("solr_field_content_ngrams");
+        if (ngramField == null)
+            throw new JATEException("'solr_field_content_ngrams' not defined in jate.properties");
+        return ngramField;
     }
 
     public String getSolrFieldnameJATECTerms() throws JATEException {
-        String fieldnameID = getString("fieldname_jate_cterms");
-        if (fieldnameID == null)
-            throw new JATEException("'fieldname_jate_cterms' not defined in jate.properties");
-        return fieldnameID;
+        String content2terms = getString("solr_field_content_terms");
+        if (content2terms == null)
+            throw new JATEException("'solr_field_content_terms' not defined in jate.properties");
+        return content2terms;
     }
 
     public String getSolrFieldnameJATEWords() {
-        String fieldnameID = getString("fieldname_jate_words");
-        return fieldnameID;
+        String content2words = getString("solr_field_content_words");
+        if (content2words == null)
+        	log.debug("'solr_field_content_words' not defined in jate.properties");
+        return content2words;
     }
 
     public String getSolrFieldnameJATESentences() {
-        String fieldnameID = getString("fieldname_jate_sentences");
-        return fieldnameID;
+        String sentences = getString("solr_field_sentences");
+        if (sentences == null) {
+        	log.debug("'solr_field_sentences' not defined in jate.properties");
+        }
+        return sentences;
     }
 
     public String getSolrFieldnameJATECTermsF(){
-        String fieldnameID = getString("fieldname_jate_cterms_f");
-        return fieldnameID;
+        String docparts2terms = getString("solr_field_map_doc_parts");
+        if (docparts2terms == null) {
+        	log.debug("Dynamic field 'solr_field_map_doc_parts' is not defined in jate.properties");
+        }
+        return docparts2terms;
     }
 
     private String getString(String propertyName) {
@@ -79,19 +90,20 @@ public class JATEProperties {
         try{
             int v= getInt("indexer_max_docs_per_worker");
             if(v<1) {
-                LOG.warning("'indexer_max_docs_per_worker' illegal value:"+v+". Default=100 is used.");
+                log.warn(String.format("'indexer_max_docs_per_worker' illegal value: %s. Default=100 is used.", v));
                 v = defaultMax;
             }
             return v;
         }catch (NumberFormatException nfe){
             StringBuilder sb = new StringBuilder("'indexer_max_docs_per_worker' illegal value. Default=100 is used.");
             sb.append("\n").append(ExceptionUtils.getFullStackTrace(nfe));
-            LOG.warning(sb.toString());
+            log.warn(sb.toString());
+            
             return defaultMax;
         }catch(NullPointerException ne){
             StringBuilder sb = new StringBuilder("'indexer_max_docs_per_worker' illegal value. Default=100 is used.");
             sb.append("\n").append(ExceptionUtils.getFullStackTrace(ne));
-            LOG.warning(sb.toString());
+            log.warn(sb.toString());
             return defaultMax;
         }
     }
@@ -101,19 +113,19 @@ public class JATEProperties {
         try{
             int v= getInt("indexer_max_units_to_commit");
             if(v<1) {
-                LOG.warning("'indexer_max_units_to_commit' illegal value:"+v+". Default=500 is used.");
+                log.warn("'indexer_max_units_to_commit' illegal value:"+v+". Default=500 is used.");
                 v = defaultMax;
             }
             return v;
         }catch (NumberFormatException nfe){
             StringBuilder sb = new StringBuilder("'indexer_max_units_to_commit' illegal value. Default=500 is used.");
             sb.append("\n").append(ExceptionUtils.getFullStackTrace(nfe));
-            LOG.warning(sb.toString());
+            log.warn(sb.toString());
             return defaultMax;
         }catch(NullPointerException ne){
             StringBuilder sb = new StringBuilder("'indexer_max_units_to_commit' illegal value. Default=500 is used.");
             sb.append("\n").append(ExceptionUtils.getFullStackTrace(ne));
-            LOG.warning(sb.toString());
+            log.warn(sb.toString());
             return defaultMax;
         }
     }
@@ -123,19 +135,19 @@ public class JATEProperties {
         try{
             int v= getInt("featurebuilder_max_docs_per_worker");
             if(v<1) {
-                LOG.warning("'featurebuilder_max_docs_per_worker' illegal value:"+v+". Default=50 is used.");
+                log.warn("'featurebuilder_max_docs_per_worker' illegal value:"+v+". Default=50 is used.");
                 v = defaultMax;
             }
             return v;
         }catch (NumberFormatException nfe){
             StringBuilder sb = new StringBuilder("'featurebuilder_max_docs_per_worker' illegal value. Default=50 is used.");
             sb.append("\n").append(ExceptionUtils.getFullStackTrace(nfe));
-            LOG.warning(sb.toString());
+            log.warn(sb.toString());
             return defaultMax;
         }catch(NullPointerException ne){
             StringBuilder sb = new StringBuilder("'featurebuilder_max_docs_per_worker' illegal value. Default=50 is used.");
             sb.append("\n").append(ExceptionUtils.getFullStackTrace(ne));
-            LOG.warning(sb.toString());
+            log.warn(sb.toString());
             return defaultMax;
         }
     }
@@ -145,19 +157,19 @@ public class JATEProperties {
         try{
             int v= getInt("featurebuilder_max_terms_per_worker");
             if(v<1) {
-                LOG.warning("'featurebuilder_max_terms_per_worker' illegal value:"+v+". Default=100 is used.");
+                log.warn("'featurebuilder_max_terms_per_worker' illegal value:"+v+". Default=100 is used.");
                 v = defaultMax;
             }
             return v;
         }catch (NumberFormatException nfe){
             StringBuilder sb = new StringBuilder("'featurebuilder_max_terms_per_worker' illegal value. Default=100 is used.");
             sb.append("\n").append(ExceptionUtils.getFullStackTrace(nfe));
-            LOG.warning(sb.toString());
+            log.warn(sb.toString());
             return defaultMax;
         }catch(NullPointerException ne){
             StringBuilder sb = new StringBuilder("'featurebuilder_max_terms_per_worker' illegal value. Default=100 is used.");
             sb.append("\n").append(ExceptionUtils.getFullStackTrace(ne));
-            LOG.warning(sb.toString());
+            log.warn(sb.toString());
             return defaultMax;
         }
     }
@@ -172,19 +184,19 @@ public class JATEProperties {
         try{
             double v= getDouble("max_cpu_usage");
             if(v<=0) {
-                LOG.warning("'max_cpu_usage' illegal value:"+v+". Default=1.0 is used.");
+                log.warn(String.format("'max_cpu_usage' illegal value: %s. Default=1.0 is used.", v));
                 v = defaultMax;
             }
             return v;
         }catch (NumberFormatException nfe){
             StringBuilder sb = new StringBuilder("'max_cpu_usage' illegal value. Default=100 is used.");
             sb.append("\n").append(ExceptionUtils.getFullStackTrace(nfe));
-            LOG.warning(sb.toString());
+            log.warn(sb.toString());
             return defaultMax;
         }catch(NullPointerException ne){
             StringBuilder sb = new StringBuilder("'max_cpu_usage' illegal value. Default=100 is used.");
             sb.append("\n").append(ExceptionUtils.getFullStackTrace(ne));
-            LOG.warning(sb.toString());
+            log.warn(sb.toString());
             return defaultMax;
         }
     }

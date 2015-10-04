@@ -6,9 +6,6 @@ import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import java.util.*;
 
-/**
- *
- */
 public abstract class Algorithm {
 
     protected Map<String, AbstractFeature> features = new HashMap<>();

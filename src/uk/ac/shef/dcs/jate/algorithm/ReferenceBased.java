@@ -10,7 +10,9 @@ import java.util.List;
  * Created by zqz on 25/09/2015.
  */
 public abstract class ReferenceBased extends Algorithm{
-    protected double nullWordProbInReference;//if a word is not found int the reference/general corpus,
+    protected double nullWordProbInReference;
+    
+    //if a word is not found int the reference/general corpus,
     //what probability should we use? Note this value has inverse relation wrt prob(wi) where wi is a word in the
     //domain corpus. a value of 0.1 has the effect of raise prob(wi) by 10x.
     //so a term that contains a word which does not exist in reference/general corpus can get an extremely high score

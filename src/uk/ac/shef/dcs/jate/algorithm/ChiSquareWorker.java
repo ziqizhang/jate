@@ -5,14 +5,13 @@ import uk.ac.shef.dcs.jate.feature.Cooccurrence;
 import uk.ac.shef.dcs.jate.feature.FrequencyCtxBased;
 import uk.ac.shef.dcs.jate.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.model.JATETerm;
-import uk.ac.shef.dcs.jate.model.TermInfo;
 
 import java.util.*;
 
-/**
- */
 class ChiSquareWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> {
-    protected FrequencyCtxBased fFeatureCtxBased;
+	
+	private static final long serialVersionUID = -5293190120654351590L;
+	protected FrequencyCtxBased fFeatureCtxBased;
     protected Cooccurrence fFeatureCoocurr;
     protected FrequencyTermBased fFeatureTerms;
 
@@ -44,9 +43,11 @@ class ChiSquareWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> {
 
     @Override
     protected List<JATETerm> computeSingleWorker(List<String> candidates) {
+    	//TODO: ziqi, pls make this code more clear by refactoring into multiple meaningful/testable functions
+    	
         List<JATETerm> result = new ArrayList<>();
         Map<String, Integer> ctxTTFLookup = new HashMap<>();//X lookup: the sum of the total number of terms in sentences where X appears
-        int count = 0;
+       
         int totalTermsInCorpus = fFeatureTerms.getCorpusTotal();
         for (String tString : candidates) {
             Integer n_w = ctxTTFLookup.get(tString);//"the total number of terms in contexts (original paper: sentences)

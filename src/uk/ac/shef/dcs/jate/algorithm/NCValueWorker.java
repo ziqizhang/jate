@@ -5,14 +5,14 @@ import uk.ac.shef.dcs.jate.feature.Containment;
 import uk.ac.shef.dcs.jate.feature.Cooccurrence;
 import uk.ac.shef.dcs.jate.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.model.JATETerm;
-import uk.ac.shef.dcs.jate.model.TermInfo;
 
 import java.util.*;
 
 
 class NCValueWorker extends JATERecursiveTaskWorker<String, List<JATETerm>>{
 
-    protected FrequencyTermBased fFeature;
+	private static final long serialVersionUID = 3958397121924424901L;
+	protected FrequencyTermBased fFeature;
     protected Containment cFeature;
     protected Cooccurrence ccFeature;
     protected double weightCValue;
