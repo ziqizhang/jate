@@ -317,6 +317,8 @@
 							sentenceModel="D:/Work/jate_github/jate/resource/en-sent.bin"
 							tokenizerModel="D:/Work/jate_github/jate/resource/en-token.bin"/>				
 				<filter class="solr.ASCIIFoldingFilterFactory"/>
+				<!-- other options for the OpenNLPRegexChunker filter: minPhraseChars (number), maxPhraseChars (number),
+				leadingStopWords (file path), leadingStopWordsIgnoreCase (boolean)-->
 				<filter class="uk.ac.shef.dcs.jate.lucene.filter.OpenNLPRegexChunkerFactory"
 							posTaggerClass="uk.ac.shef.dcs.jate.nlp.opennlp.POSTaggerOpenNLP"
 							posTaggerModel="D:/Work/jate_github/jate/resource/en-pos-maxent.bin"

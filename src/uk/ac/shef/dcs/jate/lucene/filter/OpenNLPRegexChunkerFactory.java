@@ -12,6 +12,8 @@ import uk.ac.shef.dcs.jate.nlp.POSTagger;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +28,10 @@ public class OpenNLPRegexChunkerFactory extends TokenFilterFactory {
     private POSTagger tagger;
     private Map<String, Pattern[]> patterns = new HashMap<>();
     private int maxPhraseSize=5;
+    private int maxPhraseChars=0;
+    private int minPhraseChars=0;
+    private List<String> leadingStopWords=null;
+    private boolean leadingStopWordsIgnoreCase=false;
 
     /**
      * Initialize this factory via a set of key-value pairs.
@@ -68,6 +74,46 @@ public class OpenNLPRegexChunkerFactory extends TokenFilterFactory {
             throw new IllegalArgumentException(sb.toString());
         }
 
+        try{
+            String minPhraseChars = args.get("minPhraseChars");
+            if(minPhraseChars!=null)
+                this.minPhraseChars=Integer.valueOf(minPhraseChars);
+        }catch (NumberFormatException nfe){}
+
+        try{
+            String maxPhraseChars = args.get("maxPhraseChars");
+            if(maxPhraseChars!=null)
+                this.maxPhraseChars=Integer.valueOf(maxPhraseChars);
+        }catch (NumberFormatException nfe){}
+
+        try{
+            String leadingStopWordsFile = args.get("leadingStopWords");
+            if(leadingStopWordsFile!=null){
+                leadingStopWords=new ArrayList<>();
+                String ignoreCase=args.get("leadingStopWordsIgnoreCase");
+                if(ignoreCase!=null){
+                    try{
+                        leadingStopWordsIgnoreCase=Boolean.valueOf(ignoreCase);
+                    }catch (IllegalArgumentException iae){}
+                }
+                String words=FileUtils.readFileToString(new File(leadingStopWordsFile), StandardCharsets.UTF_8);
+                for(String w: words.split("\n")) {
+                    w=w.trim();
+                    if(w.length()==0||w.startsWith("#"))
+                        continue;
+                    if(leadingStopWordsIgnoreCase)
+                        leadingStopWords.add(w.toLowerCase());
+                    else
+                        leadingStopWords.add(w);
+                }
+            }
+        }catch (IOException ioe){
+            StringBuilder sb = new StringBuilder("Initiating ");
+            sb.append(this.getClass().getName()).append(" failed due to unable to load leading stop words.\n");
+            sb.append("File provided:").append(args.get("leadingStopWords")).append("\n");
+            sb.append(ExceptionUtils.getFullStackTrace(ioe));
+            throw new IllegalArgumentException(sb.toString());
+        }
     }
 
     private void initPatterns(String patternStr, Map<String, Pattern[]> patterns) throws IOException {
@@ -97,7 +143,8 @@ public class OpenNLPRegexChunkerFactory extends TokenFilterFactory {
 
     @Override
     public TokenStream create(TokenStream input) {
-        return new OpenNLPRegexChunker(input, tagger, patterns,maxPhraseSize);
+        return new OpenNLPRegexChunker(input, tagger, patterns,maxPhraseSize,
+                maxPhraseChars, minPhraseChars, leadingStopWords, leadingStopWordsIgnoreCase);
     }
 
 }

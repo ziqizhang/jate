@@ -28,13 +28,14 @@ public class OpenNLPRegexChunker extends TokenFilter {
     private List<AttributeSource> tokenAttrs = new ArrayList<>();
     private Map<Integer, Integer> chunkSpans = new HashMap<>(); //start, end; end is exclusive
     private Map<Integer, String> chunkTypes = new HashMap<>();
-    private int chunkStart=-1;
-    private int chunkEnd=-1;
-    private int tokenIdx =0;
+    private int chunkStart = -1;
+    private int chunkEnd = -1;
+    private int tokenIdx = 0;
     private int maxPhraseSize;
     private int minPhraseChar;
     private int maxPhraseChar;
     private List<String> leadingStopWords;
+    private boolean stopWordsIgnoreCase = true;
 
     private POSTagger posTagger;
     private RegexNameFinder regexChunker;
@@ -43,11 +44,19 @@ public class OpenNLPRegexChunker extends TokenFilter {
             TokenStream input,
             POSTagger posTaggerOp,
             Map<String, Pattern[]> patterns,
-            int maxPhraseSize){
+            int maxPhraseSize,
+            int maxPhraseChars,
+            int minPhraseChars,
+            List<String> leadingStopWords,
+            boolean stopWordsIgnoreCase) {
         super(input);
         this.posTagger = posTaggerOp;
-        regexChunker=new RegexNameFinder(patterns);
-        this.maxPhraseSize=maxPhraseSize;
+        regexChunker = new RegexNameFinder(patterns);
+        this.maxPhraseSize = maxPhraseSize;
+        this.maxPhraseChar = maxPhraseChars;
+        this.minPhraseChar = minPhraseChars;
+        this.leadingStopWords = leadingStopWords;
+        this.stopWordsIgnoreCase = stopWordsIgnoreCase;
     }
 
     @Override
@@ -62,9 +71,9 @@ public class OpenNLPRegexChunker extends TokenFilter {
             //tagging
             String[] pos = createTags(words);
             //chunking
-            Span[] chunks=regexChunker.find(pos);
-            chunks= prune(chunks);
-            for(Span sp: chunks) {
+            Span[] chunks = regexChunker.find(pos);
+            chunks = prune(chunks, words);
+            for (Span sp : chunks) {
                 chunkSpans.put(sp.getStart(), sp.getEnd());
                 chunkTypes.put(sp.getStart(), sp.getType());
             }
@@ -72,16 +81,16 @@ public class OpenNLPRegexChunker extends TokenFilter {
             tokenIdx = 0;
         }
 
-        if(tokenIdx == tokenAttrs.size()) {
+        if (tokenIdx == tokenAttrs.size()) {
             resetParams();
             return false;
         }
 
-        if(chunkStart!=-1&& tokenIdx==chunkEnd){  //already found a new chunk and now we found its end
+        if (chunkStart != -1 && tokenIdx == chunkEnd) {  //already found a new chunk and now we found its end
             AttributeSource start = tokenAttrs.get(chunkStart);
-            AttributeSource end=tokenAttrs.get(chunkEnd-1);
-            StringBuilder phrase=new StringBuilder();
-            for(int i=chunkStart; i<=chunkEnd-1; i++){
+            AttributeSource end = tokenAttrs.get(chunkEnd - 1);
+            StringBuilder phrase = new StringBuilder();
+            for (int i = chunkStart; i <= chunkEnd - 1; i++) {
                 phrase.append(tokenAttrs.get(i).getAttribute(CharTermAttribute.class).buffer()).append(" ");
             }
             termAtt.setEmpty().append(phrase.toString().trim());
@@ -89,53 +98,87 @@ public class OpenNLPRegexChunker extends TokenFilter {
                     end.getAttribute(OffsetAttribute.class).endOffset());
             typeAtt.setType(chunkTypes.get(chunkStart));
 
-            chunkStart=-1;
-            chunkEnd=-1;
+            chunkStart = -1;
+            chunkEnd = -1;
             //do not increment token index here because end span is exclusive
             return true;
         }
-        if(chunkSpans.containsKey(tokenIdx)) { //at the beginning of a new chunk
-            chunkStart=tokenIdx;
-            chunkEnd=chunkSpans.get(tokenIdx);
+        if (chunkSpans.containsKey(tokenIdx)) { //at the beginning of a new chunk
+            chunkStart = tokenIdx;
+            chunkEnd = chunkSpans.get(tokenIdx);
             tokenIdx++;
             return true;
-        }
-        else{ //a token that is not part of a chunk
+        } else { //a token that is not part of a chunk
             tokenIdx++;
             return true;
         }
     }
 
-    private Span[] prune(Span[] chunks) {
-        Set<String> existing=new HashSet<>();
+    private Span[] prune(Span[] chunks, String[] toks) {
+        Set<String> existing = new HashSet<>();
         List<Span> list = new ArrayList<>(Arrays.asList(chunks));
         Iterator<Span> it = list.iterator();
-        while(it.hasNext()){
-            Span span=it.next();
-            if(span.getEnd()-span.getStart()>maxPhraseSize) {
-                it.remove();
-                continue;
-            }
-            String lookup=span.getStart()+","+span.getEnd();
-            if(existing.contains(lookup)) {
-                it.remove();
-                continue;
+        List<Span> modified = new ArrayList<>();
+        //first pass remove leading stopwords
+        if (leadingStopWords != null && leadingStopWords.size() > 0) {
+            while (it.hasNext()) {
+                Span span = it.next();
+                int newStart = -1;
+                for (int i = span.getStart(); i < span.getEnd(); i++) {
+                    String tok = toks[i];
+                    if (stopWordsIgnoreCase)
+                        tok = tok.toLowerCase();
+                    if (!leadingStopWords.contains(tok)) {
+                        newStart = i;
+                        break;
+                    }
+                }
+                if (newStart == -1) {
+                    it.remove();
+                    continue;
+                }
+                if (newStart != span.getStart()) {
+                    modified.add(new Span(newStart, span.getEnd(), span.getType(), span.getProb()));
+                    it.remove();
+                }
             }
         }
-        Collections.sort(list, (o1, o2) -> {
-            int c = Integer.valueOf(o1.getStart()).compareTo(o2.getStart());
-            if(c==0)
-                return Integer.valueOf(o1.getEnd()).compareTo(o2.getEnd());
-            return c;
-        });
+        list.addAll(modified);
+        Collections.sort(list);
+
+        //second pass check other restrictions
+        it = list.iterator();
+        while (it.hasNext()) {
+            Span span = it.next();
+            if (span.getEnd() - span.getStart() > maxPhraseSize) {
+                it.remove();
+                continue;
+            }
+            String lookup = span.getStart() + "," + span.getEnd();
+            if (existing.contains(lookup)) {
+                it.remove();
+                continue;
+            }
+
+            if (maxPhraseChar != 0 || minPhraseChar != 0) {
+                StringBuilder string = new StringBuilder();
+                for (int i = span.getStart(); i < span.getEnd(); i++) {
+                    string.append(toks[i]).append(" ");
+                }
+                int chars = string.toString().trim().length();
+                if ((maxPhraseChar != 0 && chars > maxPhraseChar) || (minPhraseChar != 0 && chars < minPhraseChar))
+                    it.remove();
+            }
+        }
+        Collections.sort(list);
         return list.toArray(new Span[0]);
     }
 
     private void resetParams() {
         first = true;
-        tokenIdx=0;
-        chunkStart=-1;
-        chunkEnd=-1;
+        tokenIdx = 0;
+        chunkStart = -1;
+        chunkEnd = -1;
         chunkSpans.clear();
         chunkTypes.clear();
     }
@@ -177,7 +220,7 @@ public class OpenNLPRegexChunker extends TokenFilter {
             tokenAttrs.add(attrs);
         }
         String[] words = new String[wordList.size()];
-        for(int i = 0; i < words.length; i++) {
+        for (int i = 0; i < words.length; i++) {
             words[i] = wordList.get(i);
         }
         return words;
@@ -189,6 +232,7 @@ public class OpenNLPRegexChunker extends TokenFilter {
         clearAttributes();
         tokenAttrs.clear();
     }
+
     @Override
     public void reset() throws IOException {
         super.reset();

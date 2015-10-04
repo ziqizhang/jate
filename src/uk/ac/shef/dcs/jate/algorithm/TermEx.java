@@ -16,22 +16,22 @@ import java.util.logging.Logger;
  * <p>
  * In the formula w(t,Di ) =a* DR + B* DC + Y* LC, default values of a, B, and Y are 0.33.
  * </p>
- *
+ * <p/>
  * This is the implementation of the scoring formula <b>only</b> and does not include the analysis of document structure
  * as discussed in the paper.
  */
-public class TermEx extends ReferenceBased{
+public class TermEx extends ReferenceBased {
     private static final Logger LOG = Logger.getLogger(TermEx.class.getName());
     private final double alpha;
     private final double beta;
     private final double zeta;
 
-    public static final String SUFFIX_REF ="_REF";
-    public static final String SUFFIX_WORD ="_WORD";
-    public static final String SUFFIX_DOC="_DOC";
+    public static final String SUFFIX_REF = "_REF";
+    public static final String SUFFIX_WORD = "_WORD";
+    public static final String SUFFIX_DOC = "_DOC";
 
     public TermEx() {
-        this(0.33,0.33,0.34,true);
+        this(0.33, 0.33, 0.34, true);
     }
 
     public TermEx(double alpha, double beta, double zeta, boolean matchOOM) {
@@ -47,19 +47,19 @@ public class TermEx extends ReferenceBased{
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeatureTerms = (FrequencyTermBased) feature;
 
-        AbstractFeature feature2 = features.get(FrequencyTermBased.class.getName()+ SUFFIX_WORD);
+        AbstractFeature feature2 = features.get(FrequencyTermBased.class.getName() + SUFFIX_WORD);
         validateFeature(feature2, FrequencyTermBased.class);
         FrequencyTermBased fFeatureWords = (FrequencyTermBased) feature2;
 
-        AbstractFeature feature4 = features.get(FrequencyCtxBased.class.getName()+SUFFIX_DOC);
+        AbstractFeature feature4 = features.get(FrequencyCtxBased.class.getName() + SUFFIX_DOC);
         validateFeature(feature4, FrequencyCtxBased.class);
         FrequencyCtxBased fFeatureDocs = (FrequencyCtxBased) feature4;
 
         List<FrequencyTermBased> referenceFeatures = new ArrayList<>();
         Map<FrequencyTermBased, Double> mapNullWordProbInReference = new HashMap<>();
         Map<FrequencyTermBased, Double> mapRefScalars = new HashMap<>();
-        for(Map.Entry<String, AbstractFeature> en: features.entrySet()){
-            if(en.getKey().startsWith(FrequencyTermBased.class.getName()+ SUFFIX_REF)){
+        for (Map.Entry<String, AbstractFeature> en : features.entrySet()) {
+            if (en.getKey().startsWith(FrequencyTermBased.class.getName() + SUFFIX_REF)) {
                 validateFeature(en.getValue(), FrequencyTermBased.class);
                 FrequencyTermBased fFeatureRef = (FrequencyTermBased) en.getValue();
                 referenceFeatures.add(fFeatureRef);
@@ -74,7 +74,7 @@ public class TermEx extends ReferenceBased{
         StringBuilder msg = new StringBuilder("Beginning computing TermEx values,");
         msg.append(", total terms=" + candidates.size());
         LOG.info(msg.toString());
-        for(String tString: candidates) {
+        for (String tString : candidates) {
             String[] elements = tString.split(" ");
             double T = (double) elements.length;
             double SUMwi = 0.0;
@@ -86,19 +86,19 @@ public class TermEx extends ReferenceBased{
             for (int i = 0; i < T; i++) {
                 String wi = elements[i];
 
-                double max_freq_t_dj_norm=0;
-                FrequencyTermBased selectedRefFeature=referenceFeatures.get(0);
-                for(FrequencyTermBased refFeature: referenceFeatures){
-                    double freqNorm=refFeature.getTTFNorm(wi);
-                    if(freqNorm>max_freq_t_dj_norm){
-                        max_freq_t_dj_norm=freqNorm;
-                        selectedRefFeature=refFeature;
+                double max_freq_t_dj_norm = 0;
+                FrequencyTermBased selectedRefFeature = referenceFeatures.get(0);
+                for (FrequencyTermBased refFeature : referenceFeatures) {
+                    double freqNorm = refFeature.getTTFNorm(wi);
+                    if (freqNorm > max_freq_t_dj_norm) {
+                        max_freq_t_dj_norm = freqNorm;
+                        selectedRefFeature = refFeature;
                     }
                 }
                 if (max_freq_t_dj_norm == 0)
                     max_freq_t_dj_norm = mapNullWordProbInReference.get(selectedRefFeature);
                 double refScalar = mapRefScalars.get(selectedRefFeature);
-                max_freq_t_dj_norm*=refScalar;
+                max_freq_t_dj_norm *= refScalar;
 
                 SUMwi += (double) fFeatureWords.getTTF(wi) / totalWordsInCorpus /
                         max_freq_t_dj_norm;
@@ -111,7 +111,7 @@ public class TermEx extends ReferenceBased{
             for (int i : docs) {
                 int tfid = fFeatureDocs.getTFIC(String.valueOf(i)).get(tString);
                 int ttfid = fFeatureDocs.getMapCtx2TTF().get(String.valueOf(i));
-                double norm = tfid==0?0: (double)tfid/ttfid;
+                double norm = tfid == 0 ? 0 : (double) tfid / ttfid;
                 if (norm == 0) sum += 0;
                 else {
                     sum += norm * Math.log(norm + 0.1);
@@ -120,7 +120,7 @@ public class TermEx extends ReferenceBased{
 
             double DP = SUMwi; //this term has been changed to ensure they are in the range of 0 and 1
             double DC = sum;
-            double LC = (T * Math.log(fFeatureTerms.getTTF(tString) + 1) * fFeatureTerms.getTTF(tString)) / SUMfwi;
+            double LC = SUMfwi==0?0:(T * Math.log(fFeatureTerms.getTTF(tString) + 1) * fFeatureTerms.getTTF(tString)) / SUMfwi;
 
             //System.out.println(DR+"------"+DC+"------"+LC);
             double score = alpha * DP + beta * DC + zeta * LC;
