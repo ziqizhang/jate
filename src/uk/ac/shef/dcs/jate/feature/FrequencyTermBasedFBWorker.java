@@ -16,7 +16,8 @@ import java.util.logging.Logger;
  */
 class FrequencyTermBasedFBWorker extends JATERecursiveTaskWorker<BytesRef, int[]> {
 
-    private static final Logger LOG = Logger.getLogger(FrequencyTermBasedFBWorker.class.getName());
+	private static final long serialVersionUID = -5304721004951728503L;
+	private static final Logger LOG = Logger.getLogger(FrequencyTermBasedFBWorker.class.getName());
     private JATEProperties properties;
     private SolrIndexSearcher solrIndexSearcher;
     private FrequencyTermBased feature;

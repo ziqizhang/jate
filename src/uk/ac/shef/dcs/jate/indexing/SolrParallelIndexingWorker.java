@@ -23,7 +23,8 @@ import java.util.logging.Logger;
  */
 public class SolrParallelIndexingWorker extends JATERecursiveTaskWorker<String, Integer> {
 
-    private static final Logger LOG = Logger.getLogger(SolrParallelIndexingWorker.class.getName());
+	private static final long serialVersionUID = -636077246728798619L;
+	private static final Logger LOG = Logger.getLogger(SolrParallelIndexingWorker.class.getName());
     protected List<String> tasks;
     protected int batchSize=100;
     protected DocumentCreator docCreator;

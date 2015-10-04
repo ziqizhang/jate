@@ -9,7 +9,9 @@ import java.util.logging.Logger;
  *
  */
 public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<String, Cooccurrence> {
-    private static final Logger LOG = Logger.getLogger(CooccurrenceFBWorker.class.getName());
+	
+	private static final long serialVersionUID = 2618520228983802927L;
+	private static final Logger LOG = Logger.getLogger(CooccurrenceFBWorker.class.getName());
     protected FrequencyCtxBased frequencyCtxBased;
     protected FrequencyTermBased frequencyTermBased;
     protected int minTTF;

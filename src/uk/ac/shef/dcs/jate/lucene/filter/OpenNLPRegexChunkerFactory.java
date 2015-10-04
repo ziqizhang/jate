@@ -1,7 +1,5 @@
 package uk.ac.shef.dcs.jate.lucene.filter;
 
-import opennlp.tools.namefind.RegexNameFinder;
-import opennlp.tools.util.Span;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -12,7 +10,6 @@ import uk.ac.shef.dcs.jate.nlp.POSTagger;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;

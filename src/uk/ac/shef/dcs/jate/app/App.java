@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.algorithm.TermInfoCollector;
-import uk.ac.shef.dcs.jate.app.App.CommandLineParams;
 import uk.ac.shef.dcs.jate.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.feature.FrequencyTermBasedFBMaster;
 import uk.ac.shef.dcs.jate.model.JATETerm;

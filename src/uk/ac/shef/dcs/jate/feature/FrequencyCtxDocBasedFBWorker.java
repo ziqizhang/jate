@@ -17,7 +17,8 @@ import java.util.logging.Logger;
  */
 public class FrequencyCtxDocBasedFBWorker extends JATERecursiveTaskWorker<BytesRef, FrequencyCtxBased> {
 
-    private static final Logger LOG = Logger.getLogger(FrequencyCtxDocBasedFBWorker.class.getName());
+	private static final long serialVersionUID = 8978235926472578074L;
+	private static final Logger LOG = Logger.getLogger(FrequencyCtxDocBasedFBWorker.class.getName());
     private JATEProperties properties;
     private SolrIndexSearcher solrIndexSearcher;
     private String targetField;

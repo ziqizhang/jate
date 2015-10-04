@@ -13,7 +13,9 @@ import java.util.regex.Pattern;
  * Created by zqz on 17/09/2015.
  */
 class ContainmentFBWorker extends JATERecursiveTaskWorker<String, int[]> {
-    private static final Logger LOG = Logger.getLogger(FrequencyTermBasedFBWorker.class.getName());
+	
+	private static final long serialVersionUID = -1208424489000405913L;
+	private static final Logger LOG = Logger.getLogger(FrequencyTermBasedFBWorker.class.getName());
     private JATEProperties properties;
     private Map<Integer, Set<String>> numTokens2Terms;
     private Containment feature;

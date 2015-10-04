@@ -2,7 +2,6 @@ package uk.ac.shef.dcs.jate.feature;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.lucene.index.*;
-import org.apache.solr.core.SolrCore;
 import org.apache.solr.search.SolrIndexSearcher;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;

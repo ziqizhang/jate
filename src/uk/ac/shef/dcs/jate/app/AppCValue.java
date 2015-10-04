@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.algorithm.CValue;
-import uk.ac.shef.dcs.jate.app.App.CommandLineParams;
 import uk.ac.shef.dcs.jate.feature.*;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 import uk.ac.shef.dcs.jate.util.JATEUtil;
