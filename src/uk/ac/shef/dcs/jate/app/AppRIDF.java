@@ -33,10 +33,8 @@ public class AppRIDF extends App {
 			write(terms, paramValue);
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JATEException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

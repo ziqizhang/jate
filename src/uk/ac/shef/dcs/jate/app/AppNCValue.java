@@ -47,14 +47,16 @@ public class AppNCValue extends App {
 	public AppNCValue(Map<String, String> initParams) throws JATEException {
 		super(initParams);
 
+		log.info("initialise NCValue algorithm...");
 		initialiseMTTFParam(initParams);
-
 		initialiseMTCFParam(initParams);
+		log.info("complete NCValue intialisation.");
 	}
 
 	@Override
 	public List<JATETerm> extract(SolrCore core, String jatePropertyFile)
 			throws IOException, JATEException {
+		log.info("start NCValue extraction for whole index ...");
 		SolrIndexSearcher searcher = core.getSearcher().get();
 		try {
 			JATEProperties properties = new JATEProperties(jatePropertyFile);
@@ -87,6 +89,7 @@ public class AppNCValue extends App {
 			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
 					properties.getSolrFieldnameID());
 
+			log.info("complete NCValue extraction.");
 			return terms;
 		} finally {
 			searcher.close();

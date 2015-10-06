@@ -45,15 +45,16 @@ public class AppGlossEx extends App {
 
 	public AppGlossEx(Map<String, String> initParams) throws JATEException {		
 		super(initParams);
-		
+		log.info("initialise GlossEx algorithm...");
 		initaliseNgramFreqParam(initParams);
-		log.info("GlossEx extraction...");
+		log.info("complete GlossEx initialisation.");
 	}
 
 
 	@Override
 	public List<JATETerm> extract(SolrCore core, String jatePropertyFile)
 			throws IOException, JATEException {
+		log.info("start GlossEx term extraction for whole index ...");
 		SolrIndexSearcher searcher = core.getSearcher().get();
 		try {
 			JATEProperties properties = new JATEProperties(jatePropertyFile);
@@ -81,6 +82,8 @@ public class AppGlossEx extends App {
 
 			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
 					properties.getSolrFieldnameID());
+			
+			log.info("complete GlossEx term extraction.");
 			return terms;
 		} finally {
 			searcher.close();

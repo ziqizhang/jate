@@ -1,6 +1,5 @@
 package uk.ac.shef.dcs.jate.app;
 
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.search.SolrIndexSearcher;
 import org.slf4j.Logger;
@@ -11,7 +10,6 @@ import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.algorithm.ChiSquare;
 import uk.ac.shef.dcs.jate.feature.*;
 import uk.ac.shef.dcs.jate.model.JATETerm;
-import uk.ac.shef.dcs.jate.util.JATEUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -44,37 +42,11 @@ public class AppChiSquare extends App {
 
 	}
 
-	public AppChiSquare(Map<String, String> initParams) throws JATEException {
+	public AppChiSquare(Map<String, String> initParams) throws JATEException {		
 		super(initParams);
-		
-		if (initParams.containsKey(CommandLineParams.MIN_TOTAL_TERM_FREQUENCY.getParamKey())) {
-			String minTTF = initParams.get(CommandLineParams.MIN_TOTAL_TERM_FREQUENCY.getParamKey());
-			if (!NumberUtils.isNumber(minTTF)) {
-				log.error("Minimum total term frequency ('-mttf') is not set correctly! A string of numeric value is expected!");
-				throw new JATEException("A string of numeric value is expected for Minimum total term frequency ('-mttf') !");
-			} else if (JATEUtil.isInteger(minTTF)) {
-				log.debug(String.format("Mininum total term frequency is set to [%s]", minTTF));
-				this.minTTF = Integer.parseInt(minTTF);
-			} else {
-				log.error("Minimum total term frequency ('-mttf') is not set correctly! A string of numeric value is expected!");
-				throw new JATEException("A string of numeric value is expected for Minimum total term frequency ('-mttf') !");
-			}
-		}
-		
-		if (initParams.containsKey(CommandLineParams.MIN_TERM_CONTEXT_FREQUENCY.getParamKey())) {
-			String minTCF = initParams.get(CommandLineParams.MIN_TERM_CONTEXT_FREQUENCY.getParamKey());
-			if (!NumberUtils.isNumber(minTCF)) {
-				log.error("Minimum term context frequency ('-mtcf') is not set correctly! A string of numeric value is expected!");
-				throw new JATEException("A string of numeric value is expected for minimum term context frequency ('-mtcf') !");
-			} else if (JATEUtil.isInteger(minTCF)) {
-				log.debug(String.format("Mininum term context frequency is set to [%s]", minTTF));
-				this.minTCF = Integer.parseInt(minTCF);
-			} else {
-				log.error("Minimum term context frequency ('-mttf') is not set correctly! A string of numeric value is expected!");
-				throw new JATEException("A string of numeric value is expected for minimum term context frequency ('-mtcf') !");
-			}
-		}
-		
+		log.info("initialise ChiSquare algorithm...");
+		initialiseMTTFParam(initParams);
+		initialiseMTCFParam(initParams);		
 	}
 
 	@Override

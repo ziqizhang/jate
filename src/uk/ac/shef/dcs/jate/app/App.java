@@ -99,16 +99,22 @@ public abstract class App {
 		// cut off threshold to filter term candidates list by termhood/unithood
 		CUT_OFF_THRESHOLD("-t", "cut_off_threshold"),
 		// top N terms to filter term candidates
-		TOP_N_TERMS("-n", "top_n_terms"),
+		TOP_N_THRESHOLD("-n", "top_n_threshold"),
+		
+		// top N terms to filter term candidates
+		TOP_PERCENTAGE_THRESHOLD ("-top_percentage", "top_percentage_threshold"),
+				
 		// output file to export final filtered term list
 		OUTPUT_FILE("-o", "output_file"),
 		// Min total fequency of a term for it to be considered for
 		// co-occurrence computation
-		// (see {@code uk.ac.shef.dcs.jate.app.AppChiSquare})
+		// see {@code uk.ac.shef.dcs.jate.app.AppChiSquare}
+		// see also {@code uk.ac.shef.dcs.jate.JATEProperties}
 		MIN_TOTAL_TERM_FREQUENCY("-mttf", "min_total_term_freq"),
 		// Min frequency of a term appearing in different context for it
 		// to be considered for co-occurrence computation.
-		// (see {@code uk.ac.shef.dcs.jate.app.AppChiSquare})
+		// see {@code uk.ac.shef.dcs.jate.app.AppChiSquare}
+		// see also {@code uk.ac.shef.dcs.jate.JATEProperties}
 		MIN_TERM_CONTEXT_FREQUENCY("-mtcf", "min_term_context_freq"),
 		// file path to the reference corpus statistics (unigram
 		// distribution) file.
@@ -151,8 +157,8 @@ public abstract class App {
 	 * @throws JATEException
 	 */
 	App(Map<String, String> initParams) throws JATEException {
-		if (initParams.containsKey(CommandLineParams.TOP_N_TERMS.getParamKey())) {
-			String topNSetting = initParams.get(CommandLineParams.TOP_N_TERMS.getParamKey());
+		if (initParams.containsKey(CommandLineParams.TOP_N_THRESHOLD.getParamKey())) {
+			String topNSetting = initParams.get(CommandLineParams.TOP_N_THRESHOLD.getParamKey());
 			if (!NumberUtils.isNumber(topNSetting)) {
 				log.error("Top N terms setting ('-n') is not set correctly! A string of numeric value is expected!");
 				// TODO: ziqi, shall we default the value to the
@@ -162,9 +168,19 @@ public abstract class App {
 				log.debug(String.format("Term candidate is set to filter by top [%s]", topNSetting));
 				this.topNTerms = Integer.parseInt(topNSetting);
 			} else {
+				//make it compatible with current setting in command line that that supports both top n and top percentage with '-n'
 				log.debug(String.format("Term candidate is set to filter by top [%s](rounded)", topNSetting));
 				this.topPercentageTerms = Double.parseDouble(topNSetting);
 			}
+		}
+		
+		if (initParams.containsKey(CommandLineParams.TOP_PERCENTAGE_THRESHOLD.getParamKey())) {
+			String topPercSetting = initParams.get(CommandLineParams.TOP_PERCENTAGE_THRESHOLD.getParamKey());
+			if (!NumberUtils.isNumber(topPercSetting)) {
+				log.error("Top Percentage terms setting ('-top_percentage') is not set correctly! A string of numeric value is expected!");
+			}
+			
+			this.topPercentageTerms = Double.parseDouble(topPercSetting);
 		}
 
 		if (initParams.containsKey(CommandLineParams.CUT_OFF_THRESHOLD.getParamKey())) {

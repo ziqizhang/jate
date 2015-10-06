@@ -1,6 +1,5 @@
 package uk.ac.shef.dcs.jate.app;
 
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.search.SolrIndexSearcher;
 import org.slf4j.Logger;
@@ -11,7 +10,6 @@ import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.algorithm.CValue;
 import uk.ac.shef.dcs.jate.feature.*;
 import uk.ac.shef.dcs.jate.model.JATETerm;
-import uk.ac.shef.dcs.jate.util.JATEUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,30 +40,20 @@ public class AppCValue extends App {
 		} catch (JATEException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public AppCValue(Map<String, String> initParams) throws JATEException {
 		super(initParams);
-		
-		if (initParams.containsKey(CommandLineParams.MIN_TOTAL_TERM_FREQUENCY.getParamKey())) {
-			String minTTF = initParams.get(CommandLineParams.MIN_TOTAL_TERM_FREQUENCY.getParamKey());
-			if (!NumberUtils.isNumber(minTTF)) {
-				log.error("Minimum total term frequency ('-mttf') is not set correctly! A string of numeric value is expected!");
-				throw new JATEException("A string of numeric value is expected for Minimum total term frequency ('-mttf') !");
-			} else if (JATEUtil.isInteger(minTTF)) {
-				log.debug(String.format("Mininum total term frequency is set to [%s]", minTTF));
-				this.minTTF = Integer.parseInt(minTTF);
-			} else {
-				log.error("Minimum total term frequency ('-mttf') is not set correctly! A string of numeric value is expected!");
-				throw new JATEException("A string of numeric value is expected for Minimum total term frequency ('-mttf') !");
-			}
-		}
+		log.info("initialise CValue algorithm...");
+		initialiseMTTFParam(initParams);
+		log.info("Complete CValue initialisation.");
 	}
 
 	@Override
 	public List<JATETerm> extract(SolrCore core, String jatePropertyFile)
 			throws IOException, JATEException {
+		log.info("Start CValue term extraction for whole index ...");
+		
 		SolrIndexSearcher searcher = core.getSearcher().get();
 		try {
 			JATEProperties properties = new JATEProperties(jatePropertyFile);
@@ -89,6 +77,7 @@ public class AppCValue extends App {
 
 			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
 					properties.getSolrFieldnameID());
+			log.info("Complete CValue term extraction.");
 			return terms;
 		} finally {
 			searcher.close();

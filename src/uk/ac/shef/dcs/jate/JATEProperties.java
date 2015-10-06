@@ -53,7 +53,7 @@ public class JATEProperties {
     public String getSolrFieldnameJATECTerms() throws JATEException {
         String content2terms = getString("solr_field_content_terms");
         if (content2terms == null)
-            throw new JATEException("'solr_field_content_terms' not defined in jate.properties");
+            throw new JATEException("term candidate field 'solr_field_content_terms' is not defined in jate.properties");
         return content2terms;
     }
 
@@ -79,7 +79,23 @@ public class JATEProperties {
         }
         return docparts2terms;
     }
-
+    
+    public String getMinTotalTermFreq() {
+    	String min_total_term_freq = getString("min_total_term_freq");
+    	if (min_total_term_freq == null) {
+    		log.debug("Frequency threshold 'min_total_term_freq' for term candidate filtering is not defined in jate.property");
+    	}
+    	return min_total_term_freq;
+    }
+    
+    public String getMinTermContextFreq() {
+    	String min_term_context_freq = getString("min_term_context_freq");
+    	if (min_term_context_freq == null) {
+    		log.debug("Context frequency threshold 'min_term_context_freq' (optional) for term candidate filtering is not defined in jate.property");
+    	}
+    	return min_term_context_freq;
+    }
+    
     private String getString(String propertyName) {
         String string = prop.getProperty(propertyName);
         return string;
