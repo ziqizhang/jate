@@ -19,6 +19,8 @@ import java.util.regex.Pattern;
 
 /**
  * Created by zqz on 28/09/2015.
+ * 
+ * TODO: change this to jate.solr.TermCandidateFilterFactory
  */
 public class OpenNLPRegexChunkerFactory extends TokenFilterFactory {
 
