@@ -29,6 +29,12 @@
 			<organization>University of Sheffield</organization>
 			<organizationUrl>http://staffwww.dcs.shef.ac.uk/people/Z.Zhang/</organizationUrl>
 		</developer>
+		<developer>
+			<name>Jie Gao</name>
+			<email>j.gao@sheffield.ac.uk</email>
+			<organization>University of Sheffield</organization>
+			<organizationUrl>http://staffwww.dcs.shef.ac.uk/people/j.gao/</organizationUrl>
+		</developer>
 	</developers>
 	<scm>
 		<connection>scm:git:git@github.com:ziqizhang/jate.git</connection>
