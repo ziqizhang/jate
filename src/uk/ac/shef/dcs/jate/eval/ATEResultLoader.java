@@ -1,6 +1,7 @@
 package uk.ac.shef.dcs.jate.eval;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import java.io.*;
@@ -16,12 +17,14 @@ public class ATEResultLoader {
 
     public static List<String> load(String jsonFile) throws FileNotFoundException, UnsupportedEncodingException {
         Gson gson = new Gson();
-        List terms=gson.fromJson(new BufferedReader(
+        List<JATETerm> terms=gson.fromJson(new BufferedReader(
                 new InputStreamReader(
-                        new FileInputStream(jsonFile), StandardCharsets.UTF_8)), List.class);
+                        new FileInputStream(jsonFile), StandardCharsets.UTF_8)), new TypeToken<List<JATETerm>>(){}.getType());
 
         List<String> result = new ArrayList<>();
-        //todo
+        for(JATETerm o: terms){
+            result.add(o.getString());
+        }
 
         return result;
     }
