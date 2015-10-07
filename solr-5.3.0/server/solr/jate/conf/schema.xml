@@ -244,8 +244,8 @@
 			<analyzer type="index">
 				<!--tokenizer class="solr.StandardTokenizerFactory" /-->
 				<tokenizer class="org.apache.lucene.analysis.opennlp.OpenNLPTokenizerFactory"
-							sentenceModel="D:/Work/jate_github/jate/resource/en-sent.bin"
-							tokenizerModel="D:/Work/jate_github/jate/resource/en-token.bin"/>
+							sentenceModel="/Users/-/jate/resource/en-sent.bin"
+							tokenizerModel="/Users/-/jate/resource/en-token.bin"/>
 				<filter class="solr.ASCIIFoldingFilterFactory"/>
 				<filter class="solr.LowerCaseFilterFactory" />								
 				<filter class="solr.ShingleFilterFactory" minShingleSize="2" maxShingleSize="5"
@@ -267,8 +267,8 @@
 			<analyzer type="index">
 				<!--tokenizer class="solr.StandardTokenizerFactory" /-->
 				<tokenizer class="org.apache.lucene.analysis.opennlp.OpenNLPTokenizerFactory"
-							sentenceModel="D:/Work/jate_github/jate/resource/en-sent.bin"
-							tokenizerModel="D:/Work/jate_github/jate/resource/en-token.bin"/>
+							sentenceModel="/Users/-/jate/resource/en-sent.bin"
+							tokenizerModel="/Users/-/jate/resource/en-token.bin"/>
 				<filter class="solr.ASCIIFoldingFilterFactory"/>
 				<filter class="solr.LowerCaseFilterFactory" />				
 				<filter class="solr.EnglishMinimalStemFilterFactory"/>
@@ -314,15 +314,15 @@
 			<analyzer type="index">
 				<!--tokenizer class="solr.StandardTokenizerFactory" /-->
 				<tokenizer class="org.apache.lucene.analysis.opennlp.OpenNLPTokenizerFactory"
-							sentenceModel="D:/Work/jate_github/jate/resource/en-sent.bin"
-							tokenizerModel="D:/Work/jate_github/jate/resource/en-token.bin"/>				
+							sentenceModel="/Users/-/jate/resource/en-sent.bin"
+							tokenizerModel="/Users/-/jate/resource/en-token.bin"/>				
 				<filter class="solr.ASCIIFoldingFilterFactory"/>
 				<!-- other options for the OpenNLPRegexChunker filter: minPhraseChars (number), maxPhraseChars (number),
 				leadingStopWords (file path), leadingStopWordsIgnoreCase (boolean)-->
 				<filter class="uk.ac.shef.dcs.jate.lucene.filter.OpenNLPRegexChunkerFactory"
 							posTaggerClass="uk.ac.shef.dcs.jate.nlp.opennlp.POSTaggerOpenNLP"
-							posTaggerModel="D:/Work/jate_github/jate/resource/en-pos-maxent.bin"
-							patterns="D:/Work/jate_github/jate/example/patterns/genia.patterns"
+							posTaggerModel="/Users/-/jate/resource/en-pos-maxent.bin"
+							patterns="/Users/-/jate/example/patterns/genia.patterns"
 							maxPhraseSize="5"/>
 				<filter class="solr.LowerCaseFilterFactory" />					
 				<filter class="solr.EnglishMinimalStemFilterFactory"/>

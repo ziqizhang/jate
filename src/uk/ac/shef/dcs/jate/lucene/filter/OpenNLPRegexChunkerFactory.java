@@ -20,7 +20,8 @@ import java.util.regex.Pattern;
 /**
  * Created by zqz on 28/09/2015.
  * 
- * TODO: change this to jate.solr.TermCandidateFilterFactory
+ * TODO: change this to jate.solr.TermCandidateFilterFactory---(ZZ: i disagree. this class is generic. anyone who does not need ATE can still use this class for other purposes so it should not be named specifically with 'TermXXX' In fact I think this should be moved to package org.apache.lucene.analysis.opennlp)
+ *
  */
 public class OpenNLPRegexChunkerFactory extends TokenFilterFactory {
 

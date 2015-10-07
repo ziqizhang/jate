@@ -76,10 +76,10 @@ public abstract class App {
 	protected String outputFile = null;
 
 	// Min total fequency of a term
-	protected Integer minTTF = null;
+	protected Integer minTTF = 0;
 
 	// Min frequency of a term appearing in different context
-	protected Integer minTCF = null;
+	protected Integer minTCF = 0;
 
 	protected String unigramFreqFilePath = null;
 

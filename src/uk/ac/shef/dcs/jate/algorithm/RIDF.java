@@ -28,7 +28,7 @@ public class RIDF extends Algorithm{
         LOG.info(msg.toString());
         for(String tString: candidates){
             JATETerm term = new JATETerm(tString);
-            int ttf = fFeature.getTTF(tString);
+            /*int ttf = fFeature.getTTF(tString);
             double cf_over_N = (double) ttf / totalDocs;
             double exponential = Math.exp(0 - cf_over_N);
             double nominator = totalDocs * (1 - exponential);
@@ -38,6 +38,15 @@ public class RIDF extends Algorithm{
                 denominator=1; //this shouldnt occur. a term that is firstly extracted from the corpus must have a source
             }
             double ridf = Math.log(nominator / denominator) / Math.log(2.0);
+            */
+            int ttf = fFeature.getTTF(tString);
+            double attf = (double) ttf / totalDocs;
+            double pi = Math.exp(0 - attf);
+            double eidf = 0-(Math.log(1-pi)/Math.log(2));//expected idf
+            double df = (double) fFeature.getTermFrequencyInDocument(tString).size();
+            double idf= Math.log(totalDocs / df);
+
+            double ridf = idf-eidf;
             term.setScore(ridf);
             result.add(term);
         }
