@@ -46,12 +46,12 @@ public class FrequencyCtxDocBasedFBMaster extends AbstractFeatureBuilder {
                 allLuceneTerms.add(BytesRef.deepCopyOf(t));
             }
             //start workers
-            int cores = Runtime.getRuntime().availableProcessors();
-            cores = (int) (cores * properties.getFeatureBuilderMaxCPUsage());
+            int cores = properties.getCandidateScoringRankingMaxCPUCores();
             cores = cores == 0 ? 1 : cores;
+            int maxPerThread = allLuceneTerms.size()/cores;
             FrequencyCtxDocBasedFBWorker worker = new
                     FrequencyCtxDocBasedFBWorker(properties, allLuceneTerms,
-                    solrIndexSearcher, properties.getFeatureBuilderMaxTermsPerWorker(), targetField,
+                    solrIndexSearcher, maxPerThread, targetField,
                     info);
             ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
             feature = forkJoinPool.invoke(worker);

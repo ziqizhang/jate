@@ -49,16 +49,16 @@ public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
                 allLuceneTerms.add(BytesRef.deepCopyOf(t));
             }
             //start workers
-            int cores = Runtime.getRuntime().availableProcessors();
-            cores = (int) (cores * properties.getFeatureBuilderMaxCPUsage());
+            int cores = properties.getCandidateScoringRankingMaxCPUCores();
             cores = cores == 0 ? 1 : cores;
+            int maxPerThread = allLuceneTerms.size()/cores;
             StringBuilder sb = new StringBuilder("Building features using cpu cores=");
             sb.append(cores).append(", total=").append(allLuceneTerms.size()).append(", max per worker=")
-                    .append(properties.getFeatureBuilderMaxTermsPerWorker());
+                    .append(maxPerThread);
             LOG.info(sb.toString());
             FrequencyTermBasedFBWorker worker = new
                     FrequencyTermBasedFBWorker(properties, allLuceneTerms,
-                    solrIndexSearcher, feature, properties.getFeatureBuilderMaxTermsPerWorker(),
+                    solrIndexSearcher, feature, maxPerThread,
                     targetField,
                     ngramInfo);
             ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
@@ -72,6 +72,7 @@ public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
             StringBuilder sb = new StringBuilder("Failed to build features!");
             sb.append("\n").append(ExceptionUtils.getFullStackTrace(ioe));
             LOG.severe(sb.toString());
+            throw new JATEException(sb.toString());
         }
         return feature;
     }

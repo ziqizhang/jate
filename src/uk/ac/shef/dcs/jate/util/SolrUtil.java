@@ -34,7 +34,7 @@ public class SolrUtil {
     public static Terms getTermVector(int docId, String fieldname, SolrIndexSearcher solrIndexSearcher) throws JATEException{
         try {
             Terms vector=solrIndexSearcher.getLeafReader().getTermVector(docId, fieldname);
-            if (vector == null)
+                if (vector == null)
                 throw new JATEException("Cannot find expected field: " + fieldname);
             return vector;
         }catch (IOException ioe){

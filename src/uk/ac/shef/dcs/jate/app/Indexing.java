@@ -36,10 +36,12 @@ public class Indexing {
         List<String> files = new ArrayList<>();
         for (File f : new File(args[1]).listFiles())
             files.add(f.toString());
-        m.index(files, prop.getIndexerMaxDocsPerWorker(),
+
+
+        m.index(files,
                 prop.getIndexerMaxUnitsToCommit(),
                 new TikaSimpleDocumentCreator(), solrClient,
-                prop.getFeatureBuilderMaxCPUsage(), prop);
+                prop.getCandidateExtractionMaxCPUCores(), prop);
         logger.info("INDEXING COMPLETE");
         System.exit(0);
     }

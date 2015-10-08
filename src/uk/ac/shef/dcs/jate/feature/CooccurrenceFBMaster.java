@@ -38,17 +38,18 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
     public AbstractFeature build() throws JATEException {
         List<String> contextIds = new ArrayList<>(ref_frequencyCtxBased.getMapCtx2TTF().keySet());
         //start workers
-        int cores = Runtime.getRuntime().availableProcessors();
-        cores = (int) (cores * properties.getFeatureBuilderMaxCPUsage());
+        int cores =  properties.getCandidateScoringRankingMaxCPUCores();
         cores = cores == 0 ? 1 : cores;
+        int maxPerThread = contextIds.size()/cores;
+
         StringBuilder sb = new StringBuilder("Building features using cpu cores=");
         sb.append(cores).append(", total ctx=").append(contextIds.size()).append(", max per worker=")
-                .append(properties.getFeatureBuilderMaxDocsPerWorker());
+                .append(maxPerThread);
         LOG.info(sb.toString());
         CooccurrenceFBWorker worker = new
                 CooccurrenceFBWorker(contextIds,
                 frequencyTermBased, minTTF, frequencyCtxBased, ref_frequencyCtxBased,
-                minTCF,properties.getFeatureBuilderMaxTermsPerWorker());
+                minTCF,maxPerThread);
         LOG.info("Filtering candidates with min.ttf="+minTTF+" min.tcf="+minTCF);
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
         Cooccurrence feature = forkJoinPool.invoke(worker);

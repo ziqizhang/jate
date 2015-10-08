@@ -25,25 +25,27 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
 	private static final Logger LOG = Logger.getLogger(FrequencyCtxSentenceBasedFBWorker.class.getName());
     private JATEProperties properties;
     private SolrIndexSearcher solrIndexSearcher;
-    private String termTargetField;
     private String sentenceTargetField;
+    private List<String> allCandidates;
 
     public FrequencyCtxSentenceBasedFBWorker(JATEProperties properties,
                                              List<Integer> docIds,
+                                             List<String> allCandidates,
                                              SolrIndexSearcher solrIndexSearcher,
                                              int maxTasksPerWorker,
-                                             String termTargetField, String sentenceTargetField) {
+                                             String sentenceTargetField) {
         super(docIds, maxTasksPerWorker);
         this.properties = properties;
         this.solrIndexSearcher = solrIndexSearcher;
-        this.termTargetField = termTargetField;
         this.sentenceTargetField = sentenceTargetField;
+        this.allCandidates=allCandidates;
     }
 
     @Override
     protected JATERecursiveTaskWorker<Integer, FrequencyCtxBased> createInstance(List<Integer> docIdSplit) {
         return new FrequencyCtxSentenceBasedFBWorker(properties, docIdSplit,
-                solrIndexSearcher, maxTasksPerThread, termTargetField, sentenceTargetField);
+                allCandidates,
+                solrIndexSearcher, maxTasksPerThread, sentenceTargetField);
     }
 
     @Override
@@ -88,7 +90,6 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
             try {
                 Terms lookupVector = SolrUtil.getTermVector(docId, properties.getSolrFieldnameJATENGramInfo(), solrIndexSearcher);
                 List<TextUnitOffsets> terms = collectTermOffsets(
-                        SolrUtil.getTermVector(docId, termTargetField, solrIndexSearcher),
                         lookupVector);
                 List<int[]> sentences = collectSentenceOffsets(solrIndexSearcher, sentenceTargetField, docId);
                 StringBuilder sb = new StringBuilder("#");
@@ -149,31 +150,25 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
         return rs;
     }
 
-    private List<TextUnitOffsets> collectTermOffsets(Terms termVector, Terms termVectorLookup) throws IOException {
+    private List<TextUnitOffsets> collectTermOffsets(Terms termVectorLookup) throws IOException {
         List<TextUnitOffsets> result = new ArrayList<>();
-        if (termVector == null)
-            return result;
+
         TermsEnum tiRef= termVectorLookup.iterator();
-        TermsEnum ti = termVector.iterator();
-        BytesRef luceneTerm = ti.next();
+        BytesRef luceneTerm = tiRef.next();
         while (luceneTerm != null) {
             if (luceneTerm.length == 0) {
-                luceneTerm = ti.next();
+                luceneTerm = tiRef.next();
+                continue;
+            }
+            String tString = luceneTerm.utf8ToString();
+            if(!allCandidates.contains(tString)) {
+                luceneTerm=tiRef.next();
                 continue;
             }
 
-            if (!tiRef.seekExact(luceneTerm)) {
-                StringBuilder msg = new StringBuilder(luceneTerm.utf8ToString());
-                msg.append(" is a candidate term, but not indexed in the n-gram information field. It's score may be mis-computed.");
-                msg.append(" (You may have used different text analysis process (e.g., different tokenizers) for the two fields.) ");
-                LOG.warning(msg.toString());
-                continue;
-            }
 
             PostingsEnum postingsEnum = tiRef.postings(null, PostingsEnum.OFFSETS);
             //PostingsEnum postingsEnum = ti.postings(null, PostingsEnum.OFFSETS);
-
-            String tString = luceneTerm.utf8ToString();
 
             int doc = postingsEnum.nextDoc(); //this should be just 1 doc, i.e., the constraint for getting this TV
             if (doc != PostingsEnum.NO_MORE_DOCS) {
@@ -185,7 +180,7 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                     result.add(new TextUnitOffsets(tString, start, end));
                 }
             }
-            luceneTerm = ti.next();
+            luceneTerm = tiRef.next();
         }
         Collections.sort(result);
         return result;

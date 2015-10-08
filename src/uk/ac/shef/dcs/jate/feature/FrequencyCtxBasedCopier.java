@@ -24,8 +24,8 @@ public class FrequencyCtxBasedCopier extends AbstractFeatureBuilder {
         this.frequencyFeature =frequencyFeature;
         List<Integer> frequencies = new ArrayList<>(frequencyFeature.getMapTerm2TTF().values());
         Collections.sort(frequencies);
-        int pos = (int)(frequencies.size()*(1-topFraction));
-        this.frequencyThreshold=frequencies.get(pos);
+        int pos = (int)(frequencies.size()*topFraction);
+        this.frequencyThreshold=frequencies.get(frequencies.size()-pos);
     }
 
     @Override
@@ -41,10 +41,12 @@ public class FrequencyCtxBasedCopier extends AbstractFeatureBuilder {
 
         for(String ft: filteredTerms){
             Set<String> ctxx = source.getContextIds(ft);
+            if(ctxx==null)
+                continue;//this is possible because candidate term may be incorrectly generated across context (e.g., sentence) boundaries
             for(String ctxid: ctxx){
                 int tfInCtx=source.getMapCtx2TFIC().get(ctxid).get(ft);
                 result.increment(ctxid,ft, tfInCtx);
-
+                result.increment(ctxid,tfInCtx);
             }
         }
 

@@ -46,20 +46,21 @@ public class ContainmentFBMaster extends AbstractFeatureBuilder {
                     ts.add(t);
             }
             //start workers
-            int cores = Runtime.getRuntime().availableProcessors();
-            cores = (int) (cores * properties.getFeatureBuilderMaxCPUsage());
+            int cores = properties.getCandidateScoringRankingMaxCPUCores();
             cores = cores == 0 ? 1 : cores;
             Set<String> uniqueTerms = new HashSet<>();
             for (Set<String> v : numTokens2Terms.values())
                 uniqueTerms.addAll(v);
+            int maxPerThread=uniqueTerms.size()/cores;
+
             StringBuilder sb = new StringBuilder("Building features using cpu cores=");
             sb.append(cores).append(", total terms=").append(uniqueTerms.size()).append(", max per worker=")
-                    .append(properties.getFeatureBuilderMaxTermsPerWorker());
+                    .append(maxPerThread);
             LOG.info(sb.toString());
             ContainmentFBWorker worker = new
                     ContainmentFBWorker(properties, new ArrayList<>(uniqueTerms),
                     numTokens2Terms,
-                    feature, properties.getFeatureBuilderMaxTermsPerWorker());
+                    feature, maxPerThread);
             ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
             int[] total = forkJoinPool.invoke(worker);
             sb = new StringBuilder("Complete building features. Total=");

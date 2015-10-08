@@ -17,13 +17,12 @@ public class SolrParallelIndexingMaster {
 
     private static final Logger LOG = Logger.getLogger(SolrParallelIndexingMaster.class.getName());
 
-    public void index(List<String> tasks, int maxTaskPerWorker,
+    public void index(List<String> tasks,
                       int batchSize, DocumentCreator docCreator,
-                      SolrClient solrClient, double cpuUsage,
+                      SolrClient solrClient, int cores,
                       JATEProperties properties){
-        int cores = Runtime.getRuntime().availableProcessors();
-        cores = (int) (cores*cpuUsage);
         cores=cores==0?1:cores;
+        int maxTaskPerWorker= tasks.size()/cores;
 
         StringBuilder msg = new StringBuilder("Beginning indexing dataset using cores=");
         msg.append(cores).append(", total docs="+tasks.size());

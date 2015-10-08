@@ -62,6 +62,8 @@ class FrequencyTermBasedFBWorker extends JATERecursiveTaskWorker<BytesRef, int[]
 
             for (BytesRef luceneTerm : terms) {
                 String term = luceneTerm.utf8ToString();
+                if(term.equals("radio-ligand binding"))
+                    System.out.println();
                 try {
                     if (ngramInfoIterator.seekExact(luceneTerm)) {
                         PostingsEnum docEnum = ngramInfoIterator.postings(null);

@@ -101,28 +101,6 @@ public class JATEProperties {
         return string;
     }
 
-    public int getIndexerMaxDocsPerWorker(){
-        int defaultMax=100;
-        try{
-            int v= getInt("indexer_max_docs_per_worker");
-            if(v<1) {
-                log.warn(String.format("'indexer_max_docs_per_worker' illegal value: %s. Default=100 is used.", v));
-                v = defaultMax;
-            }
-            return v;
-        }catch (NumberFormatException nfe){
-            StringBuilder sb = new StringBuilder("'indexer_max_docs_per_worker' illegal value. Default=100 is used.");
-            sb.append("\n").append(ExceptionUtils.getFullStackTrace(nfe));
-            log.warn(sb.toString());
-            
-            return defaultMax;
-        }catch(NullPointerException ne){
-            StringBuilder sb = new StringBuilder("'indexer_max_docs_per_worker' illegal value. Default=100 is used.");
-            sb.append("\n").append(ExceptionUtils.getFullStackTrace(ne));
-            log.warn(sb.toString());
-            return defaultMax;
-        }
-    }
 
     public int getIndexerMaxUnitsToCommit(){
         int defaultMax=500;
@@ -146,74 +124,52 @@ public class JATEProperties {
         }
     }
 
-    public int getFeatureBuilderMaxDocsPerWorker(){
-        int defaultMax=50;
-        try{
-            int v= getInt("featurebuilder_max_docs_per_worker");
-            if(v<1) {
-                log.warn("'featurebuilder_max_docs_per_worker' illegal value:"+v+". Default=50 is used.");
-                v = defaultMax;
-            }
-            return v;
-        }catch (NumberFormatException nfe){
-            StringBuilder sb = new StringBuilder("'featurebuilder_max_docs_per_worker' illegal value. Default=50 is used.");
-            sb.append("\n").append(ExceptionUtils.getFullStackTrace(nfe));
-            log.warn(sb.toString());
-            return defaultMax;
-        }catch(NullPointerException ne){
-            StringBuilder sb = new StringBuilder("'featurebuilder_max_docs_per_worker' illegal value. Default=50 is used.");
-            sb.append("\n").append(ExceptionUtils.getFullStackTrace(ne));
-            log.warn(sb.toString());
-            return defaultMax;
-        }
-    }
-
-    public int getFeatureBuilderMaxTermsPerWorker(){
-        int defaultMax=100;
-        try{
-            int v= getInt("featurebuilder_max_terms_per_worker");
-            if(v<1) {
-                log.warn("'featurebuilder_max_terms_per_worker' illegal value:"+v+". Default=100 is used.");
-                v = defaultMax;
-            }
-            return v;
-        }catch (NumberFormatException nfe){
-            StringBuilder sb = new StringBuilder("'featurebuilder_max_terms_per_worker' illegal value. Default=100 is used.");
-            sb.append("\n").append(ExceptionUtils.getFullStackTrace(nfe));
-            log.warn(sb.toString());
-            return defaultMax;
-        }catch(NullPointerException ne){
-            StringBuilder sb = new StringBuilder("'featurebuilder_max_terms_per_worker' illegal value. Default=100 is used.");
-            sb.append("\n").append(ExceptionUtils.getFullStackTrace(ne));
-            log.warn(sb.toString());
-            return defaultMax;
-        }
-    }
-
     private int getInt(String propertyName) {
         String string = prop.getProperty(propertyName);
         return Integer.valueOf(string);
     }
 
-    public double getFeatureBuilderMaxCPUsage(){
-        double defaultMax=1.0;
+    public int getCandidateExtractionMaxCPUCores(){
+        int defaultV=1;
         try{
-            double v= getDouble("max_cpu_usage");
+            int v= getInt("max_cores_candidate_extraction");
             if(v<=0) {
-                log.warn(String.format("'max_cpu_usage' illegal value: %s. Default=1.0 is used.", v));
-                v = defaultMax;
+                log.warn(String.format("'max_cores_candidate_extraction' illegal value: %s. Default=1.0 is used.", v));
+                v = defaultV;
             }
             return v;
         }catch (NumberFormatException nfe){
-            StringBuilder sb = new StringBuilder("'max_cpu_usage' illegal value. Default=100 is used.");
+            StringBuilder sb = new StringBuilder("'max_cores_candidate_extraction' illegal value. Default=100 is used.");
             sb.append("\n").append(ExceptionUtils.getFullStackTrace(nfe));
             log.warn(sb.toString());
-            return defaultMax;
+            return defaultV;
         }catch(NullPointerException ne){
-            StringBuilder sb = new StringBuilder("'max_cpu_usage' illegal value. Default=100 is used.");
+            StringBuilder sb = new StringBuilder("'max_cores_candidate_extraction' illegal value. Default=100 is used.");
             sb.append("\n").append(ExceptionUtils.getFullStackTrace(ne));
             log.warn(sb.toString());
-            return defaultMax;
+            return defaultV;
+        }
+    }
+
+    public int getCandidateScoringRankingMaxCPUCores(){
+        int defaultV=1;
+        try{
+            int v= getInt("max_cores_candidate_scoring_ranking");
+            if(v<=0) {
+                log.warn(String.format("'max_cores_candidate_scoring_ranking' illegal value: %s. Default=1.0 is used.", v));
+                v = defaultV;
+            }
+            return v;
+        }catch (NumberFormatException nfe){
+            StringBuilder sb = new StringBuilder("'max_cores_candidate_scoring_ranking' illegal value. Default=100 is used.");
+            sb.append("\n").append(ExceptionUtils.getFullStackTrace(nfe));
+            log.warn(sb.toString());
+            return defaultV;
+        }catch(NullPointerException ne){
+            StringBuilder sb = new StringBuilder("'max_cores_candidate_scoring_ranking' illegal value. Default=100 is used.");
+            sb.append("\n").append(ExceptionUtils.getFullStackTrace(ne));
+            log.warn(sb.toString());
+            return defaultV;
         }
     }
 
