@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
     private static final Logger LOG = Logger.getLogger(CooccurrenceFBMaster.class.getName());
     protected FrequencyCtxBased frequencyCtxBased;
+    protected FrequencyCtxBased ref_frequencyCtxBased;
     protected FrequencyTermBased frequencyTermBased;
     protected int minTTF;
     protected int minTCF;
@@ -23,17 +24,19 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
                                 FrequencyTermBased termFeature,
                                 Integer minTTF,
                                 FrequencyCtxBased contextFeature,
+                                FrequencyCtxBased ref_frequencyCtxBased,
                                 Integer minTCF) {
         super(solrIndexSearcher, properties);
         this.frequencyCtxBased = contextFeature;
         this.frequencyTermBased=termFeature;
+        this.ref_frequencyCtxBased=ref_frequencyCtxBased;
         this.minTTF=minTTF;
-        this.minTCF=minTCF;
+        this.minTCF=minTCF;//only applies to target terms, not reference terms
     }
 
     @Override
     public AbstractFeature build() throws JATEException {
-        List<String> contextIds = new ArrayList<>(frequencyCtxBased.getMapCtx2TTF().keySet());
+        List<String> contextIds = new ArrayList<>(ref_frequencyCtxBased.getMapCtx2TTF().keySet());
         //start workers
         int cores = Runtime.getRuntime().availableProcessors();
         cores = (int) (cores * properties.getFeatureBuilderMaxCPUsage());
@@ -43,7 +46,9 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
                 .append(properties.getFeatureBuilderMaxDocsPerWorker());
         LOG.info(sb.toString());
         CooccurrenceFBWorker worker = new
-                CooccurrenceFBWorker(contextIds, frequencyTermBased, minTTF, frequencyCtxBased, minTCF,properties.getFeatureBuilderMaxTermsPerWorker());
+                CooccurrenceFBWorker(contextIds,
+                frequencyTermBased, minTTF, frequencyCtxBased, ref_frequencyCtxBased,
+                minTCF,properties.getFeatureBuilderMaxTermsPerWorker());
         LOG.info("Filtering candidates with min.ttf="+minTTF+" min.tcf="+minTCF);
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
         Cooccurrence feature = forkJoinPool.invoke(worker);

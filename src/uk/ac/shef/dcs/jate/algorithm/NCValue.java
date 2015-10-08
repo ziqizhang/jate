@@ -9,11 +9,14 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Logger;
 
 /**
+ * todo: do not use, implementation is wrong
+ *
  * NC-Value, see Frantzi et al., Automatic Recognition of Multi-Word Terms: the C-value/NC-value Method
  *
  * In this implementation, the notion of "context words" is just candidate terms that co-occur with a target term within
  * the same sentence. No filter is applied to the selection of context words. All candidate terms are considered.
  */
+@Deprecated
 public class NCValue extends Algorithm {
     private static final Logger LOG = Logger.getLogger(NCValue.class.getName());
 

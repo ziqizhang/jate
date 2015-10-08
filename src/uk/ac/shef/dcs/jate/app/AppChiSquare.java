@@ -1,5 +1,6 @@
 package uk.ac.shef.dcs.jate.app;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.search.SolrIndexSearcher;
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.algorithm.ChiSquare;
 import uk.ac.shef.dcs.jate.feature.*;
 import uk.ac.shef.dcs.jate.model.JATETerm;
+import uk.ac.shef.dcs.jate.util.JATEUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.Map;
 
 public class AppChiSquare extends App {
 	private final Logger log = LoggerFactory.getLogger(getClass());
+	private double frequentTermFT=0.3; //top 30% of the terms are considered to be 'frequent'
 	
 	public static void main(String[] args) {
 		if (args.length < 1) {
@@ -46,7 +49,25 @@ public class AppChiSquare extends App {
 		super(initParams);
 		log.info("initialise ChiSquare algorithm...");
 		initialiseMTTFParam(initParams);
-		initialiseMTCFParam(initParams);		
+		initialiseMTCFParam(initParams);
+		initialiseFTParam(initParams);
+	}
+
+	private void initialiseFTParam(Map<String, String> initParams) throws JATEException {
+		//This param is Chi-Square only
+			String sFT = initParams.get("-ft");
+		if(sFT!=null) {
+			try {
+				frequentTermFT = Double.parseDouble(sFT);
+				if (frequentTermFT > 1.0 || frequentTermFT <= 0.0)
+					throw new JATEException("Frequent Term cutoff percentage ('-ff') is not set correctly! Value must be within (0,1.0]");
+			} catch (NumberFormatException nfe) {
+				StringBuilder msg =
+						new StringBuilder("Frequent Term cutoff percentage ('-ff') is not set correctly! A decimal value is expected!");
+				throw new JATEException(msg.toString());
+			}
+		}
+
 	}
 
 	@Override
@@ -62,7 +83,9 @@ public class AppChiSquare extends App {
 					properties.getSolrFieldnameJATECTerms(), properties.getSolrFieldnameJATESentences());
 			FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
 
-			CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, ftb, this.minTTF, fcsb, this.minTCF);
+			FrequencyCtxBased ref_fcsb=(FrequencyCtxBased) (new FrequencyCtxBasedCopier(searcher, properties,fcsb,ftb,frequentTermFT).build());
+
+			CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, ftb, this.minTTF, fcsb, ref_fcsb,this.minTCF);
 			Cooccurrence co = (Cooccurrence) cb.build();
 
 			ChiSquare chi = new ChiSquare();

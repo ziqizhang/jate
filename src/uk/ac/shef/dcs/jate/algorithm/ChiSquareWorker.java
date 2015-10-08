@@ -69,7 +69,7 @@ class ChiSquareWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> {
             Map<Integer, Integer> coocurTermIdx2Freq = fFeatureCoocurr.getCoocurrence(tString);
             for (Map.Entry<Integer, Integer> entry : coocurTermIdx2Freq.entrySet()) {
                 int g_id = entry.getKey();
-                String g_term = fFeatureCoocurr.lookup(g_id);
+                String g_term = fFeatureCoocurr.lookupTerm(g_id);
                 int freq_wg = entry.getValue();
 
                 Integer g_w = ctxTTFLookup.get(g_id); //the sum of the total number of terms in sentences where g appears

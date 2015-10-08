@@ -9,6 +9,8 @@ import uk.ac.shef.dcs.jate.model.JATETerm;
 import java.util.*;
 
 
+//todo: do not use, implementation is wrong
+@Deprecated
 class NCValueWorker extends JATERecursiveTaskWorker<String, List<JATETerm>>{
 
 	private static final long serialVersionUID = 3958397121924424901L;
@@ -86,7 +88,7 @@ class NCValueWorker extends JATERecursiveTaskWorker<String, List<JATETerm>>{
              */
             for(Map.Entry<Integer,Integer> e: cooccur.entrySet()){
                 int ctxTermIdx=e.getKey();
-                String ctxTerm = ccFeature.lookup(ctxTermIdx);
+                String ctxTerm = ccFeature.lookupTerm(ctxTermIdx);
                 Double ctxTermCValue = cvalues.get(ctxTerm);
                 if(ctxTermCValue==null)
                     continue;

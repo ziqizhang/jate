@@ -15,21 +15,31 @@ public class Cooccurrence extends AbstractFeature {
     protected Map<Integer, String> mapIdx2Term = new HashMap<>();
     protected Map<String, Integer> mapTerm2Idx = new HashMap<>();
 
-    protected int termCounter =-1;
+    protected Map<Integer, String> mapIdx2CtxTerm = new HashMap<>();
+    protected Map<String, Integer> mapCtxTerm2Idx = new HashMap<>();
 
-    public Cooccurrence(int numTerms){
-        cooccurrence =new SparseIntMatrix2D(numTerms, numTerms);
+
+    protected int termCounter =-1;
+    protected int ctxTermCounter =-1;
+
+    public Cooccurrence(int terms, int refTerms){
+        cooccurrence =new SparseIntMatrix2D(terms, refTerms);
     }
 
     public int getNumTerms(){
         return cooccurrence.rows();
     }
 
+    public int getNumCtxTerms(){return cooccurrence.columns();}
+
     public Set<String> getTerms(){
         return mapTerm2Idx.keySet();
     }
+    public Set<String> getCtxTerms(){
+        return mapCtxTerm2Idx.keySet();
+    }
 
-    protected int lookupAndIndex(String term){
+    protected int lookupAndIndexTerm(String term){
         Integer idx = mapTerm2Idx.get(term);
         if(idx==null) {
             termCounter++;
@@ -40,7 +50,7 @@ public class Cooccurrence extends AbstractFeature {
         return idx;
     }
 
-    protected int lookup(String term){
+    protected int lookupTerm(String term){
         Integer index= mapTerm2Idx.get(term);
         if(index==null) {
             return -1;
@@ -48,15 +58,32 @@ public class Cooccurrence extends AbstractFeature {
         return index;
     }
 
-    protected void increment(int term1Idx, int term2Idx, int freq){
-        int newFreq=cooccurrence.getQuick(term1Idx, term2Idx)+freq;
-        cooccurrence.setQuick(term1Idx, term2Idx,
-                newFreq);
-        cooccurrence.setQuick(term2Idx, term1Idx,
+    protected int lookupAndIndexRefTerm(String ctxTerm){
+        Integer idx = mapCtxTerm2Idx.get(ctxTerm);
+        if(idx==null) {
+            ctxTermCounter++;
+            mapIdx2CtxTerm.put(ctxTermCounter, ctxTerm);
+            mapCtxTerm2Idx.put(ctxTerm, ctxTermCounter);
+            return ctxTermCounter;
+        }
+        return idx;
+    }
+
+    protected int lookupCtxTerm(String ctxTerm){
+        Integer index= mapCtxTerm2Idx.get(ctxTerm);
+        if(index==null) {
+            return -1;
+        }
+        return index;
+    }
+
+    protected void increment(int termIdx, int ctxTermIdx, int freq){
+        int newFreq=cooccurrence.getQuick(termIdx, ctxTermIdx)+freq;
+        cooccurrence.setQuick(termIdx, ctxTermIdx,
                 newFreq);
     }
 
-    public String lookup(int index){
+    public String lookupTerm(int index){
         return mapIdx2Term.get(index);
     }
 
@@ -68,7 +95,7 @@ public class Cooccurrence extends AbstractFeature {
      * @return
      */
     public Map<Integer, Integer> getCoocurrence(String term){
-        int termIdx=lookup(term);
+        int termIdx= lookupTerm(term);
         if(termIdx==-1)
             return new HashMap<>();
         return getCooccurrence(termIdx);
@@ -88,10 +115,6 @@ public class Cooccurrence extends AbstractFeature {
             result.put(idx, v);
         }
         return result;
-    }
-
-    protected int getCooccurrence(int term1Id, int term2Id){
-        return cooccurrence.getQuick(term1Id, term2Id);
     }
 
 }

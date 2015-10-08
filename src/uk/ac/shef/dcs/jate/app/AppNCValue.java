@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+//todo: do not use, implementation is incorrect
+@Deprecated
 public class AppNCValue extends App {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
@@ -71,7 +73,7 @@ public class AppNCValue extends App {
 			FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
 
 			CooccurrenceFBMaster ccb = new CooccurrenceFBMaster(searcher, properties, this.freqFeature, this.minTTF,
-					fcsb, this.minTCF);
+					fcsb,fcsb, this.minTCF);
 			Cooccurrence co = (Cooccurrence) ccb.build();
 
 			NCValue ncvalue = new NCValue();

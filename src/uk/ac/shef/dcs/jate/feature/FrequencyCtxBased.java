@@ -9,6 +9,7 @@ import java.util.Set;
  * Created by zqz on 21/09/2015.
  */
 public class FrequencyCtxBased extends AbstractFeature {
+
     //context and total term freq in context
     private Map<String, Integer> ctx2TTF = new HashMap<>();
     //context and its contained term with their Freq In Context

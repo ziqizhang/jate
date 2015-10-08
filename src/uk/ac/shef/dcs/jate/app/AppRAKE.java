@@ -59,7 +59,7 @@ public class AppRAKE extends App {
 					properties.getSolrFieldnameJATEWords(), properties.getSolrFieldnameJATESentences());
 			FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
 
-			CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, fwb, minTTF, fcsb, minTCF);
+			CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, fwb, minTTF, fcsb,fcsb, minTCF);
 			Cooccurrence co = (Cooccurrence) cb.build();
 
 			RAKE rake = new RAKE();
