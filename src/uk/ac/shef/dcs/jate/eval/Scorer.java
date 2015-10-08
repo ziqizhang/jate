@@ -1,9 +1,13 @@
 package uk.ac.shef.dcs.jate.eval;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * compute scores
@@ -12,6 +16,45 @@ public class Scorer {
 
     private static String digitsPattern = "\\d+";
     private static String symbolsPattern="\\p{Punct}";
+
+    public static void createReportGenia(String ateOutputFolder, String gsFile, String outFile,
+                                         boolean ignoreSymbols, boolean ignoreDigits,
+                                    int minChar, int maxChar, int minTokens, int maxTokens,
+                                    int... ranks) throws IOException {
+        PrintWriter p = new PrintWriter(outFile);
+        List<String> gs = GSLoader.loadGenia(gsFile, true, true);
+        Map<String, double[]> scores = new HashMap<>();
+
+        for(File f: new File(ateOutputFolder).listFiles()){
+            String name =f.getName();
+            List<String> terms = ATEResultLoader.load(f.toString());
+
+            double[] s=computePrecisionAtRank(gs,terms, ignoreSymbols,ignoreDigits,minChar,
+                    maxChar, minTokens, maxTokens, ranks);
+            scores.put(name, s);
+        }
+
+        //generate report
+
+        StringBuilder sb=  new StringBuilder();
+        for(int i: ranks){
+            sb.append(",").append(i);
+        }
+        sb.append("\n");
+
+        for(Map.Entry<String, double[]> en: scores.entrySet()) {
+            sb.append(en.getKey()).append(",");
+            double[] s = en.getValue();
+            for (int i = 0; i < ranks.length; i++) {
+                sb.append(s[i]).append(",");
+
+            }
+            sb.append("\n");
+        }
+        p.println(sb.toString());
+        p.close();
+    }
+
     public static double[] computePrecisionAtRank(List<String> gs, List<String> terms,
                                               boolean ignoreSymbols, boolean ignoreDigits,
                                               int minChar, int maxChar, int minTokens, int maxTokens,
@@ -43,7 +86,7 @@ public class Scorer {
     private static List<String> prune(List<String> gs, boolean ignoreSymbols, boolean ignoreDigits, int minChar, int maxChar, int minTokens, int maxTokens) {
         List<String> result = new ArrayList<>();
         for(String g: gs){
-            if(ignoreDigits)
+            if (ignoreDigits)
                 g=g.replaceAll(digitsPattern," ").replaceAll("\\s+"," ").trim();
             if(ignoreSymbols)
                 g=g.replaceAll(symbolsPattern," ").replaceAll("\\s+"," ").trim();
@@ -60,6 +103,7 @@ public class Scorer {
     }
 
     public static void main(String[] args) throws IOException {
+
         List<String> gs = GSLoader.loadGenia(args[1],true, true);
 
         List<String> terms= ATEResultLoader.load(args[0]);
