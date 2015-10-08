@@ -86,7 +86,7 @@ public class AppNCValue extends App {
 			filterByTTF(candidates, this.minTTF);
 
 			List<JATETerm> terms = ncvalue.execute(candidates);
-			terms = filtering(terms);
+			terms = filter(terms);
 
 			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
 					properties.getSolrFieldnameID());

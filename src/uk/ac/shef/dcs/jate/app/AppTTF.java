@@ -64,7 +64,7 @@ public class AppTTF extends App {
 			filterByTTF(candidates, this.minTTF);
 
 			List<JATETerm> terms = ttf.execute(candidates);
-			terms = filtering(terms);
+			terms = filter(terms);
 
 			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
 					properties.getSolrFieldnameID());

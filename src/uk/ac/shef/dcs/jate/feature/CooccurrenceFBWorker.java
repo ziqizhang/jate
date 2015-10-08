@@ -58,12 +58,12 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<String, Cooccu
                 String term1 = output.lookupTerm(term1Id);
                 int newTerm1Id = joined.lookupAndIndexTerm(term1);
                 for (Map.Entry<Integer, Integer> ent : cooccurrence.entrySet()) {
-                    int term2Id = ent.getKey();
-                    String term2 = output.lookupTerm(term2Id);
+                    int refTermId = ent.getKey();
+                    String refTerm = output.lookupRefTerm(refTermId);
                     int freq = ent.getValue();
 
-                    int newTerm2Id = joined.lookupAndIndexTerm(term2);
-                    joined.increment(newTerm1Id, newTerm2Id, freq);
+                    int newRefTermId = joined.lookupAndIndexRefTerm(refTerm);
+                    joined.increment(newTerm1Id, newRefTermId, freq);
                 }
             }
         }

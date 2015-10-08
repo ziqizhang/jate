@@ -1,6 +1,8 @@
 package uk.ac.shef.dcs.jate.test;
 
+import cern.colt.matrix.tdouble.impl.SparseDoubleMatrix2D;
 import org.apache.commons.lang.StringEscapeUtils;
+import uk.ac.shef.dcs.jate.JATERecursiveTaskWorker;
 
 import java.text.BreakIterator;
 import java.util.Locale;

@@ -1,6 +1,5 @@
 package uk.ac.shef.dcs.jate.app;
 
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.search.SolrIndexSearcher;
 import org.slf4j.Logger;
@@ -11,7 +10,6 @@ import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.algorithm.ChiSquare;
 import uk.ac.shef.dcs.jate.feature.*;
 import uk.ac.shef.dcs.jate.model.JATETerm;
-import uk.ac.shef.dcs.jate.util.JATEUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -90,13 +88,14 @@ public class AppChiSquare extends App {
 
 			ChiSquare chi = new ChiSquare();
 			chi.registerFeature(FrequencyTermBased.class.getName(), ftb);
-			chi.registerFeature(FrequencyCtxBased.class.getName() + ChiSquare.SUFFIX_SENTENCE, fcsb);
+			chi.registerFeature(FrequencyCtxBased.class.getName() + ChiSquare.SUFFIX_TERM, fcsb);
+            chi.registerFeature(FrequencyCtxBased.class.getName() + ChiSquare.SUFFIX_REF_TERM, ref_fcsb);
 			chi.registerFeature(Cooccurrence.class.getName(), co);
 
 			//TODO: ziqi, should we support term frequency filtering before ranking here ?
 			
 			List<JATETerm> terms = chi.execute(co.getTerms());
-			terms = filtering(terms);
+			terms = filter(terms);
 
 			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
 					properties.getSolrFieldnameID());

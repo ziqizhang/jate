@@ -18,7 +18,8 @@ import java.util.logging.Logger;
  */
 public class ChiSquare extends Algorithm {
     private static final Logger LOG = Logger.getLogger(ChiSquare.class.getName());
-    public static final String SUFFIX_SENTENCE = "_SENTENCE";
+    public static final String SUFFIX_TERM = "_TERM";
+    public static final String SUFFIX_REF_TERM = "_REF_TERM";
 
     protected int maxPerWorker = 1000;
 
@@ -38,9 +39,13 @@ public class ChiSquare extends Algorithm {
         validateFeature(feature2, Cooccurrence.class);
         Cooccurrence fFeatureCoocurr = (Cooccurrence) feature2;
 
-        AbstractFeature feature3 = features.get(FrequencyCtxBased.class.getName() + SUFFIX_SENTENCE);
+        AbstractFeature feature3 = features.get(FrequencyCtxBased.class.getName() + SUFFIX_TERM);
         validateFeature(feature3, FrequencyCtxBased.class);
-        FrequencyCtxBased fFeatureCtxBased = (FrequencyCtxBased) feature3;
+        FrequencyCtxBased termFeatureCtxBased = (FrequencyCtxBased) feature3;
+
+        AbstractFeature feature4 = features.get(FrequencyCtxBased.class.getName() + SUFFIX_REF_TERM);
+        validateFeature(feature4, FrequencyCtxBased.class);
+        FrequencyCtxBased refTermFeatureCtxBased = (FrequencyCtxBased) feature4;
 
         int cores = Runtime.getRuntime().availableProcessors();
         StringBuilder msg = new StringBuilder("Beginning computing ChiSquare, cores=");
@@ -48,7 +53,8 @@ public class ChiSquare extends Algorithm {
                 append(" max terms per worker thread=").append(maxPerWorker);
         LOG.info(msg.toString());
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
-        ChiSquareWorker worker = new ChiSquareWorker(new ArrayList<>(candidates), maxPerWorker, fFeatureTerms, fFeatureCtxBased, fFeatureCoocurr
+        ChiSquareWorker worker = new ChiSquareWorker(new ArrayList<>(candidates), maxPerWorker, fFeatureTerms,
+                termFeatureCtxBased, refTermFeatureCtxBased,fFeatureCoocurr
                 );
         List<JATETerm> result = forkJoinPool.invoke(worker);
         Collections.sort(result);

@@ -78,7 +78,7 @@ public class AppGlossEx extends App {
 			filterByTTF(candidates, this.minTTF);
 
 			List<JATETerm> terms = glossex.execute(candidates);
-			terms = filtering(terms);
+			terms = filter(terms);
 
 			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
 					properties.getSolrFieldnameID());

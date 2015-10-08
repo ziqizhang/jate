@@ -11,23 +11,27 @@ import java.util.*;
 class ChiSquareWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> {
 	
 	private static final long serialVersionUID = -5293190120654351590L;
-	protected FrequencyCtxBased fFeatureCtxBased;
+	protected FrequencyCtxBased termFeatureCtxBased;
+    protected FrequencyCtxBased refTermFeatureCtxBased;
     protected Cooccurrence fFeatureCoocurr;
     protected FrequencyTermBased fFeatureTerms;
 
     public ChiSquareWorker(List<String> terms, int maxTasksPerWorker,
                            FrequencyTermBased frequencyTermBased,
-                           FrequencyCtxBased fFeatureCtxBased, Cooccurrence fFeatureCoocurr) {
+                           FrequencyCtxBased termFeatureCtxBased,
+                           FrequencyCtxBased refTermFeatureCtxBased,
+                           Cooccurrence fFeatureCoocurr) {
         super(terms, maxTasksPerWorker);
         this.fFeatureTerms = frequencyTermBased;
         this.fFeatureCoocurr = fFeatureCoocurr;
-        this.fFeatureCtxBased = fFeatureCtxBased;
+        this.termFeatureCtxBased = termFeatureCtxBased;
+        this.refTermFeatureCtxBased=refTermFeatureCtxBased;
     }
 
     @Override
     protected JATERecursiveTaskWorker<String, List<JATETerm>> createInstance(List<String> terms) {
         return new ChiSquareWorker(terms, maxTasksPerThread,
-                fFeatureTerms, fFeatureCtxBased, fFeatureCoocurr
+                fFeatureTerms, termFeatureCtxBased, refTermFeatureCtxBased,fFeatureCoocurr
                 );
     }
 
@@ -54,34 +58,36 @@ class ChiSquareWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> {
             // where w appears".
             if (n_w == null) {
                 n_w = 0;
-                Set<String> ctx_w = fFeatureCtxBased.getContextIds(tString);
+                Set<String> ctx_w = termFeatureCtxBased.getContextIds(tString);
                 if (ctx_w == null) {
                     continue;//this is possible if during co-occurrence computing this term is skipped
                     //because it did not satisfy minimum thresholds
                 }
+                Map<String, Integer> ctx2ttf=termFeatureCtxBased.getMapCtx2TTF();
                 for (String ctxid : ctx_w)
-                    n_w += fFeatureCtxBased.getMapCtx2TTF().get(ctxid);
+                    n_w += ctx2ttf.get(ctxid);
 
                 ctxTTFLookup.put(tString, n_w);
             }
 
             double sumChiSquare_w = 0.0, maxChiSquare = 0.0;
-            Map<Integer, Integer> coocurTermIdx2Freq = fFeatureCoocurr.getCoocurrence(tString);
-            for (Map.Entry<Integer, Integer> entry : coocurTermIdx2Freq.entrySet()) {
+            Map<Integer, Integer> coocurRefTermIdx2Freq = fFeatureCoocurr.getCoocurrence(tString);
+            for (Map.Entry<Integer, Integer> entry : coocurRefTermIdx2Freq.entrySet()) {
                 int g_id = entry.getKey();
-                String g_term = fFeatureCoocurr.lookupTerm(g_id);
+                String g_term = fFeatureCoocurr.lookupRefTerm(g_id);
                 int freq_wg = entry.getValue();
 
                 Integer g_w = ctxTTFLookup.get(g_id); //the sum of the total number of terms in sentences where g appears
                 if (g_w == null) {
                     g_w = 0;
-                    Set<String> ctx_g = fFeatureCtxBased.getContextIds(g_term);
+                    Set<String> ctx_g = refTermFeatureCtxBased.getContextIds(g_term);
                     if (ctx_g == null) {
                         continue;//this is possible if during co-occurrence computing this term is skipped
                         //because it did not satisfy minimum thresholds
                     }
+                    Map<String, Integer> refctx2ttf=refTermFeatureCtxBased.getMapCtx2TTF();
                     for (String ctxid : ctx_g)
-                        g_w += fFeatureCtxBased.getMapCtx2TTF().get(ctxid);
+                        g_w += refctx2ttf.get(ctxid);
                     ctxTTFLookup.put(g_term, g_w);
                 }
                 double p_g = (double) g_w / totalTermsInCorpus;

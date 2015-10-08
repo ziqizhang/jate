@@ -447,7 +447,7 @@ public abstract class App {
 	 * @param terms
 	 * @return List<JATETerm>, filtered terms
 	 */
-	protected List<JATETerm> filtering(List<JATETerm> terms) {
+	protected List<JATETerm> filter(List<JATETerm> terms) {
 		if (this.cutOffThreshold != null) {
 			return filterByTermWeightThreshold(terms, this.cutOffThreshold);
 		}

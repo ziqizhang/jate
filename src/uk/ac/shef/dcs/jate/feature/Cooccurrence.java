@@ -15,8 +15,8 @@ public class Cooccurrence extends AbstractFeature {
     protected Map<Integer, String> mapIdx2Term = new HashMap<>();
     protected Map<String, Integer> mapTerm2Idx = new HashMap<>();
 
-    protected Map<Integer, String> mapIdx2CtxTerm = new HashMap<>();
-    protected Map<String, Integer> mapCtxTerm2Idx = new HashMap<>();
+    protected Map<Integer, String> mapIdx2RefTerm = new HashMap<>();
+    protected Map<String, Integer> mapRefTerm2Idx = new HashMap<>();
 
 
     protected int termCounter =-1;
@@ -30,13 +30,8 @@ public class Cooccurrence extends AbstractFeature {
         return cooccurrence.rows();
     }
 
-    public int getNumCtxTerms(){return cooccurrence.columns();}
-
     public Set<String> getTerms(){
         return mapTerm2Idx.keySet();
-    }
-    public Set<String> getCtxTerms(){
-        return mapCtxTerm2Idx.keySet();
     }
 
     protected int lookupAndIndexTerm(String term){
@@ -58,34 +53,36 @@ public class Cooccurrence extends AbstractFeature {
         return index;
     }
 
-    protected int lookupAndIndexRefTerm(String ctxTerm){
-        Integer idx = mapCtxTerm2Idx.get(ctxTerm);
+    protected int lookupAndIndexRefTerm(String refTerm){
+        Integer idx = mapRefTerm2Idx.get(refTerm);
         if(idx==null) {
             ctxTermCounter++;
-            mapIdx2CtxTerm.put(ctxTermCounter, ctxTerm);
-            mapCtxTerm2Idx.put(ctxTerm, ctxTermCounter);
+            mapIdx2RefTerm.put(ctxTermCounter, refTerm);
+            mapRefTerm2Idx.put(refTerm, ctxTermCounter);
             return ctxTermCounter;
         }
         return idx;
     }
 
-    protected int lookupCtxTerm(String ctxTerm){
-        Integer index= mapCtxTerm2Idx.get(ctxTerm);
+    protected int lookupRefTerm(String refTerm){
+        Integer index= mapRefTerm2Idx.get(refTerm);
         if(index==null) {
             return -1;
         }
         return index;
     }
 
-    protected void increment(int termIdx, int ctxTermIdx, int freq){
-        int newFreq=cooccurrence.getQuick(termIdx, ctxTermIdx)+freq;
-        cooccurrence.setQuick(termIdx, ctxTermIdx,
+    protected void increment(int termIdx, int refTermIdx, int freq){
+        int newFreq=cooccurrence.getQuick(termIdx, refTermIdx)+freq;
+        cooccurrence.setQuick(termIdx, refTermIdx,
                 newFreq);
     }
 
     public String lookupTerm(int index){
         return mapIdx2Term.get(index);
     }
+
+    public String lookupRefTerm(int index){return mapIdx2RefTerm.get(index);}
 
     /**
      * It is possible to have an invalid query term, usually created because of cross-sentence-boundary n-gram,

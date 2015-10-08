@@ -71,7 +71,7 @@ public class AppRAKE extends App {
 			filterByTTF(candidates, this.minTTF);
 
 			List<JATETerm> terms = rake.execute(candidates);
-			terms = filtering(terms);
+			terms = filter(terms);
 
 			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
 					properties.getSolrFieldnameID());
