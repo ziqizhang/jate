@@ -23,16 +23,12 @@ public class NCValue extends Algorithm {
     protected double weightCValue =0.8;
     protected double weightContext =0.2;
 
-    protected int maxPerWorker = 1000;
 
     public NCValue() {
     }
     public NCValue(double weightCValue, double weightContext) {
         this.weightCValue =weightCValue;
         this.weightContext =weightContext;
-    }
-    public NCValue(int maxTermsPerWorker) {
-        this.maxPerWorker = maxTermsPerWorker;
     }
 
     @Override
@@ -50,6 +46,7 @@ public class NCValue extends Algorithm {
         Cooccurrence fFeatureCoocurr = (Cooccurrence) feature3;
 
         int cores = Runtime.getRuntime().availableProcessors();
+        int maxPerWorker=candidates.size()/cores;
         StringBuilder msg = new StringBuilder("Beginning computing NCValue, cores=");
         msg.append(cores).append(", total terms=" + candidates.size()).append(",").
                 append(" max terms per worker thread=").append(maxPerWorker);

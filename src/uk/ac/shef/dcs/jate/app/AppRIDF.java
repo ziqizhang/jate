@@ -42,6 +42,7 @@ public class AppRIDF extends App {
 
 	public AppRIDF(Map<String, String> initParams) throws JATEException {
 		super(initParams);
+		initialiseMTTFParam(initParams);
 	}
 
 	@Override

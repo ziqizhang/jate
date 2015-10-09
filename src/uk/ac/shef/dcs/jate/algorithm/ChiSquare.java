@@ -21,14 +21,9 @@ public class ChiSquare extends Algorithm {
     public static final String SUFFIX_TERM = "_TERM";
     public static final String SUFFIX_REF_TERM = "_REF_TERM";
 
-    protected int maxPerWorker = 1000;
-
     public ChiSquare() {
     }
 
-    public ChiSquare(int maxTermsPerWorker) {
-        this.maxPerWorker = maxTermsPerWorker;
-    }
 
     @Override
     public List<JATETerm> execute(Collection<String> candidates) throws JATEException {
@@ -48,6 +43,7 @@ public class ChiSquare extends Algorithm {
         FrequencyCtxBased refTermFeatureCtxBased = (FrequencyCtxBased) feature4;
 
         int cores = Runtime.getRuntime().availableProcessors();
+        int maxPerWorker = candidates.size()/cores;
         StringBuilder msg = new StringBuilder("Beginning computing ChiSquare, cores=");
         msg.append(cores).append(", total terms=" + candidates.size()).append(",").
                 append(" max terms per worker thread=").append(maxPerWorker);

@@ -24,6 +24,8 @@ import java.io.Writer;
 import java.nio.file.Paths;
 import java.util.*;
 
+
+//todo alot of params have been changed and now everything is not working. I need to change this
 public abstract class App {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
@@ -50,7 +52,7 @@ public abstract class App {
 	 * threshold for filter terms. If not set then default -n is used.
 	 * 
 	 */
-	protected Double cutOffThreshold = null;
+	protected Double filterThreshold = null;
 
 	/**
 	 * corresponding to "-n" in command line
@@ -60,9 +62,9 @@ public abstract class App {
 	 * TODO: ziqi, pls explain why this is needed? why user will select top N
 	 * terms and how they would know the "N"?
 	 */
-	protected Integer topNTerms = null;
+	protected Integer filterTopN = null;
 
-	protected Double topPercentageTerms = null;
+	protected Double filterTopPercentage = null;
 
 	/**
 	 * corresponding to "-o" in command line
@@ -102,7 +104,7 @@ public abstract class App {
 		TOP_N_THRESHOLD("-n", "top_n_threshold"),
 		
 		// top N terms to filter term candidates
-		TOP_PERCENTAGE_THRESHOLD ("-top_percentage", "top_percentage_threshold"),
+		TOP_PERCENTAGE_THRESHOLD ("-tp", "top_percentage_threshold"),
 				
 		// output file to export final filtered term list
 		OUTPUT_FILE("-o", "output_file"),
@@ -166,11 +168,11 @@ public abstract class App {
 				throw new JATEException("A string of numeric value is expected for Top N terms setting ('-n') !");
 			} else if (JATEUtil.isInteger(topNSetting)) {
 				log.debug(String.format("Term candidate is set to filter by top [%s]", topNSetting));
-				this.topNTerms = Integer.parseInt(topNSetting);
+				this.filterTopN = Integer.parseInt(topNSetting);
 			} else {
 				//make it compatible with current setting in command line that that supports both top n and top percentage with '-n'
 				log.debug(String.format("Term candidate is set to filter by top [%s](rounded)", topNSetting));
-				this.topPercentageTerms = Double.parseDouble(topNSetting);
+				this.filterTopPercentage = Double.parseDouble(topNSetting);
 			}
 		}
 		
@@ -180,7 +182,7 @@ public abstract class App {
 				log.error("Top Percentage terms setting ('-top_percentage') is not set correctly! A string of numeric value is expected!");
 			}
 			
-			this.topPercentageTerms = Double.parseDouble(topPercSetting);
+			this.filterTopPercentage = Double.parseDouble(topPercSetting);
 		}
 
 		if (initParams.containsKey(CommandLineParams.CUT_OFF_THRESHOLD.getParamKey())) {
@@ -194,7 +196,7 @@ public abstract class App {
 						"A string of numeric value is expected for Term weight cut-off threshold setting ('-t') !");
 			} else {
 				log.debug(String.format("Term weight cut-off threshold is set to [%s]", cutOffThreshold));
-				this.cutOffThreshold = Double.parseDouble(cutOffThreshold);
+				this.filterThreshold = Double.parseDouble(cutOffThreshold);
 			}
 		}
 
@@ -260,6 +262,7 @@ public abstract class App {
 			} else if (JATEUtil.isInteger(minTTF)) {
 				log.debug(String.format("Mininum total term frequency is set to [%s]", minTTF));
 				this.minTTF = Integer.parseInt(minTTF);
+
 			} else {
 				log.error(
 						"Minimum total term frequency ('-mttf') is not set correctly! A string of numeric value is expected!");
@@ -448,16 +451,16 @@ public abstract class App {
 	 * @return List<JATETerm>, filtered terms
 	 */
 	protected List<JATETerm> filter(List<JATETerm> terms) {
-		if (this.cutOffThreshold != null) {
-			return filterByTermWeightThreshold(terms, this.cutOffThreshold);
+		if (this.filterThreshold != null) {
+			return filterByTermWeightThreshold(terms, this.filterThreshold);
 		}
 
-		if (this.topNTerms != null) {
-			return filterByTopNTerm(terms, this.topNTerms);
+		else if (this.filterTopN != null) {
+			return filterByTopNTerm(terms, this.filterTopN);
 		}
 
-		if (this.topPercentageTerms != null) {
-			return filterByTopPercentage(terms, this.topPercentageTerms);
+		else if (this.filterTopPercentage != null) {
+			return filterByTopPercentage(terms, this.filterTopPercentage);
 		}
 
 		return terms;
@@ -514,8 +517,11 @@ public abstract class App {
 	 */
 	protected List<JATETerm> filterByTopPercentage(List<JATETerm> terms, Double topPercentage) {
 		if (topPercentage != null & terms != null & terms.size() > 0) {
-			log.debug(String.format("filter [%s] term candidates by Top [%s]% (rounded) ...", terms.size(),
-					topPercentage * 100));
+
+            //todo jerry to check why this line has exception??
+			/*log.debug(String.format("filter [%s] term candidates by Top [%s]% (rounded) ...",
+					terms.size(),
+					topPercentage * 100));*/
 			Integer topN = (int) Math.round(topPercentage * terms.size());
 			if (topN > 0)
 				terms = filterByTopNTerm(terms, topN);

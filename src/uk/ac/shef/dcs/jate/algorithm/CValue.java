@@ -17,13 +17,8 @@ import java.util.logging.Logger;
 public class CValue extends Algorithm {
     private static final Logger LOG = Logger.getLogger(CValue.class.getName());
 
-    protected int maxPerWorker = 1000;
 
     public CValue() {
-    }
-
-    public CValue(int maxTermsPerWorker) {
-        this.maxPerWorker = maxTermsPerWorker;
     }
 
     @Override
@@ -37,6 +32,7 @@ public class CValue extends Algorithm {
         Containment cFeature = (Containment) feature2;
 
         int cores = Runtime.getRuntime().availableProcessors();
+        int maxPerWorker=candidates.size()/cores;
         StringBuilder msg = new StringBuilder("Beginning computing CValue, cores=");
         msg.append(cores).append(", total terms=" + candidates.size()).append(",").
                 append(" max terms per worker thread=").append(maxPerWorker);
