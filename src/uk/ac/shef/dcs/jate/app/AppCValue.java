@@ -33,7 +33,7 @@ public class AppCValue extends App {
 		try {
 			terms = new AppCValue(params).extract(solrHomePath, solrCoreName, jatePropertyFile);
 
-			String paramValue = params.get(CommandLineParams.OUTPUT_FILE.getParamKey());
+			String paramValue = params.get(AppParams.OUTPUT_FILE.getParamKey());
 			write(terms, paramValue);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -70,7 +70,7 @@ public class AppCValue extends App {
 
 			List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 			
-			filterByTTF(candidates, this.minTTF);
+			filterByTTF(candidates, this.prefilterMinTTF);
 
 			List<JATETerm> terms = cvalue.execute(candidates);
 			terms = filter(terms);

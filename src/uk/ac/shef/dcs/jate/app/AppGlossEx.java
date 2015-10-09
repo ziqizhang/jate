@@ -34,7 +34,7 @@ public class AppGlossEx extends App {
 		try {
 			terms = new AppGlossEx(params).extract(solrHomePath, solrCoreName, jatePropertyFile);
 
-			String outputFilePath = params.get(CommandLineParams.OUTPUT_FILE.getParamKey());
+			String outputFilePath = params.get(AppParams.OUTPUT_FILE.getParamKey());
 			write(terms, outputFilePath);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -65,7 +65,7 @@ public class AppGlossEx extends App {
 			FrequencyTermBasedFBMaster fwbb = new FrequencyTermBasedFBMaster(searcher, properties, 1);
 			FrequencyTermBased fwb = (FrequencyTermBased) fwbb.build();
 
-			TTFReferenceFeatureFileBuilder ftrb = new TTFReferenceFeatureFileBuilder(this.unigramFreqFilePath);
+			TTFReferenceFeatureFileBuilder ftrb = new TTFReferenceFeatureFileBuilder(this.referenceFrequencyFilePath);
 			FrequencyTermBased frb = ftrb.build();
 
 			GlossEx glossex = new GlossEx();
@@ -75,7 +75,7 @@ public class AppGlossEx extends App {
 
 			List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 			
-			filterByTTF(candidates, this.minTTF);
+			filterByTTF(candidates, this.prefilterMinTTF);
 
 			List<JATETerm> terms = glossex.execute(candidates);
 			terms = filter(terms);

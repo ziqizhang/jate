@@ -29,7 +29,7 @@ public class AppRIDF extends App {
 		try {
 			terms = new AppRIDF(params).extract(solrHomePath, solrCoreName, jatePropertyFile);
 
-			String paramValue = params.get(CommandLineParams.OUTPUT_FILE.getParamKey());
+			String paramValue = params.get(AppParams.OUTPUT_FILE.getParamKey());
 			write(terms, paramValue);
 
 		} catch (IOException e) {
@@ -59,7 +59,7 @@ public class AppRIDF extends App {
 
 			List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 
-			filterByTTF(candidates, this.minTTF);
+			filterByTTF(candidates, this.prefilterMinTTF);
 
 			List<JATETerm> terms = attf.execute(candidates);
 			terms = filter(terms);

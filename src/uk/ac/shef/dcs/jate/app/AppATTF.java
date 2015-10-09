@@ -28,7 +28,7 @@ public class AppATTF extends App {
 
 		Map<String, String> params = getParams(args);
 
-		String paramValue = params.get(CommandLineParams.OUTPUT_FILE.getParamKey());
+		String paramValue = params.get(AppParams.OUTPUT_FILE.getParamKey());
 		List<JATETerm> terms;
 		try {
 			terms = new AppATTF(params).extract(solrHomePath, solrCoreName, jatePropertyFile);
@@ -60,7 +60,7 @@ public class AppATTF extends App {
 
 			List<String> candidates = new ArrayList<>(freqFeature.getMapTerm2TTF().keySet());
 			
-			filterByTTF(candidates, this.minTTF);
+			filterByTTF(candidates, this.prefilterMinTTF);
 			
 			List<JATETerm> terms = attf.execute(candidates);
 

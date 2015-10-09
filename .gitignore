@@ -2,6 +2,7 @@
 *.class
 .idea/*
 target/*
+experiment/*
 libs/*
 .iml
 *.asc

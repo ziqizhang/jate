@@ -33,7 +33,7 @@ public class AppTFIDF extends App {
 		try {
 			terms = new AppTFIDF(params).extract(solrHomePath, solrCoreName, jatePropertyFile);
 
-			String paramValue = params.get(CommandLineParams.OUTPUT_FILE.getParamKey());
+			String paramValue = params.get(AppParams.OUTPUT_FILE.getParamKey());
 			write(terms, paramValue);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -63,7 +63,7 @@ public class AppTFIDF extends App {
 
 			List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 
-			filterByTTF(candidates, this.minTTF);
+			filterByTTF(candidates, this.prefilterMinTTF);
 
 			List<JATETerm> terms = tfidf.execute(candidates);
 			terms = filter(terms);

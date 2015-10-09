@@ -26,11 +26,11 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
     private JATEProperties properties;
     private SolrIndexSearcher solrIndexSearcher;
     private String sentenceTargetField;
-    private List<String> allCandidates;
+    private Set<String> allCandidates;
 
     public FrequencyCtxSentenceBasedFBWorker(JATEProperties properties,
                                              List<Integer> docIds,
-                                             List<String> allCandidates,
+                                             Set<String> allCandidates,
                                              SolrIndexSearcher solrIndexSearcher,
                                              int maxTasksPerWorker,
                                              String sentenceTargetField) {
@@ -92,9 +92,10 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                 List<TextUnitOffsets> terms = collectTermOffsets(
                         lookupVector);
                 List<int[]> sentences = collectSentenceOffsets(solrIndexSearcher, sentenceTargetField, docId);
-                StringBuilder sb = new StringBuilder("#");
+                /*StringBuilder sb = new StringBuilder("#");
                 sb.append(count).append(", docId=").append(docId).append(", total terms=").append(terms.size())
-                        .append(", total sentences=").append(sentences);
+                        .append(", total sentences=").append(sentences);*/
+                //LOG.info(sb.toString());
                 int termCursor = 0;
                 for (int[] sent : sentences) {
                     String contextId = docId + "." + feature.nextCtxId();
@@ -129,6 +130,7 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                 LOG.severe(sb.toString());
             }
         }
+        //LOG.info("debug---finished");
         return feature;
     }
 

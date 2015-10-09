@@ -32,7 +32,7 @@ public class AppWeirdness extends App {
 		try {
 			terms = new AppWeirdness(params).extract(solrHomePath, solrCoreName, jatePropertyFile);
 
-			String paramValue = params.get(CommandLineParams.OUTPUT_FILE.getParamKey());
+			String paramValue = params.get(AppParams.OUTPUT_FILE.getParamKey());
 			write(terms, paramValue);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -60,7 +60,7 @@ public class AppWeirdness extends App {
 			FrequencyTermBasedFBMaster fwbb = new FrequencyTermBasedFBMaster(searcher, properties, 1);
 			FrequencyTermBased fwb = (FrequencyTermBased) fwbb.build();
 
-			TTFReferenceFeatureFileBuilder ftrb = new TTFReferenceFeatureFileBuilder(this.unigramFreqFilePath);
+			TTFReferenceFeatureFileBuilder ftrb = new TTFReferenceFeatureFileBuilder(this.referenceFrequencyFilePath);
 			FrequencyTermBased frb = ftrb.build();
 
 			Weirdness weirdness = new Weirdness();
@@ -69,7 +69,7 @@ public class AppWeirdness extends App {
 
 			List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 
-			filterByTTF(candidates, this.minTTF);
+			filterByTTF(candidates, this.prefilterMinTTF);
 
 			List<JATETerm> terms = weirdness.execute(candidates);
 			terms = filter(terms);

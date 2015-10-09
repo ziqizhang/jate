@@ -30,10 +30,6 @@ public abstract class App {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
-	// TODO: ziqi, please make parameter clear.
-	// if you want to support both top percentage and top N term filtering,
-	// please set two different parameters for two different settings.
-	protected static final double DEFAULT_THRESHOLD_N = 0.25;
 
 	/**
 	 * corresponding to "-c" in command line
@@ -52,19 +48,11 @@ public abstract class App {
 	 * threshold for filter terms. If not set then default -n is used.
 	 * 
 	 */
-	protected Double filterThreshold = null;
+	protected Double cutoffThreshold = null;
 
-	/**
-	 * corresponding to "-n" in command line
-	 * 
-	 * If an integer is given, top N candidates are selected as terms
-	 * 
-	 * TODO: ziqi, pls explain why this is needed? why user will select top N
-	 * terms and how they would know the "N"?
-	 */
-	protected Integer filterTopN = null;
+	protected Integer cutoffTopN = null;
 
-	protected Double filterTopPercentage = null;
+	protected Double cutoffTopPercentage = null;
 
 	/**
 	 * corresponding to "-o" in command line
@@ -77,13 +65,15 @@ public abstract class App {
 	 */
 	protected String outputFile = null;
 
+
 	// Min total fequency of a term
-	protected Integer minTTF = 0;
+	protected Integer prefilterMinTTF = 0;
 
 	// Min frequency of a term appearing in different context
-	protected Integer minTCF = 0;
+	protected Integer prefilterMinTCF = 0;
 
-	protected String unigramFreqFilePath = null;
+    //used by algorithms such as weirdness, glossex, termex that compares against a reference corpus
+	protected String referenceFrequencyFilePath = null;
 
 	/**
 	 * CommandLineParams provides the mapping of term ranking algorithms runtime
@@ -93,18 +83,18 @@ public abstract class App {
 	 * see also {@code uk.ac.shef.dcs.jate.solr.TermRecognitionRequestHandler}
 	 * 
 	 */
-	public enum CommandLineParams {
+	public enum AppParams {
 		// TODO: ziqi, pls check/add comments to explain each command line
 		// parameter
 
-		IS_COLLECT_TERM_INFO("-c", "is_collect_term_info"),
+		COLLECT_TERM_INFO("-c", "collect_term_info"),
 		// cut off threshold to filter term candidates list by termhood/unithood
-		CUT_OFF_THRESHOLD("-t", "cut_off_threshold"),
+		CUTOFF_THRESHOLD("-t", "cutoff_threshold"),
 		// top N terms to filter term candidates
-		TOP_N_THRESHOLD("-n", "top_n_threshold"),
+		CUTOFF_TOPN("-n", "cutoff_top_n"),
 		
 		// top N terms to filter term candidates
-		TOP_PERCENTAGE_THRESHOLD ("-tp", "top_percentage_threshold"),
+		CUTOFF_TOP_PERCENTAGE("-p", "cutoff_top_percentage"),
 				
 		// output file to export final filtered term list
 		OUTPUT_FILE("-o", "output_file"),
@@ -128,7 +118,7 @@ public abstract class App {
 		private final String paramKey;
 		private final String paramName;
 
-		CommandLineParams(String paramKey, String paramName) {
+		AppParams(String paramKey, String paramName) {
 			this.paramKey = paramKey;
 			this.paramName = paramName;
 		}
@@ -159,8 +149,8 @@ public abstract class App {
 	 * @throws JATEException
 	 */
 	App(Map<String, String> initParams) throws JATEException {
-		if (initParams.containsKey(CommandLineParams.TOP_N_THRESHOLD.getParamKey())) {
-			String topNSetting = initParams.get(CommandLineParams.TOP_N_THRESHOLD.getParamKey());
+		if (initParams.containsKey(AppParams.CUTOFF_TOPN.getParamKey())) {
+			String topNSetting = initParams.get(AppParams.CUTOFF_TOPN.getParamKey());
 			if (!NumberUtils.isNumber(topNSetting)) {
 				log.error("Top N terms setting ('-n') is not set correctly! A string of numeric value is expected!");
 				// TODO: ziqi, shall we default the value to the
@@ -168,25 +158,25 @@ public abstract class App {
 				throw new JATEException("A string of numeric value is expected for Top N terms setting ('-n') !");
 			} else if (JATEUtil.isInteger(topNSetting)) {
 				log.debug(String.format("Term candidate is set to filter by top [%s]", topNSetting));
-				this.filterTopN = Integer.parseInt(topNSetting);
+				this.cutoffTopN = Integer.parseInt(topNSetting);
 			} else {
 				//make it compatible with current setting in command line that that supports both top n and top percentage with '-n'
 				log.debug(String.format("Term candidate is set to filter by top [%s](rounded)", topNSetting));
-				this.filterTopPercentage = Double.parseDouble(topNSetting);
+				this.cutoffTopPercentage = Double.parseDouble(topNSetting);
 			}
 		}
 		
-		if (initParams.containsKey(CommandLineParams.TOP_PERCENTAGE_THRESHOLD.getParamKey())) {
-			String topPercSetting = initParams.get(CommandLineParams.TOP_PERCENTAGE_THRESHOLD.getParamKey());
+		if (initParams.containsKey(AppParams.CUTOFF_TOP_PERCENTAGE.getParamKey())) {
+			String topPercSetting = initParams.get(AppParams.CUTOFF_TOP_PERCENTAGE.getParamKey());
 			if (!NumberUtils.isNumber(topPercSetting)) {
 				log.error("Top Percentage terms setting ('-top_percentage') is not set correctly! A string of numeric value is expected!");
 			}
 			
-			this.filterTopPercentage = Double.parseDouble(topPercSetting);
+			this.cutoffTopPercentage = Double.parseDouble(topPercSetting);
 		}
 
-		if (initParams.containsKey(CommandLineParams.CUT_OFF_THRESHOLD.getParamKey())) {
-			String cutOffThreshold = initParams.get(CommandLineParams.CUT_OFF_THRESHOLD.getParamKey());
+		if (initParams.containsKey(AppParams.CUTOFF_THRESHOLD.getParamKey())) {
+			String cutOffThreshold = initParams.get(AppParams.CUTOFF_THRESHOLD.getParamKey());
 			if (!NumberUtils.isNumber(cutOffThreshold)) {
 				log.error(
 						"Term weight cut-off threshold setting ('-t') is not set correctly! A string of numeric value is expected!");
@@ -196,12 +186,12 @@ public abstract class App {
 						"A string of numeric value is expected for Term weight cut-off threshold setting ('-t') !");
 			} else {
 				log.debug(String.format("Term weight cut-off threshold is set to [%s]", cutOffThreshold));
-				this.filterThreshold = Double.parseDouble(cutOffThreshold);
+				this.cutoffThreshold = Double.parseDouble(cutOffThreshold);
 			}
 		}
 
-		if (initParams.containsKey(CommandLineParams.IS_COLLECT_TERM_INFO.getParamKey())) {
-			String isCollectTermInfo = initParams.get(CommandLineParams.IS_COLLECT_TERM_INFO.getParamKey());
+		if (initParams.containsKey(AppParams.COLLECT_TERM_INFO.getParamKey())) {
+			String isCollectTermInfo = initParams.get(AppParams.COLLECT_TERM_INFO.getParamKey());
 			if (isCollectTermInfo != null && isCollectTermInfo.equalsIgnoreCase("true")) {
 				this.isCollectTermInfo = true;
 			}
@@ -210,8 +200,8 @@ public abstract class App {
 	}
 
 	protected void initaliseNgramFreqParam(Map<String, String> initParams) throws JATEException {
-		if (initParams.containsKey(CommandLineParams.UNIGRAM_FREQUENCY_FILE.getParamKey())) {
-			String unigramFreqFilePath = initParams.get(CommandLineParams.UNIGRAM_FREQUENCY_FILE.getParamKey());
+		if (initParams.containsKey(AppParams.UNIGRAM_FREQUENCY_FILE.getParamKey())) {
+			String unigramFreqFilePath = initParams.get(AppParams.UNIGRAM_FREQUENCY_FILE.getParamKey());
 
 			if (unigramFreqFilePath == null) {
 				log.error(
@@ -227,21 +217,21 @@ public abstract class App {
 				throw new JATEException(" Unigram Frequency distribution file ('-r') is not accessible!");
 			}
 
-			this.unigramFreqFilePath = unigramFreqFilePath;
+			this.referenceFrequencyFilePath = unigramFreqFilePath;
 		}
 	}
 	
 	protected void initialiseMTCFParam(Map<String, String> initParams) throws JATEException {
-		if (initParams.containsKey(CommandLineParams.MIN_TERM_CONTEXT_FREQUENCY.getParamKey())) {
-			String minTCF = initParams.get(CommandLineParams.MIN_TERM_CONTEXT_FREQUENCY.getParamKey());
+		if (initParams.containsKey(AppParams.MIN_TERM_CONTEXT_FREQUENCY.getParamKey())) {
+			String minTCF = initParams.get(AppParams.MIN_TERM_CONTEXT_FREQUENCY.getParamKey());
 			if (!NumberUtils.isNumber(minTCF)) {
 				log.error(
 						"Minimum term context frequency ('-mtcf') is not set correctly! A string of numeric value is expected!");
 				throw new JATEException(
 						"A string of numeric value is expected for minimum term context frequency ('-mtcf') !");
 			} else if (JATEUtil.isInteger(minTCF)) {
-				log.debug(String.format("Mininum term context frequency is set to [%s]", minTTF));
-				this.minTCF = Integer.parseInt(minTCF);
+				log.debug(String.format("Mininum term context frequency is set to [%s]", prefilterMinTTF));
+				this.prefilterMinTCF = Integer.parseInt(minTCF);
 			} else {
 				log.error(
 						"Minimum term context frequency ('-mttf') is not set correctly! A string of numeric value is expected!");
@@ -252,8 +242,8 @@ public abstract class App {
 	}
 
 	protected void initialiseMTTFParam(Map<String, String> initParams) throws JATEException {
-		if (initParams.containsKey(CommandLineParams.MIN_TOTAL_TERM_FREQUENCY.getParamKey())) {
-			String minTTF = initParams.get(CommandLineParams.MIN_TOTAL_TERM_FREQUENCY.getParamKey());
+		if (initParams.containsKey(AppParams.MIN_TOTAL_TERM_FREQUENCY.getParamKey())) {
+			String minTTF = initParams.get(AppParams.MIN_TOTAL_TERM_FREQUENCY.getParamKey());
 			if (!NumberUtils.isNumber(minTTF)) {
 				log.error(
 						"Minimum total term frequency ('-mttf') is not set correctly! A string of numeric value is expected!");
@@ -261,7 +251,7 @@ public abstract class App {
 						"A string of numeric value is expected for Minimum total term frequency ('-mttf') !");
 			} else if (JATEUtil.isInteger(minTTF)) {
 				log.debug(String.format("Mininum total term frequency is set to [%s]", minTTF));
-				this.minTTF = Integer.parseInt(minTTF);
+				this.prefilterMinTTF = Integer.parseInt(minTTF);
 
 			} else {
 				log.error(
@@ -392,9 +382,9 @@ public abstract class App {
 			throw new JATEException("FrequencyTermBased is not initialised for TTF term filtering.");
 		}
 
-		if (this.minTTF != null & candidates != null & candidates.size() > 0) {
+		if (this.prefilterMinTTF != null & candidates != null & candidates.size() > 0) {
 			log.debug(String.format("Filter [%s] term candidates by total term frequency [%s] (exclusive)",
-					candidates.size(), this.minTTF));
+					candidates.size(), this.prefilterMinTTF));
 			Iterator<String> it = candidates.iterator();
 			while (it.hasNext()) {
 				String t = it.next();
@@ -419,7 +409,7 @@ public abstract class App {
 	}
 
 	protected static int getParamCutoffFreq(Map<String, String> params) {
-		String cutoff = params.get(CommandLineParams.MIN_TOTAL_TERM_FREQUENCY.getParamKey());
+		String cutoff = params.get(AppParams.MIN_TOTAL_TERM_FREQUENCY.getParamKey());
 		int minFreq = 0;
 		if (cutoff != null) {
 			try {
@@ -451,16 +441,16 @@ public abstract class App {
 	 * @return List<JATETerm>, filtered terms
 	 */
 	protected List<JATETerm> filter(List<JATETerm> terms) {
-		if (this.filterThreshold != null) {
-			return filterByTermWeightThreshold(terms, this.filterThreshold);
+		if (this.cutoffThreshold != null) {
+			return filterByTermWeightThreshold(terms, this.cutoffThreshold);
 		}
 
-		else if (this.filterTopN != null) {
-			return filterByTopNTerm(terms, this.filterTopN);
+		else if (this.cutoffTopN != null) {
+			return filterByTopNTerm(terms, this.cutoffTopN);
 		}
 
-		else if (this.filterTopPercentage != null) {
-			return filterByTopPercentage(terms, this.filterTopPercentage);
+		else if (this.cutoffTopPercentage != null) {
+			return filterByTopPercentage(terms, this.cutoffTopPercentage);
 		}
 
 		return terms;

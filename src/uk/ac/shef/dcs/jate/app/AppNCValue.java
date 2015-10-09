@@ -36,7 +36,7 @@ public class AppNCValue extends App {
 		try {
 			terms = new AppNCValue(params).extract(solrHomePath, solrCoreName, jatePropertyFile);
 
-			String paramValue = params.get(CommandLineParams.OUTPUT_FILE.getParamKey());
+			String paramValue = params.get(AppParams.OUTPUT_FILE.getParamKey());
 			write(terms, paramValue);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -72,8 +72,8 @@ public class AppNCValue extends App {
 					properties.getSolrFieldnameJATECTerms(), properties.getSolrFieldnameJATESentences());
 			FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
 
-			CooccurrenceFBMaster ccb = new CooccurrenceFBMaster(searcher, properties, this.freqFeature, this.minTTF,
-					fcsb,fcsb, this.minTCF);
+			CooccurrenceFBMaster ccb = new CooccurrenceFBMaster(searcher, properties, this.freqFeature, this.prefilterMinTTF,
+					fcsb,fcsb, this.prefilterMinTCF);
 			Cooccurrence co = (Cooccurrence) ccb.build();
 
 			NCValue ncvalue = new NCValue();
@@ -83,7 +83,7 @@ public class AppNCValue extends App {
 
 			List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 
-			filterByTTF(candidates, this.minTTF);
+			filterByTTF(candidates, this.prefilterMinTTF);
 
 			List<JATETerm> terms = ncvalue.execute(candidates);
 			terms = filter(terms);

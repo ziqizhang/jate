@@ -28,7 +28,7 @@ public class AppRAKE extends App {
 		try {
 			terms = new AppRAKE(params).extract(solrHomePath, solrCoreName, jatePropertyFile);
 
-			String paramValue = params.get(CommandLineParams.OUTPUT_FILE.getParamKey());
+			String paramValue = params.get(AppParams.OUTPUT_FILE.getParamKey());
 			write(terms, paramValue);
 
 		} catch (IOException e) {
@@ -59,7 +59,7 @@ public class AppRAKE extends App {
 					properties.getSolrFieldnameJATEWords(), properties.getSolrFieldnameJATESentences());
 			FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
 
-			CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, fwb, minTTF, fcsb,fcsb, minTCF);
+			CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, fwb, prefilterMinTTF, fcsb,fcsb, prefilterMinTCF);
 			Cooccurrence co = (Cooccurrence) cb.build();
 
 			RAKE rake = new RAKE();
@@ -68,7 +68,7 @@ public class AppRAKE extends App {
 
 			List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 
-			filterByTTF(candidates, this.minTTF);
+			filterByTTF(candidates, this.prefilterMinTTF);
 
 			List<JATETerm> terms = rake.execute(candidates);
 			terms = filter(terms);

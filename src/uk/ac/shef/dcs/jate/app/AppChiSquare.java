@@ -33,7 +33,7 @@ public class AppChiSquare extends App {
 		try {
 			terms = new AppChiSquare(params).extract(solrHomePath, solrCoreName, jatePropertyFile);
 
-			String outputFilePath = params.get(CommandLineParams.OUTPUT_FILE.getParamKey());
+			String outputFilePath = params.get(AppParams.OUTPUT_FILE.getParamKey());
 			write(terms, outputFilePath);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -83,7 +83,7 @@ public class AppChiSquare extends App {
 
 			FrequencyCtxBased ref_fcsb=(FrequencyCtxBased) (new FrequencyCtxBasedCopier(searcher, properties,fcsb,ftb,frequentTermFT).build());
 
-			CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, ftb, this.minTTF, fcsb, ref_fcsb,this.minTCF);
+			CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, ftb, this.prefilterMinTTF, fcsb, ref_fcsb,this.prefilterMinTCF);
 			Cooccurrence co = (Cooccurrence) cb.build();
 
 			ChiSquare chi = new ChiSquare();

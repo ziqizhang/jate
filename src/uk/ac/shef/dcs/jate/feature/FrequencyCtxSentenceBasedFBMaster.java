@@ -11,7 +11,9 @@ import uk.ac.shef.dcs.jate.util.SolrUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Logger;
 
@@ -41,7 +43,7 @@ public class FrequencyCtxSentenceBasedFBMaster extends AbstractFeatureBuilder {
             Terms terms = SolrUtil.getTermVector(properties.getSolrFieldnameJATECTerms(), solrIndexSearcher);
 
             TermsEnum termsEnum = terms.iterator();
-            List<String> allCandidates = new ArrayList<>();
+            Set<String> allCandidates = new HashSet<>();
 
             while (termsEnum.next() != null) {
                 BytesRef t = termsEnum.term();
