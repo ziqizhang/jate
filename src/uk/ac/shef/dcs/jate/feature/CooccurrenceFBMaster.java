@@ -38,7 +38,7 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
     public AbstractFeature build() throws JATEException {
         List<String> contextIds = new ArrayList<>(ref_frequencyCtxBased.getMapCtx2TTF().keySet());
         //start workers
-        int cores =  properties.getCandidateScoringRankingMaxCPUCores();
+        int cores =  properties.getMaxCPUCores();
         cores = cores == 0 ? 1 : cores;
         int maxPerThread = contextIds.size()/cores;
 

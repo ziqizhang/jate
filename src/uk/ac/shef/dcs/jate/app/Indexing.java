@@ -5,7 +5,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
-import uk.ac.shef.dcs.jate.indexing.SolrParallelIndexingMaster;
+import uk.ac.shef.dcs.jate.indexing.IndexingHandler;
 import uk.ac.shef.dcs.jate.io.TikaSimpleDocumentCreator;
 
 import java.io.File;
@@ -32,7 +32,7 @@ public class Indexing {
             solrClient.commit();
         }
         logger.info("INDEXING BEGINS");
-        SolrParallelIndexingMaster m = new SolrParallelIndexingMaster();
+        IndexingHandler m = new IndexingHandler();
         List<String> files = new ArrayList<>();
         for (File f : new File(args[1]).listFiles())
             files.add(f.toString());
@@ -41,7 +41,7 @@ public class Indexing {
         m.index(files,
                 prop.getIndexerMaxUnitsToCommit(),
                 new TikaSimpleDocumentCreator(), solrClient,
-                prop.getCandidateExtractionMaxCPUCores(), prop);
+                prop);
         logger.info("INDEXING COMPLETE");
         System.exit(0);
     }

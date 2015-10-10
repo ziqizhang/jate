@@ -46,7 +46,7 @@ public class ContainmentFBMaster extends AbstractFeatureBuilder {
                     ts.add(t);
             }
             //start workers
-            int cores = properties.getCandidateScoringRankingMaxCPUCores();
+            int cores = properties.getMaxCPUCores();
             cores = cores == 0 ? 1 : cores;
             Set<String> uniqueTerms = new HashSet<>();
             for (Set<String> v : numTokens2Terms.values())

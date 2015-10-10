@@ -6,7 +6,6 @@ import org.apache.solr.common.SolrInputDocument;
 import org.apache.tika.utils.ExceptionUtils;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
-import uk.ac.shef.dcs.jate.JATERecursiveTaskWorker;
 import uk.ac.shef.dcs.jate.io.DocumentCreator;
 import uk.ac.shef.dcs.jate.model.JATEDocument;
 import uk.ac.shef.dcs.jate.nlp.InstanceCreator;
@@ -14,35 +13,26 @@ import uk.ac.shef.dcs.jate.nlp.SentenceSplitter;
 import uk.ac.shef.dcs.jate.util.SolrUtil;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
- *
+ * Created by zqz on 15/09/2015.
  */
-public class SolrParallelIndexingWorker extends JATERecursiveTaskWorker<String, Integer> {
+public class IndexingHandler {
 
-	private static final long serialVersionUID = -636077246728798619L;
-	private static final Logger LOG = Logger.getLogger(SolrParallelIndexingWorker.class.getName());
-    protected List<String> tasks;
-    protected int batchSize=100;
-    protected DocumentCreator docCreator;
-    protected SolrClient solrClient;
-    protected JATEProperties properties;
-    protected SentenceSplitter sentenceSplitter;
+    private static final Logger LOG = Logger.getLogger(IndexingHandler.class.getName());
 
-    public SolrParallelIndexingWorker(List<String> tasks,
-                                      int maxTasksPerThread,
-                                      DocumentCreator docCreator,
-                                      SolrClient solrClient,
-                                      JATEProperties properties){
-        super(tasks, maxTasksPerThread);
-        this.docCreator = docCreator;
-        this.solrClient=solrClient;
-        this.properties=properties;
+    public void index(List<String> tasks,
+                      int batchSize, DocumentCreator docCreator,
+                      SolrClient solrClient,
+                      JATEProperties properties){
+        SentenceSplitter sentenceSplitter=null;
         boolean indexJATESentences = properties.getSolrFieldnameJATESentences()!=null &&
                 !properties.getSolrFieldnameJATESentences().equals("");
+        boolean indexJATEWords = properties.getSolrFieldnameJATEWords()!=null &&
+                !properties.getSolrFieldnameJATEWords().equals("");
+
         if(indexJATESentences &&sentenceSplitter==null) {
             try {
                 sentenceSplitter = InstanceCreator.createSentenceSplitter(properties.getSentenceSplitterClass(),
@@ -53,38 +43,15 @@ public class SolrParallelIndexingWorker extends JATERecursiveTaskWorker<String, 
                 LOG.severe(msg.toString());
             }
         }
-    }
 
-    public SolrParallelIndexingWorker(List<String> tasks,
-                                      int maxTasksPerThread,
-                                      int batchSize,
-                                      DocumentCreator docCreator,
-                                      SolrClient solrClient,
-                                      JATEProperties properties){
-        this(tasks, maxTasksPerThread, docCreator, solrClient,properties);
-        this.batchSize=batchSize;
-    }
+        StringBuilder msg = new StringBuilder("Beginning indexing dataset").append(", total docs="+tasks.size());
+        if(indexJATESentences)
+            msg.append(". Sentence boundaries required. ");
+        if(indexJATEWords)
+            msg.append("Word information required.");
 
-    @Override
-    protected JATERecursiveTaskWorker<String, Integer> createInstance(List<String> splitTasks) {
-        return new SolrParallelIndexingWorker(splitTasks, maxTasksPerThread,
-                batchSize, docCreator.copy(), solrClient, properties);
-    }
-
-    @Override
-    protected Integer mergeResult(List<JATERecursiveTaskWorker<String, Integer>> workers) {
-        int total=0;
-        for(JATERecursiveTaskWorker<String, Integer> worker: workers)
-            total+=worker.join();
-        return total;
-    }
-
-    @Override
-    protected Integer computeSingleWorker(List<String> tasks) {
-        int total = 0, batches=0;
-        boolean indexJATEWords = properties.getSolrFieldnameJATEWords()!=null &&
-                !properties.getSolrFieldnameJATEWords().equals("");
-
+        LOG.info(msg.toString());
+        int total=0, batches=0;
         for(String task: tasks){
             try {
                 JATEDocument doc = docCreator.create(task);
@@ -96,7 +63,8 @@ public class SolrParallelIndexingWorker extends JATERecursiveTaskWorker<String, 
                 if(indexJATEWords)
                     solrDoc.addField(properties.getSolrFieldnameJATEWords(), doc.getContent());
                 if(sentenceSplitter!=null) {
-                    indexSentenceOffsets(solrDoc, properties.getSolrFieldnameJATESentences(), doc.getContent());
+                    indexSentenceOffsets(solrDoc, properties.getSolrFieldnameJATESentences(), doc.getContent(),
+                            sentenceSplitter);
                 }
                 for(Map.Entry<String, String> field2Value : doc.getMapField2Content().entrySet()){
                     String field = field2Value.getKey();
@@ -108,7 +76,7 @@ public class SolrParallelIndexingWorker extends JATERecursiveTaskWorker<String, 
                 if(total%batchSize==0) {
                     batches++;
                     LOG.info("Done batches: "+batches*batchSize);
-                    SolrUtil.commit(solrClient,LOG,String.valueOf(batches), String.valueOf(batchSize));
+                    SolrUtil.commit(solrClient, LOG, String.valueOf(batches), String.valueOf(batchSize));
                 }
             } catch (JATEException e) {
                 StringBuilder message = new StringBuilder("FAILED TO ADD DOC TO SOLR (no commit): ");
@@ -128,10 +96,19 @@ public class SolrParallelIndexingWorker extends JATERecursiveTaskWorker<String, 
             }
         }
         SolrUtil.commit(solrClient,LOG,String.valueOf(batches+1), String.valueOf(batchSize));
-        return total;
+
+
+        LOG.info("Complete indexing dataset. Total data items = "+total);
+        try {
+            solrClient.close();
+        } catch (IOException e) {
+            String message = "CANNOT CLOSE SOLR: \n";
+            LOG.severe(message+ExceptionUtils.getStackTrace(e));
+        }
     }
 
-    protected void indexSentenceOffsets(SolrInputDocument solrDoc, String solrFieldnameJATESentencesAll, String content) {
+    protected void indexSentenceOffsets(SolrInputDocument solrDoc, String solrFieldnameJATESentencesAll, String content,
+                                        SentenceSplitter sentenceSplitter) {
         content=content.replaceAll("\\r","");
         List<int[]> offsets=sentenceSplitter.split(content);
         String[] values= new String[offsets.size()];

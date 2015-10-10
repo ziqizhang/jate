@@ -129,44 +129,23 @@ public class JATEProperties {
         return Integer.valueOf(string);
     }
 
-    public int getCandidateExtractionMaxCPUCores(){
-        int defaultV=1;
-        try{
-            int v= getInt("max_cores_candidate_extraction");
-            if(v<=0) {
-                log.warn(String.format("'max_cores_candidate_extraction' illegal value: %s. Default=1.0 is used.", v));
-                v = defaultV;
-            }
-            return v;
-        }catch (NumberFormatException nfe){
-            StringBuilder sb = new StringBuilder("'max_cores_candidate_extraction' illegal value. Default=100 is used.");
-            sb.append("\n").append(ExceptionUtils.getFullStackTrace(nfe));
-            log.warn(sb.toString());
-            return defaultV;
-        }catch(NullPointerException ne){
-            StringBuilder sb = new StringBuilder("'max_cores_candidate_extraction' illegal value. Default=100 is used.");
-            sb.append("\n").append(ExceptionUtils.getFullStackTrace(ne));
-            log.warn(sb.toString());
-            return defaultV;
-        }
-    }
 
-    public int getCandidateScoringRankingMaxCPUCores(){
+    public int getMaxCPUCores(){
         int defaultV=1;
         try{
-            int v= getInt("max_cores_candidate_scoring_ranking");
+            int v= getInt("max_cores");
             if(v<=0) {
-                log.warn(String.format("'max_cores_candidate_scoring_ranking' illegal value: %s. Default=1.0 is used.", v));
+                log.warn(String.format("'max_cores' illegal value: %s. Default=1 is used.", v));
                 v = defaultV;
             }
             return v;
         }catch (NumberFormatException nfe){
-            StringBuilder sb = new StringBuilder("'max_cores_candidate_scoring_ranking' illegal value. Default=100 is used.");
+            StringBuilder sb = new StringBuilder("'max_cores' illegal value. Default=1 is used.");
             sb.append("\n").append(ExceptionUtils.getFullStackTrace(nfe));
             log.warn(sb.toString());
             return defaultV;
         }catch(NullPointerException ne){
-            StringBuilder sb = new StringBuilder("'max_cores_candidate_scoring_ranking' illegal value. Default=100 is used.");
+            StringBuilder sb = new StringBuilder("'max_cores' illegal value. Default=1 is used.");
             sb.append("\n").append(ExceptionUtils.getFullStackTrace(ne));
             log.warn(sb.toString());
             return defaultV;

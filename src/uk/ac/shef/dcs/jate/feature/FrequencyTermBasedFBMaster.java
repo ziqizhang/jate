@@ -49,7 +49,7 @@ public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
                 allLuceneTerms.add(BytesRef.deepCopyOf(t));
             }
             //start workers
-            int cores = properties.getCandidateScoringRankingMaxCPUCores();
+            int cores = properties.getMaxCPUCores();
             cores = cores == 0 ? 1 : cores;
             int maxPerThread = allLuceneTerms.size()/cores;
             StringBuilder sb = new StringBuilder("Building features using cpu cores=");
