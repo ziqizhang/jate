@@ -4,8 +4,7 @@ import org.apache.solr.search.SolrIndexSearcher;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Logger;
 
@@ -14,11 +13,12 @@ import java.util.logging.Logger;
  */
 public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
     private static final Logger LOG = Logger.getLogger(CooccurrenceFBMaster.class.getName());
-    protected FrequencyCtxBased frequencyCtxBased;
-    protected FrequencyCtxBased ref_frequencyCtxBased;
-    protected FrequencyTermBased frequencyTermBased;
+    protected FrequencyCtxBased frequencyCtxBased; //frequency-in-context of target terms
+    protected FrequencyCtxBased ref_frequencyCtxBased; //frequency-in-context of ref terms, i.e. which co-occur with target terms
+    protected FrequencyTermBased frequencyTermBased; //frequency info of target terms
     protected int minTTF;
     protected int minTCF;
+
 
     public CooccurrenceFBMaster(SolrIndexSearcher solrIndexSearcher, JATEProperties properties,
                                 FrequencyTermBased termFeature,
@@ -43,17 +43,35 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
         int maxPerThread = contextIds.size()/cores;
 
         StringBuilder sb = new StringBuilder("Building features using cpu cores=");
-        sb.append(cores).append(", total ctx=").append(contextIds.size()).append(", max per worker=")
+        sb.append(cores).append(", total ctx where reference terms appear =").append(contextIds.size()).append(", max per worker=")
                 .append(maxPerThread);
         LOG.info(sb.toString());
+
+        LOG.info("Filtering candidates with min.ttf="+minTTF+" min.tcf="+minTCF);
+        Set<String> termsPassingPrefilter = new HashSet<>();
+        for (String ctxId : contextIds) {
+            Map<String, Integer> termsInContext = frequencyCtxBased.getTFIC(ctxId);
+            if (minTTF == 0 && minTCF == 0)
+                termsPassingPrefilter.addAll(termsInContext.keySet());
+            else {
+                for (String term : termsInContext.keySet()) {
+                    if (frequencyTermBased.getTTF(term) >= minTTF && frequencyCtxBased.getContextIds(term).size() >= minTCF)
+                        termsPassingPrefilter.add(term);
+                }
+            }
+        }
+        Cooccurrence feature = new Cooccurrence(termsPassingPrefilter.size(),
+                ref_frequencyCtxBased.getMapTerm2Ctx().size());
+        LOG.info("Beginning building features. Total terms="+termsPassingPrefilter.size()+", total contexts="+contextIds.size());
+
         CooccurrenceFBWorker worker = new
-                CooccurrenceFBWorker(contextIds,
+                CooccurrenceFBWorker(feature, contextIds,
                 frequencyTermBased, minTTF, frequencyCtxBased, ref_frequencyCtxBased,
                 minTCF,maxPerThread);
-        LOG.info("Filtering candidates with min.ttf="+minTTF+" min.tcf="+minTCF);
+
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
-        Cooccurrence feature = forkJoinPool.invoke(worker);
-        sb = new StringBuilder("Complete building features.");
+        int total = forkJoinPool.invoke(worker);
+        sb = new StringBuilder("Complete building features, total contexts processed="+total);
         LOG.info(sb.toString());
 
         return feature;

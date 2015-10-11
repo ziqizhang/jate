@@ -33,7 +33,7 @@ public class FrequencyCtxSentenceBasedFBMaster extends AbstractFeatureBuilder {
 
     @Override
     public AbstractFeature build() throws JATEException {
-        FrequencyCtxBased feature;
+        FrequencyCtxBased feature = new FrequencyCtxBased();
         List<Integer> allDocs = new ArrayList<>();
         for (int i = 0; i < solrIndexSearcher.maxDoc(); i++) {
             allDocs.add(i);
@@ -58,7 +58,7 @@ public class FrequencyCtxSentenceBasedFBMaster extends AbstractFeatureBuilder {
             int maxPerThread = allDocs.size()/cores;
 
             FrequencyCtxSentenceBasedFBWorker worker = new
-                    FrequencyCtxSentenceBasedFBWorker(properties, allDocs, allCandidates,
+                    FrequencyCtxSentenceBasedFBWorker(feature, properties, allDocs, allCandidates,
                     solrIndexSearcher, maxPerThread,
                     sentenceTargetField);
             StringBuilder sb = new StringBuilder("Building features using cpu cores=");
@@ -66,9 +66,9 @@ public class FrequencyCtxSentenceBasedFBMaster extends AbstractFeatureBuilder {
                     .append(maxPerThread);
             LOG.info(sb.toString());
             ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
-            feature = forkJoinPool.invoke(worker);
+            int total = forkJoinPool.invoke(worker);
             sb = new StringBuilder("Complete building features. Total sentence ctx=");
-            sb.append(feature.getMapCtx2TTF().size());
+            sb.append(feature.getMapCtx2TTF().size()).append(", from total processed docs=").append(total);
             LOG.info(sb.toString());
         } catch (IOException ioe) {
             StringBuilder sb = new StringBuilder("Failed to build features!");

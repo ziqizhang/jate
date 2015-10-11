@@ -175,6 +175,7 @@ public abstract class App {
                 try{
                     PrintWriter p = new PrintWriter(outFile);
                     p.close();
+                    outputFile=outFile;
                 }catch (IOException ioe){
                     log.warn(msg.toString());
                     outputFile="terms.txt";
@@ -416,9 +417,10 @@ public abstract class App {
      */
     protected List<JATETerm> cutoffByTopKPercent(List<JATETerm> terms, Double topPercentage) {
         if (topPercentage != null & terms != null & terms.size() > 0) {
-            log.debug(String.format("filter [%s] term candidates by Top [%s]% (rounded) ...",
+            //todo:jerry check why this line is throwing exception
+            /*log.debug(String.format("filter [%s] term candidates by Top [%s]% (rounded) ...",
 					terms.size(),
-					topPercentage * 100));
+					topPercentage * 100));*/
             Integer topN = (int) Math.round(topPercentage * terms.size());
             if (topN > 0)
                 terms = cutoffByTopK(terms, topN);
@@ -430,17 +432,21 @@ public abstract class App {
 
     protected static void printHelp() {
         StringBuilder sb = new StringBuilder("Usage:\n");
-        sb.append("java -cp '[CLASSPATH]' ").append(AppATTF.class.getName()).append(" [OPTIONS] ")
+        sb.append("java -cp '[CLASSPATH]' ").append(App.class.getName()).append(" [OPTIONS] ")
                 .append("[SOLR_HOME_PATH] [SOLR_CORE_NAME] [JATE_PROPERTY_FILE]").append("\nE.g.:\n");
-        sb.append("java -cp '/libs/*' -t 20 /solr/server/solr jate jate.properties ...\n\n");
+        sb.append("java -cp '/libs/*' -cf.k 20 /solr/server/solr jate jate.properties ...\n\n");
         sb.append("[OPTIONS]:\n")
                 .append("\t\t-c\t\t'true' or 'false'. Whether to collect term information, e.g., offsets in documents. Default is false.\n")
-                .append("\t\t-t\t\tA number. Score threshold for selecting terms. If not set then default -n is used.")
+                .append("\t\t-cf.t\t\tA number. Cutoff score threshold for selecting terms. If multiple -cf.* parameters are set the preference order will be cf.t, cf.k, cf.kp.")
                 .append("\n")
-                .append("\t\t-n\t\tA number. If an integer is given, top N candidates are selected as terms. \n")
-                .append("\t\t\t\tIf a decimal number is given, top N% of candidates are selected. Default is 0.25.\n");
-        sb.append("\t\t-o\t\tA file path. If provided, the output is written to the file. \n")
-                .append("\t\t\t\tOtherwise, output is written to the console.");
+                .append("\t\t-cf.k\t\tA number. Cutoff top ranked K terms to be selected. If multiple -cf.* parameters are set the preference order will be cf.t, cf.k, cf.kp.")
+                .append("\n")
+                .append("\t\t-cf.kp\t\tA number. Cutoff top ranked K% terms to be selected. If multiple -cf.* parameters are set the preference order will be cf.t, cf.k, cf.kp.")
+                .append("\n")
+                .append("\t\t-pf.mttf\t\tA number. Pre-filter minimum total term frequency. \n")
+                .append("\t\t-pf.mtcf\t\tA number. Pre-filter minimum context frequency of a term (used by co-occurrence based methods). \n")
+
+        .append("\t\t-o\t\tA file path to save output. \n");
         System.out.println(sb);
     }
 }

@@ -45,7 +45,6 @@ public class AppChiSquare extends App {
 
 	public AppChiSquare(Map<String, String> initParams) throws JATEException {		
 		super(initParams);
-		log.info("initialise ChiSquare algorithm...");
 		initializeFTParam(initParams);
 	}
 
@@ -69,55 +68,37 @@ public class AppChiSquare extends App {
 	@Override
 	public List<JATETerm> extract(SolrCore core, String jatePropertyFile)
 			throws IOException, JATEException {
-		SolrIndexSearcher searcher = core.getSearcher().get();
-		try {
-			JATEProperties properties = new JATEProperties(jatePropertyFile);
-			FrequencyTermBasedFBMaster ftbb = new FrequencyTermBasedFBMaster(searcher, properties, 0);
-			FrequencyTermBased ftb = (FrequencyTermBased) ftbb.build();
+        SolrIndexSearcher searcher = core.getSearcher().get();
+        try {
+            JATEProperties properties = new JATEProperties(jatePropertyFile);
+            FrequencyTermBasedFBMaster ftbb = new FrequencyTermBasedFBMaster(searcher, properties, 0);
+            FrequencyTermBased ftb = (FrequencyTermBased) ftbb.build();
 
-			FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties,
-					properties.getSolrFieldnameJATECTerms(), properties.getSolrFieldnameJATESentences());
-			FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
+            FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties,
+                    properties.getSolrFieldnameJATECTerms(), properties.getSolrFieldnameJATESentences());
+            FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
 
-			FrequencyCtxBased ref_fcsb=(FrequencyCtxBased) (new FrequencyCtxBasedCopier(searcher, properties,fcsb,ftb,frequentTermFT).build());
+            FrequencyCtxBased ref_fcsb = (FrequencyCtxBased) (new FrequencyCtxBasedCopier(searcher, properties, fcsb, ftb, frequentTermFT).build());
 
-			CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, ftb, this.prefilterMinTTF, fcsb, ref_fcsb,this.prefilterMinTCF);
-			Cooccurrence co = (Cooccurrence) cb.build();
+            CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, ftb, this.prefilterMinTTF, fcsb, ref_fcsb, this.prefilterMinTCF);
+            Cooccurrence co = (Cooccurrence) cb.build();
 
-			ChiSquare chi = new ChiSquare();
-			chi.registerFeature(FrequencyTermBased.class.getName(), ftb);
-			chi.registerFeature(FrequencyCtxBased.class.getName() + ChiSquare.SUFFIX_TERM, fcsb);
+            ChiSquare chi = new ChiSquare();
+            chi.registerFeature(FrequencyTermBased.class.getName(), ftb);
+            chi.registerFeature(FrequencyCtxBased.class.getName() + ChiSquare.SUFFIX_TERM, fcsb);
             chi.registerFeature(FrequencyCtxBased.class.getName() + ChiSquare.SUFFIX_REF_TERM, ref_fcsb);
-			chi.registerFeature(Cooccurrence.class.getName(), co);
+            chi.registerFeature(Cooccurrence.class.getName(), co);
 
-			List<JATETerm> terms = chi.execute(co.getTerms());
-			terms = cutoff(terms);
+            List<JATETerm> terms = chi.execute(co.getTerms());
+            terms = cutoff(terms);
 
-			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
-					properties.getSolrFieldnameID());
-			return terms;
-		} finally {
-			searcher.close();
-		}
+            addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
+                    properties.getSolrFieldnameID());
+            return terms;
+        } finally {
+            searcher.close();
+        }
 
-	}
-
-	protected static void printHelp() {
-		StringBuilder sb = new StringBuilder("Chi-Square, usage:\n");
-		sb.append("java -cp '[CLASSPATH]' ").append(AppATTF.class.getName()).append(" [OPTIONS] ")
-				.append("[LUCENE_INDEX_PATH] [JATE_PROPERTY_FILE]").append("\nE.g.:\n");
-		sb.append("java -cp '/libs/*' -t 20 /solr/server/solr/jate/data jate.properties\n\n");
-		sb.append("[OPTIONS]:\n")
-				.append("\t\t-c\t\t'true' or 'false'. Whether to collect term information, e.g., offsets in documents. Default is false.\n")
-				.append("\t\t-t\t\tA number. Score threshold for selecting terms. If not set then default -n is used.")
-				.append("\n")
-				.append("\t\t-n\t\tA number. If an integer is given, top N candidates are selected as terms. \n")
-				.append("\t\t\t\tIf a decimal number is given, top N% of candidates are selected. Default is 0.25.\n");
-		sb.append("\t\t-o\t\tA file path. If provided, the output is written to the file. \n")
-				.append("\t\t\t\tOtherwise, output is written to the console.\n")
-				.append("\t\t-mttf\t\tA number. Min total fequency of a term for it to be considered for co-occurrence computation. \n")
-				.append("\t\t-mtcf\t\tA number. Min frequency of a term appearing in different context for it to be considered for co-occurrence computation. \n");
-		System.out.println(sb);
-	}
+    }
 
 }

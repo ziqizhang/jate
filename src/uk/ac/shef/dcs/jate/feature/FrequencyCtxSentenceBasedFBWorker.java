@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 /**
  * Created by zqz on 21/09/2015.
  */
-public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<Integer, FrequencyCtxBased> {
+public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<Integer, Integer> {
 
 	private static final long serialVersionUID = -9172128488678036098L;
 	private static final Logger LOG = Logger.getLogger(FrequencyCtxSentenceBasedFBWorker.class.getName());
@@ -27,8 +27,9 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
     private SolrIndexSearcher solrIndexSearcher;
     private String sentenceTargetField;
     private Set<String> allCandidates;
+    private FrequencyCtxBased feature;
 
-    public FrequencyCtxSentenceBasedFBWorker(JATEProperties properties,
+    public FrequencyCtxSentenceBasedFBWorker(FrequencyCtxBased feature, JATEProperties properties,
                                              List<Integer> docIds,
                                              Set<String> allCandidates,
                                              SolrIndexSearcher solrIndexSearcher,
@@ -39,51 +40,28 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
         this.solrIndexSearcher = solrIndexSearcher;
         this.sentenceTargetField = sentenceTargetField;
         this.allCandidates=allCandidates;
+        this.feature=feature;
     }
 
     @Override
-    protected JATERecursiveTaskWorker<Integer, FrequencyCtxBased> createInstance(List<Integer> docIdSplit) {
-        return new FrequencyCtxSentenceBasedFBWorker(properties, docIdSplit,
+    protected JATERecursiveTaskWorker<Integer, Integer> createInstance(List<Integer> docIdSplit) {
+        return new FrequencyCtxSentenceBasedFBWorker(feature,properties, docIdSplit,
                 allCandidates,
                 solrIndexSearcher, maxTasksPerThread, sentenceTargetField);
     }
 
     @Override
-    protected FrequencyCtxBased mergeResult(List<JATERecursiveTaskWorker<Integer, FrequencyCtxBased>> jateRecursiveTaskWorkers) {
-        FrequencyCtxBased joined = new FrequencyCtxBased();
-        for (JATERecursiveTaskWorker<Integer, FrequencyCtxBased> worker : jateRecursiveTaskWorkers) {
-            FrequencyCtxBased feature = worker.join();
-            for (Map.Entry<String, Integer> mapCtx2TTF : feature.getMapCtx2TTF().entrySet()) {
-                String ctxId = mapCtx2TTF.getKey();
-                int ttf = mapCtx2TTF.getValue();
-                joined.increment(ctxId, ttf);
-            }
-
-            for (Map.Entry<String, Map<String, Integer>> mapCtx2TFIC : feature.getMapCtx2TFIC().entrySet()) {
-                String ctxId = mapCtx2TFIC.getKey();
-                Map<String, Integer> mapT2FIC = mapCtx2TFIC.getValue();
-                for (Map.Entry<String, Integer> e : mapT2FIC.entrySet()) {
-                    joined.increment(ctxId, e.getKey(), e.getValue());
-                }
-            }
-
-            for (Map.Entry<String, Set<String>> entry : feature.getMapTerm2Ctx().entrySet()) {
-                String term = entry.getKey();
-                Set<String> addContexts = entry.getValue();
-                Set<String> contexts = joined.getMapTerm2Ctx().get(term);
-                if (contexts == null)
-                    contexts = new HashSet<>();
-                contexts.addAll(addContexts);
-                joined.getMapTerm2Ctx().put(term, contexts);
-            }
+    protected Integer mergeResult(List<JATERecursiveTaskWorker<Integer, Integer>> jateRecursiveTaskWorkers) {
+        Integer total=0;
+        for (JATERecursiveTaskWorker<Integer, Integer> worker : jateRecursiveTaskWorkers) {
+            total+= worker.join();
         }
-        return joined;
+        return total;
     }
 
     @Override
-    protected FrequencyCtxBased computeSingleWorker(List<Integer> docIds) {
+    protected Integer computeSingleWorker(List<Integer> docIds) {
         LOG.info("Total docs to process=" + docIds.size());
-        FrequencyCtxBased feature = new FrequencyCtxBased();
         int count = 0;
         for (int docId : docIds) {
             count++;
@@ -131,7 +109,7 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
             }
         }
         //LOG.info("debug---finished");
-        return feature;
+        return count;
     }
 
     private List<int[]> collectSentenceOffsets(SolrIndexSearcher solrIndexSearcher, String fieldname, int docId) throws IOException {

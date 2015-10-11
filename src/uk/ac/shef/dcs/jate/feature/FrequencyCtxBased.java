@@ -52,10 +52,10 @@ public class FrequencyCtxBased extends AbstractFeature {
     }
 
     /**
-     * increment the number of occurrences of term by i
+     * increment the number of occurrences of term in the context (ctxid) by tf
      *
      */
-    protected void increment(String ctxId, String term, int tf) {
+    protected synchronized void increment(String ctxId, String term, int tf) {
         Map<String, Integer> tfidMap = ctx2TFIC.get(ctxId);
         if(tfidMap==null)
             tfidMap = new HashMap<>();
@@ -74,7 +74,7 @@ public class FrequencyCtxBased extends AbstractFeature {
         term2Ctx.put(term, ctxIds);
     }
 
-    protected void increment(String ctxId, int freq){
+    protected synchronized void increment(String ctxId, int freq){
         Integer f = ctx2TTF.get(ctxId);
         if(f==null)
             f=0;

@@ -34,7 +34,7 @@ public class Cooccurrence extends AbstractFeature {
         return mapTerm2Idx.keySet();
     }
 
-    protected int lookupAndIndexTerm(String term){
+    protected synchronized int lookupAndIndexTerm(String term){
         Integer idx = mapTerm2Idx.get(term);
         if(idx==null) {
             termCounter++;
@@ -53,7 +53,7 @@ public class Cooccurrence extends AbstractFeature {
         return index;
     }
 
-    protected int lookupAndIndexRefTerm(String refTerm){
+    protected synchronized int lookupAndIndexRefTerm(String refTerm){
         Integer idx = mapRefTerm2Idx.get(refTerm);
         if(idx==null) {
             ctxTermCounter++;
@@ -72,7 +72,7 @@ public class Cooccurrence extends AbstractFeature {
         return index;
     }
 
-    protected void increment(int termIdx, int refTermIdx, int freq){
+    protected synchronized void increment(int termIdx, int refTermIdx, int freq){
         int newFreq=cooccurrence.getQuick(termIdx, refTermIdx)+freq;
         cooccurrence.setQuick(termIdx, refTermIdx,
                 newFreq);
