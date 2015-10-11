@@ -30,8 +30,6 @@ public class IndexingHandler {
         SentenceSplitter sentenceSplitter=null;
         boolean indexJATESentences = properties.getSolrFieldnameJATESentences()!=null &&
                 !properties.getSolrFieldnameJATESentences().equals("");
-        boolean indexJATEWords = properties.getSolrFieldnameJATEWords()!=null &&
-                !properties.getSolrFieldnameJATEWords().equals("");
 
         if(indexJATESentences &&sentenceSplitter==null) {
             try {
@@ -47,8 +45,6 @@ public class IndexingHandler {
         StringBuilder msg = new StringBuilder("Beginning indexing dataset").append(", total docs="+tasks.size());
         if(indexJATESentences)
             msg.append(". Sentence boundaries required. ");
-        if(indexJATEWords)
-            msg.append("Word information required.");
 
         LOG.info(msg.toString());
         int total=0, batches=0;
@@ -68,8 +64,7 @@ public class IndexingHandler {
                 solrDoc.addField(properties.getSolrFieldnameID(), doc.getId());
                 solrDoc.addField(properties.getSolrFieldnameJATENGramInfo(), doc.getContent());
                 solrDoc.addField(properties.getSolrFieldnameJATECTerms(), doc.getContent());
-                if(indexJATEWords)
-                    solrDoc.addField(properties.getSolrFieldnameJATEWords(), doc.getContent());
+
                 if(sentenceSplitter!=null) {
                     indexSentenceOffsets(solrDoc, properties.getSolrFieldnameJATESentences(), doc.getContent(),
                             sentenceSplitter);

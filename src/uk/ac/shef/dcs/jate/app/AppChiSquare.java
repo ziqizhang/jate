@@ -71,11 +71,10 @@ public class AppChiSquare extends App {
         SolrIndexSearcher searcher = core.getSearcher().get();
         try {
             JATEProperties properties = new JATEProperties(jatePropertyFile);
-            FrequencyTermBasedFBMaster ftbb = new FrequencyTermBasedFBMaster(searcher, properties, 0);
+            FrequencyTermBasedFBMaster ftbb = new FrequencyTermBasedFBMaster(searcher, properties,0);
             FrequencyTermBased ftb = (FrequencyTermBased) ftbb.build();
 
-            FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties,
-                    properties.getSolrFieldnameJATECTerms(), properties.getSolrFieldnameJATESentences());
+            FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties,0);
             FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
 
             FrequencyCtxBased ref_fcsb = (FrequencyCtxBased) (new FrequencyCtxBasedCopier(searcher, properties, fcsb, ftb, frequentTermFT).build());

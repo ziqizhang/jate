@@ -11,6 +11,7 @@ import uk.ac.shef.dcs.jate.util.SolrUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Logger;
 
@@ -21,12 +22,12 @@ public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
 
     private static final Logger LOG = Logger.getLogger(FrequencyTermBasedFBMaster.class.getName());
 
-    protected int apply2Terms = 0; //1 means no, i.e, words
+    private int termOrWord; //0 means term; 1 means word
 
     public FrequencyTermBasedFBMaster(SolrIndexSearcher solrIndexSearcher, JATEProperties properties,
-                                      int apply2Terms) {
+                                      int termOrWord) {
         super(solrIndexSearcher, properties);
-        this.apply2Terms = apply2Terms;
+        this.termOrWord = termOrWord;
     }
 
     @Override
@@ -34,32 +35,24 @@ public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
         FrequencyTermBased feature = new FrequencyTermBased();
         feature.setTotalDocs((Integer) solrIndexSearcher.getStatistics().get("numDocs"));
         //solrIndexSearcher.
-        String targetField = apply2Terms == 0 ? properties.getSolrFieldnameJATECTerms() : properties.getSolrFieldnameJATEWords();
         try {
-            Terms ngramInfo = SolrUtil.getTermVector(properties.getSolrFieldnameJATENGramInfo(),solrIndexSearcher);
-            Terms terms =SolrUtil.getTermVector(targetField,solrIndexSearcher);
-
-            TermsEnum termsEnum = terms.iterator();
-            List<BytesRef> allLuceneTerms = new ArrayList<>();
-
-            while (termsEnum.next() != null) {
-                BytesRef t = termsEnum.term();
-                if (t.length == 0)
-                    continue;
-                allLuceneTerms.add(BytesRef.deepCopyOf(t));
-            }
+            Terms ngramInfo = SolrUtil.getTermVector(properties.getSolrFieldnameJATENGramInfo(), solrIndexSearcher);
+            Set<String> all;
+            if (termOrWord == 0)
+                all = getUniqueTerms();
+            else
+                all = getUniqueWords();
             //start workers
             int cores = properties.getMaxCPUCores();
             cores = cores == 0 ? 1 : cores;
-            int maxPerThread = allLuceneTerms.size()/cores;
+            int maxPerThread = all.size() / cores;
             StringBuilder sb = new StringBuilder("Building features using cpu cores=");
-            sb.append(cores).append(", total=").append(allLuceneTerms.size()).append(", max per worker=")
+            sb.append(cores).append(", total=").append(all.size()).append(", max per worker=")
                     .append(maxPerThread);
             LOG.info(sb.toString());
             FrequencyTermBasedFBWorker worker = new
-                    FrequencyTermBasedFBWorker(properties, allLuceneTerms,
+                    FrequencyTermBasedFBWorker(properties, new ArrayList<>(all),
                     solrIndexSearcher, feature, maxPerThread,
-                    targetField,
                     ngramInfo);
             ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
             int[] total = forkJoinPool.invoke(worker);

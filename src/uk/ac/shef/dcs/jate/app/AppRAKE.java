@@ -50,14 +50,14 @@ public class AppRAKE extends App {
 		SolrIndexSearcher searcher = core.getSearcher().get();
 		try {
 			JATEProperties properties = new JATEProperties(jatePropertyFile);
-			this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
+			this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties,0);
 			this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 
-			FrequencyTermBasedFBMaster fwbb = new FrequencyTermBasedFBMaster(searcher, properties, 1);
+			FrequencyTermBasedFBMaster fwbb = new FrequencyTermBasedFBMaster(searcher, properties,1);
 			FrequencyTermBased fwb = (FrequencyTermBased) fwbb.build();
 
 			FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties,
-					properties.getSolrFieldnameJATEWords(), properties.getSolrFieldnameJATESentences());
+					1);
 			FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
 
 			CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, fwb, prefilterMinTTF, fcsb,fcsb, prefilterMinTCF);

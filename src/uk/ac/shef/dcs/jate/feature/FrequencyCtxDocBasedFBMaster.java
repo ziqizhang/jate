@@ -11,6 +11,7 @@ import uk.ac.shef.dcs.jate.util.SolrUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Logger;
 
@@ -20,31 +21,25 @@ import java.util.logging.Logger;
 public class FrequencyCtxDocBasedFBMaster extends AbstractFeatureBuilder {
     private static final Logger LOG = Logger.getLogger(FrequencyCtxDocBasedFBMaster.class.getName());
 
-    protected int apply2Terms = 0; //1 means no= words
+    private int termOrWord; //0 means term; 1 means word
 
     public FrequencyCtxDocBasedFBMaster(SolrIndexSearcher solrIndexSearcher, JATEProperties properties,
-                                        int apply2Terms) {
+                                        int termOrWord) {
         super(solrIndexSearcher, properties);
-        this.apply2Terms = apply2Terms;
+        this.termOrWord = termOrWord;
     }
 
     @Override
     public AbstractFeature build() throws JATEException {
         FrequencyCtxBased feature = new FrequencyCtxBased();
-        String targetField = apply2Terms == 0 ? properties.getSolrFieldnameJATECTerms() : properties.getSolrFieldnameJATEWords();
         try {
             Terms info = SolrUtil.getTermVector(properties.getSolrFieldnameJATENGramInfo(), solrIndexSearcher);
-            Terms terms = SolrUtil.getTermVector(targetField, solrIndexSearcher);
+            Set<String> allLuceneTerms;
+            if (termOrWord == 0)
+                allLuceneTerms = getUniqueTerms();
+            else
+                allLuceneTerms = getUniqueWords();
 
-            List<BytesRef> allLuceneTerms = new ArrayList<>();
-
-            TermsEnum termsEnum = terms.iterator();
-            while (termsEnum.next() != null) {
-                BytesRef t = termsEnum.term();
-                if (t.length == 0)
-                    continue;
-                allLuceneTerms.add(BytesRef.deepCopyOf(t));
-            }
             //start workers
 
             int cores = properties.getMaxCPUCores();
@@ -53,8 +48,8 @@ public class FrequencyCtxDocBasedFBMaster extends AbstractFeatureBuilder {
             LOG.info("Beginning building features. Total terms=" + allLuceneTerms.size() + ", cpu cores=" +
                     cores + ", max per core=" + maxPerThread);
             FrequencyCtxDocBasedFBWorker worker = new
-                    FrequencyCtxDocBasedFBWorker(feature, properties, allLuceneTerms,
-                    solrIndexSearcher, maxPerThread, targetField,
+                    FrequencyCtxDocBasedFBWorker(feature, properties, new ArrayList<>(allLuceneTerms),
+                    solrIndexSearcher, maxPerThread,
                     info);
             ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
             int total = forkJoinPool.invoke(worker);

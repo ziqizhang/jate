@@ -57,14 +57,13 @@ public class AppNCValue extends App {
 		SolrIndexSearcher searcher = core.getSearcher().get();
 		try {
 			JATEProperties properties = new JATEProperties(jatePropertyFile);
-			this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
+			this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties,0);
 			this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 
 			ContainmentFBMaster cb = new ContainmentFBMaster(searcher, properties);
 			Containment cf = (Containment) cb.build();
 
-			FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties,
-					properties.getSolrFieldnameJATECTerms(), properties.getSolrFieldnameJATESentences());
+			FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties,0);
 			FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
 
 			CooccurrenceFBMaster ccb = new CooccurrenceFBMaster(searcher, properties, this.freqFeature, this.prefilterMinTTF,

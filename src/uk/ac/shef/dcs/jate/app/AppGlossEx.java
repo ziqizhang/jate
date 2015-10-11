@@ -56,10 +56,10 @@ public class AppGlossEx extends App {
 		SolrIndexSearcher searcher = core.getSearcher().get();
 		try {
 			JATEProperties properties = new JATEProperties(jatePropertyFile);
-			this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
+			this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties,0);
 			this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 
-			FrequencyTermBasedFBMaster fwbb = new FrequencyTermBasedFBMaster(searcher, properties, 1);
+			FrequencyTermBasedFBMaster fwbb = new FrequencyTermBasedFBMaster(searcher, properties,1);
 			FrequencyTermBased fwb = (FrequencyTermBased) fwbb.build();
 
 			TTFReferenceFeatureFileBuilder ftrb = new TTFReferenceFeatureFileBuilder(this.referenceFrequencyFilePath);

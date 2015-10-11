@@ -57,13 +57,6 @@ public class JATEProperties {
         return content2terms;
     }
 
-    public String getSolrFieldnameJATEWords() {
-        String content2words = getString("solr_field_content_words");
-        if (content2words == null)
-        	log.debug("'solr_field_content_words' not defined in jate.properties");
-        return content2words;
-    }
-
     public String getSolrFieldnameJATESentences() {
         String sentences = getString("solr_field_sentences");
         if (sentences == null) {

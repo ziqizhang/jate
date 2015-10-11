@@ -25,10 +25,12 @@ public class FrequencyCtxSentenceBasedFBMaster extends AbstractFeatureBuilder {
 
     private static final Logger LOG = Logger.getLogger(FrequencyCtxSentenceBasedFBMaster.class.getName());
 
+    private int termOrWord; //0 means term; 1 means word
+
     public FrequencyCtxSentenceBasedFBMaster(SolrIndexSearcher solrIndexSearcher, JATEProperties properties,
-                                             String termTargetField, String sentenceTargetField) {
+                                             int termOrWord) {
         super(solrIndexSearcher, properties);
-        this.sentenceTargetField = sentenceTargetField;
+        this.termOrWord=termOrWord;
     }
 
     @Override
@@ -40,17 +42,12 @@ public class FrequencyCtxSentenceBasedFBMaster extends AbstractFeatureBuilder {
         }
 
         try {
-            Terms terms = SolrUtil.getTermVector(properties.getSolrFieldnameJATECTerms(), solrIndexSearcher);
+            Set<String> allCandidates;
+            if(termOrWord==0)
+                allCandidates=getUniqueTerms();
+            else
+                allCandidates=getUniqueWords();
 
-            TermsEnum termsEnum = terms.iterator();
-            Set<String> allCandidates = new HashSet<>();
-
-            while (termsEnum.next() != null) {
-                BytesRef t = termsEnum.term();
-                if (t.length == 0)
-                    continue;
-                allCandidates.add(t.utf8ToString());
-            }
 
             //start workers
             int cores = properties.getMaxCPUCores();

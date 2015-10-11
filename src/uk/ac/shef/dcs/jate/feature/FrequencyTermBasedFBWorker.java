@@ -14,38 +14,35 @@ import java.util.logging.Logger;
 /**
  * Created by zqz on 17/09/2015.
  */
-class FrequencyTermBasedFBWorker extends JATERecursiveTaskWorker<BytesRef, int[]> {
+class FrequencyTermBasedFBWorker extends JATERecursiveTaskWorker<String, int[]> {
 
 	private static final long serialVersionUID = -5304721004951728503L;
 	private static final Logger LOG = Logger.getLogger(FrequencyTermBasedFBWorker.class.getName());
     private JATEProperties properties;
     private SolrIndexSearcher solrIndexSearcher;
     private FrequencyTermBased feature;
-    private String candidateField;
     private Terms ngramInfo;
 
-    FrequencyTermBasedFBWorker(JATEProperties properties, List<BytesRef> luceneTerms, SolrIndexSearcher solrIndexSearcher,
+    FrequencyTermBasedFBWorker(JATEProperties properties, List<String> luceneTerms, SolrIndexSearcher solrIndexSearcher,
                                FrequencyTermBased feature, int maxTasksPerWorker,
-                               String candidateField,
                                Terms ngramInfo) {
         super(luceneTerms, maxTasksPerWorker);
         this.properties = properties;
         this.feature = feature;
         this.solrIndexSearcher = solrIndexSearcher;
-        this.candidateField = candidateField;
         this.ngramInfo = ngramInfo;
     }
 
     @Override
-    protected JATERecursiveTaskWorker<BytesRef, int[]> createInstance(List<BytesRef> termSplit) {
-        return new FrequencyTermBasedFBWorker(properties, termSplit, solrIndexSearcher, feature, maxTasksPerThread, candidateField,
+    protected JATERecursiveTaskWorker<String, int[]> createInstance(List<String> termSplit) {
+        return new FrequencyTermBasedFBWorker(properties, termSplit, solrIndexSearcher, feature, maxTasksPerThread,
                 ngramInfo);
     }
 
     @Override
-    protected int[] mergeResult(List<JATERecursiveTaskWorker<BytesRef, int[]>> jateRecursiveTaskWorkers) {
+    protected int[] mergeResult(List<JATERecursiveTaskWorker<String, int[]>> jateRecursiveTaskWorkers) {
         int totalSuccess = 0, total = 0;
-        for (JATERecursiveTaskWorker<BytesRef, int[]> worker : jateRecursiveTaskWorkers) {
+        for (JATERecursiveTaskWorker<String, int[]> worker : jateRecursiveTaskWorkers) {
             int[] rs = worker.join();
             totalSuccess += rs[0];
             total += rs[1];
@@ -54,18 +51,15 @@ class FrequencyTermBasedFBWorker extends JATERecursiveTaskWorker<BytesRef, int[]
     }
 
     @Override
-    protected int[] computeSingleWorker(List<BytesRef> terms) {
+    protected int[] computeSingleWorker(List<String> terms) {
         int totalSuccess = 0;
         TermsEnum ngramInfoIterator;
         try {
             ngramInfoIterator = ngramInfo.iterator();
 
-            for (BytesRef luceneTerm : terms) {
-                String term = luceneTerm.utf8ToString();
-                if(term.equals("radio-ligand binding"))
-                    System.out.println();
+            for (String term : terms) {
                 try {
-                    if (ngramInfoIterator.seekExact(luceneTerm)) {
+                    if (ngramInfoIterator.seekExact(new BytesRef(term.getBytes("UTF-8")))) {
                         PostingsEnum docEnum = ngramInfoIterator.postings(null);
                         int doc = 0;
                         while ((doc = docEnum.nextDoc()) != PostingsEnum.NO_MORE_DOCS) {
@@ -84,7 +78,7 @@ class FrequencyTermBasedFBWorker extends JATERecursiveTaskWorker<BytesRef, int[]
                     LOG.info(totalSuccess+"/"+terms.size());*/
                 } catch (IOException ioe) {
                     StringBuilder sb = new StringBuilder("Unable to build feature for candidate:");
-                    sb.append(luceneTerm.utf8ToString()).append("\n");
+                    sb.append(term).append("\n");
                     sb.append(ExceptionUtils.getFullStackTrace(ioe));
                     LOG.severe(sb.toString());
                 }

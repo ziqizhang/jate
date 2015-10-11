@@ -53,7 +53,7 @@ public class AppTTF extends App {
 		SolrIndexSearcher searcher = core.getSearcher().get();
 		try {
 			JATEProperties properties = new JATEProperties(jatePropertyFile);
-			this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
+			this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties,0);
 			this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 
 			Algorithm ttf = new TTF();

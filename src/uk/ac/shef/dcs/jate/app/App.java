@@ -212,6 +212,14 @@ public abstract class App {
 
             this.referenceFrequencyFilePath = refFreqFilePath;
         }
+        else{
+            StringBuilder msg = new StringBuilder("Reference corpus frequency file (-r) ");
+            msg.append(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey()).append(" is not set. A file path is expected.");
+            log.error(
+                    msg.toString());
+            throw new JATEException(
+                    msg.toString());
+        }
     }
 
 

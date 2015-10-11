@@ -55,7 +55,7 @@ public class AppCValue extends App {
 		try {
 			JATEProperties properties = new JATEProperties(jatePropertyFile);
 			
-			this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
+			this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties,0);
 			this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 
 			ContainmentFBMaster cb = new ContainmentFBMaster(searcher, properties);

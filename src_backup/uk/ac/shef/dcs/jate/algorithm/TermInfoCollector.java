@@ -25,7 +25,7 @@ public class TermInfoCollector {
 
     public TermInfo collect(String term) throws IOException {
         TermInfo info = new TermInfo();
-        BytesRef luceneTerm =  new BytesRef(term.getBytes());
+        BytesRef luceneTerm =  new BytesRef(term.getBytes("UTF-8"));
         //this gives documents in which the term is found, but no offset information can be retrieved
         PostingsEnum postings =
                 MultiFields.getTermDocsEnum(indexReader, ngramInfoFieldname,luceneTerm);

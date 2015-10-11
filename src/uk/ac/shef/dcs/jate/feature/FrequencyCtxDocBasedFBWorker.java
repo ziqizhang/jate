@@ -15,55 +15,51 @@ import java.util.logging.Logger;
 /**
  *
  */
-public class FrequencyCtxDocBasedFBWorker extends JATERecursiveTaskWorker<BytesRef, Integer> {
+public class FrequencyCtxDocBasedFBWorker extends JATERecursiveTaskWorker<String, Integer> {
 
 	private static final long serialVersionUID = 8978235926472578074L;
 	private static final Logger LOG = Logger.getLogger(FrequencyCtxDocBasedFBWorker.class.getName());
     private JATEProperties properties;
     private SolrIndexSearcher solrIndexSearcher;
-    private String targetField;
     private Terms ngramInfo;
     private FrequencyCtxBased feature;
 
     FrequencyCtxDocBasedFBWorker(FrequencyCtxBased feature,
-                                 JATEProperties properties, List<BytesRef> luceneTerms, SolrIndexSearcher solrIndexSearcher,
+                                 JATEProperties properties, List<String> luceneTerms, SolrIndexSearcher solrIndexSearcher,
                                  int maxTasksPerWorker,
-                                 String targetField,
                                  Terms ngramInfo) {
         super(luceneTerms, maxTasksPerWorker);
         this.feature=feature;
         this.properties = properties;
         this.solrIndexSearcher = solrIndexSearcher;
-        this.targetField = targetField;
         this.ngramInfo =ngramInfo;
     }
 
     @Override
-    protected JATERecursiveTaskWorker<BytesRef, Integer> createInstance(List<BytesRef> termSplits) {
+    protected JATERecursiveTaskWorker<String, Integer> createInstance(List<String> termSplits) {
         return new FrequencyCtxDocBasedFBWorker(feature,
                 properties, termSplits, solrIndexSearcher, maxTasksPerThread,
-                targetField, ngramInfo);
+                ngramInfo);
     }
 
     @Override
-    protected Integer mergeResult(List<JATERecursiveTaskWorker<BytesRef, Integer>> jateRecursiveTaskWorkers) {
+    protected Integer mergeResult(List<JATERecursiveTaskWorker<String, Integer>> jateRecursiveTaskWorkers) {
         Integer total=0;
-        for (JATERecursiveTaskWorker<BytesRef, Integer> worker : jateRecursiveTaskWorkers) {
+        for (JATERecursiveTaskWorker<String, Integer> worker : jateRecursiveTaskWorkers) {
             total+=  worker.join();
         }
         return total;
     }
 
     @Override
-    protected Integer computeSingleWorker(List<BytesRef> terms) {
+    protected Integer computeSingleWorker(List<String> terms) {
         int total=0;
         TermsEnum ngramInfoIterator;
         try {
             ngramInfoIterator = ngramInfo.iterator();
-            for (BytesRef luceneTerm : terms) {
-                String termStr=luceneTerm.utf8ToString();
+            for (String termStr : terms) {
                 try {
-                    if (ngramInfoIterator.seekExact(luceneTerm)) {
+                    if (ngramInfoIterator.seekExact(new BytesRef(termStr.getBytes("UTF-8")))) {
                         PostingsEnum docEnum = ngramInfoIterator.postings(null);
                         int doc = 0;
                         while ((doc = docEnum.nextDoc()) != PostingsEnum.NO_MORE_DOCS) {
@@ -73,14 +69,14 @@ public class FrequencyCtxDocBasedFBWorker extends JATERecursiveTaskWorker<BytesR
                             feature.increment(docId, termStr, tfid);
                         }
                     }else {
-                        StringBuilder msg = new StringBuilder(luceneTerm.utf8ToString());
+                        StringBuilder msg = new StringBuilder(termStr);
                         msg.append(" is a candidate term, but not indexed in the n-gram information field. It's score may be mis-computed.");
                         msg.append(" (You may have used different text analysis process (e.g., different tokenizers) for the two fields.) ");
                         LOG.warning(msg.toString());
                     }
                 } catch (IOException ioe) {
                     StringBuilder sb = new StringBuilder("Unable to build feature for candidate:");
-                    sb.append(luceneTerm.utf8ToString()).append("\n");
+                    sb.append(termStr).append("\n");
                     sb.append(ExceptionUtils.getFullStackTrace(ioe));
                     LOG.severe(sb.toString());
                 }
