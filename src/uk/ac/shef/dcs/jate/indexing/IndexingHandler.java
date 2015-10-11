@@ -52,9 +52,17 @@ public class IndexingHandler {
 
         LOG.info(msg.toString());
         int total=0, batches=0;
+
+        StringBuilder skipped=new StringBuilder();
         for(String task: tasks){
             try {
                 JATEDocument doc = docCreator.create(task);
+
+                String content=doc.getContent();
+                if(content.length()==0){
+                    skipped.append(doc.getId()).append("\n");
+                    continue;
+                }
                 total++;
                 SolrInputDocument solrDoc = new SolrInputDocument();
                 solrDoc.addField(properties.getSolrFieldnameID(), doc.getId());
@@ -98,7 +106,16 @@ public class IndexingHandler {
         SolrUtil.commit(solrClient,LOG,String.valueOf(batches+1), String.valueOf(batchSize));
 
 
-        LOG.info("Complete indexing dataset. Total data items = "+total);
+        msg=new StringBuilder("Complete indexing dataset. Total processed items = ");
+        msg.append(total);
+        if(skipped.length()!=0)
+            msg.append("\n").append("Some items are skipped because of empty content. If you are not expecting this, check ")
+            .append(DocumentCreator.class.getName()).append(" you have used for indexing, or try a different one.\n");
+        msg.append(skipped);
+        if(skipped.length()==0)
+            LOG.info(msg.toString());
+        else
+            LOG.warning(msg.toString());
         try {
             solrClient.close();
         } catch (IOException e) {

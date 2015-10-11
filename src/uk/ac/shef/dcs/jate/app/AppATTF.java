@@ -28,12 +28,11 @@ public class AppATTF extends App {
 
 		Map<String, String> params = getParams(args);
 
-		String paramValue = params.get(AppParams.OUTPUT_FILE.getParamKey());
 		List<JATETerm> terms;
 		try {
-			terms = new AppATTF(params).extract(solrHomePath, solrCoreName, jatePropertyFile);
-
-			write(terms, paramValue);
+			AppATTF app = new AppATTF(params);
+			terms = app.extract(solrHomePath, solrCoreName, jatePropertyFile);
+			app.write(terms);
 		} catch (IOException e) {
 			System.err.println("IO Exception when exporting terms!");
 			e.printStackTrace();
@@ -60,11 +59,11 @@ public class AppATTF extends App {
 
 			List<String> candidates = new ArrayList<>(freqFeature.getMapTerm2TTF().keySet());
 			
-			filterByTTF(candidates, this.prefilterMinTTF);
+			filterByTTF(candidates);
 			
 			List<JATETerm> terms = attf.execute(candidates);
 
-			terms = filter(terms);
+			terms = cutoff(terms);
 
 			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
 					properties.getSolrFieldnameID());

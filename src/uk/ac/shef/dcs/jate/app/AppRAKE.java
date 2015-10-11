@@ -26,10 +26,11 @@ public class AppRAKE extends App {
 
 		List<JATETerm> terms;
 		try {
-			terms = new AppRAKE(params).extract(solrHomePath, solrCoreName, jatePropertyFile);
+			App appRake = new AppRAKE(params);
+			terms = appRake.extract(solrHomePath, solrCoreName, jatePropertyFile);
 
 			String paramValue = params.get(AppParams.OUTPUT_FILE.getParamKey());
-			write(terms, paramValue);
+			appRake.write(terms);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -68,10 +69,10 @@ public class AppRAKE extends App {
 
 			List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 
-			filterByTTF(candidates, this.prefilterMinTTF);
+			filterByTTF(candidates);
 
 			List<JATETerm> terms = rake.execute(candidates);
-			terms = filter(terms);
+			terms = cutoff(terms);
 
 			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
 					properties.getSolrFieldnameID());

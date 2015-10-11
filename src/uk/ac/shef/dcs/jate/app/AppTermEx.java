@@ -25,10 +25,11 @@ public class AppTermEx extends App {
 
 		List<JATETerm> terms;
 		try {
-			terms = new AppTermEx(params).extract(solrHomePath, solrCoreName, jatePropertyFile);
+			App termex = new AppTermEx(params);
 
-			String paramValue = params.get(AppParams.OUTPUT_FILE.getParamKey());
-			write(terms, paramValue);
+			terms = termex.extract(solrHomePath, solrCoreName, jatePropertyFile);
+
+			termex.write(terms);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JATEException e) {
@@ -39,7 +40,7 @@ public class AppTermEx extends App {
 
 	public AppTermEx(Map<String, String> initParams) throws JATEException {
 		super(initParams);
-		initaliseNgramFreqParam(initParams);
+		initalizeRefFreqParam(initParams);
 	}
 
 	@Override
@@ -70,10 +71,10 @@ public class AppTermEx extends App {
 
 			List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 
-			filterByTTF(candidates, this.prefilterMinTTF);
+			filterByTTF(candidates);
 
 			List<JATETerm> terms = termex.execute(candidates);
-			terms = filter(terms);
+			terms = cutoff(terms);
 
 			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
 					properties.getSolrFieldnameID());

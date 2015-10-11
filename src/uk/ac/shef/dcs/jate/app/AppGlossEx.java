@@ -32,10 +32,10 @@ public class AppGlossEx extends App {
 
 		List<JATETerm> terms;
 		try {
-			terms = new AppGlossEx(params).extract(solrHomePath, solrCoreName, jatePropertyFile);
+			App app = new AppGlossEx(params);
+			terms = app.extract(solrHomePath, solrCoreName, jatePropertyFile);
 
-			String outputFilePath = params.get(AppParams.OUTPUT_FILE.getParamKey());
-			write(terms, outputFilePath);
+			app.write(terms);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JATEException e) {
@@ -45,9 +45,7 @@ public class AppGlossEx extends App {
 
 	public AppGlossEx(Map<String, String> initParams) throws JATEException {		
 		super(initParams);
-		log.info("initialise GlossEx algorithm...");
-		initaliseNgramFreqParam(initParams);
-		log.info("complete GlossEx initialisation.");
+		initalizeRefFreqParam(initParams);
 	}
 
 
@@ -61,7 +59,6 @@ public class AppGlossEx extends App {
 			this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
 			this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 
-			//TODO: ziqi, pls have a look how to refactor here
 			FrequencyTermBasedFBMaster fwbb = new FrequencyTermBasedFBMaster(searcher, properties, 1);
 			FrequencyTermBased fwb = (FrequencyTermBased) fwbb.build();
 
@@ -75,10 +72,10 @@ public class AppGlossEx extends App {
 
 			List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 			
-			filterByTTF(candidates, this.prefilterMinTTF);
+			filterByTTF(candidates);
 
 			List<JATETerm> terms = glossex.execute(candidates);
-			terms = filter(terms);
+			terms = cutoff(terms);
 
 			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
 					properties.getSolrFieldnameID());

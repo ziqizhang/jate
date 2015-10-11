@@ -30,10 +30,9 @@ public class AppWeirdness extends App {
 
 		List<JATETerm> terms;
 		try {
-			terms = new AppWeirdness(params).extract(solrHomePath, solrCoreName, jatePropertyFile);
-
-			String paramValue = params.get(AppParams.OUTPUT_FILE.getParamKey());
-			write(terms, paramValue);
+			App weirdness = new AppWeirdness(params);
+			terms = weirdness.extract(solrHomePath, solrCoreName, jatePropertyFile);
+			weirdness.write(terms);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JATEException e) {
@@ -45,7 +44,7 @@ public class AppWeirdness extends App {
 	public AppWeirdness(Map<String, String> initParams) throws JATEException {
 		super(initParams);
 
-		initaliseNgramFreqParam(initParams);
+		initalizeRefFreqParam(initParams);
 	}
 
 	@Override
@@ -69,10 +68,10 @@ public class AppWeirdness extends App {
 
 			List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 
-			filterByTTF(candidates, this.prefilterMinTTF);
+			filterByTTF(candidates);
 
 			List<JATETerm> terms = weirdness.execute(candidates);
-			terms = filter(terms);
+			terms = cutoff(terms);
 
 			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
 					properties.getSolrFieldnameID());

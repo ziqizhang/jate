@@ -1,3 +1,4 @@
+/*
 package uk.ac.shef.dcs.jate.test;
 
 import cern.colt.matrix.tdouble.DoubleMatrix2D;
@@ -10,9 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
+*/
 /**
  * Created by - on 10/10/2015.
- */
+ *//*
+
 public class RecursiveMatrixWriter extends JATERecursiveTaskWorker<int[], Integer>{
     private DoubleMatrix2D matrix;
 
@@ -64,3 +67,4 @@ public class RecursiveMatrixWriter extends JATERecursiveTaskWorker<int[], Intege
         System.out.println("end");
     }
 }
+*/

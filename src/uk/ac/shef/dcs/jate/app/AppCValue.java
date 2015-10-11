@@ -31,10 +31,10 @@ public class AppCValue extends App {
 
 		List<JATETerm> terms;
 		try {
-			terms = new AppCValue(params).extract(solrHomePath, solrCoreName, jatePropertyFile);
+			App app = new AppCValue(params);
+			terms = app.extract(solrHomePath, solrCoreName, jatePropertyFile);
 
-			String paramValue = params.get(AppParams.OUTPUT_FILE.getParamKey());
-			write(terms, paramValue);
+			app.write(terms);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JATEException e) {
@@ -44,9 +44,6 @@ public class AppCValue extends App {
 
 	public AppCValue(Map<String, String> initParams) throws JATEException {
 		super(initParams);
-		log.info("initialise CValue algorithm...");
-		initialiseMTTFParam(initParams);
-		log.info("Complete CValue initialisation.");
 	}
 
 	@Override
@@ -70,10 +67,10 @@ public class AppCValue extends App {
 
 			List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 			
-			filterByTTF(candidates, this.prefilterMinTTF);
+			filterByTTF(candidates);
 
 			List<JATETerm> terms = cvalue.execute(candidates);
-			terms = filter(terms);
+			terms = cutoff(terms);
 
 			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
 					properties.getSolrFieldnameID());

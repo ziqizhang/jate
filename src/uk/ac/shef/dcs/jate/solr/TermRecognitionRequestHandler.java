@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.app.App;
+import uk.ac.shef.dcs.jate.app.AppParams;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
 /**
@@ -132,17 +133,17 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
 	 * Minimum frequency allowed for term candidates. Increase for better
 	 * precision
 	 */
-	public static final String MIN_TOTAL_TERM_FREQUENCY = App.AppParams.MIN_TOTAL_TERM_FREQUENCY.getParamName();
+	public static final String PREFILTER_MIN_TERM_TOTAL_FREQUENCY = AppParams.PREFILTER_MIN_TERM_TOTAL_FREQUENCY.getParamName();
 
 	/**
 	 * Optional
 	 * 
 	 * Min frequency of a term appearing in different context
-	 * 
+	 *
 	 * @see also {@code uk.ac.shef.dcs.jate.app.AppChiSquare}
 	 * @see also {@code uk.ac.shef.dcs.jate.app.AppNCValue}
 	 */
-	public static final String MIN_TERM_CONTEXT_FREQUENCY = App.AppParams.MIN_TOTAL_TERM_FREQUENCY
+	public static final String PREFILTER_MIN_TERM_CONTEXT_FREQUENCY = AppParams.PREFILTER_MIN_TERM_TOTAL_FREQUENCY
 			.getParamName();
 	/**
 	 * 
@@ -150,7 +151,7 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
 	 * candidates by term weight. Any term with weight less or equal to this
 	 * value will be filtered. The value is default as 0
 	 */
-	public static final String CUT_OFF_THRESHOLD = App.AppParams.CUTOFF_THRESHOLD.getParamName();
+	public static final String CUTOFF_THRESHOLD = AppParams.CUTOFF_THRESHOLD.getParamName();
 
 	/**
 	 * Top N (inclusive) threshold for choose top N ranked term candidates
@@ -158,7 +159,7 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
 	 * This threshold is an alternative to the default
 	 * {@code TermRecognitionRequestHandler.CUT_OFF_THRESHOLD}
 	 */
-	public static final String TOP_N_THRESHOLD = App.AppParams.CUTOFF_TOPN.getParamName();
+	public static final String CUTOFF_TOP_K = AppParams.CUTOFF_TOP_K.getParamName();
 
 	/**
 	 * Top percentage of total ranked term candidates.
@@ -166,7 +167,7 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
 	 * This threshold is an alternative to the default
 	 * {@code TermRecognitionRequestHandler.CUT_OFF_THRESHOLD}
 	 */
-	public static final String TOP_PERC_THRESHOLD = App.AppParams.CUTOFF_TOP_PERCENTAGE.getParamName();
+	public static final String CUTOFF_TOP_K_PERCENT = AppParams.CUTOFF_TOP_K_PERCENT.getParamName();
 
 	/**
 	 * Term ranking (unithood/termhood) algorithm.
@@ -182,7 +183,7 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
 	 * @see {@code uk.ac.shef.dcs.jate.app.AppTermEx}
 	 * @see {@code uk.ac.shef.dcs.jate.app.AppGlossEx}
 	 */
-	public static final String UNIGRAM_FREQ_FILE = App.AppParams.UNIGRAM_FREQUENCY_FILE.getParamName();
+	public static final String REFERENCE_FREQUENCY_FILE = AppParams.REFERENCE_FREQUENCY_FILE.getParamName();
 
 	private final TermRecognitionProcessor generalTRProcessor;
 
@@ -233,37 +234,37 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
 	 */
 	private Map<String, String> initialiseTRRunTimeParams(SolrQueryRequest req) {
 		Map<String, String> trRunTimeParams = new HashMap<String, String>();
-		Double cut_off_threshold = req.getParams().getDouble(CUT_OFF_THRESHOLD);
+		Double cut_off_threshold = req.getParams().getDouble(CUTOFF_THRESHOLD);
 		if (cut_off_threshold != null) {
-			trRunTimeParams.put(App.AppParams.CUTOFF_THRESHOLD.getParamKey(), cut_off_threshold.toString());
+			trRunTimeParams.put(AppParams.CUTOFF_THRESHOLD.getParamKey(), cut_off_threshold.toString());
 		}
 
-		Integer topNThreshold = req.getParams().getInt(TOP_N_THRESHOLD);
+		Integer topNThreshold = req.getParams().getInt(CUTOFF_TOP_K);
 		if (topNThreshold != null) {
-			trRunTimeParams.put(App.AppParams.CUTOFF_TOPN.getParamKey(), topNThreshold.toString());
+			trRunTimeParams.put(AppParams.CUTOFF_TOP_K.getParamKey(), topNThreshold.toString());
 		}
 
-		Double topPercentageThreshold = req.getParams().getDouble(TOP_PERC_THRESHOLD);
+		Double topPercentageThreshold = req.getParams().getDouble(CUTOFF_TOP_K_PERCENT);
 		if (topPercentageThreshold != null) {
-			trRunTimeParams.put(App.AppParams.CUTOFF_TOP_PERCENTAGE.getParamKey(),
+			trRunTimeParams.put(AppParams.CUTOFF_TOP_K_PERCENT.getParamKey(),
 					topPercentageThreshold.toString());
 		}
 
-		Integer minTotalTermFreq = req.getParams().getInt(MIN_TOTAL_TERM_FREQUENCY);
+		Integer minTotalTermFreq = req.getParams().getInt(PREFILTER_MIN_TERM_TOTAL_FREQUENCY);
 		if (minTotalTermFreq != null) {
-			trRunTimeParams.put(App.AppParams.MIN_TOTAL_TERM_FREQUENCY.getParamKey(),
+			trRunTimeParams.put(AppParams.PREFILTER_MIN_TERM_TOTAL_FREQUENCY.getParamKey(),
 					minTotalTermFreq.toString());
 		}
 
-		Integer minTermContextFreq = req.getParams().getInt(MIN_TERM_CONTEXT_FREQUENCY);
+		Integer minTermContextFreq = req.getParams().getInt(PREFILTER_MIN_TERM_CONTEXT_FREQUENCY);
 		if (minTermContextFreq != null) {
-			trRunTimeParams.put(App.AppParams.MIN_TERM_CONTEXT_FREQUENCY.getParamKey(),
+			trRunTimeParams.put(AppParams.PREFILTER_MIN_TERM_CONTEXT_FREQUENCY.getParamKey(),
 					minTermContextFreq.toString());
 		}
 
-		String unigramFreqFile = req.getParams().get(UNIGRAM_FREQ_FILE);
+		String unigramFreqFile = req.getParams().get(REFERENCE_FREQUENCY_FILE);
 		if (unigramFreqFile != null) {
-			trRunTimeParams.put(App.AppParams.UNIGRAM_FREQUENCY_FILE.getParamKey(), unigramFreqFile);
+			trRunTimeParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), unigramFreqFile);
 		}
 
 		return trRunTimeParams;

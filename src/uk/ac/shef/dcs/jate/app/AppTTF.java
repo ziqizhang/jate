@@ -31,10 +31,10 @@ public class AppTTF extends App {
 
 		List<JATETerm> terms;
 		try {
-			terms = new AppTTF(params).extract(solrHomePath, solrCoreName, jatePropertyFile);
+			App ttf = new AppTTF(params);
+			terms = ttf.extract(solrHomePath, solrCoreName, jatePropertyFile);
 
-			String paramValue = params.get(AppParams.OUTPUT_FILE.getParamKey());
-			write(terms, paramValue);
+			ttf.write(terms);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JATEException e) {
@@ -61,10 +61,10 @@ public class AppTTF extends App {
 
 			List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 
-			filterByTTF(candidates, this.prefilterMinTTF);
+			filterByTTF(candidates);
 
 			List<JATETerm> terms = ttf.execute(candidates);
-			terms = filter(terms);
+			terms = cutoff(terms);
 
 			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
 					properties.getSolrFieldnameID());

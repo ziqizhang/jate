@@ -31,10 +31,10 @@ public class AppChiSquare extends App {
 
 		List<JATETerm> terms;
 		try {
-			terms = new AppChiSquare(params).extract(solrHomePath, solrCoreName, jatePropertyFile);
+            App app = new AppChiSquare(params);
+			terms = app.extract(solrHomePath, solrCoreName, jatePropertyFile);
 
-			String outputFilePath = params.get(AppParams.OUTPUT_FILE.getParamKey());
-			write(terms, outputFilePath);
+			app.write(terms);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JATEException e) {
@@ -46,12 +46,10 @@ public class AppChiSquare extends App {
 	public AppChiSquare(Map<String, String> initParams) throws JATEException {		
 		super(initParams);
 		log.info("initialise ChiSquare algorithm...");
-		initialiseMTTFParam(initParams);
-		initialiseMTCFParam(initParams);
-		initialiseFTParam(initParams);
+		initializeFTParam(initParams);
 	}
 
-	private void initialiseFTParam(Map<String, String> initParams) throws JATEException {
+	private void initializeFTParam(Map<String, String> initParams) throws JATEException {
 		//This param is Chi-Square only
 			String sFT = initParams.get("-ft");
 		if(sFT!=null) {
@@ -92,10 +90,8 @@ public class AppChiSquare extends App {
             chi.registerFeature(FrequencyCtxBased.class.getName() + ChiSquare.SUFFIX_REF_TERM, ref_fcsb);
 			chi.registerFeature(Cooccurrence.class.getName(), co);
 
-			//TODO: ziqi, should we support term frequency filtering before ranking here ?
-			
 			List<JATETerm> terms = chi.execute(co.getTerms());
-			terms = filter(terms);
+			terms = cutoff(terms);
 
 			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
 					properties.getSolrFieldnameID());

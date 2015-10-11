@@ -27,10 +27,10 @@ public class AppRIDF extends App {
 
 		List<JATETerm> terms;
 		try {
-			terms = new AppRIDF(params).extract(solrHomePath, solrCoreName, jatePropertyFile);
+			App ridf = new AppRIDF(params);
+			terms = ridf.extract(solrHomePath, solrCoreName, jatePropertyFile);
 
-			String paramValue = params.get(AppParams.OUTPUT_FILE.getParamKey());
-			write(terms, paramValue);
+			ridf.write(terms);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -42,7 +42,6 @@ public class AppRIDF extends App {
 
 	public AppRIDF(Map<String, String> initParams) throws JATEException {
 		super(initParams);
-		initialiseMTTFParam(initParams);
 	}
 
 	@Override
@@ -59,10 +58,10 @@ public class AppRIDF extends App {
 
 			List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 
-			filterByTTF(candidates, this.prefilterMinTTF);
+			filterByTTF(candidates);
 
 			List<JATETerm> terms = attf.execute(candidates);
-			terms = filter(terms);
+			terms = cutoff(terms);
 
 			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
 					properties.getSolrFieldnameID());
