@@ -178,6 +178,8 @@ public class ComplexShingleFilter extends TokenFilter {
      */
     boolean noShingleOutput = true;
 
+    boolean stopWordsIgnoreCase=false;
+
     private Set<String> stopWords;
 
 
@@ -216,7 +218,8 @@ public class ComplexShingleFilter extends TokenFilter {
                                 boolean removeLeadingSymbolicTokens,
                                 boolean removeTrailingSymbolicTokens,
                                 boolean sentenceBoundaryAware,
-                                Set<String> stopWords) {
+                                Set<String> stopWords,
+                                boolean stopWordsIgnoreCase) {
         super(input);
         this.minShingleSize = minShingleSize;
         this.maxShingleSize = maxShingleSize;
@@ -233,6 +236,7 @@ public class ComplexShingleFilter extends TokenFilter {
         this.sentenceBoundaryAware = sentenceBoundaryAware;
         this.stopWords = stopWords;
         gramSize = new CircularSequence();
+        this.stopWordsIgnoreCase=stopWordsIgnoreCase;
     }
 
 
@@ -335,6 +339,8 @@ public class ComplexShingleFilter extends TokenFilter {
     private boolean checkToken(InputWindowToken nextToken) {
         if((removeLeadingStopwords||removeTrailingStopwords) && stopWords!=null){
             String token=new String(nextToken.termAtt.buffer(), 0,nextToken.termAtt.length());
+            if(stopWordsIgnoreCase)
+                token=token.toLowerCase();
             if(stopWords.contains(token))
                 return false;
         }

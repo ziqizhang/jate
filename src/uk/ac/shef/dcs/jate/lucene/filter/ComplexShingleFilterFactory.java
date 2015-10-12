@@ -28,6 +28,7 @@ public class ComplexShingleFilterFactory extends TokenFilterFactory {
     private final boolean outputUnigramsIfNoShingles;
     private final String tokenSeparator;
     private final String fillerToken;
+    private boolean stopWordsIgnoreCase;
 
     /** Creates a new ShingleFilterFactory */
     public ComplexShingleFilterFactory(Map<String, String> args) {
@@ -60,7 +61,17 @@ public class ComplexShingleFilterFactory extends TokenFilterFactory {
         String stopWordsFile=get(args,"stopWords","");
         if(!stopWordsFile.equals("")){
             try {
-                stopWords= new HashSet<>(FileUtils.readLines(new File(stopWordsFile)));
+                Set<String> sw= new HashSet<>(FileUtils.readLines(new File(stopWordsFile)));
+                String lowercase = get(args,"stopWordsIgnoreCase","");
+                if(lowercase.equalsIgnoreCase("true")){
+                    stopWordsIgnoreCase=true;
+                    for(String s: sw)
+                        stopWords.add(s.toLowerCase());
+                }
+                else {
+                    stopWords.addAll(sw);
+                    stopWordsIgnoreCase=false;
+                }
             } catch (IOException e) {
                 throw new IllegalArgumentException(e);
             }
@@ -88,7 +99,7 @@ public class ComplexShingleFilterFactory extends TokenFilterFactory {
                 tokenSeparator, fillerToken,
                 removeLeadingStopwords, removeTrailingStopwords,
                 removeLeadingSymbolicTokens, removeTrailingSymbolicTokens,
-                sentenceBoundaryAware,stopWords);
+                sentenceBoundaryAware,stopWords,stopWordsIgnoreCase);
         return r;
     }
 }
