@@ -26,10 +26,12 @@ import opennlp.tools.util.Span;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.AttributeFactory;
 import org.apache.sis.util.iso.AbstractFactory;
+import sun.jvm.hotspot.runtime.Flags;
 
 /**
  * Run OpenNLP SentenceDetector and Tokenizer.
@@ -41,6 +43,7 @@ public final class OpenNLPTokenizer extends Tokenizer {
     private int finalOffset;
     private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
     private final OffsetAttribute offsetAtt = addAttribute(OffsetAttribute.class);
+    private final FlagsAttribute endOfSentenceAtt = addAttribute(FlagsAttribute.class);
 
     //
     private Span[] sentences = null;
@@ -114,6 +117,11 @@ public final class OpenNLPTokenizer extends Tokenizer {
             for (int i = 0; i < termLength; i++) {
                 buffer[i] = fullText[spot + i];
             }
+
+            if(indexWord==wordSet.length-1)
+                endOfSentenceAtt.setFlags(1);
+            else
+                endOfSentenceAtt.setFlags(0);
 
             indexWord++;
             return true;
