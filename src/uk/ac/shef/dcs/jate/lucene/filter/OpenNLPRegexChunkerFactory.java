@@ -11,10 +11,7 @@ import uk.ac.shef.dcs.jate.nlp.POSTagger;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -23,15 +20,10 @@ import java.util.regex.Pattern;
  * TODO: change this to jate.solr.TermCandidateFilterFactory---(ZZ: i disagree. this class is generic. anyone who does not need ATE can still use this class for other purposes so it should not be named specifically with 'TermXXX' In fact I think this should be moved to package org.apache.lucene.analysis.opennlp)
  *
  */
-public class OpenNLPRegexChunkerFactory extends TokenFilterFactory {
+public class OpenNLPRegexChunkerFactory extends MWEFilterFactory {
 
     private POSTagger tagger;
     private Map<String, Pattern[]> patterns = new HashMap<>();
-    private int maxPhraseSize=5;
-    private int maxPhraseChars=0;
-    private int minPhraseChars=0;
-    private List<String> leadingStopWords=null;
-    private boolean leadingStopWordsIgnoreCase=false;
 
     /**
      * Initialize this factory via a set of key-value pairs.
@@ -40,14 +32,6 @@ public class OpenNLPRegexChunkerFactory extends TokenFilterFactory {
      */
     public OpenNLPRegexChunkerFactory(Map<String, String> args) {
         super(args);
-        String max = args.get("maxPhraseSize");
-        if (max == null)
-            throw new IllegalArgumentException("Parameter 'maxPhraseSize' is missing.");
-        try {
-            maxPhraseSize = Integer.valueOf(max);
-        }catch (NumberFormatException n){
-            throw new IllegalArgumentException("Parameter 'maxPhraseSize' is invalid. Expected: integer. Provided:"+max);
-        }
         String taggerClass = args.get("posTaggerClass");
         if (taggerClass == null)
             throw new IllegalArgumentException("Parameter 'class' for POS tagger is missing.");
@@ -71,47 +55,6 @@ public class OpenNLPRegexChunkerFactory extends TokenFilterFactory {
             StringBuilder sb = new StringBuilder("Initiating ");
             sb.append(this.getClass().getName()).append(" failed due to:\n");
             sb.append(ExceptionUtils.getFullStackTrace(e));
-            throw new IllegalArgumentException(sb.toString());
-        }
-
-        try{
-            String minPhraseChars = args.get("minPhraseChars");
-            if(minPhraseChars!=null)
-                this.minPhraseChars=Integer.valueOf(minPhraseChars);
-        }catch (NumberFormatException nfe){}
-
-        try{
-            String maxPhraseChars = args.get("maxPhraseChars");
-            if(maxPhraseChars!=null)
-                this.maxPhraseChars=Integer.valueOf(maxPhraseChars);
-        }catch (NumberFormatException nfe){}
-
-        try{
-            String leadingStopWordsFile = args.get("leadingStopWords");
-            if(leadingStopWordsFile!=null){
-                leadingStopWords=new ArrayList<>();
-                String ignoreCase=args.get("leadingStopWordsIgnoreCase");
-                if(ignoreCase!=null){
-                    try{
-                        leadingStopWordsIgnoreCase=Boolean.valueOf(ignoreCase);
-                    }catch (IllegalArgumentException iae){}
-                }
-                String words=FileUtils.readFileToString(new File(leadingStopWordsFile), StandardCharsets.UTF_8);
-                for(String w: words.split("\n")) {
-                    w=w.trim();
-                    if(w.length()==0||w.startsWith("#"))
-                        continue;
-                    if(leadingStopWordsIgnoreCase)
-                        leadingStopWords.add(w.toLowerCase());
-                    else
-                        leadingStopWords.add(w);
-                }
-            }
-        }catch (IOException ioe){
-            StringBuilder sb = new StringBuilder("Initiating ");
-            sb.append(this.getClass().getName()).append(" failed due to unable to load leading stop words.\n");
-            sb.append("File provided:").append(args.get("leadingStopWords")).append("\n");
-            sb.append(ExceptionUtils.getFullStackTrace(ioe));
             throw new IllegalArgumentException(sb.toString());
         }
     }
@@ -143,8 +86,12 @@ public class OpenNLPRegexChunkerFactory extends TokenFilterFactory {
 
     @Override
     public TokenStream create(TokenStream input) {
-        return new OpenNLPRegexChunker(input, tagger, patterns,maxPhraseSize,
-                maxPhraseChars, minPhraseChars, leadingStopWords, leadingStopWordsIgnoreCase);
+        return new OpenNLPRegexChunker(input, tagger, patterns, maxTokens,
+                minTokens,
+                maxCharLength, minCharLength,
+                removeLeadingStopwords,removeTrailingStopwords,
+                removeLeadingSymbolicTokens, removeTrailingSymbolicTokens,
+                stopWords, stopWordsIgnoreCase);
     }
 
 }

@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 /**
  * Created by zqz on 25/09/2015.
  */
-public class OpenNLPRegexChunker extends TokenFilter {
+public class OpenNLPRegexChunker extends MWEFilter {
     private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
     private final OffsetAttribute offsetAtt = addAttribute(OffsetAttribute.class);
     private final TypeAttribute typeAtt = addAttribute(TypeAttribute.class);
@@ -31,11 +31,6 @@ public class OpenNLPRegexChunker extends TokenFilter {
     private int chunkStart = -1;
     private int chunkEnd = -1;
     private int tokenIdx = 0;
-    private int maxPhraseSize;
-    private int minPhraseChar;
-    private int maxPhraseChar;
-    private List<String> leadingStopWords;
-    private boolean stopWordsIgnoreCase = true;
 
     private POSTagger posTagger;
     private RegexNameFinder regexChunker;
@@ -44,19 +39,22 @@ public class OpenNLPRegexChunker extends TokenFilter {
             TokenStream input,
             POSTagger posTaggerOp,
             Map<String, Pattern[]> patterns,
-            int maxPhraseSize,
-            int maxPhraseChars,
-            int minPhraseChars,
-            List<String> leadingStopWords,
+            int maxTokens,
+            int minTokens,
+            int maxCharLength,
+            int minCharLength,
+            boolean removeLeadingStopWords,
+            boolean removeTrailingStopwords,
+            boolean removeLeadingSymbolicTokens,
+            boolean removeTrailingSymbolicTokens,
+            Set<String> stopWords,
             boolean stopWordsIgnoreCase) {
-        super(input);
+        super(input, minTokens, maxTokens, minCharLength, maxCharLength,
+                removeLeadingStopWords, removeTrailingStopwords,
+                removeLeadingSymbolicTokens, removeTrailingSymbolicTokens,
+                stopWords, stopWordsIgnoreCase);
         this.posTagger = posTaggerOp;
         regexChunker = new RegexNameFinder(patterns);
-        this.maxPhraseSize = maxPhraseSize;
-        this.maxPhraseChar = maxPhraseChars;
-        this.minPhraseChar = minPhraseChars;
-        this.leadingStopWords = leadingStopWords;
-        this.stopWordsIgnoreCase = stopWordsIgnoreCase;
     }
 
     @Override
@@ -119,26 +117,18 @@ public class OpenNLPRegexChunker extends TokenFilter {
         List<Span> list = new ArrayList<>(Arrays.asList(chunks));
         Iterator<Span> it = list.iterator();
         List<Span> modified = new ArrayList<>();
-        //first pass remove leading stopwords
-        if (leadingStopWords != null && leadingStopWords.size() > 0) {
+        //first pass remove stopwords
+        if (removeLeadingStopwords || removeTrailingStopwords || removeLeadingSymbolicTokens || removeTrailingSymbolicTokens) {
             while (it.hasNext()) {
                 Span span = it.next();
-                int newStart = -1;
-                for (int i = span.getStart(); i < span.getEnd(); i++) {
-                    String tok = toks[i];
-                    if (stopWordsIgnoreCase)
-                        tok = tok.toLowerCase();
-                    if (!leadingStopWords.contains(tok)) {
-                        newStart = i;
-                        break;
-                    }
-                }
-                if (newStart == -1) {
+                int[] newspan = clean(span.getStart(), span.getEnd(), toks);
+                if(newspan==null){
                     it.remove();
                     continue;
                 }
-                if (newStart != span.getStart()) {
-                    modified.add(new Span(newStart, span.getEnd(), span.getType(), span.getProb()));
+
+                if (newspan[0] != span.getStart()||newspan[1]!=span.getEnd()) {
+                    modified.add(new Span(newspan[0], newspan[1], span.getType(), span.getProb()));
                     it.remove();
                 }
             }
@@ -150,7 +140,11 @@ public class OpenNLPRegexChunker extends TokenFilter {
         it = list.iterator();
         while (it.hasNext()) {
             Span span = it.next();
-            if (span.getEnd() - span.getStart() > maxPhraseSize) {
+            if (span.getEnd() - span.getStart() > maxTokens) {
+                it.remove();
+                continue;
+            }
+            if (span.getEnd() - span.getStart() < minTokens) {
                 it.remove();
                 continue;
             }
@@ -160,18 +154,67 @@ public class OpenNLPRegexChunker extends TokenFilter {
                 continue;
             }
 
-            if (maxPhraseChar != 0 || minPhraseChar != 0) {
+            if (maxCharLength != 0 || minCharLength != 0) {
                 StringBuilder string = new StringBuilder();
                 for (int i = span.getStart(); i < span.getEnd(); i++) {
                     string.append(toks[i]).append(" ");
                 }
                 int chars = string.toString().trim().length();
-                if ((maxPhraseChar != 0 && chars > maxPhraseChar) || (minPhraseChar != 0 && chars < minPhraseChar))
+                if ((maxCharLength != 0 && chars > maxCharLength) || (minCharLength != 0 && chars < minCharLength))
                     it.remove();
             }
         }
         Collections.sort(list);
         return list.toArray(new Span[0]);
+    }
+
+    private int[] clean(int start, int end, String[] tokens) {
+        int newStart = start, newEnd = end;
+        if (removeLeadingStopwords) {
+            String tok = tokens[newStart];
+            if (stopWordsIgnoreCase)
+                tok = tok.toLowerCase();
+            if (stopWords.contains(tok)) {
+                newStart++;
+                if (newStart > newEnd)
+                    return null;
+            }
+        }
+
+        if (removeTrailingStopwords) {
+            String tok = tokens[newEnd];
+            if (stopWordsIgnoreCase)
+                tok = tok.toLowerCase();
+            if (stopWords.contains(tok)) {
+                newEnd--;
+                if (newStart > newEnd)
+                    return null;
+            }
+        }
+
+        if (removeLeadingSymbolicTokens) {
+            String tok = tokens[newStart];
+            String normalized = tok.replaceAll("[\\p{Punct}]", "");
+            if (normalized.length() == 0) {
+                newStart++;
+                if (newStart > newEnd)
+                    return null;
+            }
+        }
+        if (removeLeadingSymbolicTokens) {
+            String tok = tokens[newEnd];
+            String normalized = tok.replaceAll("[\\p{Punct}]", "");
+            if (normalized.length() == 0) {
+                newEnd--;
+                if (newStart > newEnd)
+                    return null;
+            }
+        }
+
+        if(newEnd==end && newStart==start)
+            return new int[]{newStart, newEnd};
+        else
+            return clean(newStart, newEnd, tokens);
     }
 
     private void resetParams() {

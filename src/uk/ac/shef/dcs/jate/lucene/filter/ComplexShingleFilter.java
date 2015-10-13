@@ -13,58 +13,11 @@ import java.util.Set;
 /**
  * Created by - on 12/10/2015.
  */
-public class ComplexShingleFilter extends TokenFilter {
+public class ComplexShingleFilter extends MWEFilter {
     /**
      * filler token for when positionIncrement is more than 1
      */
     public static final String DEFAULT_FILLER_TOKEN = "_";
-
-    /**
-     * default maximum shingle size is 2.
-     */
-    public static final int DEFAULT_MAX_SHINGLE_SIZE = 2;
-
-    /**
-     * default minimum shingle size is 2.
-     */
-    public static final int DEFAULT_MIN_SHINGLE_SIZE = 2;
-
-    /**
-     * default maximum shingle size is 2.
-     */
-    public static final int DEFAULT_MAX_CHAR_LENGTH = 50;
-
-    /**
-     * default minimum shingle size is 2.
-     */
-    public static final int DEFAULT_MIN_CHAR_LENGTH = 1;
-
-    /**
-     * given "the cat sat on the" if this is true, and "the" is a stopword it becomes "cat sat on the"
-     */
-    public static final boolean DEFAULT_REMOVE_LEADING_STOPWORDS = false;
-
-    /**
-     * given "the cat sat on the" if this is true, and "the" is a stopword it becomes "the cat sat on"
-     */
-    public static final boolean DEFAULT_REMOVE_TRAILING_STOPWORDS = false;
-
-    /**
-     * if true, token n-gram will not created across sentences.
-     */
-    public static final boolean DEFAULT_SENTENCE_BOUNDARY_AWARE = true;
-
-
-    /**
-     * if true, given ", my house +" this becomes "my house +"
-     */
-    public static final boolean DEFAULT_REMOVE_LEADING_SYMBOLS = false;
-
-
-    /**
-     * if true, given ", my house +" this becomes ", my house"
-     */
-    public static final boolean DEFAULT_REMOVE_TRAILING_SYMBOLS = false;
 
 
     /**
@@ -76,6 +29,8 @@ public class ComplexShingleFilter extends TokenFilter {
      * The default string to use when joining adjacent tokens to form a shingle
      */
     public static final String DEFAULT_TOKEN_SEPARATOR = " ";
+
+    public static final boolean DEFAULT_SENTENCE_BOUNDARY_AWARE=false;
 
     /**
      * The sequence of input stream tokens (or filler tokens, if necessary)
@@ -122,31 +77,7 @@ public class ComplexShingleFilter extends TokenFilter {
      */
     private boolean outputUnigramsIfNoShingles = false;
 
-    /**
-     * maximum shingle size (number of tokens)
-     */
-    private int maxShingleSize;
-
-    /**
-     * minimum shingle size (number of tokens)
-     */
-    private int minShingleSize;
-
-    /**
-     * maximum shingle size (number of tokens)
-     */
-    private int maxCharLength;
-
-    /**
-     * minimum shingle size (number of tokens)
-     */
-    private int minCharLength;
-
-    private boolean removeLeadingStopwords;
-    private boolean removeTrailingStopwords;
     private boolean sentenceBoundaryAware;
-    private boolean removeLeadingSymbolicTokens;
-    private boolean removeTrailingSymbolicTokens;
 
     /**
      * The remaining number of filler tokens to be inserted into the input stream
@@ -178,10 +109,6 @@ public class ComplexShingleFilter extends TokenFilter {
      */
     boolean noShingleOutput = true;
 
-    boolean stopWordsIgnoreCase=false;
-
-    private Set<String> stopWords;
-
 
     /**
      * Holds the State after input.end() was called, so we can
@@ -209,7 +136,7 @@ public class ComplexShingleFilter extends TokenFilter {
      * @param minShingleSize minimum shingle size produced by the filter.
      * @param maxShingleSize maximum shingle size produced by the filter.
      */
-    public ComplexShingleFilter(TokenStream input, int minShingleSize, int maxShingleSize,
+    public ComplexShingleFilter(TokenStream input, int minTokens, int maxTokens,
                                 int minCharLength, int maxCharLength,
                                 boolean outputUnigrams, boolean outputUnigramsIfNoShingles,
                                 String tokenSeparater, String fillerToken,
@@ -220,23 +147,15 @@ public class ComplexShingleFilter extends TokenFilter {
                                 boolean sentenceBoundaryAware,
                                 Set<String> stopWords,
                                 boolean stopWordsIgnoreCase) {
-        super(input);
-        this.minShingleSize = minShingleSize;
-        this.maxShingleSize = maxShingleSize;
-        this.minCharLength = minCharLength;
-        this.maxCharLength = maxCharLength;
+        super(input, minTokens, maxTokens, minCharLength,maxCharLength,
+                removeLeadingStopWords, removeTrailingStopwords, removeLeadingSymbolicTokens,removeTrailingSymbolicTokens,
+                stopWords, stopWordsIgnoreCase);
         this.outputUnigrams = outputUnigrams;
         this.outputUnigramsIfNoShingles = outputUnigramsIfNoShingles;
         this.tokenSeparator = tokenSeparater;
         this.fillerToken = fillerToken.toCharArray();
-        this.removeLeadingStopwords = removeLeadingStopWords;
-        this.removeTrailingStopwords = removeTrailingStopwords;
-        this.removeLeadingSymbolicTokens = removeLeadingSymbolicTokens;
-        this.removeTrailingSymbolicTokens = removeTrailingSymbolicTokens;
         this.sentenceBoundaryAware = sentenceBoundaryAware;
-        this.stopWords = stopWords;
         gramSize = new CircularSequence();
-        this.stopWordsIgnoreCase=stopWordsIgnoreCase;
     }
 
 
@@ -344,7 +263,7 @@ public class ComplexShingleFilter extends TokenFilter {
             if(stopWords.contains(token))
                 return false;
         }
-        if(removeLeadingSymbolicTokens||removeTrailingStopwords){
+        if(removeLeadingSymbolicTokens||removeTrailingSymbolicTokens){
             String token = new String(nextToken.termAtt.buffer(), 0,nextToken.termAtt.length());
             token = token.replaceAll("\\p{Punct}+","");
             if (token.length()==0)
@@ -424,7 +343,7 @@ public class ComplexShingleFilter extends TokenFilter {
                 if (posIncrAtt.getPositionIncrement() > 1) {
                     // Each output shingle must contain at least one input token,
                     // so no more than (maxShingleSize - 1) filler tokens will be inserted.
-                    numFillerTokensToInsert = Math.min(posIncrAtt.getPositionIncrement() - 1, maxShingleSize - 1);
+                    numFillerTokensToInsert = Math.min(posIncrAtt.getPositionIncrement() - 1, maxTokens - 1);
                     // Save the current token as the next input stream token
                     if (null == nextInputStreamToken) {
                         nextInputStreamToken = cloneAttributes();
@@ -444,7 +363,7 @@ public class ComplexShingleFilter extends TokenFilter {
                 exhausted = true;
                 input.end();
                 endState = captureState();
-                numFillerTokensToInsert = Math.min(posIncrAtt.getPositionIncrement(), maxShingleSize - 1);
+                numFillerTokensToInsert = Math.min(posIncrAtt.getPositionIncrement(), maxTokens - 1);
                 if (numFillerTokensToInsert > 0) {
                     nextInputStreamToken = new AttributeSource(getAttributeFactory());
                     nextInputStreamToken.addAttribute(CharTermAttribute.class);
@@ -483,7 +402,7 @@ public class ComplexShingleFilter extends TokenFilter {
         if (inputWindow.size() > 0) {
             firstToken = inputWindow.removeFirst();
         }
-        while (inputWindow.size() < maxShingleSize) {
+        while (inputWindow.size() < maxTokens) {
             if (null != firstToken) {  // recycle the firstToken, if available
                 if (null != getNextToken(firstToken)) {
                     inputWindow.add(firstToken); // the firstToken becomes the last
@@ -501,7 +420,7 @@ public class ComplexShingleFilter extends TokenFilter {
             }
         }
         if (outputUnigramsIfNoShingles && noShingleOutput
-                && gramSize.minValue > 1 && inputWindow.size() < minShingleSize) {
+                && gramSize.minValue > 1 && inputWindow.size() < minTokens) {
             gramSize.minValue = 1;
         }
         gramSize.reset();
@@ -524,7 +443,7 @@ public class ComplexShingleFilter extends TokenFilter {
         endState = null;
         if (outputUnigramsIfNoShingles && !outputUnigrams) {
             // Fix up gramSize if minValue was reset for outputUnigramsIfNoShingles
-            gramSize.minValue = minShingleSize;
+            gramSize.minValue = minTokens;
         }
     }
 
@@ -544,7 +463,7 @@ public class ComplexShingleFilter extends TokenFilter {
         private int minValue;
 
         public CircularSequence() {
-            minValue = outputUnigrams ? 1 : minShingleSize;
+            minValue = outputUnigrams ? 1 : minTokens;
             reset();
         }
 
@@ -567,8 +486,8 @@ public class ComplexShingleFilter extends TokenFilter {
         public void advance() {
             previousValue = value;
             if (value == 1) {
-                value = minShingleSize;
-            } else if (value == maxShingleSize) {
+                value = minTokens;
+            } else if (value == minTokens) {
                 reset();
             } else {
                 ++value;

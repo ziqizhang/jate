@@ -1,14 +1,13 @@
 package uk.ac.shef.dcs.jate.lucene.filter;
 
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.util.TokenFilterFactory;
 
 import java.util.Map;
 
 /**
  * Created by - on 12/10/2015.
  */
-public class NounPhraseFilterFactory extends TokenFilterFactory {
+public class NounPhraseFilterFactory extends MWEFilterFactory {
     /**
      * Initialize this factory via a set of key-value pairs.
      *
@@ -20,6 +19,11 @@ public class NounPhraseFilterFactory extends TokenFilterFactory {
 
     @Override
     public TokenStream create(TokenStream input) {
-        return null;
+
+        return new NounPhraseFilter(input,
+                minTokens, maxTokens, minCharLength, maxCharLength,
+                removeLeadingStopwords, removeTrailingStopwords,
+                removeLeadingSymbolicTokens, removeTrailingSymbolicTokens,
+                stopWords, stopWordsIgnoreCase);
     }
 }
