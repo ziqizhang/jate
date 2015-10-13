@@ -1,5 +1,6 @@
 package uk.ac.shef.dcs.jate.nlp;
 
+import opennlp.tools.chunker.Chunker;
 import uk.ac.shef.dcs.jate.nlp.opennlp.POSTaggerOpenNLP;
 import uk.ac.shef.dcs.jate.nlp.opennlp.SentenceSplitterOpenNLP;
 
@@ -23,6 +24,15 @@ public class InstanceCreator {
             IllegalAccessException, InvocationTargetException, InstantiationException {
         if(className.equals(POSTaggerOpenNLP.class.getName())){
             return (POSTagger) Class.forName(className).getDeclaredConstructor(String.class).newInstance(params);
+        }
+        return null;
+    }
+
+    public static Chunker createChunker(String className, String params)
+            throws ClassNotFoundException, NoSuchMethodException,
+            IllegalAccessException, InvocationTargetException, InstantiationException {
+        if(className.equals(POSTaggerOpenNLP.class.getName())){
+            return (Chunker) Class.forName(className).getDeclaredConstructor(String.class).newInstance(params);
         }
         return null;
     }
