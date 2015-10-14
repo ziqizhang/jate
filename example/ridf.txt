@@ -1,1 +1,1 @@
-[{"string":"binding site","score":-0.003580522922930523},{"string":"affinity site","score":-0.07367725408829676},{"string":"glucocorticoid receptor","score":-0.2097872745459192},{"string":"glucocorticoid binding site","score":-0.2097872745459192}]
+[{"string":"osteoblast-specific cis-acting element","score":-0.02666886246432323},{"string":"nuclear extract","score":-0.2097872745459192},{"string":"osteoblast-specific gene","score":-0.2097872745459192}]

@@ -72,10 +72,9 @@ public class OpenNLPRegexChunker extends OpenNLPMWEFilter {
             AttributeSource start = tokenAttrs.get(chunkStart);
             AttributeSource end = tokenAttrs.get(chunkEnd - 1);
             StringBuilder phrase = new StringBuilder();
-            for (int i = chunkStart; i <= chunkEnd - 1; i++) {
+            for (int i = chunkStart; i <= chunkEnd - 1; i++)
                 phrase.append(tokenAttrs.get(i).getAttribute(CharTermAttribute.class).buffer()).append(" ");
-            }
-            
+
             termAtt.setEmpty().append(phrase.toString().trim());
             offsetAtt.setOffset(start.getAttribute(OffsetAttribute.class).startOffset(),
                     end.getAttribute(OffsetAttribute.class).endOffset());

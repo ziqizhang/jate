@@ -78,6 +78,7 @@ public class OpenNLPRegexChunkerFactory extends MWEFilterFactory {
 
     @Override
     public void inform(ResourceLoader loader) throws IOException {
+        super.inform(loader);
         if (posTaggerModelFile != null && posTaggerClass != null) {
             try {
                 tagger = InstanceCreator.createPOSTagger(posTaggerClass, loader.openResource(posTaggerModelFile));
