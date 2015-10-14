@@ -1,6 +1,5 @@
 package uk.ac.shef.dcs.jate.nlp;
 
-import opennlp.tools.chunker.Chunker;
 import uk.ac.shef.dcs.jate.nlp.opennlp.POSTaggerOpenNLP;
 import uk.ac.shef.dcs.jate.nlp.opennlp.SentenceSplitterOpenNLP;
 

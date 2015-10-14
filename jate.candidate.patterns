@@ -1,3 +1,0 @@
-NP	[JJ]*\s[NN]+
-VP	(VBD)+
-NP	(NNP)+

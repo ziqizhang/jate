@@ -24,11 +24,7 @@ public class TestIndexing {
     public static void main(String[] args) throws IOException, SolrServerException, JATEException {
 
         AutoDetectParser parser = new AutoDetectParser();
-        for (File f : new File("/Users/-/jate/experiment/acl-rd-corpus").listFiles()) {
-            if(f.toString().contains("10228")||f.toString().contains("_15.txt")||f.toString().contains("9113"))
-                System.out.println();
-
-
+        for (File f : new File("/Users/-/work/jate/experiment/bugged_corpus").listFiles()) {
             InputStream in = new BufferedInputStream(new FileInputStream(f.toString()));
             BodyContentHandler handler = new BodyContentHandler(-1);
             Metadata metadata = new Metadata();
@@ -36,9 +32,7 @@ public class TestIndexing {
 
                 parser.parse(in, handler, metadata);
                 String content = handler.toString();
-
-                if (content.length() == 0)
-                    System.out.println(f);
+                System.out.println(metadata);
             }catch (Exception e){
                 e.printStackTrace();
             }

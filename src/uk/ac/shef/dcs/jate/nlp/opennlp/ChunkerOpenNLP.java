@@ -24,9 +24,13 @@ public class ChunkerOpenNLP implements Chunker {
     }
 
     public String getStartTag(){
-        return "";
+        return "B-NP";
     }
     public String getEndTag(){
         return "";
     }
+    public String getContinueTag(){
+        return "I-NP";
+    }
+
 }

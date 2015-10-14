@@ -1,17 +1,17 @@
 package uk.ac.shef.dcs.jate.lucene.filter;
-
-import opennlp.tools.chunker.Chunker;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.lucene.analysis.TokenStream;
+import uk.ac.shef.dcs.jate.nlp.Chunker;
 import uk.ac.shef.dcs.jate.nlp.InstanceCreator;
 import uk.ac.shef.dcs.jate.nlp.POSTagger;
+import uk.ac.shef.dcs.jate.nlp.opennlp.ChunkerOpenNLP;
 
 import java.util.Map;
 
 /**
  * Created by - on 12/10/2015.
  */
-public class NounPhraseFilterFactory extends MWEFilterFactory {
+public class OpenNLPNounPhraseFilterFactory extends MWEFilterFactory {
     private POSTagger tagger;
     private Chunker chunker;
     /**
@@ -19,7 +19,7 @@ public class NounPhraseFilterFactory extends MWEFilterFactory {
      *
      * @param args
      */
-    protected NounPhraseFilterFactory(Map<String, String> args) {
+    protected OpenNLPNounPhraseFilterFactory(Map<String, String> args) {
         super(args);
         String taggerClass = args.get("posTaggerClass");
         if (taggerClass == null)
@@ -34,12 +34,10 @@ public class NounPhraseFilterFactory extends MWEFilterFactory {
             throw new IllegalArgumentException(sb.toString());
         }
 
-        String chunkerClass = args.get("chunkerClass");
-        if (chunkerClass == null)
-            throw new IllegalArgumentException("Parameter 'class' for Chunker is missing.");
+
         String chunkerFileIfExist = args.get("chunkerModel");
         try {
-            chunker = InstanceCreator.createChunker(taggerClass, chunkerFileIfExist);
+            chunker = InstanceCreator.createChunker(ChunkerOpenNLP.class.getName(), chunkerFileIfExist);
         } catch (Exception e) {
             StringBuilder sb = new StringBuilder("Initiating ");
             sb.append(this.getClass().getName()).append(" failed due to:\n");
@@ -51,7 +49,7 @@ public class NounPhraseFilterFactory extends MWEFilterFactory {
     @Override
     public TokenStream create(TokenStream input) {
 
-        return new NounPhraseFilter(input,tagger, chunker,
+        return new OpenNLPNounPhraseFilter(input,tagger, chunker,
                 minTokens, maxTokens, minCharLength, maxCharLength,
                 removeLeadingStopwords, removeTrailingStopwords,
                 removeLeadingSymbolicTokens, removeTrailingSymbolicTokens,

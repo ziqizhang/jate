@@ -7,4 +7,5 @@ public interface Chunker {
     String[] chunk(String[] tokens, String[] posTags);
     String getStartTag();
     String getEndTag();
+    String getContinueTag();
 }

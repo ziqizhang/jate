@@ -1,46 +1,46 @@
 package uk.ac.shef.dcs.jate.lucene.filter;
 
-import opennlp.tools.namefind.RegexNameFinder;
 import opennlp.tools.util.Span;
-import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
-import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
+
 import org.apache.lucene.util.AttributeSource;
+import uk.ac.shef.dcs.jate.nlp.Chunker;
 import uk.ac.shef.dcs.jate.nlp.POSTagger;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.regex.Pattern;
 
 /**
- * Created by zqz on 25/09/2015.
+ *
  */
-public class OpenNLPRegexChunker extends OpenNLPMWEFilter {
+public class OpenNLPNounPhraseFilter extends OpenNLPMWEFilter {
 
-    private RegexNameFinder regexChunker;
-
-    public OpenNLPRegexChunker(
-            TokenStream input,
-            POSTagger posTaggerOp,
-            Map<String, Pattern[]> patterns,
-            int maxTokens,
-            int minTokens,
-            int maxCharLength,
-            int minCharLength,
-            boolean removeLeadingStopWords,
-            boolean removeTrailingStopwords,
-            boolean removeLeadingSymbolicTokens,
-            boolean removeTrailingSymbolicTokens,
-            Set<String> stopWords,
-            boolean stopWordsIgnoreCase) {
-        super(input, minTokens, maxTokens, minCharLength, maxCharLength,
+    private Chunker npChunker;
+    /**
+     * Construct a token stream filtering the given input.
+     *
+     * @param input
+     */
+    protected OpenNLPNounPhraseFilter(TokenStream input,
+                                      POSTagger posTaggerOp,
+                                      Chunker npChunker,
+                                      int minTokens, int maxTokens,
+                                      int minCharLength, int maxCharLength,
+                                      boolean removeLeadingStopWords,
+                                      boolean removeTrailingStopwords,
+                                      boolean removeLeadingSymbolicTokens,
+                                      boolean removeTrailingSymbolicTokens,
+                                      Set<String> stopWords,
+                                      boolean stopWordsIgnoreCase) {
+        super(input, minTokens, maxTokens,
+                minCharLength, maxCharLength,
                 removeLeadingStopWords, removeTrailingStopwords,
                 removeLeadingSymbolicTokens, removeTrailingSymbolicTokens,
                 stopWords, stopWordsIgnoreCase);
-        this.posTagger = posTaggerOp;
-        regexChunker = new RegexNameFinder(patterns);
+        posTagger=posTaggerOp;
+        this.npChunker=npChunker;
     }
 
     @Override
@@ -55,7 +55,8 @@ public class OpenNLPRegexChunker extends OpenNLPMWEFilter {
             //tagging
             String[] pos = createTags(words);
             //chunking
-            Span[] chunks = regexChunker.find(pos);
+            String[] tags = npChunker.chunk(words, pos);
+            Span[] chunks=createSpan(tags);
             chunks = prune(chunks, words);
             for (Span sp : chunks) {
                 chunkSpans.put(sp.getStart(), sp.getEnd());
@@ -97,5 +98,28 @@ public class OpenNLPRegexChunker extends OpenNLPMWEFilter {
             return true;
         }
     }
+
+    private Span[] createSpan(String[] tags) {
+        int start=-1;
+        List<Span> result =new ArrayList<>();
+        for(int i=0; i<tags.length;i++){
+            if(tags[i].equalsIgnoreCase(npChunker.getContinueTag())){
+                //do nothing
+            }
+            else{
+                if(start!=-1){
+                    result.add(new Span(start, i, "NP"));
+                    start=-1;
+                }else if(tags[i].equals(npChunker.getStartTag())){
+                    start=i;
+                }
+            }
+        }
+        if(start!=-1){
+            result.add(new Span(start, tags.length,"NP"));
+        }
+        return result.toArray(new Span[0]);
+    }
+
 
 }
