@@ -19,7 +19,7 @@ public class OpenNLPNounPhraseFilterFactory extends MWEFilterFactory {
      *
      * @param args
      */
-    protected OpenNLPNounPhraseFilterFactory(Map<String, String> args) {
+    public OpenNLPNounPhraseFilterFactory(Map<String, String> args) {
         super(args);
         String taggerClass = args.get("posTaggerClass");
         if (taggerClass == null)

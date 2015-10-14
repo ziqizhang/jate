@@ -49,26 +49,27 @@ public class PunctuationRemover extends TokenFilter {
     public boolean incrementToken() throws IOException {
         if (input.incrementToken()) {
             String tok = new String(termAtt.buffer(),0, termAtt.length());
-            if(stripAnySymbols) {
-                tok = tok.replaceAll("\\p{Punct}", " ").replaceAll("\\s+", " ").trim();
-                if (tok.length() == 0)
-                    clearAttributes();
-                else
+            if(tok.length()>0) {
+                if (stripAnySymbols) {
+                    tok = tok.replaceAll("\\p{Punct}", " ").replaceAll("\\s+", " ").trim();
+                    if (tok.length() == 0)
+                        clearAttributes();
+                    else
+                        termAtt.setEmpty().append(tok);
+                } else {
+                    if (stripLeadingSymbols) {
+                        Matcher m = leadingSymbolPattern.matcher(tok);
+                        if (m.find())
+                            tok = tok.substring(m.end());
+                    }
+                    if (stripTrailingSymbols) {
+                        Matcher m = trailingSymbolPattern.matcher(tok);
+                        if (m.find())
+                            tok = tok.substring(0, m.start());
+                    }
+                    tok = tok.trim();
                     termAtt.setEmpty().append(tok);
-            }
-            else{
-                if(stripLeadingSymbols){
-                    Matcher m = leadingSymbolPattern.matcher(tok);
-                    if(m.find())
-                        tok=tok.substring(m.end());
                 }
-                if(stripTrailingSymbols){
-                    Matcher m = trailingSymbolPattern.matcher(tok);
-                    if(m.find())
-                        tok=tok.substring(0, m.start());
-                }
-                tok=tok.trim();
-                termAtt.setEmpty().append(tok);
             }
             return true;
         } else {

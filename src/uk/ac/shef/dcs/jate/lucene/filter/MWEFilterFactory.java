@@ -17,7 +17,7 @@ public abstract class MWEFilterFactory extends TokenFilterFactory{
     protected int maxTokens;
     protected int minCharLength;
     protected int maxCharLength;
-    protected Set<String> stopWords=null;
+    protected Set<String> stopWords=new HashSet<>();
     protected boolean removeLeadingStopwords;
     protected boolean removeTrailingStopwords;
     protected boolean removeLeadingSymbolicTokens;
@@ -29,7 +29,7 @@ public abstract class MWEFilterFactory extends TokenFilterFactory{
      *
      * @param args
      */
-    protected MWEFilterFactory(Map<String, String> args) {
+    public MWEFilterFactory(Map<String, String> args) {
         super(args);
 
         maxTokens = getInt(args, "maxTokens", MWEFilter.DEFAULT_MAX_TOKENS);
@@ -80,8 +80,5 @@ public abstract class MWEFilterFactory extends TokenFilterFactory{
         removeTrailingStopwords=getBoolean(args, "removeTrailingStopWords", ComplexShingleFilter.DEFAULT_REMOVE_TRAILING_STOPWORDS);
         removeLeadingSymbolicTokens=getBoolean(args, "removeLeadingSymbolicTokens", ComplexShingleFilter.DEFAULT_REMOVE_LEADING_SYMBOLS);
         removeTrailingSymbolicTokens=getBoolean(args, "removeTrailingSymbolicTokens", ComplexShingleFilter.DEFAULT_REMOVE_TRAILING_SYMBOLS);
-        if (!args.isEmpty()) {
-            throw new IllegalArgumentException("Unknown parameters: " + args);
-        }
     }
 }

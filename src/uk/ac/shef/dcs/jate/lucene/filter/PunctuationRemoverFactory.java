@@ -17,7 +17,7 @@ public class PunctuationRemoverFactory extends TokenFilterFactory {
      *
      * @param args
      */
-    protected PunctuationRemoverFactory(Map<String, String> args) {
+    public PunctuationRemoverFactory(Map<String, String> args) {
         super(args);
         stripAnySymbols = getBoolean(args, "stripAnySymbols", PunctuationRemover.DEFAULT_STRIP_ANY_SYMBOLS);
         stripLeadingSymbols = getBoolean(args, "stripLeadingSymbols", PunctuationRemover.DEFAULT_STRIP_LEADING_SYMBOLS);

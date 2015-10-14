@@ -48,9 +48,9 @@ public class OpenNLPRegexChunkerFactory extends MWEFilterFactory {
                 throw new IllegalArgumentException(sb.toString());
             }
         }
-        String taggerFileModerIfExist = args.get("posTaggerModel");
+        String taggerFileIfExist = args.get("posTaggerModel");
         try {
-            tagger = InstanceCreator.createPOSTagger(taggerClass, taggerFileModerIfExist);
+            tagger = InstanceCreator.createPOSTagger(taggerClass, taggerFileIfExist);
         } catch (Exception e) {
             StringBuilder sb = new StringBuilder("Initiating ");
             sb.append(this.getClass().getName()).append(" failed due to:\n");
