@@ -104,6 +104,13 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
         return list.toArray(new Span[0]);
     }
 
+    /**
+     *
+     * @param start
+     * @param end THIS IS EXCLUSIVE
+     * @param tokens
+     * @return
+     */
     protected int[] clean(int start, int end, String[] tokens) {
         int newStart = start, newEnd = end;
         if (removeLeadingStopwords) {
@@ -112,18 +119,18 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
                 tok = tok.toLowerCase();
             if (stopWords.contains(tok)) {
                 newStart++;
-                if (newStart > newEnd)
+                if (newStart >= newEnd)
                     return null;
             }
         }
 
         if (removeTrailingStopwords) {
-            String tok = tokens[newEnd];
+            String tok = tokens[newEnd-1];
             if (stopWordsIgnoreCase)
                 tok = tok.toLowerCase();
             if (stopWords.contains(tok)) {
                 newEnd--;
-                if (newStart > newEnd)
+                if (newStart >= newEnd)
                     return null;
             }
         }
@@ -133,21 +140,23 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
             String normalized = tok.replaceAll("[\\p{Punct}]", "");
             if (normalized.length() == 0) {
                 newStart++;
-                if (newStart > newEnd)
+                if (newStart >= newEnd)
                     return null;
             }
         }
         if (removeLeadingSymbolicTokens) {
-            String tok = tokens[newEnd];
+            String tok = tokens[newEnd-1];
             String normalized = tok.replaceAll("[\\p{Punct}]", "");
             if (normalized.length() == 0) {
                 newEnd--;
-                if (newStart > newEnd)
+                if (newStart >= newEnd)
                     return null;
             }
         }
 
         if(newEnd==end && newStart==start)
+            return new int[]{newStart, newEnd};
+        else if(newEnd-newStart==1)
             return new int[]{newStart, newEnd};
         else
             return clean(newStart, newEnd, tokens);
