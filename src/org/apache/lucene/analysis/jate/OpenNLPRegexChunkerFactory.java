@@ -90,7 +90,7 @@ public class OpenNLPRegexChunkerFactory extends MWEFilterFactory {
         }
         if (patternFile != null) {
             try {
-                List<String> lines = getLines(loader, stopWordFile.trim());
+                List<String> lines = getLines(loader, patternFile.trim());
                 initPatterns(lines, patterns);
             } catch (IOException ioe) {
                 StringBuilder sb = new StringBuilder("Initiating ");
