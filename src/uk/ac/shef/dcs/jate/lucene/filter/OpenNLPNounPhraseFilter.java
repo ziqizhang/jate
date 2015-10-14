@@ -109,8 +109,11 @@ public class OpenNLPNounPhraseFilter extends OpenNLPMWEFilter {
             else{
                 if(start!=-1){
                     result.add(new Span(start, i, "NP"));
-                    start=-1;
-                }else if(tags[i].equals(npChunker.getStartTag())){
+                    if(tags[i].equalsIgnoreCase(npChunker.getStartTag()))
+                        start=i;
+                    else
+                        start=-1;
+                }else if(tags[i].equalsIgnoreCase(npChunker.getStartTag())){
                     start=i;
                 }
             }

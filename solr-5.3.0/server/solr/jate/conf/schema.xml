@@ -267,13 +267,12 @@
 			This is an example fieldType definition that extracts phrases matching certain Part-
 			of-Speech patterns. 
 			
-			WARNING: YOU MUST ENSURE YOUR fieldType DEFINITION FOR YOUR n-gram information FIELD
+			WARNING: YOU MUST ENSURE YOUR fieldType DEFINITIONs FOR YOUR n-gram information FIELD
 			(default=jate_text_2_ngrams) AND THAT FOR YOUR word FIELD (default=jate_text_2_words)
 			USE THE SAME SET OF filters
 			-->
-		<fieldType name="jate_text_2_terms" class="solr.TextField" positionIncrementGap="100">
+		<!--fieldType name="jate_text_2_terms" class="solr.TextField" positionIncrementGap="100">
 			<analyzer type="index">
-				<!--tokenizer class="solr.StandardTokenizerFactory" /-->
 				<tokenizer class="org.apache.lucene.analysis.opennlp.OpenNLPTokenizerFactory"
 							sentenceModel="/Users/-/work/jate/resource/en-sent.bin"
 							tokenizerModel="/Users/-/work/jate/resource/en-token.bin"/>				
@@ -285,36 +284,37 @@
 							minTokens="1" maxTokens="5"
 							maxCharLength="50" minCharLength="1" removeLeadingStopWords="true"
 							removeTrailingStopWords="true" removeLeadingSymbolicTokens="true"
-							removeTrailingSymbolicTokens="true" sentenceBoundaryAware="true"
-							stopWords="/Users/-/work/jate/solr-5.3.0/server/solr/jate/conf/stopwords.txt" stopWordsIgnoreCase="true"/>
-				<filter class="solr.LowerCaseFilterFactory" />					
-				<filter class="solr.EnglishMinimalStemFilterFactory"/>
-				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
-			</analyzer>
-		</fieldType>	
-
-
-		<!-- a configuration for NP chunker/>
-		<fieldType name="jate_text_2_terms" class="solr.TextField" positionIncrementGap="100">
-			<analyzer type="index">
-				<tokenizer class="org.apache.lucene.analysis.opennlp.OpenNLPTokenizerFactory"
-							sentenceModel="/Users/-/work/jate/resource/en-sent.bin"
-							tokenizerModel="/Users/-/work/jate/resource/en-token.bin"/>				
-				<filter class="solr.ASCIIFoldingFilterFactory"/>
-				<filter class="uk.ac.shef.dcs.jate.lucene.filter.OpenNLPRegexChunkerFactory"
-							posTaggerClass="uk.ac.shef.dcs.jate.nlp.opennlp.POSTaggerOpenNLP"
-							posTaggerModel="/Users/-/work/jate/resource/en-pos-maxent.bin"
-							patterns="/Users/-/work/jate/example/patterns/genia.patterns"
-							minTokens="1" maxTokens="5"
-							maxCharLength="50" minCharLength="1" removeLeadingStopWords="true"
-							removeTrailingStopWords="true" removeLeadingSymbolictokens="true"
-							removeTrailingSymbolicTokens="true" sentenceBoundaryAware="true"
+							removeTrailingSymbolicTokens="true"
 							stopWords="/Users/-/work/jate/solr-5.3.0/server/solr/jate/conf/stopwords.txt" stopWordsIgnoreCase="true"/>
 				<filter class="solr.LowerCaseFilterFactory" />					
 				<filter class="solr.EnglishMinimalStemFilterFactory"/>
 				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
 			</analyzer>
 		</fieldType-->	
+
+		<!--a configuration for NP extraction-->
+		<fieldType name="jate_text_2_terms" class="solr.TextField" positionIncrementGap="100">
+			<analyzer type="index">
+				<!--tokenizer class="solr.StandardTokenizerFactory" /-->
+				<tokenizer class="org.apache.lucene.analysis.opennlp.OpenNLPTokenizerFactory"
+							sentenceModel="/Users/-/work/jate/resource/en-sent.bin"
+							tokenizerModel="/Users/-/work/jate/resource/en-token.bin"/>				
+				<filter class="solr.ASCIIFoldingFilterFactory"/>
+				<filter class="uk.ac.shef.dcs.jate.lucene.filter.OpenNLPNounPhraseFilterFactory"
+							posTaggerClass="uk.ac.shef.dcs.jate.nlp.opennlp.POSTaggerOpenNLP"
+							posTaggerModel="/Users/-/work/jate/resource/en-pos-maxent.bin"
+							chunkerModel="/Users/-/work/jate/resource/en-chunker.bin"
+							minTokens="1" maxTokens="5"
+							maxCharLength="50" minCharLength="1" removeLeadingStopWords="true"
+							removeTrailingStopWords="true" removeLeadingSymbolicTokens="true"
+							removeTrailingSymbolicTokens="true"
+							stopWords="/Users/-/work/jate/solr-5.3.0/server/solr/jate/conf/stopwords.txt" stopWordsIgnoreCase="true"/>
+				<filter class="solr.LowerCaseFilterFactory" />					
+				<filter class="solr.EnglishMinimalStemFilterFactory"/>
+				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
+			</analyzer>
+		</fieldType>
+		
 
 		<!-- a configuration for n-gram extractor/>
 		<fieldType name="jate_text_2_terms" class="solr.TextField" positionIncrementGap="100">
