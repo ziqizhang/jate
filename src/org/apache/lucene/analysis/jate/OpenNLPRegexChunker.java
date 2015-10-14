@@ -75,6 +75,9 @@ public class OpenNLPRegexChunker extends OpenNLPMWEFilter {
             for (int i = chunkStart; i <= chunkEnd - 1; i++) {
                 phrase.append(tokenAttrs.get(i).getAttribute(CharTermAttribute.class).buffer()).append(" ");
             }
+            if(phrase.toString().trim().equals("cell-specific differences in factor")||
+                    phrase.toString().trim().equals("lytic effects of dexamethasone"))
+                System.out.println();
             termAtt.setEmpty().append(phrase.toString().trim());
             offsetAtt.setOffset(start.getAttribute(OffsetAttribute.class).startOffset(),
                     end.getAttribute(OffsetAttribute.class).endOffset());

@@ -65,7 +65,7 @@ public class IndexingHandler {
                 solrDoc.addField(properties.getSolrFieldnameID(), doc.getId());
                 solrDoc.addField(properties.getSolrFieldnameJATENGramInfo(), doc.getContent());
                 solrDoc.addField(properties.getSolrFieldnameJATECTerms(), doc.getContent());
-
+                System.out.println(task);
                 if(sentenceSplitter!=null) {
                     indexSentenceOffsets(solrDoc, properties.getSolrFieldnameJATESentences(), doc.getContent(),
                             sentenceSplitter);

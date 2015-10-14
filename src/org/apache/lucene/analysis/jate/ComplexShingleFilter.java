@@ -240,7 +240,7 @@ public class ComplexShingleFilter extends MWEFilter {
                     isOutputHere = true;
                     gramSize.advance();
                     tokenAvailable = true;
-                    //System.out.println(new String(offsetAtt.startOffset()+"-"+offsetAtt.endOffset()+","+gramBuilder.toString()));
+                    System.out.println(new String(offsetAtt.startOffset()+"-"+offsetAtt.endOffset()+","+gramBuilder.toString()));
                 }else{
                     clearAttributes();
                     //termAtt.setEmpty();
@@ -486,7 +486,7 @@ public class ComplexShingleFilter extends MWEFilter {
             previousValue = value;
             if (value == 1) {
                 value = minTokens;
-            } else if (value == minTokens) {
+            } else if (value == maxTokens) {
                 reset();
             } else {
                 ++value;

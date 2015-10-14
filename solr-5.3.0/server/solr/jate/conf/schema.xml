@@ -289,6 +289,8 @@
 				<filter class="solr.LowerCaseFilterFactory" />					
 				<filter class="solr.EnglishMinimalStemFilterFactory"/>
 				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
+				<filter class="org.apache.lucene.analysis.jate.PunctuationRemoverFactory" stripAnySymbols="false"
+						stripLeadingSymbols="true" stripTrailingSymbols="true"/>
 			</analyzer>
 		</fieldType>	
 

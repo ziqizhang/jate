@@ -23,11 +23,12 @@ import java.util.List;
 public class TestIndexing {
     public static void main(String[] args) throws IOException, SolrServerException, JATEException {
 
-        AutoDetectParser parser = new AutoDetectParser();
+        /*AutoDetectParser parser = new AutoDetectParser();
         for (File f : new File("/Users/-/work/jate/experiment/bugged_corpus").listFiles()) {
             InputStream in = new BufferedInputStream(new FileInputStream(f.toString()));
             BodyContentHandler handler = new BodyContentHandler(-1);
             Metadata metadata = new Metadata();
+            metadata.set("RESOURCE_NAME_KEY",f.toString());
             try {
 
                 parser.parse(in, handler, metadata);
@@ -38,11 +39,11 @@ public class TestIndexing {
             }
         }
         System.exit(0);
-
+*/
 
 
         SolrClient solrClient =
-                new EmbeddedSolrServer(Paths.get("D:\\Work\\jate_github\\jate\\solr-5.3.0_\\server\\solr"),
+                new EmbeddedSolrServer(Paths.get("/Users/-/work/jate/experiment/solr_test/server/solr"),
                         "core1");
         SolrInputDocument solrDoc = new SolrInputDocument();
         solrDoc.addField("id", "01");
