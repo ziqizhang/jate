@@ -243,20 +243,20 @@
 		<fieldType name="jate_text_2_ngrams" class="solr.TextField" positionIncrementGap="100">
 			<analyzer type="index">
 				<!--tokenizer class="solr.StandardTokenizerFactory" /-->
-				<tokenizer class="org.apache.lucene.analysis.opennlp.OpenNLPTokenizerFactory"
-							sentenceModel="/Users/-/work/jate/resource/en-sent.bin"
-							tokenizerModel="/Users/-/work/jate/resource/en-token.bin"/>
+				<tokenizer class="org.apache.lucene.analysis.jate.OpenNLPTokenizerFactory"
+							sentenceModel="en-sent.bin"
+							tokenizerModel="en-token.bin"/>
 				<filter class="solr.ASCIIFoldingFilterFactory"/>
 				<filter class="solr.LowerCaseFilterFactory" />								
-				<filter class="uk.ac.shef.dcs.jate.lucene.filter.ComplexShingleFilterFactory" minTokens="2" maxTokens="5"
+				<filter class="org.apache.lucene.analysis.jate.ComplexShingleFilterFactory" minTokens="2" maxTokens="5"
 						maxCharLength="50" minCharLength="1" removeLeadingStopWords="true"
 						removeTrailingStopWords="true" removeLeadingSymbolicTokens="true"
 						removeTrailingSymbolicTokens="true" sentenceBoundaryAware="true"
-						stopWords="/Users/-/work/jate/solr-5.3.0/server/solr/jate/conf/stopwords.txt" stopWordsIgnoreCase="true"
+						stopWords="stopwords.txt" stopWordsIgnoreCase="true"
 						outputUnigrams="true" outputUnigramsIfNoShingles="false" tokenSeparator=" "/>
 				<filter class="solr.EnglishMinimalStemFilterFactory"/>
 				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
-				<filter class="uk.ac.shef.dcs.jate.lucene.filter.PunctuationRemoverFactory" stripAnySymbols="false"
+				<filter class="org.apache.lucene.analysis.jate.PunctuationRemoverFactory" stripAnySymbols="false"
 						stripLeadingSymbols="true" stripTrailingSymbols="true"/>
 			</analyzer>
 		</fieldType>		
@@ -274,18 +274,18 @@
 		<!--fieldType name="jate_text_2_terms" class="solr.TextField" positionIncrementGap="100">
 			<analyzer type="index">
 				<tokenizer class="org.apache.lucene.analysis.opennlp.OpenNLPTokenizerFactory"
-							sentenceModel="/Users/-/work/jate/resource/en-sent.bin"
-							tokenizerModel="/Users/-/work/jate/resource/en-token.bin"/>				
+							sentenceModel="en-sent.bin"
+							tokenizerModel="en-token.bin"/>				
 				<filter class="solr.ASCIIFoldingFilterFactory"/>
 				<filter class="uk.ac.shef.dcs.jate.lucene.filter.OpenNLPRegexChunkerFactory"
 							posTaggerClass="uk.ac.shef.dcs.jate.nlp.opennlp.POSTaggerOpenNLP"
-							posTaggerModel="/Users/-/work/jate/resource/en-pos-maxent.bin"
-							patterns="/Users/-/work/jate/example/patterns/genia.patterns"
+							posTaggerModel="en-pos-maxent.bin"
+							patterns="genia.patterns"
 							minTokens="1" maxTokens="5"
 							maxCharLength="50" minCharLength="1" removeLeadingStopWords="true"
 							removeTrailingStopWords="true" removeLeadingSymbolicTokens="true"
 							removeTrailingSymbolicTokens="true"
-							stopWords="/Users/-/work/jate/solr-5.3.0/server/solr/jate/conf/stopwords.txt" stopWordsIgnoreCase="true"/>
+							stopWords="stopwords.txt" stopWordsIgnoreCase="true"/>
 				<filter class="solr.LowerCaseFilterFactory" />					
 				<filter class="solr.EnglishMinimalStemFilterFactory"/>
 				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
@@ -296,19 +296,19 @@
 		<fieldType name="jate_text_2_terms" class="solr.TextField" positionIncrementGap="100">
 			<analyzer type="index">
 				<!--tokenizer class="solr.StandardTokenizerFactory" /-->
-				<tokenizer class="org.apache.lucene.analysis.opennlp.OpenNLPTokenizerFactory"
-							sentenceModel="/Users/-/work/jate/resource/en-sent.bin"
-							tokenizerModel="/Users/-/work/jate/resource/en-token.bin"/>				
+				<tokenizer class="org.apache.lucene.analysis.jate.OpenNLPTokenizerFactory"
+							sentenceModel="en-sent.bin"
+							tokenizerModel="en-token.bin"/>				
 				<filter class="solr.ASCIIFoldingFilterFactory"/>
-				<filter class="uk.ac.shef.dcs.jate.lucene.filter.OpenNLPNounPhraseFilterFactory"
+				<filter class="org.apache.lucene.analysis.jate.OpenNLPNounPhraseFilterFactory"
 							posTaggerClass="uk.ac.shef.dcs.jate.nlp.opennlp.POSTaggerOpenNLP"
-							posTaggerModel="/Users/-/work/jate/resource/en-pos-maxent.bin"
-							chunkerModel="/Users/-/work/jate/resource/en-chunker.bin"
+							posTaggerModel="en-pos-maxent.bin"
+							chunkerModel="en-chunker.bin"
 							minTokens="1" maxTokens="5"
 							maxCharLength="50" minCharLength="1" removeLeadingStopWords="true"
 							removeTrailingStopWords="true" removeLeadingSymbolicTokens="true"
 							removeTrailingSymbolicTokens="true"
-							stopWords="/Users/-/work/jate/solr-5.3.0/server/solr/jate/conf/stopwords.txt" stopWordsIgnoreCase="true"/>
+							stopWords="stopwords.txt" stopWordsIgnoreCase="true"/>
 				<filter class="solr.LowerCaseFilterFactory" />					
 				<filter class="solr.EnglishMinimalStemFilterFactory"/>
 				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />

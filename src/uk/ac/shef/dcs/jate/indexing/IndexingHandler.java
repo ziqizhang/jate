@@ -12,6 +12,7 @@ import uk.ac.shef.dcs.jate.nlp.InstanceCreator;
 import uk.ac.shef.dcs.jate.nlp.SentenceSplitter;
 import uk.ac.shef.dcs.jate.util.SolrUtil;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
@@ -34,7 +35,7 @@ public class IndexingHandler {
         if(indexJATESentences &&sentenceSplitter==null) {
             try {
                 sentenceSplitter = InstanceCreator.createSentenceSplitter(properties.getSentenceSplitterClass(),
-                        properties.getSentenceSplitterParams());
+                        new FileInputStream(properties.getSentenceSplitterParams()));
             }catch (Exception e){
                 StringBuilder msg = new StringBuilder("Cannot instantiate NLP sentence splitter, which will be null. Error trace:\n");
                 msg.append(ExceptionUtils.getStackTrace(e));

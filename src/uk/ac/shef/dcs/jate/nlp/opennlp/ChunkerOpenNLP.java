@@ -7,6 +7,7 @@ import uk.ac.shef.dcs.jate.nlp.Chunker;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  *
@@ -14,8 +15,8 @@ import java.io.IOException;
 public class ChunkerOpenNLP implements Chunker {
     private opennlp.tools.chunker.Chunker chunker;
 
-    public ChunkerOpenNLP(String modelFile) throws IOException {
-        chunker=new ChunkerME(new ChunkerModel(new File(modelFile)));
+    public ChunkerOpenNLP(InputStream model) throws IOException {
+        chunker=new ChunkerME(new ChunkerModel(model));
     }
 
     public String[] chunk(String[] tokens, String[] posTags){

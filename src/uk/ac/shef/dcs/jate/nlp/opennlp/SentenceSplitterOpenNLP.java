@@ -8,6 +8,7 @@ import uk.ac.shef.dcs.jate.nlp.SentenceSplitter;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -19,9 +20,9 @@ public class SentenceSplitterOpenNLP implements SentenceSplitter {
     private static Logger LOG = Logger.getLogger(SentenceSplitterOpenNLP.class.getName());
     protected SentenceDetector sentenceDetector;
 
-    public SentenceSplitterOpenNLP(String modelFile) throws IOException {
+    public SentenceSplitterOpenNLP(InputStream model) throws IOException {
         LOG.info("Initializing OpenNLP sentence splitter...");
-        sentenceDetector= new SentenceDetectorME(new SentenceModel(new FileInputStream(modelFile)));
+        sentenceDetector= new SentenceDetectorME(new SentenceModel(model));
     }
 
     public List<int[]> split(String text){

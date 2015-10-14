@@ -6,6 +6,7 @@ import uk.ac.shef.dcs.jate.nlp.POSTagger;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by zqz on 28/09/2015.
@@ -13,8 +14,8 @@ import java.io.IOException;
 public class POSTaggerOpenNLP implements POSTagger {
     private opennlp.tools.postag.POSTagger tagger;
 
-    public POSTaggerOpenNLP(String modelFile) throws IOException {
-        tagger = new POSTaggerME(new POSModel(new File(modelFile)));
+    public POSTaggerOpenNLP(InputStream model) throws IOException {
+        tagger = new POSTaggerME(new POSModel(model));
     }
 
     @Override
