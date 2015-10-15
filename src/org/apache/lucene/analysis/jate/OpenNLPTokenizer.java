@@ -46,7 +46,6 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
     private int finalOffset;
     private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
     private final OffsetAttribute offsetAtt = addAttribute(OffsetAttribute.class);
-    private final FlagsAttribute endOfSentenceAtt = addAttribute(FlagsAttribute.class);
     private final PayloadAttribute sentenceContextAtt = addAttribute(PayloadAttribute.class);
 
     //
@@ -121,13 +120,9 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
             for (int i = 0; i < termLength; i++) {
                 buffer[i] = fullText[spot + i];
             }
-
-            if (indexWord == wordSet.length - 1)
-                endOfSentenceAtt.setFlags(1);
-            else
-                endOfSentenceAtt.setFlags(0);
             addSentenceContext(sentenceContextAtt, String.valueOf(indexWord), String.valueOf(indexWord),
                     String.valueOf(indexSentence));
+            //System.out.println(sentenceContextAtt.getPayload().utf8ToString()+","+new String(buffer,0, termAtt.length()));
 
             indexWord++;
             return true;

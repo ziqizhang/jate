@@ -1,6 +1,5 @@
 package org.apache.lucene.analysis.jate;
 
-import com.sun.tools.doclets.internal.toolkit.util.DocFinder;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.*;
 import org.apache.lucene.util.AttributeSource;
@@ -120,6 +119,7 @@ public class ComplexShingleFilter extends MWEFilter implements SentenceContextAw
     private final PositionIncrementAttribute posIncrAtt = addAttribute(PositionIncrementAttribute.class);
     private final PositionLengthAttribute posLenAtt = addAttribute(PositionLengthAttribute.class);
     private final TypeAttribute typeAtt = addAttribute(TypeAttribute.class);
+    private final PayloadAttribute sentenceContextAtt = addAttribute(PayloadAttribute.class);
 
 
     /**
@@ -210,36 +210,42 @@ public class ComplexShingleFilter extends MWEFilter implements SentenceContextAw
                 if (gramBuilder.length() > maxCharLength || gramBuilder.length() < minCharLength)
                     outputThisShingle = false;
 
-                BytesRef brFirstTokenSentCtx = sentenceContextAtt != null ? sentenceContextAtt.getPayload() : null;
-                String[] firstTokenSentCtx = brFirstTokenSentCtx == null ? null : SentenceContext.parseString(
-                        brFirstTokenSentCtx.utf8ToString()
-                );
-                BytesRef brLastTokenSentCtx = nextToken.sentenceContext != null ?
-                        nextToken.sentenceContext.getPayload() : null;
-                String[] lastTokenSentCtx = brLastTokenSentCtx == null ? null :
-                        SentenceContext.parseString(brLastTokenSentCtx.utf8ToString());
-
-
-                if (outputThisShingle && !crossBoundary(firstTokenSentCtx, lastTokenSentCtx)) {
+                if (outputThisShingle) {
                     inputWindow.getFirst().attSource.copyTo(this);
-                    posIncrAtt.setPositionIncrement(isOutputHere ? 0 : 1);
-                    termAtt.setEmpty().append(gramBuilder);
-                    if (gramSize.getValue() > 1) {
-                        typeAtt.setType(tokenType);
-                        noShingleOutput = false;
-                    }
-                    offsetAtt.setOffset(offsetAtt.startOffset(), nextToken.offsetAtt.endOffset());
-                    posLenAtt.setPositionLength(builtGramSize);
+                    BytesRef brFirstTokenSentCtx = sentenceContextAtt != null ? sentenceContextAtt.getPayload() : null;
+                    String[] firstTokenSentCtx = brFirstTokenSentCtx == null ? null : SentenceContext.parseString(
+                            brFirstTokenSentCtx.utf8ToString()
+                    );
+                    BytesRef brLastTokenSentCtx = nextToken.sentenceContext != null ?
+                            nextToken.sentenceContext.getPayload() : null;
+                    String[] lastTokenSentCtx = brLastTokenSentCtx == null ? null :
+                            SentenceContext.parseString(brLastTokenSentCtx.utf8ToString());
 
-                    isOutputHere = true;
-                    gramSize.advance();
-                    tokenAvailable = true;
 
-                    if (firstTokenSentCtx != null && lastTokenSentCtx != null) {
-                        addSentenceContext(sentenceContextAtt,
-                                firstTokenSentCtx[0], lastTokenSentCtx[1], lastTokenSentCtx[2]);
+                    if (!crossBoundary(firstTokenSentCtx, lastTokenSentCtx)) {
+                        posIncrAtt.setPositionIncrement(isOutputHere ? 0 : 1);
+                        termAtt.setEmpty().append(gramBuilder);
+                        if (gramSize.getValue() > 1) {
+                            typeAtt.setType(tokenType);
+                            noShingleOutput = false;
+                        }
+                        offsetAtt.setOffset(offsetAtt.startOffset(), nextToken.offsetAtt.endOffset());
+                        posLenAtt.setPositionLength(builtGramSize);
+
+                        isOutputHere = true;
+                        gramSize.advance();
+                        tokenAvailable = true;
+
+                        if (firstTokenSentCtx != null && lastTokenSentCtx != null) {
+                            addSentenceContext(sentenceContextAtt,
+                                    firstTokenSentCtx[0], lastTokenSentCtx[1], lastTokenSentCtx[2]);
+                        }
+                        //System.out.println(gramBuilder.toString()+","+sentenceContextAtt.getPayload().utf8ToString());
+                    } else {
+                        outputThisShingle = false;
                     }
-                } else {
+                }
+                if (!outputThisShingle) {
                     clearAttributes();
                     //termAtt.setEmpty();
                     //inputWindow.getFirst().attSource.copyTo(this);

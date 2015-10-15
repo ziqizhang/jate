@@ -101,9 +101,10 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
         return false;
     }
 
-    protected List<Span> prune(List<Span> chunks, List<String> toks) {
+    protected Span[] prune(Span[] chunks, String[] toks) {
         Set<String> existing = new HashSet<>();
-        Iterator<Span> it = chunks.iterator();
+        List<Span> list = new ArrayList<>(Arrays.asList(chunks));
+        Iterator<Span> it = list.iterator();
         List<Span> modified = new ArrayList<>();
         //first pass remove stopwords
         if (removeLeadingStopwords || removeTrailingStopwords || removeLeadingSymbolicTokens || removeTrailingSymbolicTokens) {
@@ -121,11 +122,11 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
                 }
             }
         }
-        chunks.addAll(modified);
-        Collections.sort(chunks);
+        list.addAll(modified);
+        Collections.sort(list);
 
         //second pass check other restrictions
-        it = chunks.iterator();
+        it = list.iterator();
         while (it.hasNext()) {
             Span span = it.next();
             if (span.getEnd() - span.getStart() > maxTokens) {
@@ -136,26 +137,26 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
                 it.remove();
                 continue;
             }
-            String lookup = span.getStart() + "," + span.getEnd();
-            if (existing.contains(lookup)) {
-                it.remove();
-                continue;
-            }
-
             if (maxCharLength != 0 || minCharLength != 0) {
                 StringBuilder string = new StringBuilder();
                 for (int i = span.getStart(); i < span.getEnd(); i++) {
-                    string.append(toks.get(i)).append(" ");
+                    string.append(toks[i]).append(" ");
                 }
                 int chars = string.toString().trim().length();
                 if ((maxCharLength != 0 && chars > maxCharLength) || (minCharLength != 0 && chars < minCharLength))
                     it.remove();
             }
 
+            String lookup = span.getStart() + "," + span.getEnd();
+            if (existing.contains(lookup)) {
+                it.remove();
+                continue;
+            }
+
             existing.add(lookup);
         }
-        Collections.sort(chunks);
-        return chunks;
+        Collections.sort(list);
+        return list.toArray(new Span[0]);
     }
 
     /**
@@ -165,10 +166,10 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
      * @param tokens
      * @return
      */
-    protected int[] clean(int start, int end, List<String> tokens) {
+    protected int[] clean(int start, int end, String[] tokens) {
         int newStart = start, newEnd = end;
         if (removeLeadingStopwords) {
-            String tok = tokens.get(newStart);
+            String tok = tokens[newStart];
             if (stopWordsIgnoreCase)
                 tok = tok.toLowerCase();
             if (stopWords.contains(tok)) {
@@ -179,7 +180,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
         }
 
         if (removeTrailingStopwords) {
-            String tok = tokens.get(newEnd-1);
+            String tok = tokens[newEnd-1];
             if (stopWordsIgnoreCase)
                 tok = tok.toLowerCase();
             if (stopWords.contains(tok)) {
@@ -190,7 +191,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
         }
 
         if (removeLeadingSymbolicTokens) {
-            String tok = tokens.get(newStart);
+            String tok = tokens[newStart];
             String normalized = tok.replaceAll("[\\p{Punct}]", "");
             if (normalized.length() == 0) {
                 newStart++;
@@ -199,7 +200,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
             }
         }
         if (removeLeadingSymbolicTokens) {
-            String tok = tokens.get(newEnd-1);
+            String tok = tokens[newEnd-1];
             String normalized = tok.replaceAll("[\\p{Punct}]", "");
             if (normalized.length() == 0) {
                 newEnd--;
@@ -225,13 +226,11 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
         chunkTypes.clear();
     }
 
-    protected List<String[]> createTags(List<String[]> sentences) {
-        List<String[]> result = new ArrayList<>(sentences.size());
-        for(String[] sent: sentences){
-            result.add(assignPOS(sent));
-        }
-        return result;
+    protected String[] createTags(String[] words) {
+        //String[] appended = appendDot(words);
+        return assignPOS(words);
     }
+
 
     protected String[] assignPOS(String[] words) {
 
@@ -239,32 +238,22 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
     }
 
 
-    protected List<String[]> walkTokens() throws IOException {
-        List<String[]> sentences = new ArrayList<>();
-
-        List<String> sent = new ArrayList<>();
-        String prevSent=null;
+    protected String[] walkTokens() throws IOException {
+        List<String> wordList = new ArrayList<>();
         while (input.incrementToken()) {
             CharTermAttribute textAtt = input.getAttribute(CharTermAttribute.class);
             OffsetAttribute offsetAtt = input.getAttribute(OffsetAttribute.class);
             char[] buffer = textAtt.buffer();
             String word = new String(buffer, 0, offsetAtt.endOffset() - offsetAtt.startOffset());
-            String sentId = parseTokenSentenceId(input.getAttribute(PayloadAttribute.class));
-            if(prevSent==null) {
-                prevSent = sentId;
-                sent.add(word);
-            }else if(!prevSent.equals(sentId)){
-                sentences.add(sent.toArray(new String[0]));
-                sent = new ArrayList<>();
-            }else{
-                sent.add(word);
-            }
-
+            wordList.add(word);
             AttributeSource attrs = input.cloneAttributes();
             tokenAttrs.add(attrs);
         }
-
-        return sentences;
+        String[] words = new String[wordList.size()];
+        for (int i = 0; i < words.length; i++) {
+            words[i] = wordList.get(i);
+        }
+        return words;
     }
 
     private String parseTokenSentenceId(PayloadAttribute attribute){

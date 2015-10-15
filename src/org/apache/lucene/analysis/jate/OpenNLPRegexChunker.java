@@ -48,26 +48,14 @@ public class OpenNLPRegexChunker extends OpenNLPMWEFilter {
         clearAttributes();
         if (first) {
             //gather all tokens from doc
-            //gather all tokens from doc
-            List<String[]> sentences = walkTokens();
-            if (sentences.size() == 0) {
+            String[] words = walkTokens();
+            if (words.length == 0) {
                 return false;
             }
             //tagging
-            List<String[]> pos = createTags(sentences);
+            String[] pos = createTags(words);
             //chunking
-            List<Span> chunks = new ArrayList<>();
-            List<String> words = new ArrayList<>();
-
-            for(int s=0; s<sentences.size(); s++){
-                String[] ws = sentences.get(s);
-                words.addAll(Arrays.asList(ws));
-                String[] poss = pos.get(s);
-                Span[] cs = regexChunker.find(poss);
-                if(cs.length>0)
-                    chunks.addAll(Arrays.asList(cs));
-            }
-
+            Span[] chunks = regexChunker.find(pos);
             chunks = prune(chunks, words);
             for (Span sp : chunks) {
                 chunkSpans.put(sp.getStart(), sp.getEnd());
