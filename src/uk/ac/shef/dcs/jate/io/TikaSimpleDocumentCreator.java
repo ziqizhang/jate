@@ -1,50 +1,32 @@
 package uk.ac.shef.dcs.jate.io;
 
-import org.apache.tika.exception.TikaException;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.AutoDetectParser;
-import org.apache.tika.sax.BodyContentHandler;
-import org.xml.sax.SAXException;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.model.JATEDocument;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.File;
 
 /**
  * Created by zqz on 15/09/2015.
  */
 public class TikaSimpleDocumentCreator extends DocumentCreator {
 
-    protected AutoDetectParser parser;
+	protected ContentExtractor contentExtractor;
 
-    public TikaSimpleDocumentCreator(){
-        this.parser=new AutoDetectParser();
-    }
+	public TikaSimpleDocumentCreator() {
+		contentExtractor = new ContentExtractor();
+	}
 
-    public JATEDocument create(String source) throws JATEException, IOException {
-        InputStream in = new BufferedInputStream(new FileInputStream(source));
-        BodyContentHandler handler = new BodyContentHandler(-1);
-        Metadata metadata = new Metadata();
-        try {
-            JATEDocument doc = new JATEDocument(source);
-            doc.setPath(source);
-            parser.parse(in, handler, metadata);
-            doc.setContent(handler.toString());
-            return doc;
-        } catch(SAXException e){
-            throw new JATEException(e);
-        } catch(TikaException e){
-            throw new JATEException(e);
-        }finally{
-            in.close();
-        }
-    }
+	public JATEDocument create(String source) throws JATEException {
+		File file = new File(source);
+		JATEDocument doc = new JATEDocument(source);
+		doc.setPath(source);
+		String content = contentExtractor.extractContent(file);
+		doc.setContent(content);
+		return doc;
+	}
 
-    @Override
-    public DocumentCreator copy() {
-        return new TikaSimpleDocumentCreator();
-    }
+	@Override
+	public DocumentCreator copy() {
+		return new TikaSimpleDocumentCreator();
+	}
 }
