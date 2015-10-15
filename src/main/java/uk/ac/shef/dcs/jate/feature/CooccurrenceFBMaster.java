@@ -41,6 +41,8 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
         int cores =  properties.getMaxCPUCores();
         cores = cores == 0 ? 1 : cores;
         int maxPerThread = contextIds.size()/cores;
+        if(maxPerThread==0)
+            maxPerThread=50;
 
         StringBuilder sb = new StringBuilder("Building features using cpu cores=");
         sb.append(cores).append(", total ctx where reference terms appear =").append(contextIds.size()).append(", max per worker=")

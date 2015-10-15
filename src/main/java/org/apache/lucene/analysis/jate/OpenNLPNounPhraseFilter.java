@@ -11,7 +11,6 @@ import uk.ac.shef.dcs.jate.nlp.POSTagger;
 
 import java.io.IOException;
 import java.util.*;
-//todo consider sentence boundary
 /**
  *
  */

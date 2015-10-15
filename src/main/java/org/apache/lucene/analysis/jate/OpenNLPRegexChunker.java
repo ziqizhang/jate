@@ -13,10 +13,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
-/**
- * Created by zqz on 25/09/2015.
- */
-//todo consider sentence boundary
 public class OpenNLPRegexChunker extends OpenNLPMWEFilter {
 
     private RegexNameFinder regexChunker;

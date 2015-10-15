@@ -45,6 +45,9 @@ public class FrequencyCtxDocBasedFBMaster extends AbstractFeatureBuilder {
             int cores = properties.getMaxCPUCores();
             cores = cores == 0 ? 1 : cores;
             int maxPerThread = allLuceneTerms.size() / cores;
+            if(maxPerThread==0)
+                maxPerThread=50;
+
             LOG.info("Beginning building features. Total terms=" + allLuceneTerms.size() + ", cpu cores=" +
                     cores + ", max per core=" + maxPerThread);
             FrequencyCtxDocBasedFBWorker worker = new

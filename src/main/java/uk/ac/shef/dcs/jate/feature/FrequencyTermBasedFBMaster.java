@@ -46,6 +46,9 @@ public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
             int cores = properties.getMaxCPUCores();
             cores = cores == 0 ? 1 : cores;
             int maxPerThread = all.size() / cores;
+            if(maxPerThread==0)
+                maxPerThread=50;
+
             StringBuilder sb = new StringBuilder("Building features using cpu cores=");
             sb.append(cores).append(", total=").append(all.size()).append(", max per worker=")
                     .append(maxPerThread);

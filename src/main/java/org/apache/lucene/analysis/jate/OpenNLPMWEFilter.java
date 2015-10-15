@@ -70,6 +70,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
             typeAtt.setType(chunkTypes.get(chunkStart));
             addSentenceContextPayload(firstTokenSentCtx, lastTokenSentCtx);
             added=true;
+            //System.out.println(phrase.toString().trim()+","+sentenceContextAtt.getPayload().utf8ToString());
         }
 
         chunkStart = -1;
@@ -254,13 +255,6 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
             words[i] = wordList.get(i);
         }
         return words;
-    }
-
-    private String parseTokenSentenceId(PayloadAttribute attribute){
-        if(attribute!=null){
-            return SentenceContext.parseSentenceId(attribute.getPayload().utf8ToString());
-        }
-        return "";
     }
 
 

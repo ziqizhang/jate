@@ -240,7 +240,7 @@ public class ComplexShingleFilter extends MWEFilter implements SentenceContextAw
                             addSentenceContext(sentenceContextAtt,
                                     firstTokenSentCtx[0], lastTokenSentCtx[1], lastTokenSentCtx[2]);
                         }
-                        //System.out.println(gramBuilder.toString()+","+sentenceContextAtt.getPayload().utf8ToString());
+                       // System.out.println("==="+gramBuilder.toString()+","+sentenceContextAtt.getPayload().utf8ToString());
                     } else {
                         outputThisShingle = false;
                     }

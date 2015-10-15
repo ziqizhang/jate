@@ -53,6 +53,8 @@ public class FrequencyCtxSentenceBasedFBMaster extends AbstractFeatureBuilder {
             int cores = properties.getMaxCPUCores();
             cores = cores == 0 ? 1 : cores;
             int maxPerThread = allDocs.size()/cores;
+            if(maxPerThread==0)
+                maxPerThread=50;
 
             FrequencyCtxSentenceBasedFBWorker worker = new
                     FrequencyCtxSentenceBasedFBWorker(feature, properties, allDocs, allCandidates,

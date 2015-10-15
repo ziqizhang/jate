@@ -174,7 +174,7 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
         }
 
         public String toString() {
-            return sentenceId + "," + start;
+            return sentenceId + "," + start+","+end;
         }
     }
 }
