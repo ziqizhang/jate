@@ -2,15 +2,18 @@ package org.apache.lucene.analysis.jate;
 
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.tokenattributes.PayloadAttribute;
+import org.apache.lucene.util.BytesRef;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Set;
 
 /**
  * Multi-Word Expression (MWE) filter is used to build multi-word expressions (n-grams, phrases) from a token stream.
  *
  */
-public abstract class MWEFilter extends TokenFilter{
+public abstract class MWEFilter extends TokenFilter implements SentenceContextAware{
 
     /**
      * default maximum shingle size is 2.
@@ -84,6 +87,8 @@ public abstract class MWEFilter extends TokenFilter{
     protected Set<String> stopWords;
     protected boolean stopWordsIgnoreCase;
 
+    protected final PayloadAttribute sentenceContextAtt = addAttribute(PayloadAttribute.class);
+
     /**
      * Construct a token stream filtering the given input.
      *
@@ -114,5 +119,14 @@ public abstract class MWEFilter extends TokenFilter{
         this.stopWordsIgnoreCase=stopWordsIgnoreCase;
     }
 
+    @Override
+    public void addSentenceContext(PayloadAttribute attribute, String firstTokenIndex, String lastTokenIndex, String sentenceIndexes) {
+        String string = SentenceContext.createString(firstTokenIndex, lastTokenIndex, sentenceIndexes);
+        try {
+            attribute.setPayload(new BytesRef(string.getBytes("UTF-8")));
+        } catch (UnsupportedEncodingException uee) {
+            attribute.setPayload(new BytesRef(string.getBytes()));
+        }
+    }
 
 }

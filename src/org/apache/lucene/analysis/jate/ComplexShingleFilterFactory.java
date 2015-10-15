@@ -8,7 +8,6 @@ import java.util.Map;
  *
  */
 public class ComplexShingleFilterFactory extends MWEFilterFactory {
-    private final boolean sentenceBoundaryAware;
     private final boolean outputUnigrams;
     private final boolean outputUnigramsIfNoShingles;
     private final String tokenSeparator;
@@ -33,7 +32,6 @@ public class ComplexShingleFilterFactory extends MWEFilterFactory {
         tokenSeparator = get(args, "tokenSeparator", ComplexShingleFilter.DEFAULT_TOKEN_SEPARATOR);
         fillerToken = get(args, "fillerToken", ComplexShingleFilter.DEFAULT_FILLER_TOKEN);
 
-        sentenceBoundaryAware=getBoolean(args, "sentenceBoundaryAware", ComplexShingleFilter.DEFAULT_SENTENCE_BOUNDARY_AWARE);
         if (!args.isEmpty()) {
             throw new IllegalArgumentException("Unknown parameters: " + args);
         }
@@ -46,7 +44,7 @@ public class ComplexShingleFilterFactory extends MWEFilterFactory {
                 tokenSeparator, fillerToken,
                 removeLeadingStopwords, removeTrailingStopwords,
                 removeLeadingSymbolicTokens, removeTrailingSymbolicTokens,
-                sentenceBoundaryAware,stopWords,stopWordsIgnoreCase);
+                stopWords,stopWordsIgnoreCase);
         return r;
     }
 }

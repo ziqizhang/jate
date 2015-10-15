@@ -7,9 +7,9 @@ package org.apache.lucene.analysis.jate;
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,7 @@ package org.apache.lucene.analysis.jate;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 import opennlp.tools.sentdetect.SentenceDetector;
@@ -29,7 +30,9 @@ import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.PayloadAttribute;
 import org.apache.lucene.util.AttributeFactory;
+import org.apache.lucene.util.BytesRef;
 import org.apache.sis.util.iso.AbstractFactory;
 import sun.jvm.hotspot.runtime.Flags;
 
@@ -37,13 +40,14 @@ import sun.jvm.hotspot.runtime.Flags;
  * Run OpenNLP SentenceDetector and Tokenizer.
  * Must have Sentence and/or Tokenizer.
  */
-public final class OpenNLPTokenizer extends Tokenizer {
+public final class OpenNLPTokenizer extends Tokenizer implements SentenceContextAware {
     private static final int DEFAULT_BUFFER_SIZE = 256;
 
     private int finalOffset;
     private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
     private final OffsetAttribute offsetAtt = addAttribute(OffsetAttribute.class);
     private final FlagsAttribute endOfSentenceAtt = addAttribute(FlagsAttribute.class);
+    private final PayloadAttribute sentenceContextAtt = addAttribute(PayloadAttribute.class);
 
     //
     private Span[] sentences = null;
@@ -112,16 +116,18 @@ public final class OpenNLPTokenizer extends Tokenizer {
             char[] buffer = termAtt.buffer();
 
             finalOffset = correctOffset(sentenceOffset + word.getEnd());
-            int start=correctOffset(word.getStart() + sentenceOffset);
+            int start = correctOffset(word.getStart() + sentenceOffset);
             offsetAtt.setOffset(start, finalOffset);
             for (int i = 0; i < termLength; i++) {
                 buffer[i] = fullText[spot + i];
             }
 
-            if(indexWord==wordSet.length-1)
+            if (indexWord == wordSet.length - 1)
                 endOfSentenceAtt.setFlags(1);
             else
                 endOfSentenceAtt.setFlags(0);
+            addSentenceContext(sentenceContextAtt, String.valueOf(indexWord), String.valueOf(indexWord),
+                    String.valueOf(indexSentence));
 
             indexWord++;
             return true;
@@ -193,5 +199,16 @@ public final class OpenNLPTokenizer extends Tokenizer {
         super.reset();
         clearAttributes();
         restartAtBeginning();
+    }
+
+
+    @Override
+    public void addSentenceContext(PayloadAttribute attribute, String firstTokenIndex, String lastTokenIndex, String sentenceIndexes) {
+        String string = SentenceContext.createString(firstTokenIndex, lastTokenIndex, sentenceIndexes);
+        try {
+            attribute.setPayload(new BytesRef(string.getBytes("UTF-8")));
+        } catch (UnsupportedEncodingException uee) {
+            attribute.setPayload(new BytesRef(string.getBytes()));
+        }
     }
 }

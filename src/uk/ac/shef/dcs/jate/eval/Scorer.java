@@ -15,7 +15,33 @@ import java.util.Map;
 public class Scorer {
 
     private static String digitsPattern = "\\d+";
-    private static String symbolsPattern="\\p{Punct}";
+    private static String symbolsPattern = "\\p{Punct}";
+
+    public static void calculateACLRDJate1(String ateOutputFile, String gsFile, String outFile,
+                                           boolean ignoreSymbols, boolean ignoreDigits,
+                                           int minChar, int maxChar, int minTokens, int maxTokens,
+                                           int... ranks) throws IOException {
+        PrintWriter p = new PrintWriter(outFile);
+        List<String> gs = GSLoader.loadACLRD(gsFile, true, true);
+
+        List<List<String>> terms = ATEResultLoader.loadJATE1(ateOutputFile);
+
+        gs = prune(gs, ignoreSymbols, ignoreDigits, minChar, maxChar, minTokens, maxTokens);
+
+        for (int i = 0; i < ranks.length; i++) {
+            int correct = 0;
+            int rank=ranks[i];
+            for (int j = 0; j < rank && j < terms.size() && j < gs.size(); j++) {
+                List<String> variants = terms.get(j);
+                variants.retainAll(gs);
+                if (variants.size() > 0)
+                    correct++;
+            }
+            System.out.println("rank"+rank+"="+ (double) correct / rank);
+
+        }
+
+    }
 
     public static void createReportACLRD(String ateOutputFolder, String gsFile, String outFile,
                                          boolean ignoreSymbols, boolean ignoreDigits,
@@ -25,27 +51,27 @@ public class Scorer {
         List<String> gs = GSLoader.loadACLRD(gsFile, true, true);
         Map<String, double[]> scores = new HashMap<>();
 
-        for(File f: new File(ateOutputFolder).listFiles()){
-            String name =f.getName();
-            if(name.charAt(0)=='.')
+        for (File f : new File(ateOutputFolder).listFiles()) {
+            String name = f.getName();
+            if (name.charAt(0) == '.')
                 continue;
             System.out.println(f);
             List<String> terms = ATEResultLoader.load(f.toString());
 
-            double[] s=computePrecisionAtRank(gs,terms, ignoreSymbols,ignoreDigits,minChar,
+            double[] s = computePrecisionAtRank(gs, terms, ignoreSymbols, ignoreDigits, minChar,
                     maxChar, minTokens, maxTokens, ranks);
             scores.put(name, s);
         }
 
         //generate report
 
-        StringBuilder sb=  new StringBuilder();
-        for(int i: ranks){
+        StringBuilder sb = new StringBuilder();
+        for (int i : ranks) {
             sb.append(",").append(i);
         }
         sb.append("\n");
 
-        for(Map.Entry<String, double[]> en: scores.entrySet()) {
+        for (Map.Entry<String, double[]> en : scores.entrySet()) {
             sb.append(en.getKey()).append(",");
             double[] s = en.getValue();
             for (int i = 0; i < ranks.length; i++) {
@@ -60,33 +86,33 @@ public class Scorer {
 
     public static void createReportGenia(String ateOutputFolder, String gsFile, String outFile,
                                          boolean ignoreSymbols, boolean ignoreDigits,
-                                    int minChar, int maxChar, int minTokens, int maxTokens,
-                                    int... ranks) throws IOException {
+                                         int minChar, int maxChar, int minTokens, int maxTokens,
+                                         int... ranks) throws IOException {
         PrintWriter p = new PrintWriter(outFile);
         List<String> gs = GSLoader.loadGenia(gsFile, true, true);
         Map<String, double[]> scores = new HashMap<>();
 
-        for(File f: new File(ateOutputFolder).listFiles()){
-            String name =f.getName();
-            if(name.charAt(0)=='.')
+        for (File f : new File(ateOutputFolder).listFiles()) {
+            String name = f.getName();
+            if (name.charAt(0) == '.')
                 continue;
             System.out.println(f);
             List<String> terms = ATEResultLoader.load(f.toString());
 
-            double[] s=computePrecisionAtRank(gs,terms, ignoreSymbols,ignoreDigits,minChar,
+            double[] s = computePrecisionAtRank(gs, terms, ignoreSymbols, ignoreDigits, minChar,
                     maxChar, minTokens, maxTokens, ranks);
             scores.put(name, s);
         }
 
         //generate report
 
-        StringBuilder sb=  new StringBuilder();
-        for(int i: ranks){
+        StringBuilder sb = new StringBuilder();
+        for (int i : ranks) {
             sb.append(",").append(i);
         }
         sb.append("\n");
 
-        for(Map.Entry<String, double[]> en: scores.entrySet()) {
+        for (Map.Entry<String, double[]> en : scores.entrySet()) {
             sb.append(en.getKey()).append(",");
             double[] s = en.getValue();
             for (int i = 0; i < ranks.length; i++) {
@@ -100,45 +126,45 @@ public class Scorer {
     }
 
     public static double[] computePrecisionAtRank(List<String> gs, List<String> terms,
-                                              boolean ignoreSymbols, boolean ignoreDigits,
-                                              int minChar, int maxChar, int minTokens, int maxTokens,
-                                              int... ranks) throws FileNotFoundException {
+                                                  boolean ignoreSymbols, boolean ignoreDigits,
+                                                  int minChar, int maxChar, int minTokens, int maxTokens,
+                                                  int... ranks) throws FileNotFoundException {
         gs = prune(gs, ignoreSymbols, ignoreDigits, minChar, maxChar, minTokens, maxTokens);
-        terms=prune(terms, ignoreSymbols, ignoreDigits, minChar,maxChar,minTokens, maxTokens);
+        terms = prune(terms, ignoreSymbols, ignoreDigits, minChar, maxChar, minTokens, maxTokens);
 
 
         double[] scores = new double[ranks.length];
-        for(int i=0; i<ranks.length; i++){
+        for (int i = 0; i < ranks.length; i++) {
             double p = computePrecisionAtRank(gs, terms, ranks[i]);
-            scores[i]=p;
+            scores[i] = p;
 
         }
 
         return scores;
     }
 
-    private static double computePrecisionAtRank(List<String> gs, List<String> terms, int rank){
-        int correct=0;
-        for(int i=0; i< rank && i<terms.size()&&i<gs.size(); i++){
+    private static double computePrecisionAtRank(List<String> gs, List<String> terms, int rank) {
+        int correct = 0;
+        for (int i = 0; i < rank && i < terms.size() && i < gs.size(); i++) {
             String t = terms.get(i);
-            if(gs.contains(t))
+            if (gs.contains(t))
                 correct++;
         }
-        return (double)correct/rank;
+        return (double) correct / rank;
     }
 
     private static List<String> prune(List<String> gs, boolean ignoreSymbols, boolean ignoreDigits, int minChar, int maxChar, int minTokens, int maxTokens) {
         List<String> result = new ArrayList<>();
-        for(String g: gs){
+        for (String g : gs) {
             if (ignoreDigits)
-                g=g.replaceAll(digitsPattern," ").replaceAll("\\s+"," ").trim();
-            if(ignoreSymbols)
-                g=g.replaceAll(symbolsPattern," ").replaceAll("\\s+"," ").trim();
+                g = g.replaceAll(digitsPattern, " ").replaceAll("\\s+", " ").trim();
+            if (ignoreSymbols)
+                g = g.replaceAll(symbolsPattern, " ").replaceAll("\\s+", " ").trim();
 
             //g=g.trim();
-            if(g.length()>=minChar&&g.length()<=maxChar){
-                int tokens=g.split("\\s+").length;
-                if(tokens>=minTokens&&tokens<=maxTokens)
+            if (g.length() >= minChar && g.length() <= maxChar) {
+                int tokens = g.split("\\s+").length;
+                if (tokens >= minTokens && tokens <= maxTokens)
                     result.add(g);
             }
 
@@ -147,13 +173,18 @@ public class Scorer {
     }
 
     public static void main(String[] args) throws IOException {
+
+        calculateACLRDJate1("/Users/-/work/jate/experiment/CValue_ALGORITHM.txt", args[1], args[2], true, false, 2, 150, 1, 5,
+                50, 100, 500, 1000, 5000, 10000);
+        System.exit(1);
+
         /*createReportGenia(args[0],args[1],args[2],true, false, 2,150,1,5,
                 50, 100, 500, 1000, 5000,10000);
 
         System.out.println();*/
 
-        createReportACLRD(args[0],args[1],args[2],true, false, 2,150,1,5,
-                50, 100, 500, 1000, 5000,10000);
+        createReportACLRD(args[0], args[1], args[2], true, false, 2, 150, 1, 5,
+                50, 100, 500, 1000, 5000, 10000);
 
         System.out.println();
     }

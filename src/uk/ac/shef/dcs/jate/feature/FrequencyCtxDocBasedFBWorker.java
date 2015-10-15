@@ -71,7 +71,7 @@ public class FrequencyCtxDocBasedFBWorker extends JATERecursiveTaskWorker<String
                     }else {
                         StringBuilder msg = new StringBuilder(termStr);
                         msg.append(" is a candidate term, but not indexed in the n-gram information field. It's score may be mis-computed.");
-                        msg.append(" (You may have used different text analysis process (e.g., different tokenizers) for the two fields.) ");
+                        msg.append(" Reasons can be: different analysis chains for the two fields; cross-sentence-boundary MWEs");
                         LOG.warning(msg.toString());
                     }
                 } catch (IOException ioe) {

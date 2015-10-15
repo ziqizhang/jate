@@ -28,24 +28,8 @@ public class IndexingHandler {
                       int batchSize, DocumentCreator docCreator,
                       SolrClient solrClient,
                       JATEProperties properties){
-        SentenceSplitter sentenceSplitter=null;
-        boolean indexJATESentences = properties.getSolrFieldnameJATESentences()!=null &&
-                !properties.getSolrFieldnameJATESentences().equals("");
-
-        if(indexJATESentences &&sentenceSplitter==null) {
-            try {
-                sentenceSplitter = InstanceCreator.createSentenceSplitter(properties.getSentenceSplitterClass(),
-                        new FileInputStream(properties.getSentenceSplitterParams()));
-            }catch (Exception e){
-                StringBuilder msg = new StringBuilder("Cannot instantiate NLP sentence splitter, which will be null. Error trace:\n");
-                msg.append(ExceptionUtils.getStackTrace(e));
-                LOG.severe(msg.toString());
-            }
-        }
 
         StringBuilder msg = new StringBuilder("Beginning indexing dataset").append(", total docs="+tasks.size());
-        if(indexJATESentences)
-            msg.append(". Sentence boundaries required. ");
 
         LOG.info(msg.toString());
         int total=0, batches=0;
@@ -65,11 +49,7 @@ public class IndexingHandler {
                 solrDoc.addField(properties.getSolrFieldnameID(), doc.getId());
                 solrDoc.addField(properties.getSolrFieldnameJATENGramInfo(), doc.getContent());
                 solrDoc.addField(properties.getSolrFieldnameJATECTerms(), doc.getContent());
-                System.out.println(task);
-                if(sentenceSplitter!=null) {
-                    indexSentenceOffsets(solrDoc, properties.getSolrFieldnameJATESentences(), doc.getContent(),
-                            sentenceSplitter);
-                }
+
                 for(Map.Entry<String, String> field2Value : doc.getMapField2Content().entrySet()){
                     String field = field2Value.getKey();
                     String value = field2Value.getValue();
@@ -118,17 +98,5 @@ public class IndexingHandler {
             String message = "CANNOT CLOSE SOLR: \n";
             LOG.severe(message+ExceptionUtils.getStackTrace(e));
         }
-    }
-
-    protected void indexSentenceOffsets(SolrInputDocument solrDoc, String solrFieldnameJATESentencesAll, String content,
-                                        SentenceSplitter sentenceSplitter) {
-        content=content.replaceAll("\\r","");
-        List<int[]> offsets=sentenceSplitter.split(content);
-        String[] values= new String[offsets.size()];
-        for(int i=0; i<offsets.size(); i++){
-            int[] offset = offsets.get(i);
-            values[i]=offset[0]+","+offset[1];
-        }
-        solrDoc.addField(solrFieldnameJATESentencesAll, values);
     }
 }

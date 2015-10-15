@@ -5,4 +5,5 @@ package uk.ac.shef.dcs.jate.nlp;
  */
 public interface POSTagger {
     String[] tag(String[] tokens);
+
 }

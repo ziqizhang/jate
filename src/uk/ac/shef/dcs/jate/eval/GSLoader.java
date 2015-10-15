@@ -12,7 +12,6 @@ import java.util.List;
  * load gs from file
  */
 public class GSLoader {
-    //todo
 
     /**
      *

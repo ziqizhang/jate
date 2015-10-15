@@ -11,7 +11,7 @@ import uk.ac.shef.dcs.jate.nlp.POSTagger;
 
 import java.io.IOException;
 import java.util.*;
-
+//todo consider sentence boundary
 /**
  *
  */
@@ -48,15 +48,25 @@ public class OpenNLPNounPhraseFilter extends OpenNLPMWEFilter {
         clearAttributes();
         if (first) {
             //gather all tokens from doc
-            String[] words = walkTokens();
-            if (words.length == 0) {
+            List<String[]> sentences = walkTokens();
+            if (sentences.size() == 0) {
                 return false;
             }
             //tagging
-            String[] pos = createTags(words);
+            List<String[]> pos = createTags(sentences);
             //chunking
-            String[] tags = npChunker.chunk(words, pos);
-            Span[] chunks=createSpan(tags);
+            List<Span> chunks = new ArrayList<>();
+            List<String> words = new ArrayList<>();
+            for(int s=0; s<sentences.size(); s++){
+                String[] ws = sentences.get(s);
+                words.addAll(Arrays.asList(ws));
+                String[] poss = pos.get(s);
+                String[] tags = npChunker.chunk(ws, poss);
+                Span[] cs=createSpan(tags);
+                if(cs.length>0)
+                    chunks.addAll(Arrays.asList(cs));
+            }
+
             chunks = prune(chunks, words);
             for (Span sp : chunks) {
                 chunkSpans.put(sp.getStart(), sp.getEnd());
@@ -72,19 +82,7 @@ public class OpenNLPNounPhraseFilter extends OpenNLPMWEFilter {
         }
 
         if (chunkStart != -1 && tokenIdx == chunkEnd) {  //already found a new chunk and now we found its end
-            AttributeSource start = tokenAttrs.get(chunkStart);
-            AttributeSource end = tokenAttrs.get(chunkEnd - 1);
-            StringBuilder phrase = new StringBuilder();
-            for (int i = chunkStart; i <= chunkEnd - 1; i++) {
-                phrase.append(tokenAttrs.get(i).getAttribute(CharTermAttribute.class).buffer()).append(" ");
-            }
-            termAtt.setEmpty().append(phrase.toString().trim());
-            offsetAtt.setOffset(start.getAttribute(OffsetAttribute.class).startOffset(),
-                    end.getAttribute(OffsetAttribute.class).endOffset());
-            typeAtt.setType(chunkTypes.get(chunkStart));
-
-            chunkStart = -1;
-            chunkEnd = -1;
+            boolean added=addMWE();
             //do not increment token index here because end span is exclusive
             return true;
         }

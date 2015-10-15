@@ -1,8 +1,10 @@
 package org.apache.lucene.analysis.jate;
 
+import com.sun.tools.doclets.internal.toolkit.util.DocFinder;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.*;
 import org.apache.lucene.util.AttributeSource;
+import org.apache.lucene.util.BytesRef;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -12,7 +14,7 @@ import java.util.Set;
 /**
  * Created by - on 12/10/2015.
  */
-public class ComplexShingleFilter extends MWEFilter {
+public class ComplexShingleFilter extends MWEFilter implements SentenceContextAware {
     /**
      * filler token for when positionIncrement is more than 1
      */
@@ -29,7 +31,6 @@ public class ComplexShingleFilter extends MWEFilter {
      */
     public static final String DEFAULT_TOKEN_SEPARATOR = " ";
 
-    public static final boolean DEFAULT_SENTENCE_BOUNDARY_AWARE=false;
 
     /**
      * The sequence of input stream tokens (or filler tokens, if necessary)
@@ -76,7 +77,6 @@ public class ComplexShingleFilter extends MWEFilter {
      */
     private boolean outputUnigramsIfNoShingles = false;
 
-    private boolean sentenceBoundaryAware;
 
     /**
      * The remaining number of filler tokens to be inserted into the input stream
@@ -120,20 +120,13 @@ public class ComplexShingleFilter extends MWEFilter {
     private final PositionIncrementAttribute posIncrAtt = addAttribute(PositionIncrementAttribute.class);
     private final PositionLengthAttribute posLenAtt = addAttribute(PositionLengthAttribute.class);
     private final TypeAttribute typeAtt = addAttribute(TypeAttribute.class);
-    private final FlagsAttribute sentenceBoundaryFlag = addAttribute(FlagsAttribute.class);
-    /**
-     * A flag used to control Shingle emitting behaviour. If a sentence boundary token is found in the previous window generated
-     * this var will be the index of that token in that window
-     */
-    private int sentenceBoundaryInWindow = -1;
+
 
     /**
      * Constructs a ShingleFilter with the specified shingle size from the
      * {@link TokenStream} <code>input</code>
      *
-     * @param input          input stream
-     * @param minShingleSize minimum shingle size produced by the filter.
-     * @param maxShingleSize maximum shingle size produced by the filter.
+     * @param input input stream
      */
     public ComplexShingleFilter(TokenStream input, int minTokens, int maxTokens,
                                 int minCharLength, int maxCharLength,
@@ -143,17 +136,15 @@ public class ComplexShingleFilter extends MWEFilter {
                                 boolean removeTrailingStopwords,
                                 boolean removeLeadingSymbolicTokens,
                                 boolean removeTrailingSymbolicTokens,
-                                boolean sentenceBoundaryAware,
                                 Set<String> stopWords,
                                 boolean stopWordsIgnoreCase) {
-        super(input, minTokens, maxTokens, minCharLength,maxCharLength,
-                removeLeadingStopWords, removeTrailingStopwords, removeLeadingSymbolicTokens,removeTrailingSymbolicTokens,
+        super(input, minTokens, maxTokens, minCharLength, maxCharLength,
+                removeLeadingStopWords, removeTrailingStopwords, removeLeadingSymbolicTokens, removeTrailingSymbolicTokens,
                 stopWords, stopWordsIgnoreCase);
         this.outputUnigrams = outputUnigrams;
         this.outputUnigramsIfNoShingles = outputUnigramsIfNoShingles;
         this.tokenSeparator = tokenSeparater;
         this.fillerToken = fillerToken.toCharArray();
-        this.sentenceBoundaryAware = sentenceBoundaryAware;
         gramSize = new CircularSequence();
     }
 
@@ -176,8 +167,6 @@ public class ComplexShingleFilter extends MWEFilter {
 
         if (gramSize.atMinValue() || inputWindow.size() < gramSize.getValue()) {
             shiftInputWindow();
-            if(sentenceBoundaryAware)
-                sentenceBoundaryInWindow = findSentenceBoundary();
             gramBuilder.setLength(0);
         } else {
             builtGramSize = gramSize.getPreviousValue();
@@ -187,8 +176,8 @@ public class ComplexShingleFilter extends MWEFilter {
             InputWindowToken nextToken = null;
             Iterator<InputWindowToken> iter = inputWindow.iterator();
 
-            int idxInWindow=-1;
-            boolean outputThisShingle=true;
+            int idxInWindow = -1;
+            boolean outputThisShingle = true;
             //this where the token n-gram is built
             for (int gramNum = 1;
                  iter.hasNext() && builtGramSize < gramSize.getValue();
@@ -196,13 +185,10 @@ public class ComplexShingleFilter extends MWEFilter {
 
                 nextToken = iter.next();
                 idxInWindow++;
-                if(idxInWindow==0)
+                if (idxInWindow == 0)
                     outputThisShingle = checkToken(nextToken);
-
-                if(outputThisShingle && sentenceBoundaryAware)
-                    outputThisShingle = checkSentenceBoundary(idxInWindow);
-                if(outputThisShingle&&idxInWindow==gramSize.getValue()-1)
-                    outputThisShingle=checkToken(nextToken);
+                if (outputThisShingle && idxInWindow == gramSize.getValue() - 1)
+                    outputThisShingle = checkToken(nextToken);
 
                 if (builtGramSize < gramNum) {
                     if (builtGramSize > 0) {
@@ -221,10 +207,20 @@ public class ComplexShingleFilter extends MWEFilter {
                 }
             }
             if (!isAllFiller && builtGramSize == gramSize.getValue()) {
-                if(gramBuilder.length()>maxCharLength || gramBuilder.length()<minCharLength)
-                    outputThisShingle=false;
+                if (gramBuilder.length() > maxCharLength || gramBuilder.length() < minCharLength)
+                    outputThisShingle = false;
 
-                if(outputThisShingle) {
+                BytesRef brFirstTokenSentCtx = sentenceContextAtt != null ? sentenceContextAtt.getPayload() : null;
+                String[] firstTokenSentCtx = brFirstTokenSentCtx == null ? null : SentenceContext.parseString(
+                        brFirstTokenSentCtx.utf8ToString()
+                );
+                BytesRef brLastTokenSentCtx = nextToken.sentenceContext != null ?
+                        nextToken.sentenceContext.getPayload() : null;
+                String[] lastTokenSentCtx = brLastTokenSentCtx == null ? null :
+                        SentenceContext.parseString(brLastTokenSentCtx.utf8ToString());
+
+
+                if (outputThisShingle && !crossBoundary(firstTokenSentCtx, lastTokenSentCtx)) {
                     inputWindow.getFirst().attSource.copyTo(this);
                     posIncrAtt.setPositionIncrement(isOutputHere ? 0 : 1);
                     termAtt.setEmpty().append(gramBuilder);
@@ -233,69 +229,53 @@ public class ComplexShingleFilter extends MWEFilter {
                         noShingleOutput = false;
                     }
                     offsetAtt.setOffset(offsetAtt.startOffset(), nextToken.offsetAtt.endOffset());
-                    if (sentenceBoundaryAware && sentenceBoundaryInWindow != -1)
-                        posLenAtt.setPositionLength(sentenceBoundaryInWindow + 1);
-                    else
-                        posIncrAtt.setPositionIncrement(builtGramSize);
+                    posLenAtt.setPositionLength(builtGramSize);
+
                     isOutputHere = true;
                     gramSize.advance();
                     tokenAvailable = true;
-                    //System.out.println(new String(offsetAtt.startOffset()+"-"+offsetAtt.endOffset()+","+gramBuilder.toString()));
-                }else{
+
+                    if (firstTokenSentCtx != null && lastTokenSentCtx != null) {
+                        addSentenceContext(sentenceContextAtt,
+                                firstTokenSentCtx[0], lastTokenSentCtx[1], lastTokenSentCtx[2]);
+                    }
+                } else {
                     clearAttributes();
                     //termAtt.setEmpty();
                     //inputWindow.getFirst().attSource.copyTo(this);
                     gramSize.advance();
-                    isOutputHere=true;
-                    tokenAvailable=true;
+                    isOutputHere = true;
+                    tokenAvailable = true;
                 }
             }
         }
         return tokenAvailable;
     }
 
+    private boolean crossBoundary(String[] firstTokenSentCtx, String[] lastTokenSentCtx) {
+        if (firstTokenSentCtx != null && lastTokenSentCtx != null) {
+            return !firstTokenSentCtx[2].equals(lastTokenSentCtx[2]);
+        }
+        return false;
+    }
+
     private boolean checkToken(InputWindowToken nextToken) {
-        if((removeLeadingStopwords||removeTrailingStopwords) && stopWords!=null){
-            String token=new String(nextToken.termAtt.buffer(), 0,nextToken.termAtt.length());
-            if(stopWordsIgnoreCase)
-                token=token.toLowerCase();
-            if(stopWords.contains(token))
+        if ((removeLeadingStopwords || removeTrailingStopwords) && stopWords != null) {
+            String token = new String(nextToken.termAtt.buffer(), 0, nextToken.termAtt.length());
+            if (stopWordsIgnoreCase)
+                token = token.toLowerCase();
+            if (stopWords.contains(token))
                 return false;
         }
-        if(removeLeadingSymbolicTokens||removeTrailingSymbolicTokens){
-            String token = new String(nextToken.termAtt.buffer(), 0,nextToken.termAtt.length());
-            token = token.replaceAll("\\p{Punct}+","");
-            if (token.length()==0)
+        if (removeLeadingSymbolicTokens || removeTrailingSymbolicTokens) {
+            String token = new String(nextToken.termAtt.buffer(), 0, nextToken.termAtt.length());
+            token = token.replaceAll("\\p{Punct}+", "");
+            if (token.length() == 0)
                 return false;
         }
         return true;
     }
 
-    private boolean checkSentenceBoundary(int idxInWindow) {
-        if(sentenceBoundaryInWindow!=-1&&idxInWindow>sentenceBoundaryInWindow){
-            return false;
-        }
-        return true;
-    }
-
-
-    //does current window of tokens contain a sentence boundary? if so return its index in the window
-    private int findSentenceBoundary() {
-        int i = -1;
-        if (sentenceBoundaryAware) {
-            Iterator<InputWindowToken> it = inputWindow.iterator();
-            while (it.hasNext()) {
-                i++;
-
-                InputWindowToken tok = it.next();
-                if (tok.sentenceBoundaryFlag.getFlags() == 1) {
-                    return i;
-                }
-
-            }
-        }
-        return -1;
-    }
 
     private boolean exhausted;
 
@@ -452,7 +432,6 @@ public class ComplexShingleFilter extends MWEFilter {
      * stream tokens that will be used to compose the next unigram or shingle:
      * {@link #gramSize}.
      * <p><code>gramSize</code> will take on values from the circular sequence
-     * <b>{ [ 1, ] {@link #minShingleSize} [ , ... , {@link #maxShingleSize} ] }</b>.
      * <p>1 is included in the circular sequence only if
      * {@link #outputUnigrams} = true.
      */
@@ -478,7 +457,6 @@ public class ComplexShingleFilter extends MWEFilter {
          * <p>Increments this circular number's value to the next member in the
          * circular sequence
          * <code>gramSize</code> will take on values from the circular sequence
-         * <b>{ [ 1, ] {@link #minShingleSize} [ , ... , {@link #maxShingleSize} ] }</b>.
          * <p>1 is included in the circular sequence only if
          * {@link #outputUnigrams} = true.
          */
@@ -497,7 +475,6 @@ public class ComplexShingleFilter extends MWEFilter {
          * <p>Sets this circular number's value to the first member of the
          * circular sequence
          * <p><code>gramSize</code> will take on values from the circular sequence
-         * <b>{ [ 1, ] {@link #minShingleSize} [ , ... , {@link #maxShingleSize} ] }</b>.
          * <p>1 is included in the circular sequence only if
          * {@link #outputUnigrams} = true.
          */
@@ -509,7 +486,7 @@ public class ComplexShingleFilter extends MWEFilter {
          * <p>Returns true if the current value is the first member of the circular
          * sequence.
          * <p>If {@link #outputUnigrams} = true, the first member of the circular
-         * sequence will be 1; otherwise, it will be {@link #minShingleSize}.
+         * sequence will be 1; otherwise, it will be
          *
          * @return true if the current value is the first member of the circular
          * sequence; false otherwise
@@ -530,14 +507,14 @@ public class ComplexShingleFilter extends MWEFilter {
         final AttributeSource attSource;
         final CharTermAttribute termAtt;
         final OffsetAttribute offsetAtt;
-        final FlagsAttribute sentenceBoundaryFlag;
+        final PayloadAttribute sentenceContext;
         boolean isFiller = false;
 
         public InputWindowToken(AttributeSource attSource) {
             this.attSource = attSource;
             this.termAtt = attSource.getAttribute(CharTermAttribute.class);
             this.offsetAtt = attSource.getAttribute(OffsetAttribute.class);
-            this.sentenceBoundaryFlag = attSource.getAttribute(FlagsAttribute.class);
+            this.sentenceContext = attSource.getAttribute(PayloadAttribute.class);
         }
     }
 }

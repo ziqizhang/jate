@@ -2,6 +2,7 @@ package uk.ac.shef.dcs.jate.eval;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.apache.commons.io.FileUtils;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import java.io.*;
@@ -27,6 +28,20 @@ public class ATEResultLoader {
         }
 
         return result;
+    }
+
+    public static List<List<String>> loadJATE1(String jate1outputfile) throws IOException {
+        List<String> lines = FileUtils.readLines(new File(jate1outputfile));
+        List<List<String>> out = new ArrayList<>(lines.size());
+        for(String l : lines){
+            String terms = l.split("\t\t\t")[0];
+            List<String> variants = new ArrayList<>();
+            for(String t: terms.split("\\|")){
+                variants.add(t.trim());
+            }
+            out.add(variants);
+        }
+        return out;
     }
 
 }
