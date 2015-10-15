@@ -18,15 +18,9 @@ public class FrequencyCtxBased extends AbstractFeature {
     //term and set of ctx ids where it appears
     private Map<String, Set<String>> term2Ctx = new HashMap<>();
 
-    protected int contextCounter=-1;
-
     protected FrequencyCtxBased() {
     }
 
-    protected int nextCtxId(){
-        contextCounter++;
-        return contextCounter;
-    }
 
     public Map<String, Integer> getMapCtx2TTF(){
         return ctx2TTF;

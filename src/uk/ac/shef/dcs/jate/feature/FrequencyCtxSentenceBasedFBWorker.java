@@ -1,6 +1,7 @@
 package uk.ac.shef.dcs.jate.feature;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.lucene.analysis.jate.SentenceContext;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.PostingsEnum;
 import org.apache.lucene.index.Terms;
@@ -67,34 +68,13 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
             count++;
             try {
                 Terms lookupVector = SolrUtil.getTermVector(docId, properties.getSolrFieldnameJATENGramInfo(), solrIndexSearcher);
-                List<TextUnitOffsets> terms = collectTermOffsets(
+                List<MWESentenceContext> terms = collectTermOffsets(
                         lookupVector);
-                List<int[]> sentences = collectSentenceOffsets(solrIndexSearcher, sentenceTargetField, docId);
-                /*StringBuilder sb = new StringBuilder("#");
-                sb.append(count).append(", docId=").append(docId).append(", total terms=").append(terms.size())
-                        .append(", total sentences=").append(sentences);*/
-                //LOG.info(sb.toString());
-                int termCursor = 0;
-                for (int[] sent : sentences) {
-                    String contextId = docId + "." + feature.nextCtxId();
-                    for (int t = termCursor; t < terms.size(); t++) {
-                        TextUnitOffsets term = terms.get(t);
-                        if (term.end > sent[1]) {
-                            if (term.start > sent[1]) {
-                                termCursor = t;
-                                break;
-                            } else
-                                continue;
-                        }
 
-                        if (term.start >= sent[0]) { //term within sentence boundary
-                            feature.increment(contextId, 1);
-                            feature.increment(contextId, term.string, 1);
-                        } else {//a term is not within sentence boundary. this is likely for n-gram which are created
-                            //across sentence boundaries, or phrases extracted based on pos patterns due to incorrect pos
-                            //tagging
-                        }
-                    }
+                for(MWESentenceContext term: terms){
+                    String contextId = docId + "." + term.sentenceId;
+                    feature.increment(contextId,1);
+                    feature.increment(contextId, term.string, 1);
                 }
             } catch (IOException ioe) {
                 StringBuilder sb = new StringBuilder("Unable to build feature for document id:");
@@ -130,8 +110,8 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
         return rs;
     }
 
-    private List<TextUnitOffsets> collectTermOffsets(Terms termVectorLookup) throws IOException {
-        List<TextUnitOffsets> result = new ArrayList<>();
+    private List<MWESentenceContext> collectTermOffsets(Terms termVectorLookup) throws IOException {
+        List<MWESentenceContext> result = new ArrayList<>();
 
         TermsEnum tiRef= termVectorLookup.iterator();
         BytesRef luceneTerm = tiRef.next();
@@ -147,7 +127,7 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
             }
 
 
-            PostingsEnum postingsEnum = tiRef.postings(null, PostingsEnum.OFFSETS);
+            PostingsEnum postingsEnum = tiRef.postings(null, PostingsEnum.ALL);
             //PostingsEnum postingsEnum = ti.postings(null, PostingsEnum.OFFSETS);
 
             int doc = postingsEnum.nextDoc(); //this should be just 1 doc, i.e., the constraint for getting this TV
@@ -157,7 +137,12 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                     postingsEnum.nextPosition();
                     int start = postingsEnum.startOffset();
                     int end = postingsEnum.endOffset();
-                    result.add(new TextUnitOffsets(tString, start, end));
+                    BytesRef payload=postingsEnum.getPayload();
+                    String sentenceId="";
+                    if(payload!=null){
+                        sentenceId=SentenceContext.parseSentenceId(payload.utf8ToString());
+                    }
+                    result.add(new MWESentenceContext(tString,sentenceId, start, end));
                 }
             }
             luceneTerm = tiRef.next();
@@ -166,19 +151,21 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
         return result;
     }
 
-    private class TextUnitOffsets implements Comparable<TextUnitOffsets> {
+    private class MWESentenceContext implements Comparable<MWESentenceContext> {
         public String string;
+        public String sentenceId;
         public int start;
         public int end;
 
-        public TextUnitOffsets(String string, int start, int end) {
-            this.string = string;
+        public MWESentenceContext(String string, String sentenceId, int start, int end) {
+            this.string=string;
+            this.sentenceId = sentenceId;
             this.start = start;
             this.end = end;
         }
 
         @Override
-        public int compareTo(TextUnitOffsets o) {
+        public int compareTo(MWESentenceContext o) {
             int compare = Integer.valueOf(start).compareTo(o.start);
             if (compare == 0) {
                 return Integer.valueOf(end).compareTo(o.end);
@@ -187,7 +174,7 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
         }
 
         public String toString() {
-            return string + "," + start;
+            return sentenceId + "," + start;
         }
     }
 }

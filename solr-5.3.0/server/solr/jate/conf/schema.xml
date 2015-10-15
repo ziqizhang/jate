@@ -251,7 +251,7 @@
 				<filter class="org.apache.lucene.analysis.jate.ComplexShingleFilterFactory" minTokens="2" maxTokens="5"
 						maxCharLength="50" minCharLength="1" removeLeadingStopWords="true"
 						removeTrailingStopWords="true" removeLeadingSymbolicTokens="true"
-						removeTrailingSymbolicTokens="true" sentenceBoundaryAware="true"
+						removeTrailingSymbolicTokens="true"
 						stopWords="stopwords.txt" stopWordsIgnoreCase="true"
 						outputUnigrams="true" outputUnigramsIfNoShingles="false" tokenSeparator=" "/>
 				<filter class="solr.EnglishMinimalStemFilterFactory"/>
@@ -372,10 +372,7 @@
 	   <!-- Field to index and store words. You only need this if you use algorithms that require
 			word-level features, such as Weirdness, GlossEx, and TermEx
 			Must be indexed, termVectors and termOffsets set to true -->
-	   
-	   <!-- Field to store sentence offsets. You only need this if you use algorithms that require
-			sentence-level features, such as ChiSquare, and NCValue-->
-	   <field name="jate_sentences" type="string" indexed="false" stored="true" multiValued="true"/>
+
 	   <!--######################## JATE End ########################## -->
 	   
 	   <!-- Dynamic field definitions allow using convention over configuration

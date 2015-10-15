@@ -56,14 +56,7 @@ public class JATEProperties {
             throw new JATEException("term candidate field 'solr_field_content_terms' is not defined in jate.properties");
         return content2terms;
     }
-
-    public String getSolrFieldnameJATESentences() {
-        String sentences = getString("solr_field_sentences");
-        if (sentences == null) {
-        	log.debug("'solr_field_sentences' not defined in jate.properties");
-        }
-        return sentences;
-    }
+    
 
     public String getSolrFieldnameJATECTermsF(){
         String docparts2terms = getString("solr_field_map_doc_parts");
@@ -145,15 +138,4 @@ public class JATEProperties {
         }
     }
 
-    private double getDouble(String propertyName) {
-        String string = prop.getProperty(propertyName);
-        return Double.valueOf(string);
-    }
-
-    public String getSentenceSplitterClass() {
-        return getString("nlp_sentence_splitter_class");
-    }
-    public String getSentenceSplitterParams() {
-        return getString("nlp_sentence_splitter_params");
-    }
 }
