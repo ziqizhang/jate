@@ -83,6 +83,22 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<!-- Needed for embeded solr -->
+		<dependency>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-cell</artifactId>
+			<version>5.3.0</version>
+		</dependency>
+		<!-- test embeded solr if language detection is configured in core
+			Needed for embeded solr
+		 -->
+		<dependency>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-langid</artifactId>
+			<version>5.3.0</version>
+		</dependency>
+		<!-- test embeded solr if language detection is configured in core -->
+
 		<dependency>
 			<groupId>net.sourceforge.parallelcolt</groupId>
 			<artifactId>parallelcolt</artifactId>
@@ -131,7 +147,7 @@
 		</repository>
 	</distributionManagement>
 	<build>
-		<sourceDirectory>src</sourceDirectory>
+		<sourceDirectory>src/main/java</sourceDirectory>
 		<defaultGoal>install</defaultGoal>
 		<plugins>
 			<plugin>
@@ -268,5 +284,18 @@
 
 
 		</plugins>
+		
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
 	</build>
 </project>

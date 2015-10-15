@@ -54,9 +54,9 @@ import uk.ac.shef.dcs.jate.model.JATETerm;
  * 		<lst name="defaults">
  * 			<str name="jate_property_file">../resource/jate.properties</str>
  * 			<str name="field_domain_terms">industryTerm</str>
- * 			<str name="cut_off_threshold">0</str>
- * 			<!-- <str name="top_n_threshold">0</str> -->
- * 			<!-- <str name="top_percentage_threshold">0</str> -->
+ * 			<int name="cut_off_threshold">0</int>
+ * 			<!-- <int name="top_n_threshold">0</int> -->
+ * 			<!-- <double name="top_percentage_threshold">0</double> -->
  * 		</lst>
  * 	</requestHandler>
  * }

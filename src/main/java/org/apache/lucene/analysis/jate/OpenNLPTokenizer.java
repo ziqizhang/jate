@@ -18,9 +18,7 @@ package org.apache.lucene.analysis.jate;
  */
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 
 import opennlp.tools.sentdetect.SentenceDetector;
 import opennlp.tools.util.Span;
@@ -33,9 +31,6 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.PayloadAttribute;
 import org.apache.lucene.util.AttributeFactory;
 import org.apache.lucene.util.BytesRef;
-import org.apache.sis.util.iso.AbstractFactory;
-import sun.jvm.hotspot.runtime.Flags;
-
 /**
  * Run OpenNLP SentenceDetector and Tokenizer.
  * Must have Sentence and/or Tokenizer.

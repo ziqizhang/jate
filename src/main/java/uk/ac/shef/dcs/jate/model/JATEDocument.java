@@ -1,5 +1,6 @@
 package uk.ac.shef.dcs.jate.model;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +15,10 @@ public class JATEDocument {
 
     public JATEDocument(String id){
         this.id=id;
+    }
+    
+    public JATEDocument(URI fileURI) {
+    	this.path = fileURI.toString();    	
     }
 
     public String getId(){return id;}
