@@ -1,1 +1,0 @@
-[{"string":"johnson visited london","score":15.0},{"string":"visited london zoo","score":15.0},{"string":"another dog monkey","score":14.0}]

@@ -1,1 +1,0 @@
-[{"string":"monkey","score":3.0757815882334367},{"string":"african monkey","score":3.0484643787840526}]

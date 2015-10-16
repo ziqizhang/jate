@@ -1,1 +1,0 @@
-[{"string":"monkey","score":4.0},{"string":"photo","score":4.0},{"string":"took","score":3.0},{"string":"african monkey","score":3.0},{"string":"andy","score":3.0},{"string":"african","score":3.0},{"string":"dog","score":2.0},{"string":"andy johnson visited","score":1.0}]
