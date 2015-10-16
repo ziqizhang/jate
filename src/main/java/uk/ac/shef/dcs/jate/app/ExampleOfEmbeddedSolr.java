@@ -26,7 +26,7 @@ public class ExampleOfEmbeddedSolr {
     	String solrCore = "tatasteel";
     	
     	String jatePropertyFile="";
-    	Map<String, String> params = new HashMap();
+    	Map<String, String> params = new HashMap<>();
     	
     	
     	try {

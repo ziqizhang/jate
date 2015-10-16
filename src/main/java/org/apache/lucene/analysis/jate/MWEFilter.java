@@ -11,9 +11,8 @@ import java.util.Set;
 
 /**
  * Multi-Word Expression (MWE) filter is used to build multi-word expressions (n-grams, phrases) from a token stream.
- *
  */
-public abstract class MWEFilter extends TokenFilter implements SentenceContextAware{
+public abstract class MWEFilter extends TokenFilter implements SentenceContextAware {
 
     /**
      * default maximum shingle size is 2.
@@ -56,7 +55,7 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
      */
     public static final boolean DEFAULT_REMOVE_TRAILING_SYMBOLS = false;
 
-    public static final boolean DEFAULT_STOP_WORDS_IGNORE_CASE=false;
+    public static final boolean DEFAULT_STOP_WORDS_IGNORE_CASE = false;
 
 
     /**
@@ -87,7 +86,7 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
     protected Set<String> stopWords;
     protected boolean stopWordsIgnoreCase;
 
-    protected final PayloadAttribute sentenceContextAtt = addAttribute(PayloadAttribute.class);
+    protected final PayloadAttribute sentenceContext = addAttribute(PayloadAttribute.class);
 
     /**
      * Construct a token stream filtering the given input.
@@ -99,13 +98,13 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
     }
 
     public MWEFilter(TokenStream input, int minTokens, int maxTokens,
-                                int minCharLength, int maxCharLength,
-                                boolean removeLeadingStopWords,
-                                boolean removeTrailingStopwords,
-                                boolean removeLeadingSymbolicTokens,
-                                boolean removeTrailingSymbolicTokens,
-                                Set<String> stopWords,
-                                boolean stopWordsIgnoreCase) {
+                     int minCharLength, int maxCharLength,
+                     boolean removeLeadingStopWords,
+                     boolean removeTrailingStopwords,
+                     boolean removeLeadingSymbolicTokens,
+                     boolean removeTrailingSymbolicTokens,
+                     Set<String> stopWords,
+                     boolean stopWordsIgnoreCase) {
         super(input);
         this.minTokens = minTokens;
         this.maxTokens = maxTokens;
@@ -116,16 +115,22 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
         this.removeLeadingSymbolicTokens = removeLeadingSymbolicTokens;
         this.removeTrailingSymbolicTokens = removeTrailingSymbolicTokens;
         this.stopWords = stopWords;
-        this.stopWordsIgnoreCase=stopWordsIgnoreCase;
+        this.stopWordsIgnoreCase = stopWordsIgnoreCase;
     }
 
     @Override
-    public void addSentenceContext(PayloadAttribute attribute, String firstTokenIndex, String lastTokenIndex, String sentenceIndexes) {
-        String string = SentenceContext.createString(firstTokenIndex, lastTokenIndex, sentenceIndexes);
+    public void addSentenceContext(PayloadAttribute sentenceContext, String firstTokenIndex,
+                                   String lastTokenIndex, String posTag, String sentenceIndex) {
+        if(!firstTokenIndex.equals(lastTokenIndex))
+            posTag=""; //if first tok and last tok not the same, this is a multi-word-expression. makes no sense to attach a pos tag
+        StringBuilder s = new StringBuilder(firstTokenIndex);
+        s.append(",").append(lastTokenIndex).append(",")
+                .append(posTag).append(",")
+                .append(sentenceIndex);
         try {
-            attribute.setPayload(new BytesRef(string.getBytes("UTF-8")));
+            sentenceContext.setPayload(new BytesRef(s.toString().getBytes("UTF-8")));
         } catch (UnsupportedEncodingException uee) {
-            attribute.setPayload(new BytesRef(string.getBytes()));
+            sentenceContext.setPayload(new BytesRef(s.toString().getBytes()));
         }
     }
 

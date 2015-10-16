@@ -20,9 +20,6 @@ import java.util.regex.Pattern;
  */
 public class OpenNLPRegexChunkerFactory extends MWEFilterFactory {
 
-    private POSTagger tagger;
-    private String posTaggerClass;
-    private String posTaggerModelFile;
     private Map<String, Pattern[]> patterns = new HashMap<>();
     private String patternFile;
 
@@ -33,16 +30,10 @@ public class OpenNLPRegexChunkerFactory extends MWEFilterFactory {
      */
     public OpenNLPRegexChunkerFactory(Map<String, String> args) {
         super(args);
-        posTaggerClass = args.get("posTaggerClass");
-        if (posTaggerClass == null)
-            throw new IllegalArgumentException("Parameter 'class' for POS tagger is missing.");
+
         patternFile = args.get("patterns");
         if (patternFile == null) {
             throw new IllegalArgumentException("Parameter 'patterns' for chunker is missing.");
-        }
-        posTaggerModelFile = args.get("posTaggerModel");
-        if (posTaggerModelFile == null) {
-            throw new IllegalArgumentException("Parameter 'posTaggerModel' for POS tagger is missing.");
         }
     }
 
@@ -68,7 +59,7 @@ public class OpenNLPRegexChunkerFactory extends MWEFilterFactory {
 
     @Override
     public TokenStream create(TokenStream input) {
-        return new OpenNLPRegexChunker(input, tagger, patterns, maxTokens,
+        return new OpenNLPRegexChunker(input, patterns, maxTokens,
                 minTokens,
                 maxCharLength, minCharLength,
                 removeLeadingStopwords, removeTrailingStopwords,
@@ -79,16 +70,6 @@ public class OpenNLPRegexChunkerFactory extends MWEFilterFactory {
     @Override
     public void inform(ResourceLoader loader) throws IOException {
         super.inform(loader);
-        if (posTaggerModelFile != null && posTaggerClass != null) {
-            try {
-                tagger = InstanceCreator.createPOSTagger(posTaggerClass, loader.openResource(posTaggerModelFile));
-            } catch (Exception e) {
-                StringBuilder sb = new StringBuilder("Initiating ");
-                sb.append(this.getClass().getName()).append(" failed due to:\n");
-                sb.append(ExceptionUtils.getFullStackTrace(e));
-                throw new IllegalArgumentException(sb.toString());
-            }
-        }
         if (patternFile != null) {
             try {
                 List<String> lines = getLines(loader, patternFile.trim());

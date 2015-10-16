@@ -145,7 +145,7 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                     BytesRef payload=postingsEnum.getPayload();
                     String sentenceId="";
                     if(payload!=null){
-                        sentenceId=SentenceContext.parseSentenceId(payload.utf8ToString());
+                        sentenceId=new SentenceContext(payload.utf8ToString()).getSentenceId();
                     }
                     result.add(new MWESentenceContext(tString,sentenceId, start, end));
                 }

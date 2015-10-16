@@ -11,6 +11,11 @@ public class SentenceContext {
     private String sentenceId;
     private String firstTokenIdx;
     private String lastTokenIdx;
+    private String posTag;
+
+    public SentenceContext(String string){
+        init(string);
+    }
 
     public String getSentenceId() {
         return sentenceId;
@@ -36,28 +41,29 @@ public class SentenceContext {
         this.lastTokenIdx = lastTokenIdx;
     }
 
-    public static String createString(String firstTokenIdx, String lastTokenIdx, String sentenceId){
-        StringBuilder sb = new StringBuilder(firstTokenIdx);
-        sb.append(",").append(lastTokenIdx).append(",").append(sentenceId);
-        return sb.toString();
-    }
-
-    public static String[] parseString(String string){
+    private void init(String string){
         String[] values= string.split(",");
-        if(values.length!=3){
-            String[] padded = new String[3];
-            for(int i=0; i<values.length; i++)
-                padded[i]=values[i];
-            for(int i=values.length; i<padded.length; i++)
-                padded[i]="";
-            return padded;
+        String[] result = new String[4];
+
+        for(String v: values){
+            if(v.startsWith("f="))
+                firstTokenIdx=v.substring(2);
+            else if(v.startsWith("l="))
+                lastTokenIdx=v.substring(2);
+            else if(v.startsWith("p="))
+                posTag=v.substring(2);
+            else if(v.startsWith("s="))
+                sentenceId=v.substring(2);
         }
-        return values;
 
     }
 
-    public static String parseSentenceId(String s) {
-        int start = s.lastIndexOf(",")+1;
-        return start>=s.length()?"":s.substring(start);
+
+    public String getPosTag() {
+        return posTag;
+    }
+
+    public void setPosTag(String posTag) {
+        this.posTag = posTag;
     }
 }

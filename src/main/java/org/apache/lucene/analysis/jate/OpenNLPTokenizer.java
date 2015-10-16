@@ -116,7 +116,7 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
                 buffer[i] = fullText[spot + i];
             }
             addSentenceContext(sentenceContextAtt, String.valueOf(indexWord), String.valueOf(indexWord),
-                    String.valueOf(indexSentence));
+                    null, String.valueOf(indexSentence));
             //System.out.println(sentenceContextAtt.getPayload().utf8ToString()+","+new String(buffer,0, termAtt.length()));
 
             indexWord++;
@@ -193,12 +193,15 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
 
 
     @Override
-    public void addSentenceContext(PayloadAttribute attribute, String firstTokenIndex, String lastTokenIndex, String sentenceIndexes) {
-        String string = SentenceContext.createString(firstTokenIndex, lastTokenIndex, sentenceIndexes);
+    public void addSentenceContext(PayloadAttribute attribute, String firstTokenIndex, String lastTokenIndex,
+                                   String posTag, String sentenceIndex) {
+        StringBuilder s = new StringBuilder("f=").append(firstTokenIndex);
+        s.append(",l=").append(lastTokenIndex)
+                .append(",s=").append(sentenceIndex);
         try {
-            attribute.setPayload(new BytesRef(string.getBytes("UTF-8")));
+            attribute.setPayload(new BytesRef(s.toString().getBytes("UTF-8")));
         } catch (UnsupportedEncodingException uee) {
-            attribute.setPayload(new BytesRef(string.getBytes()));
+            attribute.setPayload(new BytesRef(s.toString().getBytes()));
         }
     }
 }

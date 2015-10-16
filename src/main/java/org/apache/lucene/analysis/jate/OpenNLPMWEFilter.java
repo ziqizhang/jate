@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Created by - on 14/10/2015.
  */
 public abstract class OpenNLPMWEFilter extends MWEFilter{
 
@@ -32,7 +31,6 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
     protected int chunkEnd = -1;
     protected int tokenIdx = 0;
 
-    protected POSTagger posTagger;
 
     public OpenNLPMWEFilter(TokenStream input, int minTokens, int maxTokens,
                             int minCharLength, int maxCharLength,
@@ -55,8 +53,8 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
         AttributeSource start = tokenAttrs.get(chunkStart);
         AttributeSource end = tokenAttrs.get(chunkEnd - 1);
 
-        String[] firstTokenSentCtx = parseSentenceContextPayload(start.getAttribute(PayloadAttribute.class));
-        String[] lastTokenSentCtx = parseSentenceContextPayload(end.getAttribute(PayloadAttribute.class));
+        SentenceContext firstTokenSentCtx = parseSentenceContextPayload(start.getAttribute(PayloadAttribute.class));
+        SentenceContext lastTokenSentCtx = parseSentenceContextPayload(end.getAttribute(PayloadAttribute.class));
 
         boolean added=false;
         if(!crossBoundary(firstTokenSentCtx, lastTokenSentCtx)) {
@@ -77,27 +75,28 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
         chunkEnd = -1;
         return added;
     }
-    private String[] parseSentenceContextPayload(PayloadAttribute attribute){
+    private SentenceContext parseSentenceContextPayload(PayloadAttribute attribute){
         BytesRef bfTokenSentCtx = attribute != null ? attribute.getPayload() : null;
-        String[] tokenSentCtx = bfTokenSentCtx == null ? null : SentenceContext.parseString(
+        SentenceContext tokenSentCtx = bfTokenSentCtx == null ? null : new SentenceContext(
                 bfTokenSentCtx.utf8ToString()
         );
         return tokenSentCtx;
     }
 
-    private void addSentenceContextPayload(String[] firstTokenSentCtx,
-                                             String[] lastTokenSentCtx){
+    private void addSentenceContextPayload(SentenceContext firstTokenSentCtx,
+                                           SentenceContext lastTokenSentCtx){
         if(firstTokenSentCtx!=null && lastTokenSentCtx!=null){
-
-            addSentenceContext(sentenceContextAtt, firstTokenSentCtx[0],
-                    lastTokenSentCtx[1], lastTokenSentCtx[2]);
+            addSentenceContext(sentenceContext, firstTokenSentCtx.getFirstTokenIdx(),
+                    lastTokenSentCtx.getLastTokenIdx(),
+                    firstTokenSentCtx.getPosTag(),
+                    lastTokenSentCtx.getSentenceId());
         }
     }
 
-    private boolean crossBoundary(String[] firstTokenSentCtx,
-                                            String[] lastTokenSentCtx){
+    private boolean crossBoundary(SentenceContext firstTokenSentCtx,
+                                  SentenceContext lastTokenSentCtx){
         if(firstTokenSentCtx!=null && lastTokenSentCtx!=null){
-            return !firstTokenSentCtx[2].equals(lastTokenSentCtx[2]);
+            return !firstTokenSentCtx.getSentenceId().equals(lastTokenSentCtx.getSentenceId());
         }
         return false;
     }
@@ -227,34 +226,37 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
         chunkTypes.clear();
     }
 
-    protected String[] createTags(String[] words) {
-        //String[] appended = appendDot(words);
-        return assignPOS(words);
-    }
 
-
-    protected String[] assignPOS(String[] words) {
-
-        return posTagger.tag(words);
-    }
-
-
-    protected String[] walkTokens() throws IOException {
+    protected String[][] walkTokens() throws IOException {
         List<String> wordList = new ArrayList<>();
+        List<String> posList = new ArrayList<>();
         while (input.incrementToken()) {
             CharTermAttribute textAtt = input.getAttribute(CharTermAttribute.class);
             OffsetAttribute offsetAtt = input.getAttribute(OffsetAttribute.class);
             char[] buffer = textAtt.buffer();
             String word = new String(buffer, 0, offsetAtt.endOffset() - offsetAtt.startOffset());
             wordList.add(word);
+            PayloadAttribute posAtt = input.getAttribute(PayloadAttribute.class);
+            if(posAtt!=null){
+                posList.add(posAtt.getPayload().utf8ToString());
+            }
             AttributeSource attrs = input.cloneAttributes();
             tokenAttrs.add(attrs);
         }
+        if(wordList.size()!=posList.size()){
+            StringBuilder sb = new StringBuilder(this.getClass().getName());
+            sb.append(" requires both token and token POS. Tokens=").append(wordList.size())
+                    .append(", POS=").append(posList.size()).append(", and they are inconsistent.")
+                    .append(" Have you enabled POS tagging in your Solr analyzer chain?");
+            throw new IOException(sb.toString());
+        }
         String[] words = new String[wordList.size()];
+        String[] pos = new String[posList.size()];
         for (int i = 0; i < words.length; i++) {
             words[i] = wordList.get(i);
+            pos[i]=posList.get(i);
         }
-        return words;
+        return new String[][]{words,pos};
     }
 
 

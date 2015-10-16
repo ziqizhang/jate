@@ -23,7 +23,6 @@ public class OpenNLPNounPhraseFilter extends OpenNLPMWEFilter {
      * @param input
      */
     protected OpenNLPNounPhraseFilter(TokenStream input,
-                                      POSTagger posTaggerOp,
                                       Chunker npChunker,
                                       int minTokens, int maxTokens,
                                       int minCharLength, int maxCharLength,
@@ -38,7 +37,6 @@ public class OpenNLPNounPhraseFilter extends OpenNLPMWEFilter {
                 removeLeadingStopWords, removeTrailingStopwords,
                 removeLeadingSymbolicTokens, removeTrailingSymbolicTokens,
                 stopWords, stopWordsIgnoreCase);
-        posTagger=posTaggerOp;
         this.npChunker=npChunker;
     }
 
@@ -47,12 +45,13 @@ public class OpenNLPNounPhraseFilter extends OpenNLPMWEFilter {
         clearAttributes();
         if (first) {
             //gather all tokens from doc
-            String[] words = walkTokens();
+            String[][] wordsAndPos = walkTokens();
+            String[] words = wordsAndPos[0];
             if (words.length == 0) {
                 return false;
             }
             //tagging
-            String[] pos = createTags(words);
+            String[] pos = wordsAndPos[1];
             //chunking
             String[] tags = npChunker.chunk(words, pos);
             Span[] chunks=createSpan(tags);

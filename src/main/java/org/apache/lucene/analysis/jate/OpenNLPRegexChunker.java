@@ -19,7 +19,6 @@ public class OpenNLPRegexChunker extends OpenNLPMWEFilter {
 
     public OpenNLPRegexChunker(
             TokenStream input,
-            POSTagger posTaggerOp,
             Map<String, Pattern[]> patterns,
             int maxTokens,
             int minTokens,
@@ -35,7 +34,6 @@ public class OpenNLPRegexChunker extends OpenNLPMWEFilter {
                 removeLeadingStopWords, removeTrailingStopwords,
                 removeLeadingSymbolicTokens, removeTrailingSymbolicTokens,
                 stopWords, stopWordsIgnoreCase);
-        this.posTagger = posTaggerOp;
         regexChunker = new RegexNameFinder(patterns);
     }
 
@@ -43,13 +41,14 @@ public class OpenNLPRegexChunker extends OpenNLPMWEFilter {
     public boolean incrementToken() throws IOException {
         clearAttributes();
         if (first) {
+            String[][] wordsAndPOS = walkTokens();
             //gather all tokens from doc
-            String[] words = walkTokens();
+            String[] words = wordsAndPOS[0];
             if (words.length == 0) {
                 return false;
             }
             //tagging
-            String[] pos = createTags(words);
+            String[] pos = wordsAndPOS[1];
             //chunking
             Span[] chunks = regexChunker.find(pos);
             chunks = prune(chunks, words);

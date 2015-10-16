@@ -213,13 +213,13 @@ public class ComplexShingleFilter extends MWEFilter implements SentenceContextAw
                 if (outputThisShingle) {
                     inputWindow.getFirst().attSource.copyTo(this);
                     BytesRef brFirstTokenSentCtx = sentenceContextAtt != null ? sentenceContextAtt.getPayload() : null;
-                    String[] firstTokenSentCtx = brFirstTokenSentCtx == null ? null : SentenceContext.parseString(
+                    SentenceContext firstTokenSentCtx = brFirstTokenSentCtx == null ? null : new SentenceContext(
                             brFirstTokenSentCtx.utf8ToString()
                     );
                     BytesRef brLastTokenSentCtx = nextToken.sentenceContext != null ?
                             nextToken.sentenceContext.getPayload() : null;
-                    String[] lastTokenSentCtx = brLastTokenSentCtx == null ? null :
-                            SentenceContext.parseString(brLastTokenSentCtx.utf8ToString());
+                    SentenceContext lastTokenSentCtx = brLastTokenSentCtx == null ? null :
+                            new SentenceContext(brLastTokenSentCtx.utf8ToString());
 
 
                     if (!crossBoundary(firstTokenSentCtx, lastTokenSentCtx)) {
@@ -238,7 +238,10 @@ public class ComplexShingleFilter extends MWEFilter implements SentenceContextAw
 
                         if (firstTokenSentCtx != null && lastTokenSentCtx != null) {
                             addSentenceContext(sentenceContextAtt,
-                                    firstTokenSentCtx[0], lastTokenSentCtx[1], lastTokenSentCtx[2]);
+                                    firstTokenSentCtx.getFirstTokenIdx(),
+                                    lastTokenSentCtx.getLastTokenIdx(),
+                                    firstTokenSentCtx.getPosTag(),
+                                    lastTokenSentCtx.getSentenceId());
                         }
                        // System.out.println("==="+gramBuilder.toString()+","+sentenceContextAtt.getPayload().utf8ToString());
                     } else {
@@ -258,9 +261,9 @@ public class ComplexShingleFilter extends MWEFilter implements SentenceContextAw
         return tokenAvailable;
     }
 
-    private boolean crossBoundary(String[] firstTokenSentCtx, String[] lastTokenSentCtx) {
+    private boolean crossBoundary(SentenceContext firstTokenSentCtx, SentenceContext lastTokenSentCtx) {
         if (firstTokenSentCtx != null && lastTokenSentCtx != null) {
-            return !firstTokenSentCtx[2].equals(lastTokenSentCtx[2]);
+            return !firstTokenSentCtx.getSentenceId().equals(lastTokenSentCtx.getSentenceId());
         }
         return false;
     }

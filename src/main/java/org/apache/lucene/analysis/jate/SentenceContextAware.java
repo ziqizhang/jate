@@ -21,6 +21,7 @@ import org.apache.lucene.analysis.tokenattributes.PayloadAttribute;
  */
 public interface SentenceContextAware {
 
-    void addSentenceContext(PayloadAttribute attribute, String firstTokenIndex, String lastTokenIndex, String sentenceIndexes);
+    void addSentenceContext(PayloadAttribute attribute, String firstTokenIndex, String lastTokenIndex,
+                            String posTag, String sentenceIndexes);
 
 }

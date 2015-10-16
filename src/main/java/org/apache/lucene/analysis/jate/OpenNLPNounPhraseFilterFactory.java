@@ -14,9 +14,6 @@ import java.util.Map;
  * Created by - on 12/10/2015.
  */
 public class OpenNLPNounPhraseFilterFactory extends MWEFilterFactory {
-    private POSTagger tagger;
-    private String posTaggerClass;
-    private String posTaggerModelFile;
     private Chunker chunker;
     private String chunkerModelFile;
     /**
@@ -26,12 +23,6 @@ public class OpenNLPNounPhraseFilterFactory extends MWEFilterFactory {
      */
     public OpenNLPNounPhraseFilterFactory(Map<String, String> args) {
         super(args);
-        posTaggerClass = args.get("posTaggerClass");
-        if (posTaggerClass == null)
-            throw new IllegalArgumentException("Parameter 'posTaggerClass' for POS tagger is missing.");
-        posTaggerModelFile = args.get("posTaggerModel");
-        if (posTaggerModelFile == null)
-            throw new IllegalArgumentException("Parameter 'posTaggerModel' for POS tagger is missing.");
         chunkerModelFile = args.get("chunkerModel");
         if (chunkerModelFile == null)
             throw new IllegalArgumentException("Parameter 'chunkerModel' for chunker is missing.");
@@ -41,7 +32,7 @@ public class OpenNLPNounPhraseFilterFactory extends MWEFilterFactory {
     @Override
     public TokenStream create(TokenStream input) {
 
-        return new OpenNLPNounPhraseFilter(input,tagger, chunker,
+        return new OpenNLPNounPhraseFilter(input, chunker,
                 minTokens, maxTokens, minCharLength, maxCharLength,
                 removeLeadingStopwords, removeTrailingStopwords,
                 removeLeadingSymbolicTokens, removeTrailingSymbolicTokens,
@@ -51,14 +42,6 @@ public class OpenNLPNounPhraseFilterFactory extends MWEFilterFactory {
     @Override
     public void inform(ResourceLoader loader) throws IOException {
         super.inform(loader);
-        try {
-            tagger = InstanceCreator.createPOSTagger(posTaggerClass, loader.openResource(posTaggerModelFile));
-        } catch (Exception e) {
-            StringBuilder sb = new StringBuilder("Initiating ");
-            sb.append(this.getClass().getName()).append(" failed due to:\n");
-            sb.append(ExceptionUtils.getFullStackTrace(e));
-            throw new IllegalArgumentException(sb.toString());
-        }
 
         try {
             chunker = InstanceCreator.createChunker(ChunkerOpenNLP.class.getName(), loader.openResource(chunkerModelFile));

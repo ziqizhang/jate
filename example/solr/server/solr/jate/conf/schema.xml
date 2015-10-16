@@ -247,6 +247,9 @@
 							sentenceModel="en-sent.bin"
 							tokenizerModel="en-token.bin"/>
 				<filter class="solr.ASCIIFoldingFilterFactory"/>
+				<filter class="org.apache.lucene.analysis.jate.OpenNLPPOSTaggerFactory"
+							posTaggerClass="uk.ac.shef.dcs.jate.nlp.opennlp.POSTaggerOpenNLP"
+							posTaggerModel="en-pos-maxent.bin"/>				
 				<filter class="solr.LowerCaseFilterFactory" />								
 				<filter class="org.apache.lucene.analysis.jate.ComplexShingleFilterFactory" minTokens="2" maxTokens="5"
 						maxCharLength="50" minCharLength="1" removeLeadingStopWords="true"
@@ -299,11 +302,12 @@
 			<analyzer type="index">
 				<tokenizer class="org.apache.lucene.analysis.jate.OpenNLPTokenizerFactory"
 							sentenceModel="en-sent.bin"
-							tokenizerModel="en-token.bin"/>				
+							tokenizerModel="en-token.bin"/>											
 				<filter class="solr.ASCIIFoldingFilterFactory"/>
-				<filter class="org.apache.lucene.analysis.jate.OpenNLPNounPhraseFilterFactory"
+				<filter class="org.apache.lucene.analysis.jate.OpenNLPPOSTaggerFactory"
 							posTaggerClass="uk.ac.shef.dcs.jate.nlp.opennlp.POSTaggerOpenNLP"
-							posTaggerModel="en-pos-maxent.bin"
+							posTaggerModel="en-pos-maxent.bin"/>
+				<filter class="org.apache.lucene.analysis.jate.OpenNLPNounPhraseFilterFactory"
 							chunkerModel="en-chunker.bin"
 							minTokens="1" maxTokens="5"
 							maxCharLength="50" minCharLength="1" removeLeadingStopWords="true"
