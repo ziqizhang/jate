@@ -26,7 +26,6 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
 	private static final Logger LOG = Logger.getLogger(FrequencyCtxSentenceBasedFBWorker.class.getName());
     private JATEProperties properties;
     private SolrIndexSearcher solrIndexSearcher;
-    private String sentenceTargetField;
     private Set<String> allCandidates;
     private FrequencyCtxBased feature;
 
@@ -34,12 +33,10 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                                              List<Integer> docIds,
                                              Set<String> allCandidates,
                                              SolrIndexSearcher solrIndexSearcher,
-                                             int maxTasksPerWorker,
-                                             String sentenceTargetField) {
+                                             int maxTasksPerWorker) {
         super(docIds, maxTasksPerWorker);
         this.properties = properties;
         this.solrIndexSearcher = solrIndexSearcher;
-        this.sentenceTargetField = sentenceTargetField;
         this.allCandidates=allCandidates;
         this.feature=feature;
     }
@@ -48,7 +45,7 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
     protected JATERecursiveTaskWorker<Integer, Integer> createInstance(List<Integer> docIdSplit) {
         return new FrequencyCtxSentenceBasedFBWorker(feature,properties, docIdSplit,
                 allCandidates,
-                solrIndexSearcher, maxTasksPerThread, sentenceTargetField);
+                solrIndexSearcher, maxTasksPerThread);
     }
 
     @Override
@@ -64,6 +61,7 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
     protected Integer computeSingleWorker(List<Integer> docIds) {
         LOG.info("Total docs to process=" + docIds.size());
         int count = 0;
+        Set<String> sentenceIds=new HashSet<>();
         for (int docId : docIds) {
             count++;
             try {
@@ -75,6 +73,7 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                     String contextId = docId + "." + term.sentenceId;
                     feature.increment(contextId,1);
                     feature.increment(contextId, term.string, 1);
+                    sentenceIds.add(term.sentenceId);
                 }
             } catch (IOException ioe) {
                 StringBuilder sb = new StringBuilder("Unable to build feature for document id:");
@@ -88,6 +87,12 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                 LOG.severe(sb.toString());
             }
         }
+        if(sentenceIds.size()/docIds.size()<=1)
+            try {
+                LOG.warning("Among "+docIds.size()+" on average each document has only 1 sentence. If this is not expected, check your analyzer chain for your Solr field "
+                +properties.getSolrFieldnameJATENGramInfo()+" if SentenceContext has been produced.");
+            } catch (JATEException e) {
+            }
         //LOG.info("debug---finished");
         return count;
     }

@@ -58,8 +58,8 @@ public class FrequencyCtxSentenceBasedFBMaster extends AbstractFeatureBuilder {
 
             FrequencyCtxSentenceBasedFBWorker worker = new
                     FrequencyCtxSentenceBasedFBWorker(feature, properties, allDocs, allCandidates,
-                    solrIndexSearcher, maxPerThread,
-                    sentenceTargetField);
+                    solrIndexSearcher, maxPerThread
+                    );
             StringBuilder sb = new StringBuilder("Building features using cpu cores=");
             sb.append(cores).append(", total docs=").append(allDocs.size()).append(", max per worker=")
                     .append(maxPerThread);

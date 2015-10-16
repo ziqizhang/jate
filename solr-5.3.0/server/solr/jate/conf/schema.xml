@@ -370,8 +370,7 @@
 	   <field name="jate_ngraminfo" type="jate_text_2_ngrams" indexed="true" stored="false" multiValued="false" termVectors="true" termPositions="true" termOffsets="true"
 	   	termPayloads="true"/>
 	   <!-- Field to index and store candidate terms. Must be indexed, and termVectors set to true-->
-	   <field name="jate_cterms" type="jate_text_2_terms" indexed="true" stored="false" multiValued="false" termVectors="true"
-	   termOffsets="true" termPositions="true" termPayloads="true"/>
+	   <field name="jate_cterms" type="jate_text_2_terms" indexed="true" stored="false" multiValued="false" termVectors="true"/>
 	   <!-- Field to index and store words. You only need this if you use algorithms that require
 			word-level features, such as Weirdness, GlossEx, and TermEx
 			Must be indexed, termVectors and termOffsets set to true -->
