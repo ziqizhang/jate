@@ -24,7 +24,7 @@ public class OpenNLPPOSTaggerFactory extends TokenFilterFactory implements Resou
      *
      * @param args
      */
-    protected OpenNLPPOSTaggerFactory(Map<String, String> args) {
+    public OpenNLPPOSTaggerFactory(Map<String, String> args) {
         super(args);
         posTaggerModelFile = args.get("posTaggerModel");
         posTaggerClass=args.get("posTaggerClass");

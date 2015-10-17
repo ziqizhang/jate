@@ -43,7 +43,7 @@ public class SentenceContext {
 
     private void init(String string){
         String[] values= string.split(",");
-        String[] result = new String[4];
+        //String[] result = new String[4];
 
         for(String v: values){
             if(v.startsWith("f="))

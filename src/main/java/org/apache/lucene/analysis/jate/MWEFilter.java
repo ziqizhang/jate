@@ -123,9 +123,9 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
                                    String lastTokenIndex, String posTag, String sentenceIndex) {
         if(!firstTokenIndex.equals(lastTokenIndex))
             posTag=""; //if first tok and last tok not the same, this is a multi-word-expression. makes no sense to attach a pos tag
-        StringBuilder s = new StringBuilder(firstTokenIndex);
-        s.append(",").append(lastTokenIndex).append(",")
-                .append(posTag).append(",")
+        StringBuilder s = new StringBuilder("f=").append(firstTokenIndex);
+        s.append(",l=").append(lastTokenIndex).append(",p=")
+                .append(posTag).append(",s=")
                 .append(sentenceIndex);
         try {
             sentenceContext.setPayload(new BytesRef(s.toString().getBytes("UTF-8")));

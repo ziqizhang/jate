@@ -5,12 +5,14 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PayloadAttribute;
+import org.apache.lucene.util.Attribute;
 import org.apache.lucene.util.AttributeSource;
 import org.apache.lucene.util.BytesRef;
 import uk.ac.shef.dcs.jate.nlp.POSTagger;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -26,6 +28,7 @@ public class OpenNLPPOSTaggerFilter extends TokenFilter {
     private final PayloadAttribute exitingPayload = addAttribute(PayloadAttribute.class);
 
     private String[] posTags;
+
     /**
      * Construct a token stream filtering the given input.
      *
@@ -38,7 +41,7 @@ public class OpenNLPPOSTaggerFilter extends TokenFilter {
 
     @Override
     public boolean incrementToken() throws IOException {
-        clearAttributes();
+        //clearAttributes();
         if (first) {
             //gather all tokens from doc
             String[] words = walkTokens();
@@ -56,7 +59,16 @@ public class OpenNLPPOSTaggerFilter extends TokenFilter {
             return false;
         }
 
-        String string = exitingPayload.getPayload().utf8ToString()+",";
+        AttributeSource as = tokenAttrs.get(tokenIdx);
+        Iterator<? extends Class<? extends Attribute>> it = as.getAttributeClassesIterator();
+        while(it.hasNext()) {
+            Class<? extends Attribute> attrClass = it.next();
+            if (! hasAttribute(attrClass)) {
+                addAttribute(attrClass);
+            }
+        }
+        as.copyTo(this);
+        String string = exitingPayload.getPayload()==null?"":exitingPayload.getPayload().utf8ToString()+",p=";
         exitingPayload.setPayload(new BytesRef((string+posTags[tokenIdx]).getBytes("UTF-8")));
         tokenIdx++;
         return true;
@@ -94,14 +106,14 @@ public class OpenNLPPOSTaggerFilter extends TokenFilter {
     @Override
     public void reset() throws IOException {
         super.reset();
-        clearAttributes();
+        //clearAttributes();
         resetParams();
     }
 
     @Override
     public final void end() throws IOException {
         super.end();
-        clearAttributes();
+        //clearAttributes();
         tokenAttrs.clear();
     }
 

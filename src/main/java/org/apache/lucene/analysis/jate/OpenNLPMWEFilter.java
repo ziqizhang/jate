@@ -238,7 +238,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
             wordList.add(word);
             PayloadAttribute posAtt = input.getAttribute(PayloadAttribute.class);
             if(posAtt!=null){
-                posList.add(posAtt.getPayload().utf8ToString());
+                posList.add(new SentenceContext(posAtt.getPayload().utf8ToString()).getPosTag());
             }
             AttributeSource attrs = input.cloneAttributes();
             tokenAttrs.add(attrs);
