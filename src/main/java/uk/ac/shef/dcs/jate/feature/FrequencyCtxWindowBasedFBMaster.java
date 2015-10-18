@@ -1,34 +1,31 @@
 package uk.ac.shef.dcs.jate.feature;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.lucene.index.Terms;
-import org.apache.lucene.index.TermsEnum;
-import org.apache.lucene.util.BytesRef;
 import org.apache.solr.search.SolrIndexSearcher;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
-import uk.ac.shef.dcs.jate.util.SolrUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Logger;
 
 /**
- * Created by zqz on 21/09/2015.
+ * Created by - on 18/10/2015.
  */
-public class FrequencyCtxSentenceBasedFBMaster extends AbstractFeatureBuilder {
-    private static final Logger LOG = Logger.getLogger(FrequencyCtxSentenceBasedFBMaster.class.getName());
+public class FrequencyCtxWindowBasedFBMaster extends AbstractFeatureBuilder{
+    private static final Logger LOG = Logger.getLogger(FrequencyCtxWindowBasedFBMaster.class.getName());
 
     private int termOrWord; //0 means term; 1 means word
+    private int window;
 
-    public FrequencyCtxSentenceBasedFBMaster(SolrIndexSearcher solrIndexSearcher, JATEProperties properties,
-                                             int termOrWord) {
+    public FrequencyCtxWindowBasedFBMaster(SolrIndexSearcher solrIndexSearcher, JATEProperties properties,
+                                           int window, int termOrWord) {
         super(solrIndexSearcher, properties);
         this.termOrWord=termOrWord;
+        this.window=window;
     }
 
     @Override
@@ -54,10 +51,10 @@ public class FrequencyCtxSentenceBasedFBMaster extends AbstractFeatureBuilder {
             if(maxPerThread==0)
                 maxPerThread=50;
 
-            FrequencyCtxSentenceBasedFBWorker worker = new
-                    FrequencyCtxSentenceBasedFBWorker(feature, properties, allDocs, allCandidates,
-                    solrIndexSearcher, maxPerThread
-                    );
+            FrequencyCtxWindowBasedFBWorker worker = new
+                    FrequencyCtxWindowBasedFBWorker(feature, properties, allDocs, allCandidates,
+                    solrIndexSearcher, window, maxPerThread
+            );
             StringBuilder sb = new StringBuilder("Building features using cpu cores=");
             sb.append(cores).append(", total docs=").append(allDocs.size()).append(", max per worker=")
                     .append(maxPerThread);
