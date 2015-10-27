@@ -75,6 +75,9 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
         int total = forkJoinPool.invoke(worker);
         sb = new StringBuilder("Complete building features, total contexts processed="+total);
         LOG.info(sb.toString());
+        //todo-3. need to do an update on the co-ocurrence matrix, to cancel double-counting
+        //go through each overlap zone, deduce from co-ocurrence matrix the co-occurrence of pairs of terms within
+        //each overlap zone
 
         return feature;
     }

@@ -74,7 +74,8 @@ public class AppChiSquare extends App {
             FrequencyTermBasedFBMaster ftbb = new FrequencyTermBasedFBMaster(searcher, properties,0);
             FrequencyTermBased ftb = (FrequencyTermBased) ftbb.build();
 
-            FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties,0);
+            //FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties,0);
+			FrequencyCtxWindowBasedFBMaster fcsbb = new FrequencyCtxWindowBasedFBMaster(searcher, properties, 5,0);
             FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
 
             FrequencyCtxBased ref_fcsb = (FrequencyCtxBased) (new FrequencyCtxBasedCopier(searcher, properties, fcsb, ftb, frequentTermFT).build());

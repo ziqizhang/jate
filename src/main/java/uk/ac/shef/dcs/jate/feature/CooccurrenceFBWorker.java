@@ -6,7 +6,8 @@ import java.util.*;
 import java.util.logging.Logger;
 
 /**
- *
+ * AN IMPORTANT ASSUMPTION IS THAT context id disjoint, e.g., sentences. This class will not
+ * work for window-based context. coocurrence can be double-counted in that case
  */
 public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<String, Integer> {
 	

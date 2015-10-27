@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  * Created by - on 18/10/2015.
  */
 public class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, Integer> {
-    private static final long serialVersionUID = -9172128488678036098L;
+    private static final long serialVersionUID = -9172128488678036089L;
     private static final Logger LOG = Logger.getLogger(FrequencyCtxWindowBasedFBWorker.class.getName());
     private JATEProperties properties;
     private SolrIndexSearcher solrIndexSearcher;
@@ -84,20 +84,34 @@ public class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Int
                     }
 
 
-                    if(term.start>=currWindowStart && term.start<=currWindowEnd)
+                    if(term.firstTokenIndex>=currWindowStart && term.firstTokenIndex<=currWindowEnd)
                         continue;//the term is included in the current window, it should have been counted
 
                     //create window based on this term, and check its context
-                    currWindowStart=term.start-window;
+                    currWindowStart=term.firstTokenIndex-window;
                     if(currWindowStart<0)
                         currWindowStart=0;
-                    currWindowEnd = term.end+window;
+                    currWindowEnd = term.lastTokenIndex+window;
                     if(currWindowEnd>=terms.size())
                         currWindowEnd=terms.size()-1;
 
                     String windowId = docId+","+currWindowStart+"-"+currWindowEnd;
                     feature.increment(windowId,1);
                     feature.increment(windowId, term.string,1);
+                    //previous context
+                    //todo-2: check against previous window, to identify overlap. record following info
+                    //create an overlap zone; the affected context ids; for each term in the zone, the string, and freq.
+                    for(int j=i-1; j>-1; j--){
+                        MWESentenceContext nextTerm = terms.get(j);
+                        if(nextTerm.lastTokenIndex<currWindowStart)
+                            break;
+                        feature.increment(windowId, 1);
+                        feature.increment(windowId, nextTerm.string, 1);
+                    }
+                    //following context
+                    //todo-1: record following information:
+                    //a list of term firsttokenidx maps to its string
+                    //
                     for(int j=i+1; j<terms.size(); j++){
                         MWESentenceContext nextTerm = terms.get(j);
                         if(nextTerm.firstTokenIndex>currWindowEnd)
@@ -203,7 +217,8 @@ public class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Int
         }
 
         public String toString() {
-            return sentenceId + "," + firstTokenIndex+","+lastTokenIndex+","+start+","+end;
+
+            return "s="+sentenceId + ",f=" + firstTokenIndex+",l="+lastTokenIndex+",so="+start+",se="+end;
         }
     }
 }
