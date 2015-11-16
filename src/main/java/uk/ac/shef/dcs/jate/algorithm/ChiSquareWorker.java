@@ -1,7 +1,7 @@
 package uk.ac.shef.dcs.jate.algorithm;
 
 import uk.ac.shef.dcs.jate.JATERecursiveTaskWorker;
-import uk.ac.shef.dcs.jate.feature.Context;
+import uk.ac.shef.dcs.jate.feature.ContextWindow;
 import uk.ac.shef.dcs.jate.feature.Cooccurrence;
 import uk.ac.shef.dcs.jate.feature.FrequencyCtxBased;
 import uk.ac.shef.dcs.jate.feature.FrequencyTermBased;
@@ -48,8 +48,6 @@ class ChiSquareWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> {
 
     @Override
     protected List<JATETerm> computeSingleWorker(List<String> candidates) {
-    	//TODO: ziqi, pls make this code more clear by refactoring into multiple meaningful/testable functions
-    	
         List<JATETerm> result = new ArrayList<>();
         Map<String, Integer> ctxTTFLookup = new HashMap<>();//X lookup: the sum of the total number of terms in sentences where X appears
        
@@ -59,13 +57,13 @@ class ChiSquareWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> {
             // where w appears".
             if (n_w == null) {
                 n_w = 0;
-                Set<Context> ctx_w = termFeatureCtxBased.getContexts(tString);
+                Set<ContextWindow> ctx_w = termFeatureCtxBased.getContexts(tString);
                 if (ctx_w == null) {
                     continue;//this is possible if during co-occurrence computing this term is skipped
                     //because it did not satisfy minimum thresholds
                 }
-                Map<Context, Integer> ctx2ttf=termFeatureCtxBased.getMapCtx2TTF();
-                for (Context ctxid : ctx_w)
+                Map<ContextWindow, Integer> ctx2ttf=termFeatureCtxBased.getMapCtx2TTF();
+                for (ContextWindow ctxid : ctx_w)
                     n_w += ctx2ttf.get(ctxid);
 
                 ctxTTFLookup.put(tString, n_w);
@@ -81,13 +79,13 @@ class ChiSquareWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> {
                 Integer g_w = ctxTTFLookup.get(g_id); //the sum of the total number of terms in sentences where g appears
                 if (g_w == null) {
                     g_w = 0;
-                    Set<Context> ctx_g = refTermFeatureCtxBased.getContexts(g_term);
+                    Set<ContextWindow> ctx_g = refTermFeatureCtxBased.getContexts(g_term);
                     if (ctx_g == null) {
                         continue;//this is possible if during co-occurrence computing this term is skipped
                         //because it did not satisfy minimum thresholds
                     }
-                    Map<Context, Integer> refctx2ttf=refTermFeatureCtxBased.getMapCtx2TTF();
-                    for (Context ctx : ctx_g)
+                    Map<ContextWindow, Integer> refctx2ttf=refTermFeatureCtxBased.getMapCtx2TTF();
+                    for (ContextWindow ctx : ctx_g)
                         g_w += refctx2ttf.get(ctx);
                     ctxTTFLookup.put(g_term, g_w);
                 }

@@ -8,15 +8,15 @@ import java.util.*;
 public class FrequencyCtxBased extends AbstractFeature {
 
     //context id to context objects
-    private Map<String, Context> id2Ctx = new HashMap<>();
+    private Map<String, ContextWindow> id2Ctx = new HashMap<>();
 
     //context and total frequency of all terms in that context
-    private Map<Context, Integer> ctx2TTF = new HashMap<>();
+    private Map<ContextWindow, Integer> ctx2TTF = new HashMap<>();
     //context and its contained terms with their frequency In that context
-    private Map<Context, Map<String, Integer>> ctx2TFIC = new HashMap<>();
+    private Map<ContextWindow, Map<String, Integer>> ctx2TFIC = new HashMap<>();
 
     //term and set of contexts where it appears
-    private Map<String, Set<Context>> term2Ctx = new HashMap<>();
+    private Map<String, Set<ContextWindow>> term2Ctx = new HashMap<>();
 
     private Map<String, ContextOverlap> ctxOverlapZones = new HashMap<>();
 
@@ -24,34 +24,34 @@ public class FrequencyCtxBased extends AbstractFeature {
     }
 
 
-    public Map<Context, Integer> getMapCtx2TTF() {
+    public Map<ContextWindow, Integer> getMapCtx2TTF() {
         return ctx2TTF;
     }
 
-    public Map<Context, Map<String, Integer>> getMapCtx2TFIC() {
+    public Map<ContextWindow, Map<String, Integer>> getMapCtx2TFIC() {
         return ctx2TFIC;
     }
 
-    protected Map<String, Set<Context>> getMapTerm2Ctx() {
+    protected Map<String, Set<ContextWindow>> getMapTerm2Ctx() {
         return term2Ctx;
     }
 
-    public Map<String, Integer> getTFIC(Context ctx) {
+    public Map<String, Integer> getTFIC(ContextWindow ctx) {
         Map<String, Integer> result = ctx2TFIC.get(ctx);
         if (result == null)
             return new HashMap<>();
         return result;
     }
 
-    public Set<Context> getContexts(String term) {
+    public Set<ContextWindow> getContexts(String term) {
         return term2Ctx.get(term);
     }
 
     /**
      * increment the number of occurrences of term in the context (ctxid) by tf
      */
-    protected synchronized void increment(Context ctx, String term, int tf) {
-        Context c = id2Ctx.get(ctx.getContextId());
+    protected synchronized void increment(ContextWindow ctx, String term, int tf) {
+        ContextWindow c = id2Ctx.get(ctx.getContextId());
         if (c == null) {
             c = ctx;
             id2Ctx.put(ctx.getContextId(), c);
@@ -68,15 +68,15 @@ public class FrequencyCtxBased extends AbstractFeature {
         tfidMap.put(term, f);
         ctx2TFIC.put(c, tfidMap);
 
-        Set<Context> ctxs = term2Ctx.get(term);
+        Set<ContextWindow> ctxs = term2Ctx.get(term);
         if (ctxs == null)
             ctxs = new HashSet<>();
         ctxs.add(c);
         term2Ctx.put(term, ctxs);
     }
 
-    protected synchronized void increment(Context ctx, int freq) {
-        Context c = id2Ctx.get(ctx.getContextId());
+    protected synchronized void increment(ContextWindow ctx, int freq) {
+        ContextWindow c = id2Ctx.get(ctx.getContextId());
         if (c == null) {
             c = ctx;
             id2Ctx.put(ctx.getContextId(), c);

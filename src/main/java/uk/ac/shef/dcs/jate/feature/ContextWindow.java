@@ -4,7 +4,7 @@ package uk.ac.shef.dcs.jate.feature;
  * Represents a context of a term occurrence. The context contains the document id, the sentence id in the document,
  * the first token index in the sentence, and the last token index
  */
-public class Context implements Comparable<Context>{
+public class ContextWindow implements Comparable<ContextWindow>{
 
     private int docId=-1;
     private int sentenceId=-1;
@@ -44,8 +44,8 @@ public class Context implements Comparable<Context>{
     }
 
     public boolean equals(Object o) {
-        if (o instanceof Context) {
-            Context ctx = (Context) o;
+        if (o instanceof ContextWindow) {
+            ContextWindow ctx = (ContextWindow) o;
             return ctx.getDocId()==getDocId() &&
                     ctx.getSentenceId()==getSentenceId() &&
                     ctx.getTokStart() == getTokStart() &&
@@ -62,7 +62,7 @@ public class Context implements Comparable<Context>{
     }
 
     @Override
-    public int compareTo(Context o) {
+    public int compareTo(ContextWindow o) {
         if(docId==o.docId){
             if(sentenceId==o.sentenceId){
                 if(tokStart==o.tokStart){
@@ -73,5 +73,9 @@ public class Context implements Comparable<Context>{
             return Integer.valueOf(sentenceId).compareTo(o.sentenceId);
         }
         return Integer.valueOf(docId).compareTo(o.docId);
+    }
+
+    public String toString(){
+        return getContextId();
     }
 }

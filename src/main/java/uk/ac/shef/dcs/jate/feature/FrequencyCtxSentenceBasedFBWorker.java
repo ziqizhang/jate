@@ -2,7 +2,6 @@ package uk.ac.shef.dcs.jate.feature;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.lucene.analysis.jate.SentenceContext;
-import org.apache.lucene.document.Document;
 import org.apache.lucene.index.PostingsEnum;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
@@ -61,7 +60,7 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
     protected Integer computeSingleWorker(List<Integer> docIds) {
         LOG.info("Total docs to process=" + docIds.size());
         int count = 0;
-        Set<String> sentenceIds=new HashSet<>();
+        Set<Integer> sentenceIds=new HashSet<>();
         for (int docId : docIds) {
             count++;
             try {
@@ -70,9 +69,9 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                         lookupVector);
 
                 for(MWESentenceContext term: terms){
-                    Context ctx = new Context();
+                    ContextWindow ctx = new ContextWindow();
                     ctx.setDocId(docId);
-                    ctx.setSentenceId(term.end);
+                    ctx.setSentenceId(term.sentenceId);
 
                     feature.increment(ctx,1);
                     feature.increment(ctx, term.string, 1);
@@ -128,7 +127,7 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                     int start = postingsEnum.startOffset();
                     int end = postingsEnum.endOffset();
                     BytesRef payload=postingsEnum.getPayload();
-                    String sentenceId="";
+                    int sentenceId=-1;
                     if(payload!=null){
                         sentenceId=new SentenceContext(payload.utf8ToString()).getSentenceId();
                     }
@@ -143,11 +142,11 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
 
     private class MWESentenceContext implements Comparable<MWESentenceContext> {
         public String string;
-        public String sentenceId;
+        public int sentenceId;
         public int start;
         public int end;
 
-        public MWESentenceContext(String string, String sentenceId, int start, int end) {
+        public MWESentenceContext(String string, int sentenceId, int start, int end) {
             this.string=string;
             this.sentenceId = sentenceId;
             this.start = start;

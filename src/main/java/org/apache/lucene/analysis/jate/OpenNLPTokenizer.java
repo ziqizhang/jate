@@ -115,8 +115,8 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
             for (int i = 0; i < termLength; i++) {
                 buffer[i] = fullText[spot + i];
             }
-            addSentenceContext(sentenceContextAtt, String.valueOf(indexWord), String.valueOf(indexWord),
-                    null, String.valueOf(indexSentence));
+            addSentenceContext(sentenceContextAtt, indexWord, indexWord,
+                    null, indexSentence);
             //System.out.println(sentenceContextAtt.getPayload().utf8ToString()+","+new String(buffer,0, termAtt.length()));
 
             indexWord++;
@@ -193,8 +193,8 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
 
 
     @Override
-    public void addSentenceContext(PayloadAttribute attribute, String firstTokenIndex, String lastTokenIndex,
-                                   String posTag, String sentenceIndex) {
+    public void addSentenceContext(PayloadAttribute attribute, int firstTokenIndex, int lastTokenIndex,
+                                   String posTag, int sentenceIndex) {
         StringBuilder s = new StringBuilder("f=").append(firstTokenIndex);
         s.append(",l=").append(lastTokenIndex)
                 .append(",s=").append(sentenceIndex);

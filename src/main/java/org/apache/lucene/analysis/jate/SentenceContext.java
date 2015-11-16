@@ -1,45 +1,34 @@
 package org.apache.lucene.analysis.jate;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  */
 public class SentenceContext {
 
-    private String sentenceId;
-    private String firstTokenIdx;
-    private String lastTokenIdx;
+    private int sentenceId;
+    private int firstTokenIdx;
+    private int lastTokenIdx;
     private String posTag;
 
     public SentenceContext(String string){
         init(string);
     }
 
-    public String getSentenceId() {
+    public int getSentenceId() {
         return sentenceId;
     }
 
-    public void setSentenceIds(String id) {
-        this.sentenceId=id;
-    }
 
-    public String getFirstTokenIdx() {
+    public int getFirstTokenIdx() {
         return firstTokenIdx;
     }
 
-    public void setFirstTokenIdx(String firstTokenIdx) {
-        this.firstTokenIdx = firstTokenIdx;
-    }
 
-    public String getLastTokenIdx() {
+    public int getLastTokenIdx() {
         return lastTokenIdx;
     }
 
-    public void setLastTokenIdx(String lastTokenIdx) {
-        this.lastTokenIdx = lastTokenIdx;
-    }
 
     private void init(String string){
         String[] values= string.split(",");
@@ -47,13 +36,13 @@ public class SentenceContext {
 
         for(String v: values){
             if(v.startsWith("f="))
-                firstTokenIdx=v.substring(2);
+                firstTokenIdx=Integer.valueOf(v.substring(2));
             else if(v.startsWith("l="))
-                lastTokenIdx=v.substring(2);
+                lastTokenIdx=Integer.valueOf(v.substring(2));
             else if(v.startsWith("p="))
                 posTag=v.substring(2);
             else if(v.startsWith("s="))
-                sentenceId=v.substring(2);
+                sentenceId=Integer.valueOf(v.substring(2));
         }
 
     }

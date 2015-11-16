@@ -263,7 +263,7 @@ public class ComplexShingleFilter extends MWEFilter implements SentenceContextAw
 
     private boolean crossBoundary(SentenceContext firstTokenSentCtx, SentenceContext lastTokenSentCtx) {
         if (firstTokenSentCtx != null && lastTokenSentCtx != null) {
-            return !firstTokenSentCtx.getSentenceId().equals(lastTokenSentCtx.getSentenceId());
+            return firstTokenSentCtx.getSentenceId()!=lastTokenSentCtx.getSentenceId();
         }
         return false;
     }

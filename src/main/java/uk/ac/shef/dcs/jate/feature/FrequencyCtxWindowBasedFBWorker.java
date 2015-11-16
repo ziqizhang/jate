@@ -27,7 +27,7 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
     private Set<String> allCandidates;
     private FrequencyCtxBased feature;
     private int window;
-    private Map<Integer, List<Context>> contextLookup;//set of contexts in which we should count term frequencies
+    private Map<Integer, List<ContextWindow>> contextLookup;//set of contexts in which we should count term frequencies
 
     /**
      * @param feature
@@ -45,7 +45,7 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
                                            List<Integer> docIds,
                                            Set<String> allCandidates,
                                            SolrIndexSearcher solrIndexSearcher,
-                                           Map<Integer, List<Context>> contextLookup,
+                                           Map<Integer, List<ContextWindow>> contextLookup,
                                            int window,
                                            int maxTasksPerWorker) {
         super(docIds, maxTasksPerWorker);
@@ -95,7 +95,7 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
                 Terms lookupVector = SolrUtil.getTermVector(docId, properties.getSolrFieldnameJATENGramInfo(), solrIndexSearcher);
                 List<MWESentenceContext> terms = collectTermSentenceContext(
                         lookupVector);
-                List<Context> contexts_in_doc = contextLookup.get(docId);
+                List<ContextWindow> contexts_in_doc = contextLookup.get(docId);
                 if (contexts_in_doc == null || contexts_in_doc.size() == 0)
                     continue;
 
@@ -103,8 +103,8 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
                 //contexts now should be sorted by sentence id, then start tok index, then end tok index
                 //mwecontext should have been sorted by sentence id too
                 int cursor_for_termsList = 0;
-                Context prevCtx = null;
-                for (Context ctx : contexts_in_doc) {
+                ContextWindow prevCtx = null;
+                for (ContextWindow ctx : contexts_in_doc) {
                     ContextOverlap co = null;
                     if (prevCtx != null) {
                         //calculate context overlap
@@ -164,7 +164,7 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
                         lookupVector);
 
                 int currSentenceId = -1, currWindowStart = -1, currWindowEnd = -1;
-                Context prevCtx = null;
+                ContextWindow prevCtx = null;
                 List<Integer> prevWindowRight = new ArrayList<>();
 
                 for (int i = 0; i < terms.size(); i++) {
@@ -189,7 +189,7 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
                     if (currWindowEnd >= terms.size())
                         currWindowEnd = terms.size() - 1;
 
-                    Context ctx = new Context();
+                    ContextWindow ctx = new ContextWindow();
                     ctx.setDocId(docId);
                     ctx.setSentenceId(currSentenceId);
                     ctx.setTokStart(currWindowStart);
@@ -286,9 +286,9 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
                         result.add(new MWESentenceContext(tString, start, end, 0, 0, 0));
                     else
                         result.add(new MWESentenceContext(tString, start, end,
-                                Integer.parseInt(sentenceContextInfo.getFirstTokenIdx()),
-                                Integer.parseInt(sentenceContextInfo.getLastTokenIdx()),
-                                Integer.parseInt(sentenceContextInfo.getSentenceId())));
+                                sentenceContextInfo.getFirstTokenIdx(),
+                                sentenceContextInfo.getLastTokenIdx(),
+                                sentenceContextInfo.getSentenceId()));
                 }
             }
             luceneTerm = tiRef.next();

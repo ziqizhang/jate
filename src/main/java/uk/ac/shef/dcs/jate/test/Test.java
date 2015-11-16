@@ -1,11 +1,12 @@
 package uk.ac.shef.dcs.jate.test;
 
-import cern.colt.matrix.tdouble.impl.SparseDoubleMatrix2D;
 import org.apache.commons.lang.StringEscapeUtils;
-import uk.ac.shef.dcs.jate.JATERecursiveTaskWorker;
+import uk.ac.shef.dcs.jate.feature.ContextWindow;
 
 import java.text.BreakIterator;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,7 +28,18 @@ public class Test {
     public static void main(String[] args) {
 
         //todo Test object equality in hashset
-        
+        ContextWindow c = new ContextWindow();
+        c.setDocId(1);
+
+        ContextWindow c2 = new ContextWindow();
+        c2.setDocId(1);
+
+        Set<ContextWindow> all = new HashSet<>();
+        all.add(c);
+        System.out.println(all.contains(c2));
+        all.add(c2);
+        System.exit(1);
+
         String str="and this";
         String pstr = "(?<!\\w)"+Pattern.quote(str)+"(?!\\w)";
         Pattern pat=Pattern.compile(pstr);

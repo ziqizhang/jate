@@ -36,23 +36,23 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
 
     @Override
     public AbstractFeature build() throws JATEException {
-        List<Context> contexts = new ArrayList<>(ref_frequencyCtxBased.getMapCtx2TTF().keySet());
+        List<ContextWindow> contextWindows = new ArrayList<>(ref_frequencyCtxBased.getMapCtx2TTF().keySet());
         //start workers
         int cores =  properties.getMaxCPUCores();
         cores = cores == 0 ? 1 : cores;
-        int maxPerThread = contexts.size()/cores;
+        int maxPerThread = contextWindows.size()/cores;
         if(maxPerThread==0)
             maxPerThread=50;
 
         StringBuilder sb = new StringBuilder("Building features using cpu cores=");
-        sb.append(cores).append(", total ctx where reference terms appear =").append(contexts.size()).append(", max per worker=")
+        sb.append(cores).append(", total ctx where reference terms appear =").append(contextWindows.size()).append(", max per worker=")
                 .append(maxPerThread);
         LOG.info(sb.toString());
 
         LOG.info("Filtering candidates with min.ttf="+minTTF+" min.tcf="+minTCF);
         Set<String> termsPassingPrefilter = new HashSet<>();
-        for (Context ctxId : contexts) {
-            Map<String, Integer> termsInContext = frequencyCtxBased.getTFIC(ctxId);
+        for (ContextWindow ctx : contextWindows) {
+            Map<String, Integer> termsInContext = frequencyCtxBased.getTFIC(ctx);
             if (minTTF == 0 && minTCF == 0)
                 termsPassingPrefilter.addAll(termsInContext.keySet());
             else {
@@ -64,10 +64,10 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
         }
         Cooccurrence feature = new Cooccurrence(termsPassingPrefilter.size(),
                 ref_frequencyCtxBased.getMapTerm2Ctx().size());
-        LOG.info("Beginning building features. Total terms="+termsPassingPrefilter.size()+", total contexts="+contexts.size());
+        LOG.info("Beginning building features. Total terms="+termsPassingPrefilter.size()+", total contexts="+ contextWindows.size());
 
         CooccurrenceFBWorker worker = new
-                CooccurrenceFBWorker(feature, contexts,
+                CooccurrenceFBWorker(feature, contextWindows,
                 frequencyTermBased, minTTF, frequencyCtxBased, ref_frequencyCtxBased,
                 minTCF,maxPerThread);
 

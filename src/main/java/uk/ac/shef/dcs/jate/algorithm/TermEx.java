@@ -2,7 +2,7 @@ package uk.ac.shef.dcs.jate.algorithm;
 
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.feature.AbstractFeature;
-import uk.ac.shef.dcs.jate.feature.Context;
+import uk.ac.shef.dcs.jate.feature.ContextWindow;
 import uk.ac.shef.dcs.jate.feature.FrequencyCtxBased;
 import uk.ac.shef.dcs.jate.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.model.JATETerm;
@@ -109,7 +109,7 @@ public class TermEx extends ReferenceBased {
             Set<Integer> docs = fFeatureTerms.getTermFrequencyInDocument(tString).keySet();
             double sum = 0;
             for (int i : docs) {
-                Context c = new Context();
+                ContextWindow c = new ContextWindow();
                 c.setDocId(i);
                 int tfid = fFeatureDocs.getTFIC(c).get(tString);
                 int ttfid = fFeatureDocs.getMapCtx2TTF().get(String.valueOf(i));

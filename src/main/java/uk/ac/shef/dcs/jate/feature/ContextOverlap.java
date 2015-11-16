@@ -9,22 +9,22 @@ import java.util.List;
  * they are not double counted.
  */
 class ContextOverlap {
-    private Context context1;
-    private Context context2;
+    private ContextWindow contextWindow1;
+    private ContextWindow contextWindow2;
     private List<String> terms;
 
-    ContextOverlap(Context context1, Context context2, List<String> terms) {
-        this.context1 = context1;
-        this.context2 = context2;
+    ContextOverlap(ContextWindow contextWindow1, ContextWindow contextWindow2, List<String> terms) {
+        this.contextWindow1 = contextWindow1;
+        this.contextWindow2 = contextWindow2;
         this.terms = terms;
     }
 
-    public Context getPrevContext() {
-        return context1;
+    public ContextWindow getPrevContext() {
+        return contextWindow1;
     }
 
-    public Context getNextContext() {
-        return context2;
+    public ContextWindow getNextContext() {
+        return contextWindow2;
     }
 
     public List<String> getTerms() {
@@ -38,7 +38,7 @@ class ContextOverlap {
     public boolean equals(Object o){
         if (o instanceof ContextOverlap){
             ContextOverlap c = (ContextOverlap) o;
-            if(c.context2.equals(context2)&& c.context1.equals(context1))
+            if(c.contextWindow2.equals(contextWindow2)&& c.contextWindow1.equals(contextWindow1))
                 return true;
         }
         return false;

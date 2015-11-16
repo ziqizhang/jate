@@ -96,7 +96,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
     private boolean crossBoundary(SentenceContext firstTokenSentCtx,
                                   SentenceContext lastTokenSentCtx){
         if(firstTokenSentCtx!=null && lastTokenSentCtx!=null){
-            return !firstTokenSentCtx.getSentenceId().equals(lastTokenSentCtx.getSentenceId());
+            return firstTokenSentCtx.getSentenceId()!=lastTokenSentCtx.getSentenceId();
         }
         return false;
     }
