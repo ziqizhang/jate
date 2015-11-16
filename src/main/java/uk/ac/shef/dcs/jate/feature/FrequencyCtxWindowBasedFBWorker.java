@@ -163,6 +163,8 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
                 List<MWESentenceContext> terms = collectTermSentenceContext(
                         lookupVector);
 
+                int lastToken = terms.get(terms.size()-1).lastTokenIndex;
+
                 int currSentenceId = -1, currWindowStart = -1, currWindowEnd = -1;
                 ContextWindow prevCtx = null;
                 List<Integer> prevWindowRight = new ArrayList<>();
@@ -186,14 +188,15 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
                     if (currWindowStart < 0)
                         currWindowStart = 0;
                     currWindowEnd = term.lastTokenIndex + window;
-                    if (currWindowEnd >= terms.size())
-                        currWindowEnd = terms.size() - 1;
+                    if (currWindowEnd >= lastToken)
+                        currWindowEnd = lastToken;
 
                     ContextWindow ctx = new ContextWindow();
                     ctx.setDocId(docId);
                     ctx.setSentenceId(currSentenceId);
                     ctx.setTokStart(currWindowStart);
                     ctx.setTokEnd(currWindowEnd);
+
                     feature.increment(ctx, 1);
                     feature.increment(ctx, term.string, 1);
 

@@ -74,13 +74,19 @@ public class AppChiSquare extends App {
             FrequencyTermBasedFBMaster ftbb = new FrequencyTermBasedFBMaster(searcher, properties,0);
             FrequencyTermBased ftb = (FrequencyTermBased) ftbb.build();
 
-            FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties,0);
-			//FrequencyCtxWindowBasedFBMaster fcsbb = new FrequencyCtxWindowBasedFBMaster(searcher, properties, null,5,0);
-            FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
-
+			//sentence is a context
+            /*FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties,0);
+			FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
             FrequencyCtxBased ref_fcsb = (FrequencyCtxBased) (new FrequencyCtxBasedCopier(searcher, properties, fcsb, ftb, frequentTermFT).build());
+*/
+			//window is a context
+			FrequencyCtxWindowBasedFBMaster fcsbb = new FrequencyCtxWindowBasedFBMaster(searcher, properties, null,5,0);
+			FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
+			FrequencyCtxBased ref_fcsb = (FrequencyCtxBased)
+					(new FrequencyCtxWindowBasedFBMaster(searcher, properties, fcsb.getMapCtx2TTF().keySet(), 5,0).build());
 
-            CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, ftb, this.prefilterMinTTF, fcsb, ref_fcsb, this.prefilterMinTCF);
+
+			CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, ftb, this.prefilterMinTTF, fcsb, ref_fcsb, this.prefilterMinTCF);
             Cooccurrence co = (Cooccurrence) cb.build();
 
             ChiSquare chi = new ChiSquare();

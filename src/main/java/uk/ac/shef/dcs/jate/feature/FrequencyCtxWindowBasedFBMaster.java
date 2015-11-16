@@ -39,7 +39,7 @@ public class FrequencyCtxWindowBasedFBMaster extends AbstractFeatureBuilder {
         super(solrIndexSearcher, properties);
         this.termOrWord = termOrWord;
         this.window = window;
-        if (contextLookup != null) {
+        if (existingContextWindows != null) {
             for (ContextWindow ctx : existingContextWindows) {
                 List<ContextWindow> container = contextLookup.get(ctx.getDocId());
                 if (container == null)
