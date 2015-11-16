@@ -26,6 +26,14 @@ public class Cooccurrence extends AbstractFeature {
         cooccurrence =new SparseIntMatrix2D(terms, refTerms);
     }
 
+    void deduce(int rowIndex, int colIndex, int value){
+        int newValue = cooccurrence.get(rowIndex, colIndex);
+        newValue-=value;
+        newValue=newValue<0?0:newValue;
+
+        cooccurrence.setQuick(rowIndex, colIndex, newValue);
+    }
+
     public int getNumTerms(){
         return cooccurrence.rows();
     }

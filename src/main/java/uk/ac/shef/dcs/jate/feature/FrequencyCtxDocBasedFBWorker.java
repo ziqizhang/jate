@@ -10,6 +10,7 @@ import uk.ac.shef.dcs.jate.JATERecursiveTaskWorker;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -64,9 +65,10 @@ public class FrequencyCtxDocBasedFBWorker extends JATERecursiveTaskWorker<String
                         int doc = 0;
                         while ((doc = docEnum.nextDoc()) != PostingsEnum.NO_MORE_DOCS) {
                             int tfid = docEnum.freq();  //tf in document
-                            String docId = String.valueOf(doc);
-                            feature.increment(docId, tfid);
-                            feature.increment(docId, termStr, tfid);
+                            Context ctx = new Context();
+                            ctx.setDocId(doc);
+                            feature.increment(ctx, tfid);
+                            feature.increment(ctx, termStr, tfid);
                         }
                     }else {
                         StringBuilder msg = new StringBuilder(termStr);

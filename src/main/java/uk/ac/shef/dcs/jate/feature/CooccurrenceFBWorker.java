@@ -9,7 +9,7 @@ import java.util.logging.Logger;
  * AN IMPORTANT ASSUMPTION IS THAT context id disjoint, e.g., sentences. This class will not
  * work for window-based context. coocurrence can be double-counted in that case
  */
-public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<String, Integer> {
+public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<Context, Integer> {
 	
 	private static final long serialVersionUID = 2618520228983802927L;
 	private static final Logger LOG = Logger.getLogger(CooccurrenceFBWorker.class.getName());
@@ -20,7 +20,7 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<String, Intege
     protected int minTCF;
     protected Cooccurrence feature;
 
-    public CooccurrenceFBWorker(Cooccurrence feature, List<String> contextIds,
+    public CooccurrenceFBWorker(Cooccurrence feature, List<Context> contextIds,
                                 FrequencyTermBased frequencyTermBased,
                                 int minTTF,
                                 FrequencyCtxBased frequencyCtxBased,
@@ -37,15 +37,15 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<String, Intege
     }
 
     @Override
-    protected JATERecursiveTaskWorker<String, Integer> createInstance(List<String> contextIdSplit) {
+    protected JATERecursiveTaskWorker<Context, Integer> createInstance(List<Context> contextIdSplit) {
         return new CooccurrenceFBWorker(feature,contextIdSplit,frequencyTermBased,
                 minTTF, frequencyCtxBased, ref_frequencyCtxBased, minTCF, maxTasksPerThread);
     }
 
     @Override
-    protected Integer mergeResult(List<JATERecursiveTaskWorker<String, Integer>> jateRecursiveTaskWorkers) {
+    protected Integer mergeResult(List<JATERecursiveTaskWorker<Context, Integer>> jateRecursiveTaskWorkers) {
         Integer total=0;
-        for (JATERecursiveTaskWorker<String, Integer> worker : jateRecursiveTaskWorkers) {
+        for (JATERecursiveTaskWorker<Context, Integer> worker : jateRecursiveTaskWorkers) {
             total+= worker.join();
         }
 
@@ -53,27 +53,27 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<String, Intege
     }
 
     @Override
-    protected Integer computeSingleWorker(List<String> contextIds) {
+    protected Integer computeSingleWorker(List<Context> contexts) {
         StringBuilder sb = new StringBuilder("Total ctx to process=");
-        sb.append(contextIds.size())
+        sb.append(contexts.size())
         .append(", total ref terms=").append(ref_frequencyCtxBased.getMapTerm2Ctx().size());
         LOG.info(sb.toString());
 
         int total=0;
-        for (String ctxId : contextIds) {
+        for (Context ctx : contexts) {
             //map containing ref term as key, its frequency in this context (ctxid) as value
-            Map<String, Integer> refTerm2TFIC=ref_frequencyCtxBased.getTFIC(ctxId);
+            Map<String, Integer> refTerm2TFIC=ref_frequencyCtxBased.getTFIC(ctx);
             if(refTerm2TFIC.size()==0)
                 continue;
             //map containing term as key, its frequency in this context (ctxid) as value
-            Map<String, Integer> term2TFIC = frequencyCtxBased.getTFIC(ctxId);
+            Map<String, Integer> term2TFIC = frequencyCtxBased.getTFIC(ctx);
             //all terms in this ctxid
             List<String> terms = new ArrayList<>(term2TFIC.keySet());
 
             for(int i=0; i<terms.size(); i++){
                 String targetTerm = terms.get(i);
                 if ((minTTF > 0 && frequencyTermBased.getTTF(targetTerm) < minTTF)
-                        || (minTCF>0&& frequencyCtxBased.getContextIds(targetTerm).size() < minTCF))
+                        || (minTCF>0&& frequencyCtxBased.getContexts(targetTerm).size() < minTCF))
                     continue;
 
                 int targetFIC = term2TFIC.get(targetTerm); //frequency of term in this context

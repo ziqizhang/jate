@@ -40,13 +40,13 @@ public class FrequencyCtxBasedCopier extends AbstractFeatureBuilder {
         }
 
         for(String ft: filteredTerms){
-            Set<String> ctxx = source.getContextIds(ft);
+            Set<Context> ctxx = source.getContexts(ft);
             if(ctxx==null)
                 continue;//this is possible because candidate term may be incorrectly generated across context (e.g., sentence) boundaries
-            for(String ctxid: ctxx){
-                int tfInCtx=source.getMapCtx2TFIC().get(ctxid).get(ft);
-                result.increment(ctxid,ft, tfInCtx);
-                result.increment(ctxid,tfInCtx);
+            for(Context ctx: ctxx){
+                int tfInCtx=source.getMapCtx2TFIC().get(ctx).get(ft);
+                result.increment(ctx,ft, tfInCtx);
+                result.increment(ctx,tfInCtx);
             }
         }
 

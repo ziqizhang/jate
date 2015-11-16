@@ -26,6 +26,8 @@ public class Test {
 
     public static void main(String[] args) {
 
+        //todo Test object equality in hashset
+        
         String str="and this";
         String pstr = "(?<!\\w)"+Pattern.quote(str)+"(?!\\w)";
         Pattern pat=Pattern.compile(pstr);

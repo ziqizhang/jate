@@ -1,78 +1,100 @@
 package uk.ac.shef.dcs.jate.feature;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by zqz on 21/09/2015.
  */
 public class FrequencyCtxBased extends AbstractFeature {
 
-    //context and total term freq in context
-    private Map<String, Integer> ctx2TTF = new HashMap<>();
-    //context and its contained term with their Freq In Context
-    private Map<String, Map<String, Integer>> ctx2TFIC = new HashMap<>();
+    //context id to context objects
+    private Map<String, Context> id2Ctx = new HashMap<>();
 
-    //term and set of ctx ids where it appears
-    private Map<String, Set<String>> term2Ctx = new HashMap<>();
+    //context and total frequency of all terms in that context
+    private Map<Context, Integer> ctx2TTF = new HashMap<>();
+    //context and its contained terms with their frequency In that context
+    private Map<Context, Map<String, Integer>> ctx2TFIC = new HashMap<>();
+
+    //term and set of contexts where it appears
+    private Map<String, Set<Context>> term2Ctx = new HashMap<>();
+
+    private Map<String, ContextOverlap> ctxOverlapZones = new HashMap<>();
 
     protected FrequencyCtxBased() {
     }
 
 
-    public Map<String, Integer> getMapCtx2TTF(){
+    public Map<Context, Integer> getMapCtx2TTF() {
         return ctx2TTF;
     }
 
-    public Map<String, Map<String, Integer>> getMapCtx2TFIC(){
+    public Map<Context, Map<String, Integer>> getMapCtx2TFIC() {
         return ctx2TFIC;
     }
 
-    protected Map<String, Set<String>> getMapTerm2Ctx(){
+    protected Map<String, Set<Context>> getMapTerm2Ctx() {
         return term2Ctx;
     }
 
-    public Map<String, Integer> getTFIC(String ctxId){
-        Map<String, Integer> result = ctx2TFIC.get(ctxId);
-        if(result==null)
+    public Map<String, Integer> getTFIC(Context ctx) {
+        Map<String, Integer> result = ctx2TFIC.get(ctx);
+        if (result == null)
             return new HashMap<>();
         return result;
     }
 
-    public Set<String> getContextIds(String term){
+    public Set<Context> getContexts(String term) {
         return term2Ctx.get(term);
     }
 
     /**
      * increment the number of occurrences of term in the context (ctxid) by tf
-     *
      */
-    protected synchronized void increment(String ctxId, String term, int tf) {
-        Map<String, Integer> tfidMap = ctx2TFIC.get(ctxId);
-        if(tfidMap==null)
+    protected synchronized void increment(Context ctx, String term, int tf) {
+        Context c = id2Ctx.get(ctx.getContextId());
+        if (c == null) {
+            c = ctx;
+            id2Ctx.put(ctx.getContextId(), c);
+        }
+
+        Map<String, Integer> tfidMap = ctx2TFIC.get(c);
+        if (tfidMap == null)
             tfidMap = new HashMap<>();
 
         Integer f = tfidMap.get(term);
-        if(f==null)
-            f=0;
-        f+=tf;
+        if (f == null)
+            f = 0;
+        f += tf;
         tfidMap.put(term, f);
-        ctx2TFIC.put(ctxId, tfidMap);
+        ctx2TFIC.put(c, tfidMap);
 
-        Set<String> ctxIds = term2Ctx.get(term);
-        if(ctxIds==null)
-            ctxIds = new HashSet<>();
-        ctxIds.add(ctxId);
-        term2Ctx.put(term, ctxIds);
+        Set<Context> ctxs = term2Ctx.get(term);
+        if (ctxs == null)
+            ctxs = new HashSet<>();
+        ctxs.add(c);
+        term2Ctx.put(term, ctxs);
     }
 
-    protected synchronized void increment(String ctxId, int freq){
-        Integer f = ctx2TTF.get(ctxId);
-        if(f==null)
-            f=0;
-        f+=freq;
-        ctx2TTF.put(ctxId, f);
+    protected synchronized void increment(Context ctx, int freq) {
+        Context c = id2Ctx.get(ctx.getContextId());
+        if (c == null) {
+            c = ctx;
+            id2Ctx.put(ctx.getContextId(), c);
+        }
+        Integer f = ctx2TTF.get(c);
+        if (f == null)
+            f = 0;
+        f += freq;
+        ctx2TTF.put(c, f);
+    }
+
+    public Map<String, ContextOverlap> getCtxOverlapZones() {
+        return ctxOverlapZones;
+    }
+
+    public void addCtxOverlapZone(ContextOverlap ctxOverlapZone) {
+        this.ctxOverlapZones.put(ctxOverlapZone.getPrevContext().getContextId() + ":" +
+                        ctxOverlapZone.getNextContext().getContextId(),
+                ctxOverlapZone);
     }
 }

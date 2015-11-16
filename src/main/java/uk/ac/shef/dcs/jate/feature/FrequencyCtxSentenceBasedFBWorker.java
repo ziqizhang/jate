@@ -18,7 +18,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 /**
- * Created by zqz on 21/09/2015.
+ *
  */
 public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<Integer, Integer> {
 
@@ -70,9 +70,12 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                         lookupVector);
 
                 for(MWESentenceContext term: terms){
-                    String contextId = docId + "." + term.sentenceId;
-                    feature.increment(contextId,1);
-                    feature.increment(contextId, term.string, 1);
+                    Context ctx = new Context();
+                    ctx.setDocId(docId);
+                    ctx.setSentenceId(term.end);
+
+                    feature.increment(ctx,1);
+                    feature.increment(ctx, term.string, 1);
                     sentenceIds.add(term.sentenceId);
                 }
             } catch (IOException ioe) {
