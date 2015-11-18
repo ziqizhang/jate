@@ -85,7 +85,6 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
         }
     }
 
-    //todo: what about overlapping context?
     private int useContext(List<Integer> docIds) {
         int count = 0;
         Set<Integer> firstTokenIndexes = new HashSet<>();
@@ -94,7 +93,7 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
             try {
                 Terms lookupVector = SolrUtil.getTermVector(docId, properties.getSolrFieldnameJATENGramInfo(), solrIndexSearcher);
                 List<MWESentenceContext> terms = collectTermSentenceContext(
-                        lookupVector);
+                        lookupVector, new HashMap<>());
                 List<ContextWindow> contexts_in_doc = contextLookup.get(docId);
                 if (contexts_in_doc == null || contexts_in_doc.size() == 0)
                     continue;
@@ -105,11 +104,13 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
                 int cursor_for_termsList = 0;
                 ContextWindow prevCtx = null;
                 for (ContextWindow ctx : contexts_in_doc) {
+                    if(ctx.getDocId()==1250 && ctx.getSentenceId()==0&&ctx.getTokStart()==0 && ctx.getTokEnd()==5)
+                        System.out.println("000");
                     ContextOverlap co = null;
-                    if (prevCtx != null) {
+                    if (prevCtx != null && prevCtx.getSentenceId()==ctx.getSentenceId()) {
                         //calculate context overlap
-                        if(prevCtx.getTokEnd()<ctx.getTokStart()){
-                            co  =new ContextOverlap(prevCtx, ctx, new ArrayList<>());
+                        if (prevCtx.getTokEnd() > ctx.getTokStart()) {
+                            co = new ContextOverlap(prevCtx, ctx, new ArrayList<>());
                         }
                     }
                     for (int i = cursor_for_termsList; i < terms.size(); i++) {
@@ -121,17 +122,25 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
                         }
 
                         //is t within this context?
-                        if (t.start >= ctx.getTokStart() && t.end <= ctx.getTokEnd()) {
+                        boolean outOfContext = false;
+                        if (t.firstTokenIndex >= ctx.getTokStart() && t.firstTokenIndex <= ctx.getTokEnd()) {
                             feature.increment(ctx, 1);
                             feature.increment(ctx, t.string, 1);
+                        } else {
+                            outOfContext = true;
+                            cursor_for_termsList = i;
                         }
 
                         //is t within a context overlap?
-                        if(co!=null){
-                            if(co.getPrevContext().getTokEnd()>=t.end && co.getNextContext().getTokStart()<=t.start){
+                        if (co != null) {
+                            if (co.getPrevContext().getTokEnd() >= t.lastTokenIndex &&
+                                    co.getNextContext().getTokStart() <= t.firstTokenIndex) {
                                 co.getTerms().add(t.string);
                             }
                         }
+
+                        if (outOfContext)
+                            break;
                     }
 
                     prevCtx = ctx;
@@ -160,10 +169,11 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
             count++;
             try {
                 Terms lookupVector = SolrUtil.getTermVector(docId, properties.getSolrFieldnameJATENGramInfo(), solrIndexSearcher);
+                Map<Integer, Integer> sentenceBoundaries = new HashMap<>();
                 List<MWESentenceContext> terms = collectTermSentenceContext(
-                        lookupVector);
+                        lookupVector, sentenceBoundaries);
 
-                int lastToken = terms.get(terms.size()-1).lastTokenIndex;
+                int lastToken = -1;
 
                 int currSentenceId = -1, currWindowStart = -1, currWindowEnd = -1;
                 ContextWindow prevCtx = null;
@@ -178,6 +188,7 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
                         currSentenceId = term.sentenceId;
                         currWindowStart = -1;
                         currWindowEnd = -1;
+                        lastToken = sentenceBoundaries.get(currSentenceId);
                     }
 
                     if (term.firstTokenIndex >= currWindowStart && term.firstTokenIndex <= currWindowEnd)
@@ -191,6 +202,9 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
                     if (currWindowEnd >= lastToken)
                         currWindowEnd = lastToken;
 
+                    /*if (currWindowStart > currWindowEnd)
+                        System.out.println();*/
+
                     ContextWindow ctx = new ContextWindow();
                     ctx.setDocId(docId);
                     ctx.setSentenceId(currSentenceId);
@@ -203,14 +217,14 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
                     //previous j tokens
                     List<String> termsInOverlap = new ArrayList<>();
                     for (int j = i - 1; j > -1; j--) {
-                        MWESentenceContext nextTerm = terms.get(j);
-                        if (nextTerm.lastTokenIndex < currWindowStart)
+                        MWESentenceContext prevTerm = terms.get(j);
+                        if (prevTerm.lastTokenIndex < currWindowStart || prevTerm.sentenceId != ctx.getSentenceId())
                             break;
                         feature.increment(ctx, 1);
-                        feature.increment(ctx, nextTerm.string, 1);
+                        feature.increment(ctx, prevTerm.string, 1);
 
                         if (prevWindowRight.contains(j)) {
-                            termsInOverlap.add(nextTerm.string);
+                            termsInOverlap.add(prevTerm.string);
                         }
                     }
                     if (termsInOverlap.size() > 0) {
@@ -221,8 +235,9 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
 
                     //following j tokens
                     for (int j = i + 1; j < terms.size(); j++) {
+                        i=j-1;
                         MWESentenceContext nextTerm = terms.get(j);
-                        if (nextTerm.firstTokenIndex > currWindowEnd)
+                        if (nextTerm.firstTokenIndex > currWindowEnd || nextTerm.sentenceId != ctx.getSentenceId())
                             break;
                         feature.increment(ctx, 1);
                         feature.increment(ctx, nextTerm.string, 1);
@@ -253,7 +268,8 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
         return count;
     }
 
-    private List<MWESentenceContext> collectTermSentenceContext(Terms termVectorLookup) throws IOException {
+    private List<MWESentenceContext> collectTermSentenceContext(Terms termVectorLookup,
+                                                                Map<Integer, Integer> sentenceBoundaries) throws IOException {
         List<MWESentenceContext> result = new ArrayList<>();
 
         TermsEnum tiRef = termVectorLookup.iterator();
@@ -287,11 +303,17 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
                     }
                     if (sentenceContextInfo == null)
                         result.add(new MWESentenceContext(tString, start, end, 0, 0, 0));
-                    else
+                    else {
                         result.add(new MWESentenceContext(tString, start, end,
                                 sentenceContextInfo.getFirstTokenIdx(),
                                 sentenceContextInfo.getLastTokenIdx(),
                                 sentenceContextInfo.getSentenceId()));
+
+                        Integer endBound = sentenceBoundaries.get(sentenceContextInfo.getSentenceId());
+                        if (endBound == null || endBound < sentenceContextInfo.getLastTokenIdx())
+                            sentenceBoundaries.put(sentenceContextInfo.getSentenceId(),
+                                    sentenceContextInfo.getLastTokenIdx());
+                    }
                 }
             }
             luceneTerm = tiRef.next();

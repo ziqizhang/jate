@@ -6,10 +6,7 @@ import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Logger;
 
@@ -40,6 +37,7 @@ public class FrequencyCtxWindowBasedFBMaster extends AbstractFeatureBuilder {
         this.termOrWord = termOrWord;
         this.window = window;
         if (existingContextWindows != null) {
+            contextLookup=new HashMap<>();
             for (ContextWindow ctx : existingContextWindows) {
                 List<ContextWindow> container = contextLookup.get(ctx.getDocId());
                 if (container == null)
