@@ -139,8 +139,8 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
                         }
                     }
 
-                    if(ctx.getDocId()==399&&ctx.getSentenceId()==1&&ctx.getFirstTok()==13&&ctx.getLastTok()==23)
-                        System.out.println("stop");
+                    /*if(ctx.getDocId()==399&&ctx.getSentenceId()==1&&ctx.getFirstTok()==13&&ctx.getLastTok()==23)
+                        System.out.println("stop");*/
 
                     int indexFirstIncludedTermByContext = -1;
                     for (int i = cursor; i < terms.size(); i++) {//starting from the term pointed by the cursor
@@ -259,10 +259,10 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
                     ctx.setFirstTok(currWindowStart);
                     ctx.setLastTok(currWindowEnd);
 
-                    if (docId == 399 && currSentenceId == 1 && currWindowStart == 5 && currWindowEnd == 17)
+                    /*if (docId == 399 && currSentenceId == 1 && currWindowStart == 5 && currWindowEnd == 17)
                         System.out.println("stop");
                     if (docId == 399 && currSentenceId == 1 && currWindowStart == 13 && currWindowEnd == 23)
-                        System.out.println("stop");
+                        System.out.println("stop");*/
 
                     feature.increment(ctx, 1);
                     feature.increment(ctx, term.string, 1);

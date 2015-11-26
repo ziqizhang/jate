@@ -103,10 +103,10 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
         int total = forkJoinPool.invoke(worker);
 
-        List<String> col=new ArrayList<>(frequencyCtxBased.getCtxOverlapZones().keySet());
+        /*List<String> col=new ArrayList<>(frequencyCtxBased.getCtxOverlapZones().keySet());
         col.removeAll(ref_frequencyCtxBased.getCtxOverlapZones().keySet());
         System.out.println(col.size());
-
+*/
         //post-process to correct double counting in overlapping context
         //both target candidate terms and reference candidate terms use the same context objects. So they should also
         //have the same context overlaps
