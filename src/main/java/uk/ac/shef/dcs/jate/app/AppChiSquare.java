@@ -12,8 +12,7 @@ import uk.ac.shef.dcs.jate.feature.*;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AppChiSquare extends App {
 	private final Logger log = LoggerFactory.getLogger(getClass());
@@ -85,6 +84,11 @@ public class AppChiSquare extends App {
 			FrequencyCtxBased ref_fcsb = (FrequencyCtxBased)
 					(new FrequencyCtxWindowBasedFBMaster(searcher, properties, fcsb.getMapCtx2TTF().keySet(), 5,0).build());
 
+			List<String> inter=new ArrayList<>(fcsb.getCtxOverlapZones().keySet());
+			inter.removeAll(ref_fcsb.getCtxOverlapZones().keySet());
+			Collections.sort(inter);
+			/*for (String t : inter)
+				System.out.println(t);*/
 
 			CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, ftb, this.prefilterMinTTF, fcsb, ref_fcsb, this.prefilterMinTCF);
             Cooccurrence co = (Cooccurrence) cb.build();

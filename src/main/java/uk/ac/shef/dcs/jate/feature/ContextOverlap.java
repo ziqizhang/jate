@@ -3,10 +3,12 @@ package uk.ac.shef.dcs.jate.feature;
 import java.util.List;
 
 /**
- * For contextual features, it is possible that some context can have overlap (e.g., contextual window).
+ * Context windows can have overlap. This class represent an overlap case of two adjacent context windows.
  *
- * It is critical to know what terms are present in these overlap, such that when co-occurrence stats are computed,
- * they are not double counted.
+ * </p>This includes the previous and following context window objects, and the list of terms (multi-set) appearing
+ * in the overlapping zone. So a context window in sentence 1, with start token index=1 and end token index=10
+ * has an overlap with a context window in the same sentence with start token=6 and end token=15. The list of terms
+ * stored along this object appear between token index=5 and token index=10 in sentence 1.
  */
 class ContextOverlap {
     private ContextWindow contextWindow1;

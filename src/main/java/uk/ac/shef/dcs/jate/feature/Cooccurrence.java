@@ -28,6 +28,10 @@ public class Cooccurrence extends AbstractFeature {
 
     void deduce(int rowIndex, int colIndex, int value){
         int newValue = cooccurrence.get(rowIndex, colIndex);
+        if(newValue==0) {
+            System.out.println(rowIndex+"|"+colIndex);
+            System.out.println(lookupTerm(rowIndex) + "|" + lookupRefTerm(colIndex));
+        }
         newValue-=value;
         newValue=newValue<0?0:newValue;
 

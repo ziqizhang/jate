@@ -6,8 +6,10 @@ import java.util.*;
 import java.util.logging.Logger;
 
 /**
- * AN IMPORTANT ASSUMPTION IS THAT context id disjoint, e.g., sentences. This class will not
- * work for window-based context. coocurrence can be double-counted in that case
+ * AN IMPORTANT ASSUMPTION IS THAT context id disjoint, e.g., sentences. In window-based context, coocurrence can be
+ * double-counted. This is corrected by the CooccurrenceFBMaster class as a post-process.
+ *
+ * @see CooccurrenceFBMaster
  */
 public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<ContextWindow, Integer> {
 	
@@ -61,11 +63,11 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<ContextWindow,
 
         int total=0;
         for (ContextWindow ctx : contextWindows) {
-            //map containing ref term as key, its frequency in this context (ctxid) as value
+            //get the reference terms appearing in this ctx object and their frequency
             Map<String, Integer> refTerm2TFIC=ref_frequencyCtxBased.getTFIC(ctx);
             if(refTerm2TFIC.size()==0)
                 continue;
-            //map containing term as key, its frequency in this context (ctxid) as value
+            //get the target terms appearing in this ctx object and their frequency
             Map<String, Integer> term2TFIC = frequencyCtxBased.getTFIC(ctx);
             //all terms in this ctxid
             List<String> terms = new ArrayList<>(term2TFIC.keySet());

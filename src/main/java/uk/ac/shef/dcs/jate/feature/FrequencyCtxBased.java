@@ -92,7 +92,7 @@ public class FrequencyCtxBased extends AbstractFeature {
         return ctxOverlapZones;
     }
 
-    public void addCtxOverlapZone(ContextOverlap ctxOverlapZone) {
+    protected synchronized void addCtxOverlapZone(ContextOverlap ctxOverlapZone) {
         this.ctxOverlapZones.put(ctxOverlapZone.getPrevContext().getContextId() + ":" +
                         ctxOverlapZone.getNextContext().getContextId(),
                 ctxOverlapZone);

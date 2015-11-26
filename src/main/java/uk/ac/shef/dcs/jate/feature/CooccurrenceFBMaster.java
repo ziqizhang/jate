@@ -9,7 +9,36 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Logger;
 
 /**
+ * This class counts pair-wise co-occurrence between two list of candidates, one called <b>target</b> candidate terms
+ * (which are the terms we want to consider as real domain terms); the other called <b>reference</b> candidate terms
+ * (lexical items of which we are interested in their co-occurring behaviour with the target candidates). The two
+ * lists can be identical.
  *
+ * </p> The candidates are provided in the form of FrequencyCtxBased objects. A FrequencyCtxBased object stores a set of
+ * candidate terms, and the contexts where they appear. An example scenario is described below.
+ *
+ * </p>In Chi-Square, we need to calculate co-ocurrence between every target candidate term, and the most frequent n candidate
+ * terms (reference term). To do so, we create two FrequencyCtxBased objects. The first stores all candidate terms which
+ * contexts they appear in. The second is a subset of the first, and only stores most frequent n candidates and the
+ * contexts they appear in.
+ *
+ * </p><b>NOTE 1</b>:We must ensure that the first and second FrequencyCtxBased objects use the same context windows.
+ *
+ * </p>Next to calculate co-occurrence, we take a target candidate term (t) from the first FrequencyCtxBased object, pair it with a
+ * reference term (rt) from the second FrequencyCtxBased object. We then find the context windows that both t and rt appear in, denoted
+ * by X. Given each x (from X), we look up the frequency of t in x, and frequency of rt in x. The co-occurrence frequency is
+ * therefore the smaller of the two frequencies.
+ *
+ * </p><b>NOTE 2</b>:This method works if contexts are mutually exclusive, i.e., they do not have overlap (e.g., a document, or
+ * a sentence as a context). When contexts are likely to have overlap (e.g., context window of size n around candidate terms),
+ * co-occurrences of terms appearing in overlap are double-counted. This is corrected by deducting the frequency of the pair
+ * in the overlap from their total co-occurrence frequency calculated using the above method.
+ *
+ *
+ * @see FrequencyCtxBased
+ * @see FrequencyCtxDocBasedFBMaster
+ * @see FrequencyCtxSentenceBasedFBMaster
+ * @see FrequencyCtxWindowBasedFBMaster
  */
 public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
     private static final Logger LOG = Logger.getLogger(CooccurrenceFBMaster.class.getName());
@@ -74,8 +103,13 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
         int total = forkJoinPool.invoke(worker);
 
-        //go through each overlap zone, deduce from co-ocurrence matrix the co-occurrence of pairs of terms within
-        //each overlap zone
+        List<String> col=new ArrayList<>(frequencyCtxBased.getCtxOverlapZones().keySet());
+        col.removeAll(ref_frequencyCtxBased.getCtxOverlapZones().keySet());
+        System.out.println(col.size());
+
+        //post-process to correct double counting in overlapping context
+        //both target candidate terms and reference candidate terms use the same context objects. So they should also
+        //have the same context overlaps
         Map<String, ContextOverlap> overlaps = frequencyCtxBased.getCtxOverlapZones();
         if (overlaps.size() > 0) {
             LOG.info("Correcting double counted co-occurrences in context overlapping zones, total zones=" + overlaps.size());
@@ -83,7 +117,7 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
                 String key = en.getKey();
                 ContextOverlap co = en.getValue();
 
-                //build a map of unique terms and their frequency within the overlap zone
+                //a map of unique target terms found in this overlap zone and their frequencies
                 Map<String, Integer> freq = new HashMap<>();
                 for (String t : co.getTerms()) {
                     Integer f = freq.get(t);
@@ -95,8 +129,9 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
                 if (freq.size() <= 1)
                     continue;
 
+                //get the corresponding context overlap object created for the reference terms
                 ContextOverlap ref_co = ref_frequencyCtxBased.getCtxOverlapZones().get(key);
-                //build a map of unique terms and their frequency within the overlap zone for ref terms
+                //a map of unique reference terms and their frequency within the overlap zone for ref terms
                 Map<String, Integer> ref_freq = new HashMap<>();
                 if (ref_co != null) {
                     for (String t : ref_co.getTerms()) {
@@ -111,13 +146,18 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
 
                 //now revise co-occurrence stats
                 for (Map.Entry<String, Integer> term_in_co : freq.entrySet()) {
-                    int f = term_in_co.getValue();
+                    int f = term_in_co.getValue(); //target term
                     for (Map.Entry<String, Integer> term_in_ref_co : ref_freq.entrySet()) {
-                        int rf = term_in_ref_co.getValue();
+                        int rf = term_in_ref_co.getValue(); //reference term
+                        if(term_in_co.getKey().equals(term_in_ref_co.getKey()))
+                            continue;
 
                         int deduce = f < rf ? f : rf;
-                        int tid = feature.lookupTerm(term_in_co.getKey());
-                        int tid_f = feature.lookupRefTerm(term_in_ref_co.getKey());
+                        int tid = feature.lookupTerm(term_in_co.getKey()); //get index of target term
+                        int tid_f = feature.lookupRefTerm(term_in_ref_co.getKey()); //get index of reference term
+                        if(tid==-1||tid_f==-1)
+                            continue;// after tracking terms in overlapping zones coocurrence stat workers
+                                    // may have filtered some terms so they do not exist in the index
                         feature.deduce(tid, tid_f, deduce);
                     }
                 }
