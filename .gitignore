@@ -7,3 +7,4 @@ experiment/*
 *.asc
 *.gif
 example/solr/server/solr/jate/data
+/target/

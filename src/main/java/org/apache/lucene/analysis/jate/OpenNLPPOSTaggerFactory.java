@@ -11,9 +11,6 @@ import uk.ac.shef.dcs.jate.nlp.POSTagger;
 import java.io.IOException;
 import java.util.Map;
 
-/**
- *
- */
 public class OpenNLPPOSTaggerFactory extends TokenFilterFactory implements ResourceLoaderAware {
 
     private POSTagger tagger=null;
