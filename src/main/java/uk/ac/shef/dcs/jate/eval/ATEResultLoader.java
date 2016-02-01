@@ -30,6 +30,14 @@ public class ATEResultLoader {
         return result;
     }
 
+    public static List<String> load(List<JATETerm> jateTerms) {
+        List<String> result = new ArrayList<>();
+        if (jateTerms != null) {
+            jateTerms.forEach(jateTerm -> {result.add(jateTerm.getString());});
+        }
+        return result;
+    }
+
     public static List<List<String>> loadJATE1(String jate1outputfile) throws IOException {
         List<String> lines = FileUtils.readLines(new File(jate1outputfile));
         List<List<String>> out = new ArrayList<>(lines.size());

@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * Created by - on 12/10/2015.
  */
-public class ComplexShingleFilter extends MWEFilter implements SentenceContextAware {
+public final class ComplexShingleFilter extends MWEFilter implements SentenceContextAware {
     /**
      * filler token for when positionIncrement is more than 1
      */

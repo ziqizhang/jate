@@ -15,10 +15,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created by - on 16/10/2015.
- */
-public class OpenNLPPOSTaggerFilter extends TokenFilter {
+
+public final class OpenNLPPOSTaggerFilter extends TokenFilter {
     private POSTagger tagger;
     private int tokenIdx = 0;
     protected boolean first = true;

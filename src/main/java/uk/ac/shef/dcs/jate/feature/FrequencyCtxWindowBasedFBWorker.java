@@ -117,7 +117,7 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
             count++;
             try {
                 //get the terms in this document, ordered by sentence id, then its index position in sentence
-                Terms lookupVector = SolrUtil.getTermVector(docId, properties.getSolrFieldnameJATENGramInfo(), solrIndexSearcher);
+                Terms lookupVector = SolrUtil.getTermVector(docId, properties.getSolrFieldNameJATENGramInfo(), solrIndexSearcher);
                 List<MWEInSentence> terms = collectTermSentenceContext(
                         lookupVector, new HashMap<>());
                 List<ContextWindow> contexts_in_doc = contextLookup.get(docId);
@@ -214,7 +214,7 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
             count++;
             try {
                 //get all terms in the document
-                Terms lookupVector = SolrUtil.getTermVector(docId, properties.getSolrFieldnameJATENGramInfo(), solrIndexSearcher);
+                Terms lookupVector = SolrUtil.getTermVector(docId, properties.getSolrFieldNameJATENGramInfo(), solrIndexSearcher);
                 Map<Integer, Integer> sentenceBoundaries = new HashMap<>();
                 //terms are now sorted by sentence id, then first tok index in sentence, then last tok index in sentence
                 List<MWEInSentence> terms = collectTermSentenceContext(
@@ -331,7 +331,7 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
         if (firstTokenIndexes.size() / docIds.size() <= 1)
             try {
                 LOG.warning("Check your analyzer chain for your Solr field "
-                        + properties.getSolrFieldnameJATENGramInfo() + " if each token's position in a sentence has been produced.");
+                        + properties.getSolrFieldNameJATENGramInfo() + " if each token's position in a sentence has been produced.");
             } catch (JATEException e) {
             }
         //LOG.info("debug---finished");

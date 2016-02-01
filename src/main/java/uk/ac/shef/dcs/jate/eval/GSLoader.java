@@ -14,7 +14,6 @@ import java.util.List;
 public class GSLoader {
 
     /**
-     *
      * @param file
      * @param lowercase
      * @param normalize if true, will run ascii unfolding then Lucene simple english stemmer
@@ -25,19 +24,17 @@ public class GSLoader {
         return prune(terms, lowercase, normalize);
     }
 
-
-
     public static List<String> loadACLRD(String file, boolean lowercase, boolean normalize) throws IOException {
         List<String> raw = FileUtils.readLines(new File(file));
-        List<String> terms = new ArrayList<>(raw.size()-1);
-        int count=0;
-        for(String r: raw){
-            if(count==0){
+        List<String> terms = new ArrayList<>(raw.size() - 1);
+        int count = 0;
+        for (String r : raw) {
+            if (count == 0) {
                 count++;
                 continue;
             }
             String[] splits = r.split("\\t");
-            if(splits[2].equals("0"))
+            if (splits[2].equals("0"))
                 continue;
             terms.add(splits[1].trim());
         }
@@ -49,32 +46,32 @@ public class GSLoader {
     private static List<String> prune(List<String> terms, boolean lowercase, boolean normalize) {
         List<String> result = new ArrayList<>();
         EnglishMinimalStemmer stemmer = new EnglishMinimalStemmer();
-        for(String t: terms){
-            if(lowercase)
-                t=t.toLowerCase();
+        for (String t : terms) {
+            if (lowercase)
+                t = t.toLowerCase();
 
-            if(normalize){
-                int start=0, end=t.length();
-                for(int i=0; i<t.length(); i++){
-                    if(Character.isLetterOrDigit(t.charAt(i))){
-                        start=i;
+            if (normalize) {
+                int start = 0, end = t.length();
+                for (int i = 0; i < t.length(); i++) {
+                    if (Character.isLetterOrDigit(t.charAt(i))) {
+                        start = i;
                         break;
                     }
                 }
-                for(int i=t.length()-1; i>-1; i--){
-                    if(Character.isLetterOrDigit(t.charAt(i))){
-                        end=i+1;
+                for (int i = t.length() - 1; i > -1; i--) {
+                    if (Character.isLetterOrDigit(t.charAt(i))) {
+                        end = i + 1;
                         break;
                     }
                 }
 
-                t=t.substring(start,end).trim();
-                if(t.length()>0) {
+                t = t.substring(start, end).trim();
+                if (t.length() > 0) {
                     int newEnd = stemmer.stem(t.toCharArray(), t.length());
-                    t=t.substring(0, newEnd).trim();
+                    t = t.substring(0, newEnd).trim();
                 }
 
-                if(t.length()>0)
+                if (t.length() > 0)
                     result.add(t);
 
             }

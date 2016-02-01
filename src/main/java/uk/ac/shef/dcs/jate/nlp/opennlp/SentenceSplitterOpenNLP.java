@@ -4,6 +4,7 @@ import opennlp.tools.sentdetect.SentenceDetector;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
 import opennlp.tools.util.Span;
+import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.nlp.SentenceSplitter;
 
 import java.io.File;
@@ -41,7 +42,7 @@ public class SentenceSplitterOpenNLP implements SentenceSplitter {
 		return rs;
 	}
 
-	public static void testOpenNLPSentenceSplitter() {
+	public static void testOpenNLPSentenceSplitter() throws JATEException {
 		try {
 			Path currentRelativePath = Paths.get("");
 			String prjRoot = currentRelativePath.toAbsolutePath().toString();
@@ -54,10 +55,11 @@ public class SentenceSplitterOpenNLP implements SentenceSplitter {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new JATEException("sentence splitter model failed to be loaded!");
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws JATEException {
 		testOpenNLPSentenceSplitter();
 	}
 }

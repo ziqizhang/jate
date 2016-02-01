@@ -2,7 +2,6 @@ package uk.ac.shef.dcs.jate.feature;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.lucene.index.*;
-import org.apache.lucene.util.BytesRef;
 import org.apache.solr.search.SolrIndexSearcher;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
@@ -10,7 +9,6 @@ import uk.ac.shef.dcs.jate.util.SolrUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Logger;
@@ -33,7 +31,7 @@ public class FrequencyCtxDocBasedFBMaster extends AbstractFeatureBuilder {
     public AbstractFeature build() throws JATEException {
         FrequencyCtxBased feature = new FrequencyCtxBased();
         try {
-            Terms info = SolrUtil.getTermVector(properties.getSolrFieldnameJATENGramInfo(), solrIndexSearcher);
+            Terms info = SolrUtil.getTermVector(properties.getSolrFieldNameJATENGramInfo(), solrIndexSearcher);
             Set<String> allLuceneTerms;
             if (termOrWord == 0)
                 allLuceneTerms = getUniqueTerms();

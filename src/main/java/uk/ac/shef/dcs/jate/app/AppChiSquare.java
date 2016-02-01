@@ -15,82 +15,91 @@ import java.io.IOException;
 import java.util.*;
 
 public class AppChiSquare extends App {
-	private final Logger log = LoggerFactory.getLogger(getClass());
-	private double frequentTermFT=0.3; //top 30% of the terms are considered to be 'frequent'
-	
-	public static void main(String[] args) {
-		if (args.length < 1) {
-			printHelp();
-			System.exit(1);
-		}
-		String solrHomePath = args[args.length - 3];
-		String solrCoreName = args[args.length - 2];
-		String jatePropertyFile = args[args.length - 1];
-		Map<String, String> params = getParams(args);
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    private double frequentTermFT = 0.3; //top 30% of the terms are considered to be 'frequent'
 
-		List<JATETerm> terms;
-		try {
+    public static void main(String[] args) {
+        if (args.length < 1) {
+            printHelp();
+            System.exit(1);
+        }
+        String solrHomePath = args[args.length - 3];
+        String solrCoreName = args[args.length - 2];
+        String jatePropertyFile = args[args.length - 1];
+        Map<String, String> params = getParams(args);
+
+        List<JATETerm> terms;
+        try {
             App app = new AppChiSquare(params);
-			terms = app.extract(solrHomePath, solrCoreName, jatePropertyFile);
+            terms = app.extract(solrHomePath, solrCoreName, jatePropertyFile);
 
-			app.write(terms);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (JATEException e) {
-			e.printStackTrace();
-		}
+            app.write(terms);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JATEException e) {
+            e.printStackTrace();
+        }
+    }
 
-	}
+    public AppChiSquare() {
+    }
 
-	public AppChiSquare(Map<String, String> initParams) throws JATEException {		
-		super(initParams);
-		initializeFTParam(initParams);
-	}
+    public AppChiSquare(Map<String, String> initParams) throws JATEException {
+        super(initParams);
+        initializeFTParam(initParams);
+    }
 
-	private void initializeFTParam(Map<String, String> initParams) throws JATEException {
-		//This param is Chi-Square only
-			String sFT = initParams.get("-ft");
-		if(sFT!=null) {
-			try {
-				frequentTermFT = Double.parseDouble(sFT);
-				if (frequentTermFT > 1.0 || frequentTermFT <= 0.0)
-					throw new JATEException("Frequent Term cutoff percentage ('-ff') is not set correctly! Value must be within (0,1.0]");
-			} catch (NumberFormatException nfe) {
-				StringBuilder msg =
-						new StringBuilder("Frequent Term cutoff percentage ('-ff') is not set correctly! A decimal value is expected!");
-				throw new JATEException(msg.toString());
-			}
-		}
+    private void initializeFTParam(Map<String, String> initParams) throws JATEException {
+        //This param is Chi-Square only
+        String sFT = initParams.get("-ft");
+        if (sFT != null) {
+            try {
+                frequentTermFT = Double.parseDouble(sFT);
+                if (frequentTermFT > 1.0 || frequentTermFT <= 0.0)
+                    throw new JATEException("Frequent Term cutoff percentage ('-ff') is not set correctly! Value must be within (0,1.0]");
+            } catch (NumberFormatException nfe) {
+                StringBuilder msg =
+                        new StringBuilder("Frequent Term cutoff percentage ('-ff') is not set correctly! A decimal value is expected!");
+                throw new JATEException(msg.toString());
+            }
+        }
 
-	}
+    }
 
-	@Override
-	public List<JATETerm> extract(SolrCore core, String jatePropertyFile)
-			throws IOException, JATEException {
+    @Override
+    public List<JATETerm> extract(SolrCore core, String jatePropertyFile)
+            throws IOException, JATEException {
+        JATEProperties properties = new JATEProperties(jatePropertyFile);
+
+        return extract(core, properties);
+
+    }
+
+    public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException, IOException {
         SolrIndexSearcher searcher = core.getSearcher().get();
         try {
-            JATEProperties properties = new JATEProperties(jatePropertyFile);
-            FrequencyTermBasedFBMaster ftbb = new FrequencyTermBasedFBMaster(searcher, properties,0);
+
+            FrequencyTermBasedFBMaster ftbb = new FrequencyTermBasedFBMaster(searcher, properties, 0);
             FrequencyTermBased ftb = (FrequencyTermBased) ftbb.build();
 
-			//sentence is a context
+            //sentence is a context
             /*FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties,0);
-			FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
+            FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
             FrequencyCtxBased ref_fcsb = (FrequencyCtxBased) (new FrequencyCtxBasedCopier(searcher, properties, fcsb, ftb, frequentTermFT).build());
 */
-			//window is a context
-			FrequencyCtxWindowBasedFBMaster fcsbb = new FrequencyCtxWindowBasedFBMaster(searcher, properties, null,5,0);
-			FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
-			FrequencyCtxBased ref_fcsb = (FrequencyCtxBased)
-					(new FrequencyCtxWindowBasedFBMaster(searcher, properties, fcsb.getMapCtx2TTF().keySet(), 5,0).build());
+            //window is a context
+            FrequencyCtxWindowBasedFBMaster fcsbb = new FrequencyCtxWindowBasedFBMaster(searcher, properties, null, 5, 0);
+            FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
+            FrequencyCtxBased ref_fcsb = (FrequencyCtxBased)
+                    (new FrequencyCtxWindowBasedFBMaster(searcher, properties, fcsb.getMapCtx2TTF().keySet(), 5, 0).build());
 
-			List<String> inter=new ArrayList<>(fcsb.getCtxOverlapZones().keySet());
-			inter.removeAll(ref_fcsb.getCtxOverlapZones().keySet());
-			Collections.sort(inter);
+            List<String> inter = new ArrayList<>(fcsb.getCtxOverlapZones().keySet());
+            inter.removeAll(ref_fcsb.getCtxOverlapZones().keySet());
+            Collections.sort(inter);
 			/*for (String t : inter)
 				System.out.println(t);*/
 
-			CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, ftb, this.prefilterMinTTF, fcsb, ref_fcsb, this.prefilterMinTCF);
+            CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, ftb, this.prefilterMinTTF, fcsb, ref_fcsb, this.prefilterMinTCF);
             Cooccurrence co = (Cooccurrence) cb.build();
 
             ChiSquare chi = new ChiSquare();
@@ -102,13 +111,12 @@ public class AppChiSquare extends App {
             List<JATETerm> terms = chi.execute(co.getTerms());
             terms = cutoff(terms);
 
-            addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
-                    properties.getSolrFieldnameID());
+            addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
+                    properties.getSolrFieldNameID());
             return terms;
         } finally {
             searcher.close();
         }
-
     }
 
 }

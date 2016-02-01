@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  *
  *
  */
-public class PunctuationRemover extends TokenFilter {
+public final class PunctuationRemover extends TokenFilter {
 
     public static boolean DEFAULT_STRIP_LEADING_SYMBOLS=false;
     public static boolean DEFAULT_STRIP_TRAILING_SYMBOLS=false;

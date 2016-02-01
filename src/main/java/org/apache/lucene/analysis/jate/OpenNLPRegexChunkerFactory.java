@@ -14,6 +14,9 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 /**
+ * This class wraps OpenNLPTokenizer to support PoS pattern sequence
+ * matching based candidate extraction at index-time.
+ *
  * Created by zqz on 28/09/2015.
  * <p>
  * TODO: change this to jate.solr.TermCandidateFilterFactory---(ZZ: i disagree. this class is generic. anyone who does not need ATE can still use this class for other purposes so it should not be named specifically with 'TermXXX' In fact I think this should be moved to package org.apache.lucene.analysis.opennlp)
@@ -25,8 +28,8 @@ public class OpenNLPRegexChunkerFactory extends MWEFilterFactory {
 
     /**
      * Initialize this factory via a set of key-value pairs.
-     *
-     * @param args
+     * TODO: check why run-time parameter "posTaggerClass" and "posTaggerModel" not being used
+     * @param args, arguments for the filter, see example of jate_text_2_terms field type in JATE 2.0 solr schema.xml
      */
     public OpenNLPRegexChunkerFactory(Map<String, String> args) {
         super(args);

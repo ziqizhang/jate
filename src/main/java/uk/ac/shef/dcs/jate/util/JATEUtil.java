@@ -1,5 +1,9 @@
 package uk.ac.shef.dcs.jate.util;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 public class JATEUtil {
 
 	public static boolean isInteger(String s) {
@@ -17,5 +21,4 @@ public class JATEUtil {
 	    }
 	    return true;
 	}
-	
 }

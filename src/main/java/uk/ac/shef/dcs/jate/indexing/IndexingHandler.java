@@ -8,11 +8,8 @@ import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.io.DocumentCreator;
 import uk.ac.shef.dcs.jate.model.JATEDocument;
-import uk.ac.shef.dcs.jate.nlp.InstanceCreator;
-import uk.ac.shef.dcs.jate.nlp.SentenceSplitter;
 import uk.ac.shef.dcs.jate.util.SolrUtil;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
@@ -46,9 +43,9 @@ public class IndexingHandler {
                 }
                 total++;
                 SolrInputDocument solrDoc = new SolrInputDocument();
-                solrDoc.addField(properties.getSolrFieldnameID(), doc.getId());
-                solrDoc.addField(properties.getSolrFieldnameJATENGramInfo(), doc.getContent());
-                solrDoc.addField(properties.getSolrFieldnameJATECTerms(), doc.getContent());
+                solrDoc.addField(properties.getSolrFieldNameID(), doc.getId());
+                solrDoc.addField(properties.getSolrFieldNameJATENGramInfo(), doc.getContent());
+                solrDoc.addField(properties.getSolrFieldNameJATECTerms(), doc.getContent());
 
                 for(Map.Entry<String, String> field2Value : doc.getMapField2Content().entrySet()){
                     String field = field2Value.getKey();

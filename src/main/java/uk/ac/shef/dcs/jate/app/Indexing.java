@@ -25,7 +25,7 @@ public class Indexing {
         boolean deletePrevious = Boolean.valueOf(args[2]);
         SolrClient solrClient =
                 new EmbeddedSolrServer(Paths.get(prop.getSolrHome()),
-                        prop.getSolrCorename());
+                        prop.getSolrCoreName());
         if (deletePrevious) {
             logger.info("DELETING PREVIOUS INDEX");
             solrClient.deleteByQuery("*:*");
