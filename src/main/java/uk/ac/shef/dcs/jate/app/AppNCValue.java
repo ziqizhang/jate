@@ -82,8 +82,8 @@ public class AppNCValue extends App {
 			List<JATETerm> terms = ncvalue.execute(candidates);
 			terms = cutoff(terms);
 
-			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
-					properties.getSolrFieldnameID());
+			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
+					properties.getSolrFieldNameID());
 
 			log.info("complete NCValue extraction.");
 			return terms;

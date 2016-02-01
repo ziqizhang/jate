@@ -9,9 +9,7 @@ import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.util.SolrUtil;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -32,7 +30,7 @@ public abstract class AbstractFeatureBuilder {
 
 
     protected Set<String> getUniqueWords() throws JATEException, IOException {
-        Terms ngramInfo = SolrUtil.getTermVector(properties.getSolrFieldnameJATENGramInfo(), solrIndexSearcher);
+        Terms ngramInfo = SolrUtil.getTermVector(properties.getSolrFieldNameJATENGramInfo(), solrIndexSearcher);
 
         TermsEnum termsEnum = ngramInfo.iterator();
         Set<String> allWords = new HashSet<>();
@@ -47,13 +45,23 @@ public abstract class AbstractFeatureBuilder {
         }
         if(allWords.size()==0)
             throw new JATEException("Features are required on 'Words', however there are no single-token lexical units in the "+
-            properties.getSolrFieldnameJATENGramInfo()+" field. Check to see if your analyzer pipeline outputs uni-grams");
+            properties.getSolrFieldNameJATENGramInfo()+" field. Check to see if your analyzer pipeline outputs uni-grams");
         return allWords;
     }
 
 
+    /**
+     * Retrieve term candidates from solr field
+     *      see @code {uk.ac.shef.dcs.jate.JATEProperties.PROPERTY_SOLR_FIELD_CONTENT_TERMS}
+     *
+     * The method assumes that the term candidates are extracted at index-time and stored in pre-configured field
+     *
+     * @return Set, a set of term candidate surface form
+     * @throws JATEException
+     * @throws IOException
+     */
     protected Set<String> getUniqueTerms() throws JATEException, IOException {
-        Terms terms =SolrUtil.getTermVector(properties.getSolrFieldnameJATECTerms(),solrIndexSearcher);
+        Terms terms =SolrUtil.getTermVector(properties.getSolrFieldNameJATECTerms(),solrIndexSearcher);
 
         TermsEnum termsEnum = terms.iterator();
         Set<String> allTermCandidates = new HashSet<>();

@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
-public class OpenNLPRegexChunker extends OpenNLPMWEFilter {
+public final class OpenNLPRegexChunker extends OpenNLPMWEFilter {
 
     private RegexNameFinder regexChunker;
 

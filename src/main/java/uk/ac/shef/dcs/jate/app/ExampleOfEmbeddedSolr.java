@@ -2,7 +2,6 @@ package uk.ac.shef.dcs.jate.app;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +20,12 @@ import uk.ac.shef.dcs.jate.model.JATETerm;
 public class ExampleOfEmbeddedSolr {
 	public static void main(String[] args) {
 		
+    	String workingDir = System.getProperty("user.dir");
     	
+    	System.out.println("working dir:"+workingDir);
+    	
+    	
+    	/*
     	String solrHome = "C:\\oak-project\\SPEEAK-PC-TermRecognition\\solr-5.3.0\\data";
     	String solrCore = "tatasteel";
     	
@@ -34,7 +38,7 @@ public class ExampleOfEmbeddedSolr {
 			appATTF.extract(solrHome, solrCore, jatePropertyFile);			
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	/**
@@ -61,7 +65,7 @@ public class ExampleOfEmbeddedSolr {
     	    Fields lfields = indexReader.fields();
     	    System.out.println(""+lfields.size());
     	    
-    	    Terms ngramInfo = lfields.terms(properties.getSolrFieldnameJATENGramInfo());
+    	    Terms ngramInfo = lfields.terms(properties.getSolrFieldNameJATENGramInfo());
     	    
     	    TermsEnum termsEnum = ngramInfo.iterator();
             List<BytesRef> allLuceneTerms = new ArrayList<>();

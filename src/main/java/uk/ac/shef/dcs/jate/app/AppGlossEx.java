@@ -53,9 +53,14 @@ public class AppGlossEx extends App {
 	public List<JATETerm> extract(SolrCore core, String jatePropertyFile)
 			throws IOException, JATEException {
 		log.info("start GlossEx term extraction for whole index ...");
+		JATEProperties properties = new JATEProperties(jatePropertyFile);
+
+		return extract(core, properties);
+	}
+
+	public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException, IOException {
 		SolrIndexSearcher searcher = core.getSearcher().get();
 		try {
-			JATEProperties properties = new JATEProperties(jatePropertyFile);
 			this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties,0);
 			this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 
@@ -71,21 +76,20 @@ public class AppGlossEx extends App {
 			glossex.registerFeature(FrequencyTermBased.class.getName() + GlossEx.SUFFIX_REF, frb);
 
 			List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
-			
+
 			filterByTTF(candidates);
 
 			List<JATETerm> terms = glossex.execute(candidates);
 			terms = cutoff(terms);
 
-			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
-					properties.getSolrFieldnameID());
-			
+			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
+					properties.getSolrFieldNameID());
+
 			log.info("complete GlossEx term extraction.");
 			return terms;
 		} finally {
 			searcher.close();
 		}
-
 	}
 
 	protected static void printHelp() {

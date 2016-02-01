@@ -48,7 +48,13 @@
 	</properties>
 
 	<dependencies>
-
+		<!--make sure the slf4j in the top of dependencies,
+		more details via multiple-slf4j-bindings-cause-error issue from stackoverflow-->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.5.2</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.tika</groupId>
 			<artifactId>tika-core</artifactId>
@@ -88,6 +94,12 @@
 			<groupId>org.apache.solr</groupId>
 			<artifactId>solr-cell</artifactId>
 			<version>5.3.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- test embeded solr if language detection is configured in core
 			Needed for embeded solr
@@ -96,6 +108,12 @@
 			<groupId>org.apache.solr</groupId>
 			<artifactId>solr-langid</artifactId>
 			<version>5.3.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- test embeded solr if language detection is configured in core -->
 
@@ -133,7 +151,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
 	</dependencies>
 
 	<distributionManagement>
@@ -228,6 +245,17 @@
 			</plugin>
 
 			<plugin>
+				<inherited>true</inherited>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 				<executions>
@@ -246,17 +274,6 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<configuration>
 					<mainClass />
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<inherited>true</inherited>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 
@@ -287,14 +304,18 @@
 		
 		<resources>
 			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
 			</resource>
 		</resources>
 		<testResources>
 			<testResource>
-				<directory>src/test/resources</directory>
-				<filtering>true</filtering>
+				<directory>src/test/java</directory>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
 			</testResource>
 		</testResources>
 	</build>

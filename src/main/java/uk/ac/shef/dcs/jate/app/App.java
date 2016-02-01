@@ -80,6 +80,7 @@ public abstract class App {
     // see also {@code AppATTF}
     protected FrequencyTermBased freqFeature = null;
 
+    public App(){}
 
     private int parseIntParam(String name, String value) throws JATEException {
         try {

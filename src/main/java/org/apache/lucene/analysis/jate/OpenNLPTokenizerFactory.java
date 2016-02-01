@@ -15,9 +15,6 @@ import org.apache.lucene.util.AttributeFactory;
 import java.io.IOException;
 import java.util.Map;
 
-/**
- * Created by zqz on 28/09/2015.
- */
 public class OpenNLPTokenizerFactory extends TokenizerFactory implements ResourceLoaderAware {
     private final int maxTokenLength;
     private SentenceDetector sentenceOp = null;

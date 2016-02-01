@@ -64,7 +64,7 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
         for (int docId : docIds) {
             count++;
             try {
-                Terms lookupVector = SolrUtil.getTermVector(docId, properties.getSolrFieldnameJATENGramInfo(), solrIndexSearcher);
+                Terms lookupVector = SolrUtil.getTermVector(docId, properties.getSolrFieldNameJATENGramInfo(), solrIndexSearcher);
                 List<MWESentenceContext> terms = collectTermOffsets(
                         lookupVector);
 
@@ -92,7 +92,7 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
         if(sentenceIds.size()/docIds.size()<=1)
             try {
                 LOG.warning("Among "+docIds.size()+" on average each document has only 1 sentence. If this is not expected, check your analyzer chain for your Solr field "
-                +properties.getSolrFieldnameJATENGramInfo()+" if SentenceContext has been produced.");
+                +properties.getSolrFieldNameJATENGramInfo()+" if SentenceContext has been produced.");
             } catch (JATEException e) {
             }
         //LOG.info("debug---finished");

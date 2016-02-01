@@ -17,69 +17,76 @@ import java.util.List;
 import java.util.Map;
 
 public class AppCValue extends App {
-	private final Logger log = LoggerFactory.getLogger(getClass());
-	
-	public static void main(String[] args) {
-		if (args.length < 1) {
-			printHelp();
-			System.exit(1);
-		}
-		String solrHomePath = args[args.length - 3];
-		String solrCoreName = args[args.length - 2];
-		String jatePropertyFile = args[args.length - 1];
-		Map<String, String> params = getParams(args);
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
-		List<JATETerm> terms;
-		try {
-			App app = new AppCValue(params);
-			terms = app.extract(solrHomePath, solrCoreName, jatePropertyFile);
+    public static void main(String[] args) {
+        if (args.length < 1) {
+            printHelp();
+            System.exit(1);
+        }
+        String solrHomePath = args[args.length - 3];
+        String solrCoreName = args[args.length - 2];
+        String jatePropertyFile = args[args.length - 1];
+        Map<String, String> params = getParams(args);
 
-			app.write(terms);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (JATEException e) {
-			e.printStackTrace();
-		}
-	}
+        List<JATETerm> terms;
+        try {
+            App app = new AppCValue(params);
+            terms = app.extract(solrHomePath, solrCoreName, jatePropertyFile);
 
-	public AppCValue(Map<String, String> initParams) throws JATEException {
-		super(initParams);
-	}
+            app.write(terms);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JATEException e) {
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public List<JATETerm> extract(SolrCore core, String jatePropertyFile)
-			throws IOException, JATEException {
-		log.info("Start CValue term extraction for whole index ...");
-		
-		SolrIndexSearcher searcher = core.getSearcher().get();
-		try {
-			JATEProperties properties = new JATEProperties(jatePropertyFile);
-			
-			this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties,0);
-			this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
+    public AppCValue(Map<String, String> initParams) throws JATEException {
+        super(initParams);
+    }
 
-			ContainmentFBMaster cb = new ContainmentFBMaster(searcher, properties);
-			Containment cf = (Containment) cb.build();
+    public AppCValue() {
 
-			CValue cvalue = new CValue();
-			cvalue.registerFeature(FrequencyTermBased.class.getName(), this.freqFeature);
-			cvalue.registerFeature(Containment.class.getName(), cf);
+    }
 
-			List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
-			
-			filterByTTF(candidates);
+    @Override
+    public List<JATETerm> extract(SolrCore core, String jatePropertyFile)
+            throws IOException, JATEException {
+        log.info("Start CValue term extraction for whole index ...");
+        JATEProperties properties = new JATEProperties(jatePropertyFile);
 
-			List<JATETerm> terms = cvalue.execute(candidates);
-			terms = cutoff(terms);
+        return extract(core, properties);
+    }
 
-			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
-					properties.getSolrFieldnameID());
-			log.info("Complete CValue term extraction.");
-			return terms;
-		} finally {
-			searcher.close();
-		}
+    public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException, IOException {
+        SolrIndexSearcher searcher = core.getSearcher().get();
+        try {
 
-	}
+            this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
+            this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
+
+            ContainmentFBMaster cb = new ContainmentFBMaster(searcher, properties);
+            Containment cf = (Containment) cb.build();
+
+            CValue cvalue = new CValue();
+            cvalue.registerFeature(FrequencyTermBased.class.getName(), this.freqFeature);
+            cvalue.registerFeature(Containment.class.getName(), cf);
+
+            List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
+
+            filterByTTF(candidates);
+
+            List<JATETerm> terms = cvalue.execute(candidates);
+            terms = cutoff(terms);
+
+            addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
+                    properties.getSolrFieldNameID());
+            log.info("Complete CValue term extraction.");
+            return terms;
+        } finally {
+            searcher.close();
+        }
+    }
 
 }

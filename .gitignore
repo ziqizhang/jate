@@ -7,4 +7,5 @@ experiment/*
 *.asc
 *.gif
 example/solr/server/solr/jate/data
+/testdata/solr-testbed/testCore/data
 /target/

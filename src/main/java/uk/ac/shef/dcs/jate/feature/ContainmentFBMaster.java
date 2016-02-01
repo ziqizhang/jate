@@ -27,7 +27,7 @@ public class ContainmentFBMaster extends AbstractFeatureBuilder {
     public AbstractFeature build() throws JATEException {
         Containment feature = new Containment();
         try {
-            Terms terms = SolrUtil.getTermVector(properties.getSolrFieldnameJATECTerms(), solrIndexSearcher);
+            Terms terms = SolrUtil.getTermVector(properties.getSolrFieldNameJATECTerms(), solrIndexSearcher);
 
             Map<Integer, Set<String>> numTokens2Terms = new HashMap<>();
 

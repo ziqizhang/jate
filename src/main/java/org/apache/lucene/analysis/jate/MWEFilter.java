@@ -5,7 +5,6 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.PayloadAttribute;
 import org.apache.lucene.util.BytesRef;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Set;
 

@@ -46,12 +46,22 @@ public class AppTFIDF extends App {
 		super(initParams);
 	}
 
+	public AppTFIDF(){
+
+	}
+
 	@Override
 	public List<JATETerm> extract(SolrCore core, String jatePropertyFile)
 			throws IOException, JATEException {
+		JATEProperties properties = new JATEProperties(jatePropertyFile);
+
+		return extract(core, properties);
+	}
+
+	public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException, IOException {
 		SolrIndexSearcher searcher = core.getSearcher().get();
 		try {
-			JATEProperties properties = new JATEProperties(jatePropertyFile);
+
 			this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties,0);
 			this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 
@@ -65,13 +75,12 @@ public class AppTFIDF extends App {
 			List<JATETerm> terms = tfidf.execute(candidates);
 			terms = cutoff(terms);
 
-			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldnameJATENGramInfo(),
-					properties.getSolrFieldnameID());
+			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
+					properties.getSolrFieldNameID());
 			return terms;
 		} finally {
 			searcher.close();
 		}
-
 	}
 
 }

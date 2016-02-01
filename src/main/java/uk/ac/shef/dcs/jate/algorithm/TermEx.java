@@ -111,8 +111,10 @@ public class TermEx extends ReferenceBased {
             for (int i : docs) {
                 ContextWindow c = new ContextWindow();
                 c.setDocId(i);
-                int tfid = fFeatureDocs.getTFIC(c).get(tString);
-                int ttfid = fFeatureDocs.getMapCtx2TTF().get(String.valueOf(i));
+                //TODO: check why the following two lines which may cause nullpointException
+                int tfid = fFeatureDocs.getTFIC(c).size() == 0 ? 0 : fFeatureDocs.getTFIC(c).get(tString);
+                int ttfid = (fFeatureDocs.getMapCtx2TTF().size() ==0 || fFeatureDocs.getMapCtx2TTF()!= null)?
+                        0:fFeatureDocs.getMapCtx2TTF().get(String.valueOf(i));
                 double norm = tfid == 0 ? 0 : (double) tfid / ttfid;
                 if (norm == 0) sum += 0;
                 else {

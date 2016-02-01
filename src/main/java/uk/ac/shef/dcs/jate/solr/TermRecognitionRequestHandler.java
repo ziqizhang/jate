@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
-import uk.ac.shef.dcs.jate.app.App;
 import uk.ac.shef.dcs.jate.app.AppParams;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
@@ -201,7 +200,7 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
 		final String solrFieldDomainTerms = req.getParams().get(FIELD_DOMAIN_TERMS);
 
 		JATEProperties properties = new JATEProperties(jatePropertyFile);
-		String termCandidateField = properties.getSolrFieldnameJATECTerms();
+		String termCandidateField = properties.getSolrFieldNameJATECTerms();
 
 		final Algorithm algorithm = getAlgorithm(algorithmName);
 

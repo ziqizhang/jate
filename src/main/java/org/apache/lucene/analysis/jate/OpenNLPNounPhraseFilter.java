@@ -14,7 +14,7 @@ import java.util.*;
 /**
  *
  */
-public class OpenNLPNounPhraseFilter extends OpenNLPMWEFilter {
+public final class OpenNLPNounPhraseFilter extends OpenNLPMWEFilter {
 
     private Chunker npChunker;
     /**
