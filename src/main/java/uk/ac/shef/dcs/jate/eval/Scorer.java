@@ -174,18 +174,18 @@ public class Scorer {
 
     public static void main(String[] args) throws IOException {
 
-        calculateACLRDJate1("/Users/-/work/jate/experiment/CValue_ALGORITHM.txt", args[1], args[2], true, false, 2, 150, 1, 5,
+        /*calculateACLRDJate1("/Users/-/work/jate/experiment/CValue_ALGORITHM.txt", args[1], args[2], true, false, 2, 150, 1, 5,
                 50, 100, 500, 1000, 5000, 10000);
         System.exit(1);
-
-        /*createReportGenia(args[0],args[1],args[2],true, false, 2,150,1,5,
+*/
+        createReportGenia(args[0],args[1],args[2],true, false, 2,150,1,5,
                 50, 100, 500, 1000, 5000,10000);
 
-        System.out.println();*/
+        System.out.println();
 
-        createReportACLRD(args[0], args[1], args[2], true, false, 2, 150, 1, 5,
+        /*createReportACLRD(args[0], args[1], args[2], true, false, 2, 150, 1, 5,
                 50, 100, 500, 1000, 5000, 10000);
-
+*/
         System.out.println();
     }
 }
