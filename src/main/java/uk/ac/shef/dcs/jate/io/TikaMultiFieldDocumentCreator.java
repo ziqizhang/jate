@@ -32,7 +32,8 @@ public class TikaMultiFieldDocumentCreator extends DocumentCreator {
 		// add two specific fields: title and links. The values are not really
 		// useful
 		String dynamicFieldName = properties.getSolrFieldNameJATECTermsF();
-		//TODO: not sure why document metadata is necessary here
+		//TODO: check the comments below
+		// JATEProperties.PROPERTY_SOLR_FIELD_MAP_DOC_PARTS fields extracted by Tika where terms will be extracted from
 		if (dynamicFieldName == null)
 			throw new JATEException(String.format("'%s' required but is not defined in jate.properties",
 					JATEProperties.PROPERTY_SOLR_FIELD_MAP_DOC_PARTS));

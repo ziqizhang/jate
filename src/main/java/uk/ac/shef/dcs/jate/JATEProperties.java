@@ -30,7 +30,7 @@ public class JATEProperties {
     public static final String PROPERTY_SOLR_FIELD_CONTENT_NGRAMS = "solr_field_content_ngrams";
     // solr content/text field
     public static final String PROPERTY_SOLR_FIELD_CONTENT_TERMS = "solr_field_content_terms";
-    // document metadata extracted from Tika
+    // document metadata extracted from Tika where term will be extracted from
     // see also @code{uk.ac.shef.dcs.jate.io.TikaMultiFieldDocumentCreator}
     public static final String PROPERTY_SOLR_FIELD_MAP_DOC_PARTS = "solr_field_map_doc_parts";
     //minimum frequency allowed for term candidates

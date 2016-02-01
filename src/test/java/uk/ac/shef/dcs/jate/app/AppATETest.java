@@ -9,10 +9,7 @@ import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.sax.BodyContentHandler;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.xml.sax.SAXException;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
@@ -136,14 +133,14 @@ public class AppATETest extends BaseEmbeddedSolrTest {
         }
     }
 
-    @Test
+    //@Test
     public void benchmarking_appATTF() throws JATEException, IOException {
         AppATTF appATTF = new AppATTF();
         List<JATETerm> termList = appATTF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
 
         assert termList != null;
         // the results depends on specified PoS patterns
-        // refer to genia.patterns for the default candidate extraction patterns
+        // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
         Assert.assertEquals("Candidate size should be 39367.", 39367, termList.size());
 
@@ -188,13 +185,15 @@ public class AppATETest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    @Test
+    //@Test
     public void benchmarking_appChiSquare() throws IOException, JATEException {
         AppChiSquare appChiSquare = new AppChiSquare();
         List<JATETerm> termList = appChiSquare.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
 
         assert termList != null;
-        // refer to genia.patterns for the default candidate extraction patterns
+        // the results depends on specified PoS patterns
+        // refer to genia.patterns in solr config for the default candidate extraction patterns
+        // candidate extraction is performed at index-time
         Assert.assertEquals("Candidate size should be 39367.", 39367, termList.size());
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double top50Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 50);
@@ -243,7 +242,8 @@ public class AppATETest extends BaseEmbeddedSolrTest {
         List<JATETerm> termList = appCValue.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
 
         assert termList != null;
-        // refer to genia.patterns for the default candidate extraction patterns
+        // the results depends on specified PoS patterns
+        // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
         Assert.assertEquals("Candidate size should be 39367.", 39367, termList.size());
 
@@ -288,7 +288,7 @@ public class AppATETest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    @Test
+    //@Test
     public void benchmarking_appGlossEx() throws JATEException, IOException {
         Map<String, String> initParams = new HashMap<>();
         initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), workingDir+"\\src\\main\\resource\\bnc_unifrqs.normal");
@@ -340,13 +340,14 @@ public class AppATETest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    @Test
+    //@Test
     public void benchmarking_appRAKE() throws JATEException, IOException {
         AppRAKE appRAKE = new AppRAKE();
         List<JATETerm> termList = appRAKE.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
 
         assert termList != null;
-        // refer to genia.patterns for the default candidate extraction patterns
+        // the results depends on specified PoS patterns
+        // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
         Assert.assertEquals("Candidate size should be 39367.", 39367, termList.size());
 
@@ -391,13 +392,14 @@ public class AppATETest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    @Test
+    //@Test
     public void benchmarking_appRIDF() throws JATEException, IOException {
         AppRIDF appRIDF = new AppRIDF();
         List<JATETerm> termList = appRIDF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
 
         assert termList != null;
-        // refer to genia.patterns for the default candidate extraction patterns
+        // the results depends on specified PoS patterns
+        // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
         Assert.assertEquals("Candidate size should be 39367.", 39367, termList.size());
 
@@ -442,14 +444,16 @@ public class AppATETest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    @Test
+    //@Test
     public void benchmarking_appTermEx() throws JATEException, IOException {
         Map<String, String> initParams = new HashMap<>();
         initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), workingDir+"\\src\\main\\resource\\bnc_unifrqs.normal");
         AppTermEx appTermEx = new AppTermEx(initParams);
 
         List<JATETerm> termList = appTermEx.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
-
+        // the results depends on specified PoS patterns
+        // refer to genia.patterns in solr config for the default candidate extraction patterns
+        // candidate extraction is performed at index-time
         LOG.info("termList.size():"+termList.size());
         Assert.assertEquals("Candidate size should be 39367.", 39367, termList.size());
 
@@ -494,7 +498,7 @@ public class AppATETest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    @Test
+   // @Test
     public void benchmarking_appTFIDF()throws JATEException, IOException {
         AppTFIDF appTFIDF = new AppTFIDF();
 
@@ -543,12 +547,15 @@ public class AppATETest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    @Test
+   // @Test
     public void benchmarking_appTTF() throws JATEException, IOException {
         AppTTF appTTF = new AppTTF();
 
         List<JATETerm> termList = appTTF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
 
+        // the results depends on specified PoS patterns
+        // refer to genia.patterns in solr config for the default candidate extraction patterns
+        // candidate extraction is performed at index-time
         LOG.info("termList.size():"+termList.size());
         Assert.assertEquals("Candidate size should be 39367.", 39367, termList.size());
 
@@ -593,14 +600,16 @@ public class AppATETest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    @Test
+   // @Test
     public void benchmarking_appWeirdness()throws JATEException, IOException {
         Map<String, String> initParams = new HashMap<>();
         initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), workingDir+"\\src\\main\\resource\\bnc_unifrqs.normal");
         AppWeirdness appWeirdness = new AppWeirdness(initParams);
 
         List<JATETerm> termList = appWeirdness.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
-
+        // the results depends on specified PoS patterns
+        // refer to genia.patterns in solr config for the default candidate extraction patterns
+        // candidate extraction is performed at index-time
         LOG.info("termList.size():"+termList.size());
         Assert.assertEquals("Candidate size should be 39367.", 39367, termList.size());
 
