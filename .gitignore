@@ -6,6 +6,7 @@ experiment/*
 .iml
 *.asc
 *.gif
+*.iml
 example/solr/server/solr/jate/data
 /testdata/solr-testbed/testCore/data
 /target/
