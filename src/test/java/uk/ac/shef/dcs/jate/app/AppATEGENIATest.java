@@ -9,7 +9,10 @@ import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.sax.BodyContentHandler;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.xml.sax.SAXException;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
@@ -19,28 +22,40 @@ import uk.ac.shef.dcs.jate.eval.Scorer;
 import uk.ac.shef.dcs.jate.model.JATEDocument;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
  * Unit tests for App* of a set of ATE algorithms & GENIA based benchmarking test based on Embedded Solr
- *
+ * <p>
+ * GENIA CORPUS is downloaded via <a href="http://www.geniaproject.org/genia-corpus/term-corpus">GENIA Corpus</a>
+ * <p>
+ * GENIA CORPUS needs specialised part-of-speech tagger to get optimal performance. However, we use a general purpose
+ * one (the OpenNLP Part-of-Speech (PoS) tagger) due to the license constraints. This explains the reason of overall
+ * recall is low in our implementation.
+ * <p>
  * Default Solr config is retrieved through testdata/solr-testbed
  * Default jate.properties is loaded from classpath
  * Enable PoS pattern based candidate extraction in Solr (see field type "jate_text_2_terms" for reference)
- *
  */
-public class AppATETest extends BaseEmbeddedSolrTest {
-    private static Logger LOG = Logger.getLogger(AppATETest.class.getName());
+public class AppATEGENIATest extends BaseEmbeddedSolrTest {
+    private static Logger LOG = Logger.getLogger(AppATEGENIATest.class.getName());
 
-    String workingDir = System.getProperty("user.dir");
+    static String workingDir = System.getProperty("user.dir");
 
-    public static final String GENIA_CORPUS_ZIPPED_FILE = System.getProperty("user.dir") +
-            "\\src\\test\\resource\\eval\\GENIAcorpus-files.zip";
-    public static final String GENIA_CORPUS_CONCEPT_FILE = System.getProperty("user.dir") +
-            "\\src\\test\\resource\\eval\\GENIAcorpus-concept.txt";
+    public static final Path GENIA_CORPUS_ZIPPED_FILE =
+            Paths.get(workingDir, "src", "test", "resource", "eval", "GENIAcorpus-files.zip");
+
+    public static final Path GENIA_CORPUS_CONCEPT_FILE = Paths.get(System.getProperty("user.dir"),
+            "src", "test", "resource", "eval", "GENIAcorpus-concept.txt");
+
+    public static final Path REFERENCE_FREQUENCY_FILE = Paths.get(workingDir,
+            "src", "main", "resource", "bnc_unifrqs.normal");
 
     JATEProperties jateProperties = null;
 
@@ -50,13 +65,15 @@ public class AppATETest extends BaseEmbeddedSolrTest {
     public void setup() throws Exception {
         super.setup();
 
+        ;
+
         jateProperties = new JATEProperties();
         jateProperties.setSolrHome(this.solrHome);
         jateProperties.setSolrCoreName(this.solrCoreName);
 
         indexCorpus(loadGENIACorpus());
 
-        gsTerms = GSLoader.loadGenia(GENIA_CORPUS_CONCEPT_FILE, true, true);
+        gsTerms = GSLoader.loadGenia(GENIA_CORPUS_CONCEPT_FILE.toFile(), true, true);
 
         if (gsTerms == null) {
             throw new JATEException("GENIA CORPUS CONCEPT FILE CANNOT BE LOADED SUCCESSFULLY!");
@@ -71,7 +88,7 @@ public class AppATETest extends BaseEmbeddedSolrTest {
         List<JATEDocument> corpus = new ArrayList<JATEDocument>();
 
         try {
-            ZipFile geniaCorpus = new ZipFile(GENIA_CORPUS_ZIPPED_FILE);
+            ZipFile geniaCorpus = new ZipFile(GENIA_CORPUS_ZIPPED_FILE.toFile());
             Enumeration<? extends ZipEntry> entries = geniaCorpus.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
@@ -291,12 +308,13 @@ public class AppATETest extends BaseEmbeddedSolrTest {
     //@Test
     public void benchmarking_appGlossEx() throws JATEException, IOException {
         Map<String, String> initParams = new HashMap<>();
-        initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), workingDir+"\\src\\main\\resource\\bnc_unifrqs.normal");
+
+        initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), REFERENCE_FREQUENCY_FILE.toString());
         AppGlossEx appGlossEx = new AppGlossEx(initParams);
 
         List<JATETerm> termList = appGlossEx.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
 
-        LOG.info("termList.size():"+termList.size());
+        LOG.info("termList.size():" + termList.size());
         Assert.assertEquals("Candidate size should be 39367.", 39367, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
@@ -447,14 +465,14 @@ public class AppATETest extends BaseEmbeddedSolrTest {
     //@Test
     public void benchmarking_appTermEx() throws JATEException, IOException {
         Map<String, String> initParams = new HashMap<>();
-        initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), workingDir+"\\src\\main\\resource\\bnc_unifrqs.normal");
+        initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), REFERENCE_FREQUENCY_FILE.toString());
         AppTermEx appTermEx = new AppTermEx(initParams);
 
         List<JATETerm> termList = appTermEx.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
         // the results depends on specified PoS patterns
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
-        LOG.info("termList.size():"+termList.size());
+        LOG.info("termList.size():" + termList.size());
         Assert.assertEquals("Candidate size should be 39367.", 39367, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
@@ -498,12 +516,12 @@ public class AppATETest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-   // @Test
-    public void benchmarking_appTFIDF()throws JATEException, IOException {
+    // @Test
+    public void benchmarking_appTFIDF() throws JATEException, IOException {
         AppTFIDF appTFIDF = new AppTFIDF();
 
         List<JATETerm> termList = appTFIDF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
-        LOG.info("termList.size():"+termList.size());
+        LOG.info("termList.size():" + termList.size());
         Assert.assertEquals("Candidate size should be 39367.", 39367, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
@@ -547,7 +565,7 @@ public class AppATETest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-   // @Test
+    // @Test
     public void benchmarking_appTTF() throws JATEException, IOException {
         AppTTF appTTF = new AppTTF();
 
@@ -556,7 +574,7 @@ public class AppATETest extends BaseEmbeddedSolrTest {
         // the results depends on specified PoS patterns
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
-        LOG.info("termList.size():"+termList.size());
+        LOG.info("termList.size():" + termList.size());
         Assert.assertEquals("Candidate size should be 39367.", 39367, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
@@ -600,17 +618,17 @@ public class AppATETest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-   // @Test
-    public void benchmarking_appWeirdness()throws JATEException, IOException {
+    // @Test
+    public void benchmarking_appWeirdness() throws JATEException, IOException {
         Map<String, String> initParams = new HashMap<>();
-        initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), workingDir+"\\src\\main\\resource\\bnc_unifrqs.normal");
+        initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), REFERENCE_FREQUENCY_FILE.toString());
         AppWeirdness appWeirdness = new AppWeirdness(initParams);
 
         List<JATETerm> termList = appWeirdness.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
         // the results depends on specified PoS patterns
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
-        LOG.info("termList.size():"+termList.size());
+        LOG.info("termList.size():" + termList.size());
         Assert.assertEquals("Candidate size should be 39367.", 39367, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
