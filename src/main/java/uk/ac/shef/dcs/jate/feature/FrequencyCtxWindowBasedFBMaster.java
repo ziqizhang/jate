@@ -8,7 +8,7 @@ import uk.ac.shef.dcs.jate.JATEProperties;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * <p>This class creates context windows of a given size around candidate terms or words, and counts
@@ -139,7 +139,7 @@ public class FrequencyCtxWindowBasedFBMaster extends AbstractFeatureBuilder {
         } catch (IOException ioe) {
             StringBuilder sb = new StringBuilder("Failed to build features!");
             sb.append("\n").append(ExceptionUtils.getFullStackTrace(ioe));
-            LOG.severe(sb.toString());
+            LOG.error(sb.toString());
             throw new JATEException(sb.toString());
         }
         return feature;

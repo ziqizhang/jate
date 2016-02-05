@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * To run on external/remote Solr server, it needs jate-2.0Alpha-SNAPSHOT-jar-with-dependencies.jar
@@ -24,8 +26,9 @@ public class AppATTFACLRDTECTest extends ACLRDTECTest {
 
     public List<JATETerm> rankAndFilter(String solrCoreName) throws JATEException {
         List<JATETerm> terms = new ArrayList<>();
+        Map initParam = new HashMap<>();
 
-        AppATTF appATTF = new AppATTF();
+        AppATTF appATTF = new AppATTF(initParam);
 
         terms = appATTF.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
         return terms;

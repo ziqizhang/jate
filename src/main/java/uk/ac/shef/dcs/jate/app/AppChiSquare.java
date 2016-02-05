@@ -41,23 +41,30 @@ public class AppChiSquare extends App {
         }
     }
 
+    //TODO: should allow to initialse with default setting
     public AppChiSquare(Map<String, String> initParams) throws JATEException {
         super(initParams);
         initializeFTParam(initParams);
     }
 
+    /**
+     * TODO: provide more guidance and explanation about how to setup initial parameters
+     *
+     * @param initParams, TODO
+     * @throws JATEException
+     */
     private void initializeFTParam(Map<String, String> initParams) throws JATEException {
         //This param is Chi-Square only
-        String sFT = initParams.get("-ft");
+        String sFT = initParams.get(AppParams.CHISQUERE_FREQ_TERM_CUTOFF_PERCENTAGE.getParamKey());
         if (sFT != null) {
             try {
                 frequentTermFT = Double.parseDouble(sFT);
                 if (frequentTermFT > 1.0 || frequentTermFT <= 0.0)
-                    throw new JATEException("Frequent Term cutoff percentage ('-ft') is not set correctly! Value must be within (0,1.0]");
+                    throw new JATEException("Frequent Term cutoff percentage ('-ft') is not set correctly! " +
+                            "Value must be within (0,1.0]");
             } catch (NumberFormatException nfe) {
-                StringBuilder msg =
-                        new StringBuilder("Frequent Term cutoff percentage ('-ft') is not set correctly! A decimal value is expected!");
-                throw new JATEException(msg.toString());
+                throw new JATEException("Frequent Term cutoff percentage ('-ft') is not set correctly! " +
+                        "A decimal value is expected!");
             }
         }
 

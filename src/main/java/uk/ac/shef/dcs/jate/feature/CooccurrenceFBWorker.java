@@ -3,7 +3,7 @@ package uk.ac.shef.dcs.jate.feature;
 import uk.ac.shef.dcs.jate.JATERecursiveTaskWorker;
 
 import java.util.*;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * AN IMPORTANT ASSUMPTION IS THAT context id disjoint, e.g., sentences. In window-based context, coocurrence can be

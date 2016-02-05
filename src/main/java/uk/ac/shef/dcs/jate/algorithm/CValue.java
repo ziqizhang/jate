@@ -8,7 +8,7 @@ import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * An implementation of the CValue term recognition algorithm. See Frantzi et. al 2000, <i>

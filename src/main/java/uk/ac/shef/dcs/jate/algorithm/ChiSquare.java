@@ -9,7 +9,7 @@ import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * An implementation of the Chi Square algorithm. See Matsuo, Y., Ishizuka, M. </i>

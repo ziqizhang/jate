@@ -8,7 +8,7 @@ import uk.ac.shef.dcs.jate.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import java.util.*;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * An implementation of the TermEx term recognition algorithm. See Sclano e. al 2007, <i>
@@ -115,7 +115,7 @@ public class TermEx extends ReferenceBased {
                 c.setDocId(i);
                 c = fFeatureDocs.getContextWindow(c.toString());
                 if (c == null)
-                    LOG.severe("TermEx error: expected context window does not exist, its id is:"+c.toString());
+                    LOG.error(String.format("TermEx error: expected context window does not exist in doc [%s]", i));
 
                 int tfid = fFeatureDocs.getTFIC(c).get(tString);
                 int ttfid = fFeatureDocs.getMapCtx2TTF().get(c);

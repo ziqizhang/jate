@@ -9,7 +9,7 @@ import uk.ac.shef.dcs.jate.JATERecursiveTaskWorker;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -72,19 +72,19 @@ public class FrequencyCtxDocBasedFBWorker extends JATERecursiveTaskWorker<String
                         StringBuilder msg = new StringBuilder(termStr);
                         msg.append(" is a candidate term, but not indexed in the n-gram information field. It's score may be mis-computed.");
                         msg.append(" Reasons can be: different analysis chains for the two fields; cross-sentence-boundary MWEs");
-                        LOG.warning(msg.toString());
+                        LOG.warn(msg.toString());
                     }
                 } catch (IOException ioe) {
                     StringBuilder sb = new StringBuilder("Unable to build feature for candidate:");
                     sb.append(termStr).append("\n");
                     sb.append(ExceptionUtils.getFullStackTrace(ioe));
-                    LOG.severe(sb.toString());
+                    LOG.error(sb.toString());
                 }
             }
         } catch (IOException e) {
             StringBuilder sb = new StringBuilder("Unable to read ngram information field:");
             sb.append(ExceptionUtils.getFullStackTrace(e));
-            LOG.severe(sb.toString());
+            LOG.error(sb.toString());
         }
         return total;
     }

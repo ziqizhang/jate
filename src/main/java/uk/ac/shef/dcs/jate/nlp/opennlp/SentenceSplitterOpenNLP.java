@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 public class SentenceSplitterOpenNLP implements SentenceSplitter {
     private static Logger LOG = Logger.getLogger(SentenceSplitterOpenNLP.class.getName());

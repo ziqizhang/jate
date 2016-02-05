@@ -9,11 +9,8 @@ import uk.ac.shef.dcs.jate.JATEException;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
-/**
- * Created by zqz on 15/09/2015.
- */
 public class SolrUtil {
 
     public static Terms getTermVector(String fieldname, SolrIndexSearcher solrIndexSearcher) throws JATEException{
@@ -51,12 +48,12 @@ public class SolrUtil {
             StringBuilder message = new StringBuilder("FAILED TO COMMIT TO SOLR: ");
             message.append(Arrays.toString(messages)).append("\n")
                     .append(ExceptionUtils.getStackTrace(e)).append("\n");
-            logger.severe(message.toString());
+            logger.error(message.toString());
         } catch (IOException e) {
             StringBuilder message = new StringBuilder("FAILED TO COMMIT TO SOLR: ");
             message.append(Arrays.toString(messages)).append("\n")
                     .append(ExceptionUtils.getStackTrace(e)).append("\n");
-            logger.severe(message.toString());
+            logger.error(message.toString());
         }
     }
 }

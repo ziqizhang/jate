@@ -14,7 +14,7 @@ import uk.ac.shef.dcs.jate.util.SolrUtil;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * A containment relationship between a candidate term and a context window can be partial. I.e., as long as a candidate term's
@@ -199,7 +199,7 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
                 StringBuilder sb = new StringBuilder("Unable to build feature for document id:");
                 sb.append(docId).append("\n");
                 sb.append(ExceptionUtils.getFullStackTrace(ioe));
-                LOG.severe(sb.toString());
+                LOG.error(sb.toString());
             }
         }
 
@@ -320,17 +320,17 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
                 StringBuilder sb = new StringBuilder("Unable to build feature for document id:");
                 sb.append(docId).append("\n");
                 sb.append(ExceptionUtils.getFullStackTrace(ioe));
-                LOG.severe(sb.toString());
+                LOG.error(sb.toString());
             } catch (JATEException je) {
                 StringBuilder sb = new StringBuilder("Unable to build feature for document id:");
                 sb.append(docId).append("\n");
                 sb.append(ExceptionUtils.getFullStackTrace(je));
-                LOG.severe(sb.toString());
+                LOG.error(sb.toString());
             }
         }
         if (firstTokenIndexes.size() / docIds.size() <= 1)
             try {
-                LOG.warning("Check your analyzer chain for your Solr field "
+                LOG.warn("Check your analyzer chain for your Solr field "
                         + properties.getSolrFieldNameJATENGramInfo() + " if each token's position in a sentence has been produced.");
             } catch (JATEException e) {
             }

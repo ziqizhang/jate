@@ -6,7 +6,7 @@ import uk.ac.shef.dcs.jate.JATEProperties;
 
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * This class counts pair-wise co-occurrence between two list of candidates, one called <b>target</b> candidate terms

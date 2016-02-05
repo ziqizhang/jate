@@ -13,11 +13,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
-/**
- * Created by zqz on 23/09/2015.
- */
 public class Indexing {
     public static void main(String[] args) throws IOException, JATEException, SolrServerException {
         Logger logger = Logger.getLogger(Indexing.class.getName());

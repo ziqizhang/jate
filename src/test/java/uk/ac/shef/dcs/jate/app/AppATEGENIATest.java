@@ -1,5 +1,6 @@
 package uk.ac.shef.dcs.jate.app;
 
+import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
@@ -19,8 +20,9 @@ import uk.ac.shef.dcs.jate.model.JATEDocument;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -35,35 +37,35 @@ import java.util.zip.ZipFile;
 public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     private static Logger LOG = Logger.getLogger(AppATEGENIATest.class.getName());
 
-    public static final String GENIA_CORPUS_ZIPPED_FILE = System.getProperty("user.dir") +
-            "/src/test/resource/eval/GENIAcorpus-files.zip";
-    /*public static final String GENIA_CORPUS_ZIPPED_FILE = System.getProperty("user.dir") +
-            "/src/test/resource/eval/files.zip";*/
-    public static final String GENIA_CORPUS_CONCEPT_FILE = System.getProperty("user.dir") +
-            "/src/test/resource/eval/GENIAcorpus-concept.txt";
+    public static final Path GENIA_CORPUS_ZIPPED_FILE = Paths.get(workingDir, "src", "test", "resource",
+        "eval", "GENIAcorpus-files.zip");
+
+    public static final Path GENIA_CORPUS_CONCEPT_FILE = Paths.get(workingDir, "src", "test", "resource",
+            "eval", "GENIAcorpus-concept.txt");
 
     JATEProperties jateProperties = null;
 
     List<String> gsTerms;
-    Map<String, String> params = new HashMap<>();
+    Map<String, String> initParams = null;
 
     @Before
     public void setup() throws Exception {
         super.setup();
         jateProperties = new JATEProperties();
-        jateProperties.setSolrHome(this.solrHome);
-        jateProperties.setSolrCoreName(this.solrCoreName);
+        jateProperties.setSolrHome(solrHome.toString());
+        jateProperties.setSolrCoreName(solrCoreName);
 
-        //indexCorpus(loadGENIACorpus());
+        indexCorpus(loadGENIACorpus());
 
-        gsTerms = GSLoader.loadGenia(GENIA_CORPUS_CONCEPT_FILE, true, true);
+        gsTerms = GSLoader.loadGenia(GENIA_CORPUS_CONCEPT_FILE.toFile(), true, true);
 
         if (gsTerms == null) {
             throw new JATEException("GENIA CORPUS CONCEPT FILE CANNOT BE LOADED SUCCESSFULLY!");
         }
+        initParams = new HashMap<>();
 
-        params.put("-pf.mttf","2");
-        params.put("-cf.kp","0.99999");
+        initParams.put(AppParams.PREFILTER_MIN_TERM_TOTAL_FREQUENCY.getParamKey(), "2");
+        initParams.put(AppParams.CUTOFF_TOP_K_PERCENT.getParamKey(), "0.99999");
         LOG.info("<<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>");
     }
 
@@ -75,12 +77,13 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         List<JATEDocument> corpus = new ArrayList<>();
 
         try {
-            ZipFile geniaCorpus = new ZipFile(GENIA_CORPUS_ZIPPED_FILE);
+            ZipFile geniaCorpus = new ZipFile(GENIA_CORPUS_ZIPPED_FILE.toFile());
             Enumeration<? extends ZipEntry> entries = geniaCorpus.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
                 String fileName = entry.getName();
-                if(entry.isDirectory()||fileName.startsWith("__MACOSX/")||fileName.contains(".DS_Store"))//hidden file in MAC OS
+                //skip file in MAC OS
+                if(entry.isDirectory()||fileName.startsWith("__MACOSX/")||fileName.contains(".DS_Store"))
                     continue;
 
                 InputStream stream = geniaCorpus.getInputStream(entry);
@@ -111,7 +114,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
                 count++;
                 super.addNewDoc(doc.getId(), doc.getId(), doc.getContent(), jateProperties, false);
                 if (count%500==0){
-                    LOG.info("Done "+count);
+                    LOG.info(String.format("%s documents indexed.",count));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -119,7 +122,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
                 e.printStackTrace();
             } catch (JATEException jateEx) {
                 jateEx.printStackTrace();
-                LOG.warning(String.format("failed to index document. Please check JATE properties " +
+                LOG.warn(String.format("failed to index document. Please check JATE properties " +
                                 "for current setting for [%s] and [%s]", JATEProperties.PROPERTY_SOLR_FIELD_CONTENT_NGRAMS,
                         JATEProperties.PROPERTY_SOLR_FIELD_CONTENT_TERMS));
             }
@@ -145,7 +148,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     }
     //@Test
     public void benchmarking_appATTF() throws JATEException, IOException {
-        AppATTF appATTF = new AppATTF(params);
+        AppATTF appATTF = new AppATTF(initParams);
         List<JATETerm> termList = appATTF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
 
         assert termList != null;
@@ -197,8 +200,8 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
     //@Test
     public void benchmarking_appChiSquare() throws IOException, JATEException {
-        params.put("-ft","0.3");
-        AppChiSquare appChiSquare = new AppChiSquare(params);
+        initParams.put(AppParams.CHISQUERE_FREQ_TERM_CUTOFF_PERCENTAGE.getParamKey(), "0.3");
+        AppChiSquare appChiSquare = new AppChiSquare(initParams);
         List<JATETerm> termList = appChiSquare.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
 
         assert termList != null;
@@ -245,12 +248,11 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  top 8000 Precision:" + top8000Precision);
         LOG.info("  top 10000 Precision:" + top10000Precision);
         LOG.info("  overall recall:" + recall);
-        params.remove("-ft");
     }
 
-    //@Test
+    @Test
     public void benchmarking_appCValue() throws IOException, JATEException {
-        AppCValue appCValue = new AppCValue(params);
+        AppCValue appCValue = new AppCValue(initParams);
         List<JATETerm> termList = appCValue.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
 
         assert termList != null;
@@ -302,8 +304,8 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
     //@Test
     public void benchmarking_appGlossEx() throws JATEException, IOException {
-        params.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), workingDir+"/testdata/solr-testbed/jate/conf/bnc_unifrqs.normal");
-        AppGlossEx appGlossEx = new AppGlossEx(params);
+        initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), FREQ_GENIC_FILE.toString());
+        AppGlossEx appGlossEx = new AppGlossEx(initParams);
 
         List<JATETerm> termList = appGlossEx.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
 
@@ -349,11 +351,11 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  top 8000 Precision:" + top8000Precision);
         LOG.info("  top 10000 Precision:" + top10000Precision);
         LOG.info("  overall recall:" + recall);
-        params.remove(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey());
     }
+
     //@Test
     public void benchmarking_appRAKE() throws JATEException, IOException {
-        AppRAKE appRAKE = new AppRAKE(params);
+        AppRAKE appRAKE = new AppRAKE(initParams);
         List<JATETerm> termList = appRAKE.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
 
         assert termList != null;
@@ -408,7 +410,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
     //@Test
     public void benchmarking_appRIDF() throws JATEException, IOException {
-        AppRIDF appRIDF = new AppRIDF(params);
+        AppRIDF appRIDF = new AppRIDF(initParams);
         List<JATETerm> termList = appRIDF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
 
         assert termList != null;
@@ -460,8 +462,8 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
     //@Test
     public void benchmarking_appTermEx() throws JATEException, IOException {
-        params.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), workingDir+"/testdata/solr-testbed/jate/conf/bnc_unifrqs.normal");
-        AppTermEx appTermEx = new AppTermEx(params);
+        initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), FREQ_GENIC_FILE.toString());
+        AppTermEx appTermEx = new AppTermEx(initParams);
 
         List<JATETerm> termList = appTermEx.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
         // the results depends on specified PoS patterns
@@ -472,28 +474,28 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double top50Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 50);
-        //assert 0.32 == top50Precision;
+        assert 0.56 == top50Precision;
 
         double top100Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 100);
-        //assert 0.41 == top100Precision;
+        assert 0.63 == top100Precision;
 
         double top500Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 500);
-        //assert 0.29 == top500Precision;
+        assert 0.61 == top500Precision;
 
         double top1000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 1000);
-        //assert 0.28 == top1000Precision;
+        assert 0.6 == top1000Precision;
 
         double top3000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 3000);
-        //assert 0.29 == top3000Precision;
+        assert 0.64 == top3000Precision;
 
         double top5000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 5000);
-        //assert 0.29 == top5000Precision;
+        assert 0.66 == top5000Precision;
 
         double top8000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 8000);
-        //assert 0.32 == top8000Precision;
+        assert 0.67 == top8000Precision;
 
         double top10000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 10000);
-        //assert 0.32 == top10000Precision;
+        assert 0.64 == top10000Precision;
 
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.18 == recall;
@@ -509,13 +511,11 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  top 8000 Precision:" + top8000Precision);
         LOG.info("  top 10000 Precision:" + top10000Precision);
         LOG.info("  overall recall:" + recall);
-
-        params.remove(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey());
     }
 
     //@Test
     public void benchmarking_appTFIDF()throws JATEException, IOException {
-        AppTFIDF appTFIDF = new AppTFIDF(params);
+        AppTFIDF appTFIDF = new AppTFIDF(initParams);
 
         List<JATETerm> termList = appTFIDF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
         //LOG.info("termList.size():"+termList.size());
@@ -564,7 +564,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
     //@Test
     public void benchmarking_appTTF() throws JATEException, IOException {
-        AppTTF appTTF = new AppTTF(params);
+        AppTTF appTTF = new AppTTF(initParams);
 
         List<JATETerm> termList = appTTF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
 
@@ -615,10 +615,10 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    @Test
+    //@Test
     public void benchmarking_appWeirdness()throws JATEException, IOException {
-        params.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), workingDir+"/testdata/solr-testbed/jate/conf/bnc_unifrqs.normal");
-        AppWeirdness appWeirdness = new AppWeirdness(params);
+        initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), FREQ_GENIC_FILE.toString());
+        AppWeirdness appWeirdness = new AppWeirdness(initParams);
 
         List<JATETerm> termList = appWeirdness.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
         // the results depends on specified PoS patterns
@@ -666,8 +666,6 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  top 8000 Precision:" + top8000Precision);
         LOG.info("  top 10000 Precision:" + top10000Precision);
         LOG.info("  overall recall:" + recall);
-
-        params.remove(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey());
     }
 
     @After

@@ -1,12 +1,12 @@
 package uk.ac.shef.dcs.jate.algorithm;
 
+import org.apache.log4j.Logger;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.feature.AbstractFeature;
 import uk.ac.shef.dcs.jate.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * Average Total Term Frequency (ATTF). Compute the total frequency of a term in a corpus (ttf), and total document frequency (tdf).

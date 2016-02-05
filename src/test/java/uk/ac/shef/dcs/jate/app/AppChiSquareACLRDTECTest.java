@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AppChiSquareACLRDTECTest extends ACLRDTECTest {
 
@@ -18,8 +20,11 @@ public class AppChiSquareACLRDTECTest extends ACLRDTECTest {
     @Override
     List<JATETerm> rankAndFilter(String solrCoreName) throws JATEException {
         List<JATETerm> terms = new ArrayList<>();
-
-        AppChiSquare appChiSquare = new AppChiSquare();
+        Map<String, String> params = new HashMap<>();
+        params.put("-pf.mttf","2");
+        params.put("-cf.kp","0.99999");
+        params.put("-ft","0.3");
+        AppChiSquare appChiSquare = new AppChiSquare(params);
         try {
             terms = appChiSquare.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
         } catch (IOException e) {

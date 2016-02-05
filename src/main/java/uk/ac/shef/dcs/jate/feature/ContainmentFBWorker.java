@@ -1,12 +1,12 @@
 package uk.ac.shef.dcs.jate.feature;
 
+import org.apache.log4j.Logger;
 import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.JATERecursiveTaskWorker;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -68,7 +68,7 @@ class ContainmentFBWorker extends JATERecursiveTaskWorker<String, int[]> {
             }
             count++;
             if(count%1000==0)
-                LOG.info(count+"/"+taskTerms.size());
+                LOG.debug(count + "/" + taskTerms.size());
         }
         return new int[]{count, taskTerms.size()};
     }

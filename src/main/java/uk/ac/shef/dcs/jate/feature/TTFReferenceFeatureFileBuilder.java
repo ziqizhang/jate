@@ -6,7 +6,7 @@ import uk.ac.shef.dcs.jate.JATEException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * A specific type of feature builder that builds an instance of

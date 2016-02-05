@@ -14,7 +14,7 @@ import uk.ac.shef.dcs.jate.util.SolrUtil;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -81,17 +81,17 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                 StringBuilder sb = new StringBuilder("Unable to build feature for document id:");
                 sb.append(docId).append("\n");
                 sb.append(ExceptionUtils.getFullStackTrace(ioe));
-                LOG.severe(sb.toString());
+                LOG.error(sb.toString());
             } catch (JATEException je) {
                 StringBuilder sb = new StringBuilder("Unable to build feature for document id:");
                 sb.append(docId).append("\n");
                 sb.append(ExceptionUtils.getFullStackTrace(je));
-                LOG.severe(sb.toString());
+                LOG.error(sb.toString());
             }
         }
         if(sentenceIds.size()==1)
             try {
-                LOG.warning("Among "+docIds.size()+" on average each document has only 1 sentence. If this is not expected, check your analyzer chain for your Solr field "
+                LOG.error("Among "+docIds.size()+" on average each document has only 1 sentence. If this is not expected, check your analyzer chain for your Solr field "
                 +properties.getSolrFieldNameJATENGramInfo()+" (OpenNLPTokenizerFactory) if SentenceContext has been produced corrected.");
             } catch (JATEException e) {
             }

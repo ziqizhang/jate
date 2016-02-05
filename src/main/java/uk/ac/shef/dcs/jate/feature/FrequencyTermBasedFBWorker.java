@@ -9,11 +9,8 @@ import uk.ac.shef.dcs.jate.JATERecursiveTaskWorker;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
-/**
- * Created by zqz on 17/09/2015.
- */
 class FrequencyTermBasedFBWorker extends JATERecursiveTaskWorker<String, int[]> {
 
 	private static final long serialVersionUID = -5304721004951728503L;
@@ -72,7 +69,7 @@ class FrequencyTermBasedFBWorker extends JATERecursiveTaskWorker<String, int[]> 
                         StringBuilder msg = new StringBuilder(term);
                         msg.append(" is a candidate term, but not indexed in the n-gram information field. It's score may be mis-computed.");
                         msg.append(" (You may have used different text analysis process (e.g., different tokenizers) for the two fields.) ");
-                        LOG.warning(msg.toString());
+                        LOG.warn(msg.toString());
                     }
                 /*if(totalSuccess%2000==0)
                     LOG.info(totalSuccess+"/"+terms.size());*/
@@ -80,13 +77,13 @@ class FrequencyTermBasedFBWorker extends JATERecursiveTaskWorker<String, int[]> 
                     StringBuilder sb = new StringBuilder("Unable to build feature for candidate:");
                     sb.append(term).append("\n");
                     sb.append(ExceptionUtils.getFullStackTrace(ioe));
-                    LOG.severe(sb.toString());
+                    LOG.error(sb.toString());
                 }
             }
         } catch (IOException e) {
             StringBuilder sb = new StringBuilder("Unable to read ngram information field:");
             sb.append(ExceptionUtils.getFullStackTrace(e));
-            LOG.severe(sb.toString());
+            LOG.error(sb.toString());
         }
         LOG.info(totalSuccess + "/" + terms.size());
         return new int[]{totalSuccess, terms.size()};

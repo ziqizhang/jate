@@ -12,11 +12,8 @@ import uk.ac.shef.dcs.jate.util.SolrUtil;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
-/**
- * Created by zqz on 15/09/2015.
- */
 public class IndexingHandler {
 
     private static final Logger LOG = Logger.getLogger(IndexingHandler.class.getName());
@@ -63,17 +60,17 @@ public class IndexingHandler {
                 StringBuilder message = new StringBuilder("FAILED TO ADD DOC TO SOLR (no commit): ");
                 message.append(task).append("\n")
                         .append(ExceptionUtils.getStackTrace(e)).append("\n");
-                LOG.severe(message.toString());
+                LOG.error(message.toString());
             } catch (IOException e) {
                 StringBuilder message = new StringBuilder("FAILED TO ADD DOC TO SOLR (no commit): ");
                 message.append(task).append("\n")
                         .append(ExceptionUtils.getStackTrace(e)).append("\n");
-                LOG.severe(message.toString());
+                LOG.error(message.toString());
             }  catch (SolrServerException e) {
                 StringBuilder message = new StringBuilder("FAILED TO ADD DOC TO SOLR (add): ");
                 message.append(task).append("\n")
                         .append(ExceptionUtils.getStackTrace(e)).append("\n");
-                LOG.severe(message.toString());
+                LOG.error(message.toString());
             }
         }
         SolrUtil.commit(solrClient,LOG,String.valueOf(batches+1), String.valueOf(batchSize));
@@ -88,12 +85,12 @@ public class IndexingHandler {
         if(skipped.length()==0)
             LOG.info(msg.toString());
         else
-            LOG.warning(msg.toString());
+            LOG.warn(msg.toString());
         try {
             solrClient.close();
         } catch (IOException e) {
             String message = "CANNOT CLOSE SOLR: \n";
-            LOG.severe(message+ExceptionUtils.getStackTrace(e));
+            LOG.error(message+ExceptionUtils.getStackTrace(e));
         }
     }
 }

@@ -1,5 +1,6 @@
 package uk.ac.shef.dcs.jate.algorithm;
 
+import org.apache.log4j.Logger;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.feature.AbstractFeature;
 import uk.ac.shef.dcs.jate.feature.Cooccurrence;
@@ -7,8 +8,6 @@ import uk.ac.shef.dcs.jate.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import java.util.*;
-import java.util.logging.Logger;
-
 /**
  * Rose, S., Engel, D., Cramer, N., & Cowley, W. (2010).
  * Automatic Keyword Extraction from Individual Documents. In M. W. Berry & J. Kogan (Eds.),
@@ -34,7 +33,9 @@ public class RAKE extends Algorithm {
         StringBuilder msg = new StringBuilder("Beginning computing RAKE values,");
         msg.append(" total terms=" + candidates.size());
         int count=0;
-        LOG.info(msg.toString());
+
+        LOG.debug(msg.toString());
+
         for (String tString : candidates) {
             String[] elements = tString.split(" ");
             double score = 0;
@@ -56,8 +57,10 @@ public class RAKE extends Algorithm {
             JATETerm term = new JATETerm(tString, score);
             result.add(term);
             count++;
-            if(count%1000==0)
-                LOG.info("done batch="+count);
+
+            if(count%1000==0) {
+                LOG.debug("done batch="+count);
+            }
         }
 
         Collections.sort(result);

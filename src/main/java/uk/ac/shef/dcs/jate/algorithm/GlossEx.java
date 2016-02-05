@@ -6,7 +6,8 @@ import uk.ac.shef.dcs.jate.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import java.util.*;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
+
 
 /**
  * An implementation of the GlossEx term recognition algorithm. See Park, et. al 2002, <i>

@@ -13,6 +13,8 @@ import uk.ac.shef.dcs.jate.JATEProperties;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Abstracted class to support embedded solr based unit test
@@ -29,30 +31,28 @@ public abstract class BaseEmbeddedSolrTest {
 
     static String workingDir = System.getProperty("user.dir");
 
-    static String solrCoreName = "jate";
-    static String solrHome = workingDir + "/testdata/solr-testbed";
+    static String solrCoreName = "geniaCore";
+    static Path solrHome = Paths.get(workingDir, "testdata", "solr-testbed");
 
-    /*static String solrCoreName = "jate";
-    static String solrHome = "/Users/-/work/jate_accepted/example/solr/server/solr";*/
+    static Path FREQ_GENIC_FILE = Paths.get(workingDir,"src","main", "resource","bnc_unifrqs.normal");
 
     EmbeddedSolrServer server;
 
     @BeforeClass
     public static void setupClass() throws Exception {
-        /*try {
-            cleanIndexDirectory(solrHome, solrCoreName);
+        try {
+            cleanIndexDirectory(solrHome.toString(), solrCoreName);
         } catch (IOException ioe) {
             throw new JATEException("Unable to delete index data. Please clean index directory " +
                     "[testdata/solr-testbed/jate/data] manually!");
-        }*/
+        }
     }
 
     //@Before
     public void setup() throws Exception {
-        CoreContainer testBedContainer = new CoreContainer(solrHome);
+        CoreContainer testBedContainer = new CoreContainer(solrHome.toString());
         testBedContainer.load();
         server = new EmbeddedSolrServer(testBedContainer, solrCoreName);
-
     }
 
     /**
@@ -86,8 +86,10 @@ public abstract class BaseEmbeddedSolrTest {
     }
 
     public static void cleanIndexDirectory(String solrHome, String coreName) throws IOException {
-        File indexDir = new File(solrHome + File.separator + coreName + File.separator +
-                "data" + File.separator + "index" + File.separator);
+//       File indexDir = new File(solrHome + File.separator + coreName + File.separator +
+//                "data" + File.separator + "index" + File.separator);
+        File indexDir = Paths.get(solrHome,coreName,"data","index").toFile();
+
         try {
             if (indexDir.exists()) {
                 FileUtils.cleanDirectory(indexDir);
