@@ -225,6 +225,14 @@ public abstract class App {
 
 
     /**
+     * Rank and Filter terms candidates based on a given Solr index
+     *
+     * This method assume that documents are indexed in the solr container (solrHomePath)
+     * and term candidates have already been extracted at index-time.
+     *
+     * jate properties provides necessary information needed by the ATE algorithm (e.g., text field, ngram info field,
+     * term candiate field, cut-off threshold)
+     *
      * @param core,             solr core
      * @param jatePropertyFile, property file path
      * @return List<JATETerm>, the list of terms extracted
@@ -234,9 +242,18 @@ public abstract class App {
     public abstract List<JATETerm> extract(SolrCore core, String jatePropertyFile) throws IOException, JATEException;
 
     /**
+     * Rank and Filter terms candidates based on a given Solr index
+     *
+     * This method assume that documents are indexed in the solr container (solrHomePath)
+     * and term candidates have already been extracted at index-time.
+     *
+     * jate properties provides necessary information needed by the ATE algorithm (e.g., text field, ngram info field,
+     * term candiate field, cut-off threshold)
+     *
      * @param solrHomePath,     solr core home directory path
      * @param coreName,         solr core name from where term recognition is executed
-     * @param jatePropertyFile, property file path
+     * @param jatePropertyFile, jate property file path
+     *
      * @return List<JATETerm>, the list of terms extracted
      * @throws IOException
      * @throws JATEException

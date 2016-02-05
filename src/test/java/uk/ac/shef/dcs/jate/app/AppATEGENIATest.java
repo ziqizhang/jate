@@ -35,8 +35,6 @@ import java.util.zip.ZipFile;
 public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     private static Logger LOG = Logger.getLogger(AppATEGENIATest.class.getName());
 
-    String workingDir = System.getProperty("user.dir");
-
     public static final String GENIA_CORPUS_ZIPPED_FILE = System.getProperty("user.dir") +
             "/src/test/resource/eval/GENIAcorpus-files.zip";
     /*public static final String GENIA_CORPUS_ZIPPED_FILE = System.getProperty("user.dir") +
@@ -52,7 +50,6 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     @Before
     public void setup() throws Exception {
         super.setup();
-
         jateProperties = new JATEProperties();
         jateProperties.setSolrHome(this.solrHome);
         jateProperties.setSolrCoreName(this.solrCoreName);

@@ -2,11 +2,15 @@ package uk.ac.shef.dcs.jate.eval;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.lucene.analysis.en.EnglishMinimalStemmer;
+import uk.ac.shef.dcs.jate.JATEException;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * load gs from file
@@ -27,6 +31,30 @@ public class GSLoader {
         List<String> terms = FileUtils.readLines(file);
         return prune(terms, lowercase, normalize);
     }
+
+    public static List<String> loadACLRDTECGSTerms(Path allAnnotatedCandidTerm, boolean lowercase, boolean normalize)
+            throws JATEException {
+        List<String> terms = loadACLRDTECGSTerms(allAnnotatedCandidTerm);
+        return prune(terms, lowercase, normalize);
+    }
+
+    public static List<String> loadACLRDTECGSTerms(Path allAnnotatedCandidTerm) throws JATEException {
+        List<String> gsTerms = new ArrayList<>();
+        try {
+            InputStream is = new FileInputStream(allAnnotatedCandidTerm.toFile());
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            gsTerms = br.lines().map(mapToTerm).filter(term -> !term.equalsIgnoreCase("TERM_STRING")).collect(toList());
+        } catch (FileNotFoundException e) {
+            throw new JATEException(String.format("File [%s] not found!", allAnnotatedCandidTerm.toString()));
+        }
+        return gsTerms;
+    }
+
+    private static Function<String, String> mapToTerm = (line) -> {
+        String[] p = line.split("\t");
+        return p[1];
+    };
 
     public static List<String> loadACLRD(String file, boolean lowercase, boolean normalize) throws IOException {
         List<String> raw = FileUtils.readLines(new File(file));
