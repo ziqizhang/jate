@@ -9,6 +9,7 @@ out/*
 *.DS_Store
 *.log
 example/*
-/testdata/solr-testbed/jate/data
+/testdata/solr-testbed/geniaCore/data/*
+/testdata/solr-testbed/geniaCore/aclRdTecCore/*
 /target/
 .DS_Store
