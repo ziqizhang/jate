@@ -48,10 +48,6 @@ public class AppTTF extends App {
         super(initParams);
     }
 
-    public AppTTF() {
-
-    }
-
     @Override
     public List<JATETerm> extract(SolrCore core, String jatePropertyFile)
             throws IOException, JATEException {

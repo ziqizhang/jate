@@ -46,9 +46,6 @@ public class AppTFIDF extends App {
 		super(initParams);
 	}
 
-	public AppTFIDF(){
-
-	}
 
 	@Override
 	public List<JATETerm> extract(SolrCore core, String jatePropertyFile)

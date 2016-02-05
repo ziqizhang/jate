@@ -53,6 +53,7 @@ class ChiSquareWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> {
        
         int totalTermsInCorpus = fFeatureTerms.getCorpusTotal();
         for (String tString : candidates) {
+            //System.out.println(candidates.hashCode());
             Integer n_w = ctxTTFLookup.get(tString);//"the total number of terms in contexts (original paper: sentences)
             // where w appears".
             if (n_w == null) {

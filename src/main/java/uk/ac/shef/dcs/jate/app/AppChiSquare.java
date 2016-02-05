@@ -41,9 +41,6 @@ public class AppChiSquare extends App {
         }
     }
 
-    public AppChiSquare() {
-    }
-
     public AppChiSquare(Map<String, String> initParams) throws JATEException {
         super(initParams);
         initializeFTParam(initParams);
@@ -56,10 +53,10 @@ public class AppChiSquare extends App {
             try {
                 frequentTermFT = Double.parseDouble(sFT);
                 if (frequentTermFT > 1.0 || frequentTermFT <= 0.0)
-                    throw new JATEException("Frequent Term cutoff percentage ('-ff') is not set correctly! Value must be within (0,1.0]");
+                    throw new JATEException("Frequent Term cutoff percentage ('-ft') is not set correctly! Value must be within (0,1.0]");
             } catch (NumberFormatException nfe) {
                 StringBuilder msg =
-                        new StringBuilder("Frequent Term cutoff percentage ('-ff') is not set correctly! A decimal value is expected!");
+                        new StringBuilder("Frequent Term cutoff percentage ('-ft') is not set correctly! A decimal value is expected!");
                 throw new JATEException(msg.toString());
             }
         }
@@ -83,15 +80,14 @@ public class AppChiSquare extends App {
             FrequencyTermBased ftb = (FrequencyTermBased) ftbb.build();
 
             //sentence is a context
-            /*FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties,0);
+            FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties,0);
             FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
             FrequencyCtxBased ref_fcsb = (FrequencyCtxBased) (new FrequencyCtxBasedCopier(searcher, properties, fcsb, ftb, frequentTermFT).build());
-*/
             //window is a context
-            FrequencyCtxWindowBasedFBMaster fcsbb = new FrequencyCtxWindowBasedFBMaster(searcher, properties, null, 5, 0);
+            /*FrequencyCtxWindowBasedFBMaster fcsbb = new FrequencyCtxWindowBasedFBMaster(searcher, properties, null, 5, 0);
             FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
             FrequencyCtxBased ref_fcsb = (FrequencyCtxBased)
-                    (new FrequencyCtxWindowBasedFBMaster(searcher, properties, fcsb.getMapCtx2TTF().keySet(), 5, 0).build());
+                    (new FrequencyCtxWindowBasedFBMaster(searcher, properties, fcsb.getMapCtx2TTF().keySet(), 5, 0).build());*/
 
             List<String> inter = new ArrayList<>(fcsb.getCtxOverlapZones().keySet());
             inter.removeAll(ref_fcsb.getCtxOverlapZones().keySet());

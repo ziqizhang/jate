@@ -23,6 +23,9 @@ public class FrequencyCtxBased extends AbstractFeature {
     protected FrequencyCtxBased() {
     }
 
+    public ContextWindow getContextWindow(String id){
+        return id2Ctx.get(id);
+    }
 
     public Map<ContextWindow, Integer> getMapCtx2TTF() {
         return ctx2TTF;
@@ -38,6 +41,7 @@ public class FrequencyCtxBased extends AbstractFeature {
 
     public Map<String, Integer> getTFIC(ContextWindow ctx) {
         Map<String, Integer> result = ctx2TFIC.get(ctx);
+
         if (result == null)
             return new HashMap<>();
         return result;

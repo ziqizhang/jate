@@ -22,7 +22,6 @@ public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
 
     private int termOrWord; //0 means term; 1 means word
     public final static Integer FEATURE_TYPE_TERM = 0;
-    public final static Integer FEATURE_TYPE_WORD = 1;
     public final static Integer DEFAULT_CPU_CORES = 1;
 
     public FrequencyTermBasedFBMaster(SolrIndexSearcher solrIndexSearcher, JATEProperties properties,

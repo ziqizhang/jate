@@ -6,7 +6,7 @@ import org.apache.lucene.analysis.tokenattributes.PayloadAttribute;
  * Classes implementing this interface must record the following information, in the following format:
  *
  * 1. which sentence id this lexical unit (token, phrase) is from
- * 2. the order of the first token and the order of the last token in the sentence
+ * 2. the index number of the first token and the index of the last token in the sentence
  *
  * For example, given a phrase "the cat" in the sentences "I saw the cat sat on the mat. The dog has left."
  * The following information should be stored for "the cat":

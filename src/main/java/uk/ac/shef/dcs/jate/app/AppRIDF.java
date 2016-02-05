@@ -20,10 +20,6 @@ public class AppRIDF extends App {
         super(initParams);
     }
 
-    public AppRIDF(){
-
-    }
-
     public static void main(String[] args) {
         if (args.length < 1) {
             printHelp();

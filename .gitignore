@@ -2,11 +2,13 @@ classes/*
 target/*
 out/*
 .idea/*
-experiment/*
 .iml
 *.asc
 *.gif
 *.iml
-example/solr/server/solr/jate/data
+*.DS_Store
+*.log
+example/*
 /testdata/solr-testbed/testCore/data
 /target/
+.DS_Store

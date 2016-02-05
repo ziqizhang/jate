@@ -11,7 +11,9 @@ import java.util.LinkedList;
 import java.util.Set;
 
 /**
- * Created by - on 12/10/2015.
+ * Based on org.apache.lucene.analysis.shingle.ShingleFilter that does additionally:
+ * <br>-allows to remove trailing and heading stopwords in a shingle</br>
+ * <br>-records sentence context of a shingle (see SentenceContext)
  */
 public final class ComplexShingleFilter extends MWEFilter implements SentenceContextAware {
     /**

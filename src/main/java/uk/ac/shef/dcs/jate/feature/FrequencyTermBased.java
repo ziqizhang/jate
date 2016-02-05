@@ -29,7 +29,7 @@ public class FrequencyTermBased extends AbstractFeature {
         return term2TTF;
     }
 
-    public int getCorpusTotal() {
+    public synchronized int getCorpusTotal() {
         if(corpusTotal ==0){
             for(int i: term2TTF.values())
                 corpusTotal +=i;

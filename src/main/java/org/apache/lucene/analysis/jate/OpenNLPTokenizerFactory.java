@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.Map;
 
 public class OpenNLPTokenizerFactory extends TokenizerFactory implements ResourceLoaderAware {
-    private final int maxTokenLength;
     private SentenceDetector sentenceOp = null;
     private String sentenceModelFile = null;
     private opennlp.tools.tokenize.Tokenizer tokenizerOp = null;
@@ -27,7 +26,6 @@ public class OpenNLPTokenizerFactory extends TokenizerFactory implements Resourc
      */
     public OpenNLPTokenizerFactory(Map<String, String> args) {
         super(args);
-        maxTokenLength = getInt(args, "maxTokenLength", StandardAnalyzer.DEFAULT_MAX_TOKEN_LENGTH);
         sentenceModelFile = args.get("sentenceModel");
         tokenizerModelFile = args.get("tokenizerModel");
     }

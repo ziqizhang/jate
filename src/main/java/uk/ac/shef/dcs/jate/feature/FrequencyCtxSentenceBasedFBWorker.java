@@ -89,13 +89,12 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                 LOG.severe(sb.toString());
             }
         }
-        if(sentenceIds.size()/docIds.size()<=1)
+        if(sentenceIds.size()==1)
             try {
                 LOG.warning("Among "+docIds.size()+" on average each document has only 1 sentence. If this is not expected, check your analyzer chain for your Solr field "
-                +properties.getSolrFieldNameJATENGramInfo()+" if SentenceContext has been produced.");
+                +properties.getSolrFieldNameJATENGramInfo()+" (OpenNLPTokenizerFactory) if SentenceContext has been produced corrected.");
             } catch (JATEException e) {
             }
-        //LOG.info("debug---finished");
         return count;
     }
 

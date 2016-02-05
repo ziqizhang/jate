@@ -42,7 +42,7 @@ public class ChiSquare extends Algorithm {
         validateFeature(feature4, FrequencyCtxBased.class);
         FrequencyCtxBased refTermFeatureCtxBased = (FrequencyCtxBased) feature4;
 
-        int cores = Runtime.getRuntime().availableProcessors();
+        int cores =Runtime.getRuntime().availableProcessors();
         int maxPerWorker = candidates.size()/cores;
         StringBuilder msg = new StringBuilder("Beginning computing ChiSquare, cores=");
         msg.append(cores).append(", total terms=" + candidates.size()).append(",").

@@ -46,10 +46,6 @@ public class AppCValue extends App {
         super(initParams);
     }
 
-    public AppCValue() {
-
-    }
-
     @Override
     public List<JATETerm> extract(SolrCore core, String jatePropertyFile)
             throws IOException, JATEException {

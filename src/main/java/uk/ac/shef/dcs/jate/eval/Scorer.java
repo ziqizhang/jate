@@ -232,7 +232,7 @@ public class Scorer {
             throw new JATEException("Gold Standard Terms is null!");
         }
 
-        int defaultMinChar = 1;
+        int defaultMinChar = 2; //originall 1. should use 2 at least
         int defaultMaxChar = 1000;
         int defaultMinTokens=1;
         int defaultMaxTokens=10;
@@ -244,6 +244,8 @@ public class Scorer {
 
         List<String> topKTerms = terms.subList(0, topK);
         score = precision(gsTerms, topKTerms);
+
+        //score=computePrecisionAtRank(gsTerms, terms,topK);
 
         return round(score, 2);
     }
@@ -335,18 +337,18 @@ public class Scorer {
 
     public static void main(String[] args) throws IOException {
 
-        calculateACLRDJate1("/Users/-/work/jate/experiment/CValue_ALGORITHM.txt", args[1], args[2], true, false, true,
+        /*calculateACLRDJate1("/Users/-/work/jate/experiment/CValue_ALGORITHM.txt", args[1], args[2], true, false, true,
                 2, 150, 1, 5,
                 50, 100, 500, 1000, 5000, 10000);
-        System.exit(1);
+        System.exit(1);*/
 
-        /*createReportGenia(args[0],args[1],args[2],true, false, 2,150,1,5,
+        createReportGenia(args[0],args[1],args[2],true, false, true,2,150,1,5,
                 50, 100, 500, 1000, 5000,10000);
 
-        System.out.println();*/
+        System.out.println();
 
-        createReportACLRD(args[0], args[1], args[2], true, false, true, 2, 150, 1, 5,
-                50, 100, 500, 1000, 5000, 10000);
+       /* createReportACLRD(args[0], args[1], args[2], true, false, true, 2, 150, 1, 5,
+                50, 100, 500, 1000, 5000, 10000);*/
 
         System.out.println();
     }

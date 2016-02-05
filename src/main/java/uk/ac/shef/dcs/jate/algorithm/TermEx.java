@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * <p>
  * In the formula w(t,Di ) =a* DR + B* DC + Y* LC, default values of a, B, and Y are 0.33.
  * </p>
- * <p/>
+ * <p>
  * This is the implementation of the scoring formula <b>only</b> and does not include the analysis of document structure
  * as discussed in the paper.
  */
@@ -109,12 +109,16 @@ public class TermEx extends ReferenceBased {
             Set<Integer> docs = fFeatureTerms.getTermFrequencyInDocument(tString).keySet();
             double sum = 0;
             for (int i : docs) {
+                //do not query for features using this context window. but query to get the
+                //real context window object that matches this id
                 ContextWindow c = new ContextWindow();
                 c.setDocId(i);
-                //TODO: check why the following two lines which may cause nullpointException
-                int tfid = fFeatureDocs.getTFIC(c).size() == 0 ? 0 : fFeatureDocs.getTFIC(c).get(tString);
-                int ttfid = (fFeatureDocs.getMapCtx2TTF().size() ==0 || fFeatureDocs.getMapCtx2TTF()!= null)?
-                        0:fFeatureDocs.getMapCtx2TTF().get(String.valueOf(i));
+                c = fFeatureDocs.getContextWindow(c.toString());
+                if (c == null)
+                    LOG.severe("TermEx error: expected context window does not exist, its id is:"+c.toString());
+
+                int tfid = fFeatureDocs.getTFIC(c).get(tString);
+                int ttfid = fFeatureDocs.getMapCtx2TTF().get(c);
                 double norm = tfid == 0 ? 0 : (double) tfid / ttfid;
                 if (norm == 0) sum += 0;
                 else {
@@ -124,7 +128,7 @@ public class TermEx extends ReferenceBased {
 
             double DP = SUMwi; //this term has been changed to ensure they are in the range of 0 and 1
             double DC = sum;
-            double LC = SUMfwi==0?0:(T * Math.log(fFeatureTerms.getTTF(tString) + 1) * fFeatureTerms.getTTF(tString)) / SUMfwi;
+            double LC = SUMfwi == 0 ? 0 : (T * Math.log(fFeatureTerms.getTTF(tString) + 1) * fFeatureTerms.getTTF(tString)) / SUMfwi;
 
             double score = alpha * DP + beta * DC + zeta * LC;
             JATETerm term = new JATETerm(tString, score);

@@ -1,5 +1,6 @@
 package uk.ac.shef.dcs.jate.feature;
 
+import org.apache.lucene.index.PostingsEnum;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.util.BytesRef;

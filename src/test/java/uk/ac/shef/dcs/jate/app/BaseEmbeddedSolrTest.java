@@ -33,27 +33,30 @@ public abstract class BaseEmbeddedSolrTest {
     private static Logger LOG = Logger.getLogger(BaseEmbeddedSolrTest.class.getName());
 
     static String workingDir = System.getProperty("user.dir");
-    static String solrCoreName = "testCore";
-    static String solrHome = workingDir + "\\testdata\\solr-testbed\\";
+    static String solrCoreName = "jate";
+    static String solrHome = workingDir + "/testdata/solr-testbed";
+
+    /*static String solrCoreName = "jate";
+    static String solrHome = "/Users/-/work/jate_accepted/example/solr/server/solr";*/
 
     EmbeddedSolrServer server;
 
     @BeforeClass
     public static void setupClass() throws Exception {
-        try {
+        /*try {
             cleanIndexDirectory(solrHome, solrCoreName);
         } catch (IOException ioe) {
             throw new JATEException("Unable to delete index data. Please clean index directory " +
-                    "[testdata\\solr-testbed\\testCore\\data] manually!");
-        }
+                    "[testdata/solr-testbed/jate/data] manually!");
+        }*/
     }
 
     //@Before
     public void setup() throws Exception {
         CoreContainer testBedContainer = new CoreContainer(solrHome);
         testBedContainer.load();
-
         server = new EmbeddedSolrServer(testBedContainer, solrCoreName);
+
     }
 
     /**

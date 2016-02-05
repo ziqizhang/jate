@@ -34,6 +34,9 @@ import org.apache.lucene.util.BytesRef;
 /**
  * Run OpenNLP SentenceDetector and Tokenizer.
  * Must have Sentence and/or Tokenizer.
+ * <p>This class will split a text into sentences, the tokenize each sentence. For each token, it will record its sentence context information. See SentenceContext class.
+ * The sentence context information is recorded as PayloadAttribute</p>
+ *
  */
 public final class OpenNLPTokenizer extends Tokenizer implements SentenceContextAware {
     private static final int DEFAULT_BUFFER_SIZE = 256;
