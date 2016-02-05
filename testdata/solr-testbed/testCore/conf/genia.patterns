@@ -1,0 +1,4 @@
+#c/nc-value paper
+#default	(\bNN\b|\bNNP\b|\bNNS\b)+
+#taken and translated from http://users.cs.cf.ac.uk/I.Spasic/flexiterm/
+default	(((((\bNN\b|\bNNP\b|\bNNS\b|JJ) )*(\bNN\b|\bNNP\b|\bNNS\b)) IN (((\bNN\b|\bNNP\b|\bNNS\b|JJ) )*(\bNN\b|\bNNP\b|\bNNS\b)))|((\bNN\b|\bNNP\b|\bNNS\b|JJ )*(\bNN\b|\bNNP\b|\bNNS\b) POS (\bNN\b|\bNNP\b|\bNNS\b|JJ )*(\bNN\b|\bNNP\b|\bNNS\b)))|(((\bNN\b|\bNNP\b|\bNNS\b|JJ) )+(\bNN\b|\bNNP\b|\bNNS\b))
