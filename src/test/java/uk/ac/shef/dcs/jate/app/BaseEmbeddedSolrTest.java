@@ -1,38 +1,34 @@
 package uk.ac.shef.dcs.jate.app;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.core.CoreContainer;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Abstracted class to support embedded solr based unit test
- *
+ * <p>
  * for more examples about how to use solr Embedded Solr server,
  *
  * @see <a href="http://www.programcreek.com/java-api-examples/index.php?api=org.apache.solr.client.solrj.embedded.EmbeddedSolrServer">
- *     Java Code Examples for org.apache.solr.client.solrj.embedded.EmbeddedSolrServer</a>
- *
+ * Java Code Examples for org.apache.solr.client.solrj.embedded.EmbeddedSolrServer</a>
  * @see <a href="https://wiki.searchtechnologies.com/index.php/Unit_Testing_with_Embedded_Solr">
- *     Unit Testing with Embedded Solr</a>
- *
+ * Unit Testing with Embedded Solr</a>
  */
 public abstract class BaseEmbeddedSolrTest {
     private static Logger LOG = Logger.getLogger(BaseEmbeddedSolrTest.class.getName());
 
     static String workingDir = System.getProperty("user.dir");
+
     static String solrCoreName = "jate";
     static String solrHome = workingDir + "/testdata/solr-testbed";
 
@@ -61,12 +57,13 @@ public abstract class BaseEmbeddedSolrTest {
 
     /**
      * create and add new document with necessary fields
-     *  see also @code{uk.ac.shef.dcs.jate.indexing.IndexingHandler}
-     * @param docId, document id value for default solr field 'id'
-     * @param docTitle, document title for default solr field 'title_s'
-     * @param text, document content for default solr field 'text' where term will be extracted
+     * see also @code{uk.ac.shef.dcs.jate.indexing.IndexingHandler}
+     *
+     * @param docId,          document id value for default solr field 'id'
+     * @param docTitle,       document title for default solr field 'title_s'
+     * @param text,           document content for default solr field 'text' where term will be extracted
      * @param jateProperties, JATE properties for various run-time parameters
-     * @param commit, boolean value to determine whether the new document will be committed
+     * @param commit,         boolean value to determine whether the new document will be committed
      * @throws IOException
      * @throws SolrServerException
      * @throws JATEException
@@ -89,7 +86,8 @@ public abstract class BaseEmbeddedSolrTest {
     }
 
     public static void cleanIndexDirectory(String solrHome, String coreName) throws IOException {
-        File indexDir = new File(solrHome + "/" + coreName + "/data/index/");
+        File indexDir = new File(solrHome + File.separator + coreName + File.separator +
+                "data" + File.separator + "index" + File.separator);
         try {
             if (indexDir.exists()) {
                 FileUtils.cleanDirectory(indexDir);

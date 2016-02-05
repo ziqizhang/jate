@@ -54,7 +54,6 @@ public class AppTTF extends App {
         JATEProperties properties = new JATEProperties(jatePropertyFile);
 
         return extract(core, properties);
-
     }
 
     public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException, IOException {

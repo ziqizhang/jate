@@ -20,7 +20,11 @@ public class GSLoader {
      * @return
      */
     public static List<String> loadGenia(String file, boolean lowercase, boolean normalize) throws IOException {
-        List<String> terms = FileUtils.readLines(new File(file));
+        return loadGenia(new File(file), lowercase, normalize);
+    }
+
+    public static List<String> loadGenia(File file, boolean lowercase, boolean normalize) throws IOException {
+        List<String> terms = FileUtils.readLines(file);
         return prune(terms, lowercase, normalize);
     }
 
