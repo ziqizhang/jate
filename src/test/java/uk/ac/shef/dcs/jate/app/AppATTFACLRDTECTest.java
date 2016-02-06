@@ -57,10 +57,12 @@ public class AppATTFACLRDTECTest extends ACLRDTECTest {
             appATTFTest.evaluate(terms);
 
             validate_indexing();
-
-            server.getCoreContainer().shutdown();
-        } finally {
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new JATEException(e.toString());
+        }finally {
             try {
+                server.getCoreContainer().shutdown();
                 server.close();
             } catch (IOException e) {
                 e.printStackTrace();

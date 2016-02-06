@@ -1,0 +1,363 @@
+<?xml version="1.0" standalone="yes"?>
+
+<Paper id="P06-1139">
+  <Title>Stochastic Language Generation Using WIDL-expressions and its Application in Machine Translation and Summarization</Title>
+  <Keywords></Keywords>
+  <Abbreviations></Abbreviations>
+  <Authors>
+    <Author>
+      <FirstName>Radu</FirstName>
+      <MiddleName></MiddleName>
+      <LastName>Soricut</LastName>
+      <Email>radu@isi.edu</Email>
+      <Affiliation>Information Sciences Institute University of Southern California</Affiliation>
+    </Author>
+    <Author>
+      <FirstName>Daniel</FirstName>
+      <MiddleName></MiddleName>
+      <LastName>Marcu</LastName>
+      <Email>marcu@isi.edu</Email>
+      <Affiliation>Information Sciences Institute University of Southern California</Affiliation>
+    </Author>
+  </Authors>
+  <Section position="1" start_page="0" end_page="0" type="ope">
+    <SectionTitle>nd</SectionTitle>
+    <Paragraph position="0"> Proceedings of the 21st International Conference on Computational Linguistics and 44th Annual Meeting of the ACL, pages 1105-1112, Sydney, July 2006. c(c)2006 Association for Computational Linguistics</Paragraph>
+  </Section>
+  <Section position="2" start_page="0" end_page="0" type="abstr">
+    <SectionTitle>
+Abstract
+</SectionTitle>
+    <Paragraph position="0"> We propose WIDL-expressions as a flexible formalism that facilitates the integration of a generic sentence realization system within end-to-end language processing applications. WIDL-expressions represent compactly probability distributions over finite sets of candidate realizations, and have optimal algorithms for realization via interpolation with language model probability distributions. We show the effectiveness of a WIDL-based NLG system in two sentence realization tasks: automatic translation and headline generation.</Paragraph>
+  </Section>
+  <Section position="3" start_page="0" end_page="1105" type="keywo">
+    <SectionTitle>
+1 Introduction
+</SectionTitle>
+    <Paragraph position="0"> The Natural Language Generation (NLG) community has produced over the years a considerable number of generic sentence realization systems: Penman (Matthiessen and Bateman, 1991), FUF (Elhadad, 1991), Nitrogen (Knight and Hatzivassiloglou, 1995), Fergus (Bangalore and Rambow, 2000), HALogen (Langkilde-Geary, 2002), Amalgam (Corston-Oliver et al., 2002), etc. However, when it comes to end-to-end, text-to-text applications - Machine Translation, Summarization, Question Answering - these generic systems either cannot be employed, or, in instances where they can be, the results are significantly below that of state-of-the-art, application-specific systems (Hajic et al., 2002; Habash, 2003). We believe two reasons explain this state of affairs.</Paragraph>
+    <Paragraph position="1"> First, these generic NLG systems use input representation languages with complex syntax and semantics. These languages involve deep, semantic-based subject-verb or verb-object relations (such as ACTOR, AGENT, PATIENT, etc., for Penman and FUF), syntactic relations (such as subject, object, premod, etc., for HALogen), or lexical dependencies (Fergus, Amalgam). Such inputs cannot be accurately produced by state-of-the-art analysis components from arbitrary textual input in the context of text-to-text applications.</Paragraph>
+    <Paragraph position="2"> Second, most of the recent systems (starting with Nitrogen) have adopted a hybrid approach to generation, which has increased their robustness. These hybrid systems use, in a first phase, symbolic knowledge to (over)generate a large set of candidate realizations, and, in a second phase, statistical knowledge about the target language (such as stochastic language models) to rank the candidate realizations and find the best scoring one. The disadvantage of the hybrid approach - from the perspective of integrating these systems within end-to-end applications - is that the two generation phases cannot be tightly coupled.</Paragraph>
+    <Paragraph position="3"> More precisely, input-driven preferences and target language-driven preferences cannot be integrated in a true probabilistic model that can be trained and tuned for maximum performance.</Paragraph>
+    <Paragraph position="4"> In this paper, we propose WIDL-expressions (WIDL stands for Weighted Interleave, Disjunction, and Lock, after the names of the main operators) as a representation formalism that facilitates the integration of a generic sentence realization system within end-to-end language applications. The WIDL formalism, an extension of the IDL-expressions formalism of Nederhof and Satta (2004), has several crucial properties that differentiate it from previously-proposed NLG representation formalisms. First, it has a simple syntax (expressions are built using four operators) and a simple, formal semantics (probability distributions over finite sets of strings). Second, it is a compact representation that grows linearly  in the number of words available for generation (see Section 2). (In contrast, representations such as word lattices (Knight and Hatzivassiloglou, 1995) or non-recursive CFGs (Langkilde-Geary, 2002) require exponential space in the number of words available for generation (Nederhof and Satta, 2004).) Third, it has good computational properties, such as optimal algorithms for intersection with a0 -gram language models (Section 3). Fourth, it is flexible with respect to the amount of linguistic processing required to produce WIDL-expressions directly from text (Sections 4 and 5). Fifth, it allows for a tight integration of inputspecific preferences and target-language preferences via interpolation of probability distributions using log-linear models. We show the effectiveness of our proposal by directly employing a generic WIDL-based generation system in two end-to-end tasks: machine translation and automatic headline generation.</Paragraph>
+  </Section>
+  <Section position="4" start_page="1105" end_page="1106" type="intro">
+    <SectionTitle>
+2 The WIDL Representation Language
+</SectionTitle>
+    <Paragraph position="0"></Paragraph>
+    <Section position="1" start_page="1105" end_page="1106" type="sub_section">
+      <SectionTitle>
+2.1 WIDL-expressions
+</SectionTitle>
+      <Paragraph position="0"> In this section, we introduce WIDL-expressions, a formal language used to compactly represent probability distributions over finite sets of strings.</Paragraph>
+      <Paragraph position="1"> Given a finite alphabet of symbols a1 , atomic WIDL-expressions are of the form a2 , with a2a4a3 a1 .</Paragraph>
+      <Paragraph position="2"> For a WIDL-expression a5a7a6a8a2 , its semantics is a probability distribution a9a11a10a13a12a15a14a17a16a19a18a20a5a22a21a24a23a26a25a28a27a30a29a32a31a34a33</Paragraph>
+      <Paragraph position="4"> other WIDL-expressions, by employing the following four operators, as well as operator distribution functions a51a53a52 from an alphabet a54 .</Paragraph>
+      <Paragraph position="5"> Weighted Disjunction. If a5a56a55 a37a53a57a53a57a53a57a58a37 a5a60a59 are WIDL-expressions, then a5a61a6 a62a42a63a19a64a65a18a20a5a42a55 a37a53a57a53a57a53a57a45a37 a5a66a59a30a21 , with a51a17a67 a23a44a43 a38a68a37a53a57a53a57a53a57a58a37 a0 a46 a33 a35a36a30a37a39a38a41a40 , specified such that a1a70a69a45a71a73a72a75a74a77a76a60a78a63a64a75a79a51a17a67a80a18a82a81a47a21a83a6 a38 , is a WIDLexpression. Its semantics is a probability distribution a9a13a10a13a12a15a14a17a16a48a18a20a5a22a21a84a23a85a25a28a27a30a29 a31 a33 a35a36a30a37a39a38a41a40 , where</Paragraph>
+      <Paragraph position="7"> ity values are induced by a51a39a67 and a9a49a10a11a12a15a14a41a16a19a18a20a5a66a52a82a21 ,  a25a28a27a30a29a133a31 is the set of all strings that obey the precedence imposed over the arguments, and the probability values are induced by a9a47a10a13a12a15a14a17a16a48a18a20a5a134a55a41a21 and a9a47a10a13a12a15a14a17a16a82a18a20a5a66a129a45a21 . For example, if</Paragraph>
+      <Paragraph position="9"> Weighted Interleave. If a5a56a55 a37a53a57a53a57a53a57a58a37 a5a60a59 are WIDLexpressions, then a5a153a6a95a154a41a63a19a64a65a18a20a5a42a55 a37 a5a66a129 a37a53a57a53a57a53a57a58a37 a5a60a59a30a21 , with</Paragraph>
+      <Paragraph position="11"> specified such that a1a101a179 a71a73a72a75a74a77a76a66a78a63a19a64 a79a51a17a67a65a18a48a2a49a21a146a6 a38 , is a WIDL-expression. Its semantics is a probability distribution a9a13a10a13a12a15a14a17a16a82a18a20a5a22a21a180a23a85a25a42a27a30a29 a31 a33 a35a36a30a37a39a38a41a40 , where a25a28a27a30a29 a31 consists of all the possible interleavings of strings from a25a28a27a30a29 a31a80a89 , a38a181a90a182a92a183a90 a0 , and the probability values are induced by a51a45a67 and a9a49a10a11a12a15a14a41a16a19a18a20a5a66a52a82a21 . The distribution function a51 a67 is defined either explicitly, over a173a180a174a184a176a49a177a68a178a185a29a112a59 (the set of all permutations of a0 elements), or implicitly, as a51a45a67a80a18a48a27a68a186a77a187a73a177a68a178a189a188a80a177a68a178a185a29a32a190a77a21 . Because the set of argument permutations is a sub-set of all possible interleavings, a51a45a67 also needs to specify the probability mass for the strings that are not argument permutations, a51a45a67a80a18a191a190a53a187a193a192a39a194a195a177a17a190a41a21 . For example, if a5 a6 a154a77a63a64 a18a48a96 a131 a97a167a37 a141a45a21 , a99 a64 a100a95a102a53a103a196a110a24a104 a105a45a107a108a41a105a39a109a42a158a77a159a119a160a162a161a162a163a53a164a17a161a77a163a88a165a167a166a198a197a200a199a20a201a202a203a200a204a205a104 a105a45a107a206a103a75a207a53a109a140a166a140a160a53a168a98a169a56a161a119a166a196a197a20a199a200a201a202a203a200a204a205a104 a105a45a107a105a41a207a17a113 , its semantics is a probability distribution a9a124a10a13a12a15a14a17a16a48a18a20a5a22a21 , with domain a25a28a27a30a29 a31 a6a93a43a45a96 a97 a141 a37 a141a53a96 a97a167a37 a96a65a141 a97 a46 , defined</Paragraph>
+      <Paragraph position="13"> a18a20a5a28a220a88a21 is a WIDL-expression. The semantic mapping a9a47a10a13a12a15a14a17a16a48a18a20a5a22a21 is the same as a9a13a10a13a12a15a14a17a16a82a18a20a5 a220a21 , except that a25a28a27a30a29 a31 contains strings in which no additional symbol can be interleaved. For exam-</Paragraph>
+      <Paragraph position="15"> a105a45a107a108a41a105a39a109a124a158a162a159a119a160a162a161a77a163a53a164a41a161a77a163a88a165a167a166a223a104a182a105a45a107a110a77a105a17a113 , its semantics is a probability distribution a9a13a10a13a12a15a14a17a16a82a18a20a5a22a21 , with domain a25a28a27a30a29 a31 a6</Paragraph>
+      <Paragraph position="17"> In Figure 1, we show a more complex WIDLexpression. The probability distribution a51 a55 associated with the operator a154a41a63a126a137 assigns probability 0.2 to the argument order a225 a38a111a226 ; from a probability mass of 0.7, it assigns uniformly, for each of the remaining a226a189a227a147a228a135a38 a6a230a229 argument permutations, a permutation probability value of a67a41a231a232a233 a6 a36a30a57a88a38a17a234 . The</Paragraph>
+      <Paragraph position="19"> remaining probability mass of 0.1 is left for the 12 shuffles associated with the unlocked expression a2a15a7 a131 a2a122a178a24a16a3a25 , for a shuffle probability of a67a41a231a15a55</Paragraph>
+      <Paragraph position="21"> a18a191a190a98a186a41a178a17a2a23a7 a4 a21a18a41 pairs that belong to the probability distribution defined by our example: rebels fighting turkish government in iraq 0.130 in iraq attacked rebels turkish goverment 0.049 in turkish goverment iraq rebels fighting 0.005 The following result characterizes an important representation property for WIDL-expressions.</Paragraph>
+      <Paragraph position="22"> Theorem 1 A WIDL-expression a5 over a1 and a54 using a0 atomic expressions has space complexity O(a0 ), if the operator distribution functions of a5 have space complexity at most O(a0 ).</Paragraph>
+      <Paragraph position="23"> For proofs and more details regarding WIDLexpressions, we refer the interested reader to (Soricut, 2006). Theorem 1 ensures that highcomplexity hypothesis spaces can be represented efficiently by WIDL-expressions (Section 5).</Paragraph>
+    </Section>
+    <Section position="2" start_page="1106" end_page="1106" type="sub_section">
+      <SectionTitle>
+2.2 WIDL-graphs and Probabilistic
+Finite-State Acceptors
+</SectionTitle>
+      <Paragraph position="0"> WIDL-graphs. Equivalent at the representation level with WIDL-expressions, WIDL-graphs allow for formulations of algorithms that process them. For each WIDL-expression a5 , there exists an equivalent WIDL-graph a42 a31 . As an example, we illustrate in Figure 2(a) the WIDL-graph corresponding to the WIDL-expression in Figure 1.</Paragraph>
+      <Paragraph position="1"> WIDL-graphs have an initial vertex a43a45a44 and a final vertex a43a37a46 . Vertices a43a80a67 , a43a48a47 , and a43a65a129a98a67 with in-going edges labeled a49 a55</Paragraph>
+      <Paragraph position="3"> , respectively, result from the expansion of the a154a41a63a126a137 operator. Vertices a43a193a232</Paragraph>
+      <Paragraph position="5"> spectively, and vertices a43a49a55a185a129 and a43a189a55a53a55 with out-going edges labeled a21 a55</Paragraph>
+      <Paragraph position="7"> , respectively, result from the expansion of the a62a28a63a185a139 operator. With each WIDL-graph a42 a31 , we associate a probability distribution. The domain of this distribution is the finite collection of strings that can be generated from the paths of a WIDL-specific traversal of a42 a31 , starting from a43a56a44 and ending in a43a37a46 . Each path (and its associated string) has a probability value induced by the probability distribution functions associated with the edge labels of a42 a31 . A WIDL-expression a5 and its corresponding WIDL-graph a42 a31 are said to be equivalent because they represent the same distribution a9a11a10a11a12a15a14a41a16a19a18a20a5a22a21 . WIDL-graphs and Probabilistic FSA. Probabilistic finite-state acceptors (pFSA) are a well-known formalism for representing probability distributions (Mohri et al., 2002). For a WIDL-expression a5 , we define a mapping, called UNFOLD, between the WIDL-graph a42 a31 and a pFSA a57 a31 . A state a58 in a57 a31 is created for each set of WIDL-graph vertices that can be reached simultaneously when traversing the graph. State a58 records, in what we call a a154 -stack (interleave stack), the order in which a49 a52  graph), and then reaching vertex a43 a52 (inside the a49 a129</Paragraph>
+      <Paragraph position="9"> -bordered sub-graph).</Paragraph>
+      <Paragraph position="10"> A transition labeled a2 between two a57 a31 states a58a80a55 and a58a58a129 in a57 a31 exists if there exists a vertex a43a3a61 in the description of a58 a55 and a vertex a43 a69 in the description of a58a73a129 such that there exists a path in a42 a31 between a43a5a61 and a43 a69 , and a2 is the only a1 -labeled transitions in this path. For example, transition  in the description of a58 a55 and vertex a43 a69 in the description of a58 a129 , such  [v v v ,&lt;32][v v v ,&lt;32][v v v ,&lt;3] [v v v ,&lt;3] [v v v ,&lt;32] [v v v ,&lt;0] [v v v ,&lt;32] [v v v ,&lt;2] [v v v ,&lt;2]</Paragraph>
+      <Paragraph position="12"> probabilistic finite-state acceptor (pFSA) that corresponds to the WIDL-graph is shown in (b).</Paragraph>
+      <Paragraph position="13"> are responsible for adding and removing, respectively, the a38 a63 ,a41a126a63 symbols in the a154 -stack. The probabilities associated with a57 a31 transitions are computed using the vertex set and the a154 -stack of each a57a32a31 state, together with the distribution functions of the a62 and a154 operators. For a detailed presentation of the UNFOLD relation we refer the reader to (Soricut, 2006).</Paragraph>
+    </Section>
+  </Section>
+  <Section position="5" start_page="1106" end_page="1108" type="metho">
+    <SectionTitle>
+3 Stochastic Language Generation from
+</SectionTitle>
+    <Paragraph position="0"></Paragraph>
+    <Section position="1" start_page="1106" end_page="1106" type="sub_section">
+      <SectionTitle>
+WIDL-expressions
+3.1 Interpolating Probability Distributions in
+a Log-linear Framework
+</SectionTitle>
+      <Paragraph position="0"> Let us assume a finite set a61 of strings over a finite alphabet a1 , representing the set of possible sentence realizations. In a log-linear framework, we have a vector of feature functions a62 a6</Paragraph>
+      <Paragraph position="2"> a61 , the interpolated probability a67a222a18a68a66a58a21 can be written under a log-linear model as in Equation 1:</Paragraph>
+      <Paragraph position="4"> We can formulate the search problem of finding the most probable realization a66 under this model as shown in Equation 2, and therefore we do not need to be concerned about computing expensive normalization factors.</Paragraph>
+      <Paragraph position="6"> For a given WIDL-expression a5 over a1 , the set a61 is defined by a21 a27a30a29a196a18a48a9a47a10a13a12a15a14a17a16a19a18a20a5a22a21a98a21 , and feature function a62a13a67 is taken to be a9a13a10a13a12a15a14a17a16a82a18a20a5a22a21 . Any language model we want to employ may be added in Equation 2 as a feature function a62a13a52 , a92a85a84a24a38 .</Paragraph>
+    </Section>
+    <Section position="2" start_page="1106" end_page="1108" type="sub_section">
+      <SectionTitle>
+3.2 Algorithms for Intersecting
+WIDL-expressions with Language
+Models
+</SectionTitle>
+      <Paragraph position="0"> Algorithm WIDL-NGLM-Aa86 (Figure 3) solves the search problem defined by Equation 2 for a WIDL-expression a5 (which provides feature function a62 a67 ) and a87 a0 -gram language models (which provide feature functions a62a167a55 a37a53a57a53a57a53a57a58a37 a62 a63 a21 . It does so by incrementally computing UNFOLD for a42 a31 (i.e., on-demand computation of the corresponding pFSA a57 a31 ), by keeping track of a set of active states, called a88a90a89a92a91a94a93a96a95a78a97 . The set of newly UNFOLDed states is called a98a100a99a53a101a71a102a78a103a105a104 . Using Equation 1 (unnormalized), we EVALUATE the current a67a183a18a68a66a58a21 scores for the a98a73a99a92a101a106a102a78a103a107a104 states. Additionally, EVALUATE uses an admissible heuristic function to compute future (admissible) scores for the a98a73a99a92a101a71a102a108a103a107a104 states. The algorithm PUSHes each state from the current a98a100a99a53a101a71a102a78a103a105a104 into a priority queue a109 , which sorts the states according to their total score (current a110 admissible). In the next iteration, a88a90a89a53a91a94a93a111a95a108a97 is a singleton set containing the state POPed out from the top of a109 . The admissible heuristic function we use is the one defined in (Soricut and Marcu, 2005), using Equation 1 (unnormalized) for computing the event costs. Given the existence of the admissible heuristic and the monotonicity property of the unfolding provided by the priority queue a109 , the proof for Aa86 optimality (Russell and Norvig, 1995) guarantees that WIDL-NGLM-Aa86 finds a path in a57a113a112 that provides an optimal solution.</Paragraph>
+      <Paragraph position="1">  An important property of the WIDL-NGLM-Aa86 algorithm is that the UNFOLD relation (and, implicitly, the a57a112a31 acceptor) is computed only partially, for those states for which the total cost is less than the cost of the optimal path. This results in important savings, both in space and time, over simply running a single-source shortest-path algorithm for directed acyclic graphs (Cormen et al., 2001) over the full acceptor a57a133a31 (Soricut and Marcu, 2005).</Paragraph>
+    </Section>
+  </Section>
+  <Section position="6" start_page="1108" end_page="1109" type="metho">
+    <SectionTitle>
+4 Headline Generation using
+</SectionTitle>
+    <Paragraph position="0"> WIDL-expressions We employ the WIDL formalism (Section 2) and the WIDL-NGLM-Aa86 algorithm (Section 3) in a summarization application that aims at producing both informative and fluent headlines. Our headlines are generated in an abstractive, bottom-up manner, starting from words and phrases. A more common, extractive approach operates top-down, by starting from an extracted sentence that is compressed (Dorr et al., 2003) and annotated with additional information (Zajic et al., 2004).</Paragraph>
+    <Paragraph position="1"> Automatic Creation of WIDL-expressions for Headline Generation. We generate WIDL-expressions starting from an input document. First, we extract a weighted list of topic keywords from the input document using the algorithm of Zhou and Hovy (2003). This list is enriched with phrases created from the lexical dependencies the topic keywords have in the input document. We associate probability distributions with these phrases using their frequency (we assume Keywords a43 iraq 0.32, syria 0.25, rebels 0.22, kurdish 0.17, turkish 0.14, attack 0.10a46</Paragraph>
+    <Section position="1" start_page="1108" end_page="1109" type="sub_section">
+      <SectionTitle>
+Phrases
+</SectionTitle>
+      <Paragraph position="0"> iraq a43 in iraq 0.4, northern iraq 0.5,iraq and iran 0.1a46 , syria a43 into syria 0.6, and syria 0.4 a46 rebels a43 attacked rebels 0.7,rebels fighting 0.3a46  that higher frequency is indicative of increased importance) and their position in the document (we assume that proximity to the beginning of the document is also indicative of importance). In Figure 4, we present an example of input keywords and lexical-dependency phrases automatically extracted from a document describing incidents at the Turkey-Iraq border.</Paragraph>
+      <Paragraph position="1"> The algorithm for producing WIDL-expressions combines the lexical-dependency phrases for each keyword using a a62 operator with the associated probability values for each phrase multiplied with the probability value of each topic keyword. It then combines all the a62 -headed expressions into a single WIDL-expression using a a154 operator with uniform probability. The WIDL-expression in Figure 1 is a (scaled-down) example of the expressions created by this algorithm.</Paragraph>
+      <Paragraph position="2"> On average, a WIDL-expression created by this algorithm, using a10 a6 a34 keywords and an average of a81a195a6 a234 lexical-dependency phrases per keyword, compactly encodes a candidate set of about 3 million possible realizations. As the specification of the a154a77a63 operator takes space a11a195a18 a38 a21 for uniform a51 , Theorem 1 guarantees that the space complexity of these expressions is a11a183a18a12a10 a81a47a21 .</Paragraph>
+      <Paragraph position="3"> Finally, we generate headlines from WIDL-expressions using the WIDL-NGLM-Aa86 algorithm, which interpolates the probability distributions represented by the WIDL-expressions with a0 -gram language model distributions. The output presented in Figure 4 is the most likely headline realization produced by our system.</Paragraph>
+      <Paragraph position="4"> Headline Generation Evaluation. To evaluate the accuracy of our headline generation system, we use the documents from the DUC 2003 evaluation competition. Half of these documents are used as development set (283 documents),  pare extractive algorithms against abstractive algorithms, including our WIDL-based algorithm.</Paragraph>
+      <Paragraph position="5"> and the other half is used as test set (273 documents). We automatically measure performance by comparing the produced headlines against one reference headline produced by a human using ROUGEa129 (Lin, 2004).</Paragraph>
+      <Paragraph position="6"> For each input document, we train two language models, using the SRI Language Model Toolkit (with modified Kneser-Ney smoothing). A general trigram language model, trained on 170M English words from the Wall Street Journal, is used to model fluency. A document-specific tri-gram language model, trained on-the-fly for each input document, accounts for both fluency and content validity. We also employ a word-count model (which counts the number of words in a proposed realization) and a phrase-count model (which counts the number of phrases in a proposed realization), which allow us to learn to produce headlines that have restrictions in the number of words allowed (10, in our case). The interpolation weights a65 (Equation 2) are trained using discriminative training (Och, 2003) using ROUGEa129 as the objective function, on the development set.</Paragraph>
+      <Paragraph position="7"> The results are presented in Table 1. We compare the performance of several extractive algorithms (which operate on an extracted sentence to arrive at a headline) against several abstractive algorithms (which create headlines starting from scratch). For the extractive algorithms, Lead10 is a baseline which simply proposes as headline the lead sentence, cut after the first 10 words.</Paragraph>
+      <Paragraph position="8"> HedgeTrimmera6 is our implementation of the Hedge Trimer system (Dorr et al., 2003), and Topiarya7 is our implementation of the Topiary system (Zajic et al., 2004). For the abstractive algorithms, Key-words is a baseline that proposes as headline the sequence of topic keywords, Webcl is the system</Paragraph>
+    </Section>
+  </Section>
+  <Section position="7" start_page="1109" end_page="1109" type="metho">
+    <SectionTitle>
+THREE GORGES PROJECT IN CHINA HAS WON APPROVAL
+WATER IS LINK BETWEEN CLUSTER OF E. COLI CASES
+SRI LANKA 'S JOINT VENTURE TO EXPAND EXPORTS
+OPPOSITION TO EUROPEAN UNION SINGLE CURRENCY EURO
+OF INDIA AND BANGLADESH WATER BARRAGE
+</SectionTitle>
+    <Paragraph position="0"> a WIDL-based sentence realization system.</Paragraph>
+    <Paragraph position="1"> described in (Zhou and Hovy, 2003), and WIDL-Aa8 is the algorithm described in this paper. This evaluation shows that our WIDL-based approach to generation is capable of obtaining headlines that compare favorably, in both content and fluency, with extractive, state-of-the-art results (Zajic et al., 2004), while it outperforms a previously-proposed abstractive system by a wide margin (Zhou and Hovy, 2003). Also note that our evaluation makes these results directly comparable, as they use the same parsing and topic identification algorithms. In Figure 5, we present a sample of headlines produced by our system, which includes both good and not-so-good outputs.</Paragraph>
+  </Section>
+  <Section position="8" start_page="1109" end_page="1109" type="metho">
+    <SectionTitle>
+5 Machine Translation using
+</SectionTitle>
+    <Paragraph position="0"> WIDL-expressions We also employ our WIDL-based realization engine in a machine translation application that uses a two-phase generation approach: in a first phase, WIDL-expressions representing large sets of possible translations are created from input foreign-language sentences. In a second phase, we use our generic, WIDL-based sentence realization engine to intersect WIDL-expressions with an a0 -gram language model. In the experiments reported here, we translate between Chinese (source language) and English (target language).</Paragraph>
+    <Paragraph position="1"> Automatic Creation of WIDL-expressions for MT. We generate WIDL-expressions from Chinese strings by exploiting a phrase-based translation table (Koehn et al., 2003). We use an algorithm resembling probabilistic bottom-up parsing to build a WIDL-expression for an input Chinese string: each contiguous span a18a92a75a37a10a9 a21 over a Chinese string a11a22a52a13a12a61 is considered a possible &amp;quot;constituent&amp;quot;, and the &amp;quot;non-terminals&amp;quot; associated with each constituent are the English phrase translations a61 a69 a52a13a12a61 that correspond in the translation table to the Chinese string a11a56a52a13a12a61 . Multiple-word English phrases, such as a14a16a15a17a14a19a18a20a14a22a21 , are represented as WIDL-expressions using the precedence (a131) and  WIDL-expression, which provides a translation as the best scoring hypothesis under the interpolation with a trigram language model.</Paragraph>
+    <Paragraph position="2"> lock (a221 ) operators, as a221 a18 a14 a15a134a131 a14 a18a56a131 a14 a21 a21 . To limit the number of possible translations a61 a69 a52a13a12a61  corresponding to a Chinese span a11a56a52a13a12a61 , we use a probabilistic beam a90 and a histogram beam a58 to beam out low probability translation alternatives. At this point, each a11 a52 a12a61 span is &amp;quot;tiled&amp;quot; with likely translations a61 a69 a52a13a12a61 taken from the translation table.</Paragraph>
+    <Paragraph position="3"> Tiles that are adjacent are joined together in a larger tile by a a154a77a63 operator, where a51 a6  the component tiles are permitted by the a154a53a63 operators (assigned non-zero probability), but the longer the movement from the original order of the tiles, the lower the probability. (This distortion model is similar with the one used in (Koehn, 2004).) When multiple tiles are available for the same span a18a92a75a37a10a9 a21 , they are joined by a a62a42a63 operator, where a51 is specified by the probability distributions specified in the translation table. Usually, statistical phrase-based translation tables specify not only one, but multiple distributions that account for context preferences. In our experiments, we consider four probability distributions:  and a66 are Chinese-English phrase translations as they appear in the translation table. In Figure 6, we show an example of WIDL-expression created by this algorithm1.</Paragraph>
+    <Paragraph position="4"> On average, a WIDL-expression created by this algorithm, using an average of a10 a6 a226a48a36 tiles per sentence (for an average input sentence length of 30 words) and an average of a81a183a6a101a100 possible translations per tile, encodes a candidate set of about 10a233 a67 possible translations. As the specification of the a154a162a63 operators takes space a11a195a18 a38 a21 , Theorem 1 1English reference: the gunman was shot dead by the police. guarantees that these WIDL-expressions encode compactly these huge spaces in a11a183a18a12a10 a81a47a21 . In the second phase, we employ our WIDL-based realization engine to interpolate the distribution probabilities of WIDL-expressions with a trigram language model. In the notation of Equation 2, we use four feature functions a62a124a67 a37a53a57a53a57a53a57a58a37 a62 a50 for the WIDL-expression distributions (one for each probability distribution encoded); a feature function a62a79a102 for a trigram language model; a feature function a62 a233 for a word-count model, and a feature function a62 a47 for a phrase-count model.</Paragraph>
+    <Paragraph position="5"> As acknowledged in the Machine Translation literature (Germann et al., 2003), full Aa86 search is not usually possible, due to the large size of the search spaces. We therefore use an approximation algorithm, called WIDL-NGLM-Aa86a69 , which considers for unfolding only the nodes extracted from the priority queue a109 which already unfolded a path of length greater than or equal to the maximum length already unfolded minus a81 (we used a81a195a6a84a225 in the experiments reported here). MT Performance Evaluation. When evaluated against the state-of-the-art, phrase-based decoder Pharaoh (Koehn, 2004), using the same experimental conditions - translation table trained on the FBIS corpus (7.2M Chinese words and 9.2M English words of parallel text), trigram language model trained on 155M words of English newswire, interpolation weights a65 (Equation 2) trained using discriminative training (Och, 2003) (on the 2002 NIST MT evaluation set), probabilistic beam a90 set to 0.01, histogram beam a58 set to 10 - and BLEU (Papineni et al., 2002) as our metric, the WIDL-NGLM-Aa86 a129 algorithm produces translations that have a BLEU score of 0.2570, while Pharaoh translations have a BLEU score of 0.2635. The difference is not statistically significant at 95% confidence level.</Paragraph>
+    <Paragraph position="6"> These results show that the WIDL-based approach to machine translation is powerful enough to achieve translation accuracy comparable with state-of-the-art systems in machine translation.</Paragraph>
+  </Section>
+  <Section position="9" start_page="1109" end_page="1111" type="concl">
+    <SectionTitle>
+6 Conclusions
+</SectionTitle>
+    <Paragraph position="0"> The approach to sentence realization we advocate in this paper relies on WIDL-expressions, a formal language with convenient theoretical properties that can accommodate a wide range of generation scenarios. In the worst case, one can work with simple bags of words that encode no context  preferences (Soricut and Marcu, 2005). One can also work with bags of words and phrases that encode context preferences, a scenario that applies to current approaches in statistical machine translation (Section 5). And one can also encode context and ordering preferences typically used in summarization (Section 4).</Paragraph>
+    <Paragraph position="1"> The generation engine we describe enables a tight coupling of content selection with sentence realization preferences. Its algorithm comes with theoretical guarantees about its optimality.</Paragraph>
+    <Paragraph position="2"> Because the requirements for producing WIDL-expressions are minimal, our WIDL-based generation engine can be employed, with state-of-the-art results, in a variety of text-to-text applications.</Paragraph>
+    <Paragraph position="3"> Acknowledgments This work was partially supported under the GALE program of the Defense Advanced Research Projects Agency, Contract No. HR0011-06-C-0022.</Paragraph>
+  </Section>
+  <References>
+    <Reference>
+      <Title>Using TAG, a tree model, and a language model for generation.</Title>
+      <Authors>
+        <Author>Srinivas Bangalore</Author>
+        <Author>Owen Rambow</Author>
+      </Authors>
+      <Date>2000</Date>
+    </Reference>
+    <Reference>
+      <Title>Introduction to Algorithms.</Title>
+      <Authors>
+        <Author>Rivest</Author>
+        <Author>Clifford Stein</Author>
+      </Authors>
+      <Date>2001</Date>
+    </Reference>
+    <Reference>
+      <Title>An overview of Amalgam: A machine-learned generation module.</Title>
+      <Authors>
+        <Author>Simon Corston-Oliver</Author>
+        <Author>Michael Gamon</Author>
+        <Author>Eric K Ringger</Author>
+        <Author>Robert Moore</Author>
+      </Authors>
+      <Date>2002</Date>
+    </Reference>
+    <Reference>
+      <Title>Hedge trimmer: a parse-and-trim approach to headline generation.</Title>
+      <Authors>
+        <Author>Bonnie Dorr</Author>
+        <Author>David Zajic</Author>
+        <Author>Richard Schwartz</Author>
+      </Authors>
+      <Date>2003</Date>
+    </Reference>
+    <Reference>
+      <Title>FUF User manual -- version 5.0.</Title>
+      <Authors>
+        <Author>Michael Elhadad</Author>
+      </Authors>
+      <Date>1991</Date>
+    </Reference>
+    <Reference>
+      <Title>Fast decoding and optimal decoding for machine translation.</Title>
+      <Authors>
+        <Author>Ulrich Germann</Author>
+        <Author>Mike Jahr</Author>
+        <Author>Kevin Knight</Author>
+        <Author>Daniel Marcu</Author>
+        <Author>Kenji Yamada</Author>
+      </Authors>
+      <Date>2003</Date>
+    </Reference>
+    <Reference>
+      <Title>Matador: A large-scale SpanishEnglish GHMT system.</Title>
+      <Authors>
+        <Author>Nizar Habash</Author>
+      </Authors>
+      <Date>2003</Date>
+    </Reference>
+    <Reference>
+      <Title>Natural language generation in the context of machine translation. Summer workshop final report,</Title>
+      <Authors>
+        <Author>J Hajic</Author>
+        <Author>M Cmejrek</Author>
+        <Author>B Dorr</Author>
+        <Author>Y Ding</Author>
+        <Author>J Eisner</Author>
+        <Author>D Gildea</Author>
+        <Author>T Koo</Author>
+        <Author>K Parton</Author>
+        <Author>G Penn</Author>
+        <Author>D Radev</Author>
+        <Author>O Rambow</Author>
+      </Authors>
+      <Date>2002</Date>
+    </Reference>
+    <Reference>
+      <Title>Two level, many-path generation.</Title>
+      <Authors>
+        <Author>K Knight</Author>
+        <Author>V Hatzivassiloglou</Author>
+      </Authors>
+      <Date>1995</Date>
+    </Reference>
+    <Reference>
+      <Title>Statistical phrase based translation.</Title>
+      <Authors>
+        <Author>Philipp Koehn</Author>
+        <Author>Franz J Och</Author>
+        <Author>Daniel Marcu</Author>
+      </Authors>
+      <Date>2003</Date>
+    </Reference>
+    <Reference>
+      <Title>Pharaoh: a beam search decoder for phrase-based statistical machine transltion models.</Title>
+      <Authors>
+        <Author>Philipp Koehn</Author>
+      </Authors>
+      <Date>2004</Date>
+    </Reference>
+    <Reference>
+      <Title>A foundation for generalpurpose natural language generation: sentence realization using probabilistic models of language.</Title>
+      <Authors>
+        <Author>I Langkilde-Geary</Author>
+      </Authors>
+      <Date>2002</Date>
+    </Reference>
+    <Reference>
+      <Title>ROUGE: a package for automatic evaluation of summaries.</Title>
+      <Authors>
+        <Author>Chin-Yew Lin</Author>
+      </Authors>
+      <Date>2004</Date>
+    </Reference>
+    <Reference>
+      <Title>Text Generation and Systemic-Functional Linguistic.</Title>
+      <Authors>
+        <Author>Christian Matthiessen</Author>
+        <Author>John Bateman</Author>
+      </Authors>
+      <Date>1991</Date>
+    </Reference>
+    <Reference>
+      <Title>Weighted finite-state transducers in speech recognition.</Title>
+      <Authors>
+        <Author>Mehryar Mohri</Author>
+        <Author>Fernando Pereira</Author>
+        <Author>Michael Riley</Author>
+      </Authors>
+      <Date>2002</Date>
+    </Reference>
+    <Reference>
+      <Title>IDLexpressions: a formalism for representing and parsing finite languages in natural language processing.</Title>
+      <Authors>
+        <Author>Mark-Jan Nederhof</Author>
+        <Author>Giorgio Satta</Author>
+      </Authors>
+      <Date>2004</Date>
+    </Reference>
+    <Reference>
+      <Title>Minimum error rate training in statistical machine translation.</Title>
+      <Authors>
+        <Author>Franz Josef Och</Author>
+      </Authors>
+      <Date>2003</Date>
+    </Reference>
+    <Reference>
+      <Title>BLEU: a method for automatic evaluation of machine translation. In</Title>
+      <Authors>
+        <Author>Kishore Papineni</Author>
+        <Author>Salim Roukos</Author>
+        <Author>Todd Ward</Author>
+        <Author>WeiJing Zhu</Author>
+      </Authors>
+      <Date>2002</Date>
+    </Reference>
+    <Reference>
+      <Title>Artificial Intelligence. A Modern Approach.</Title>
+      <Authors>
+        <Author>Stuart Russell</Author>
+        <Author>Peter Norvig</Author>
+      </Authors>
+      <Date>1995</Date>
+    </Reference>
+    <Reference>
+      <Title>Towards developing generation algorithms for text-to-text applications.</Title>
+      <Authors>
+        <Author>Radu Soricut</Author>
+        <Author>Daniel Marcu</Author>
+      </Authors>
+      <Date>2005</Date>
+    </Reference>
+    <Reference>
+      <Title>Natural Language Generation for Text-to-Text Applications Using an Information-Slim Representation.</Title>
+      <Authors>
+        <Author>Radu Soricut</Author>
+      </Authors>
+      <Date>2006</Date>
+    </Reference>
+    <Reference>
+      <Title>BBN/UMD at DUC-2004: Topiary.</Title>
+      <Authors>
+        <Author>David Zajic</Author>
+        <Author>Bonnie J Dorr</Author>
+        <Author>Richard Schwartz</Author>
+      </Authors>
+      <Date>2004</Date>
+    </Reference>
+    <Reference>
+      <Title>Headline summarization at ISI.</Title>
+      <Authors>
+        <Author>Liang Zhou</Author>
+        <Author>Eduard Hovy</Author>
+      </Authors>
+      <Date>2003</Date>
+    </Reference>
+  </References>
+</Paper>
+

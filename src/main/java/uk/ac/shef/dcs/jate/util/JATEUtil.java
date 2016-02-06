@@ -68,7 +68,6 @@ public class JATEUtil {
         try {
             saxParser = factory.newSAXParser();
 
-
             StringBuffer paperParagraphs = new StringBuffer();
             StringBuffer paperId = new StringBuffer();
             StringBuffer paperTitle = new StringBuffer();
@@ -80,7 +79,7 @@ public class JATEUtil {
                 boolean section = false;
                 boolean sectionTitle = false;
                 boolean paragraph = false;
-
+                boolean reference = false;
 
                 public void startElement(String uri, String localName,
                                          String qName, org.xml.sax.Attributes attributes)
@@ -90,6 +89,7 @@ public class JATEUtil {
                         paperId.append(attributes.getValue("id"));
                     }
 
+                    //TODO: need to skip title of reference, test data:P06-1139_cln.xml
                     if (qName.equalsIgnoreCase("title")) {
                         title = true;
                     }
@@ -105,6 +105,10 @@ public class JATEUtil {
                     if (qName.equalsIgnoreCase("Paragraph")) {
                         paragraph = true;
                     }
+
+                    if (qName.equalsIgnoreCase("Reference")) {
+                        reference = true;
+                    }
                 }
 
                 public void endElement(String uri, String localName,
@@ -118,9 +122,12 @@ public class JATEUtil {
                     }
 
                     if (title) {
-                        //System.out.println("title:" + new String(ch, start, length));
                         title = false;
-                        paperTitle.append(new String(ch, start, length));
+
+                        if (!reference) {
+                            paperTitle.append(new String(ch, start, length)).append("\n");
+                        }
+                        reference = false;
                     }
 
                     if (section) {
@@ -163,7 +170,6 @@ public class JATEUtil {
         List<String> extractBrokenWords = extractBrokenWords(normalizedText);
 //        extractBrokenWords.parallelStream().forEach((extractBrokenWord) ->
 //                fixBrokenWords(normalizedParagraph, extractBrokenWord) );
-        System.out.println(extractBrokenWords.toString());
         String cleanedText = normalizedText;
         for (String extractBrokenWord : extractBrokenWords) {
             cleanedText = fixBrokenWords(cleanedText, extractBrokenWord);

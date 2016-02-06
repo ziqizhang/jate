@@ -103,18 +103,26 @@ public abstract class ACLRDTECTest {
 
         files.forEach(file -> {
             try {
-                indexJATEDocuments(file, jateProp);
+                indexJATEDocuments(file, jateProp, false);
             } catch (JATEException e) {
                 e.printStackTrace();
             }
         });
+
+        try {
+            server.commit();
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    static void indexJATEDocuments(Path file, JATEProperties jateProp) throws JATEException {
+    static void indexJATEDocuments(Path file, JATEProperties jateProp, boolean commit) throws JATEException {
         try {
             JATEDocument jateDocument = JATEUtil.loadACLRDTECDocument(new FileInputStream(file.toFile()));
 
-            JATEUtil.addNewDoc(server, jateDocument.getId(), jateDocument.getId(), jateDocument.getContent(), jateProp, false);
+            JATEUtil.addNewDoc(server, jateDocument.getId(), jateDocument.getId(), jateDocument.getContent(), jateProp, commit);
         } catch (FileNotFoundException ffe) {
             throw new JATEException(ffe.toString());
         } catch (IOException ioe) {
@@ -149,12 +157,12 @@ public abstract class ACLRDTECTest {
         List<String> rankedTerms = ATEResultLoader.load(jateTerms);
         double top50Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 50);
         double top100Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 100);
-        double top500Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 500);
-        double top1000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 1000);
-        double top3000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 3000);
-        double top5000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 5000);
-        double top8000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 8000);
-        double top10000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 10000);
+//        double top500Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 500);
+//        double top1000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 1000);
+//        double top3000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 3000);
+//        double top5000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 5000);
+//        double top8000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 8000);
+//        double top10000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 10000);
 
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.34 == recall;
@@ -163,12 +171,12 @@ public abstract class ACLRDTECTest {
 
         LOG.info("  top 50 Precision:" + top50Precision);
         LOG.info("  top 100 Precision:" + top100Precision);
-        LOG.info("  top 500 Precision:" + top500Precision);
-        LOG.info("  top 1000 Precision:" + top1000Precision);
-        LOG.info("  top 3000 Precision:" + top3000Precision);
-        LOG.info("  top 5000 Precision:" + top5000Precision);
-        LOG.info("  top 8000 Precision:" + top8000Precision);
-        LOG.info("  top 10000 Precision:" + top10000Precision);
+//        LOG.info("  top 500 Precision:" + top500Precision);
+//        LOG.info("  top 1000 Precision:" + top1000Precision);
+//        LOG.info("  top 3000 Precision:" + top3000Precision);
+//        LOG.info("  top 5000 Precision:" + top5000Precision);
+//        LOG.info("  top 8000 Precision:" + top8000Precision);
+//        LOG.info("  top 10000 Precision:" + top10000Precision);
         LOG.info("  overall recall:" + recall);
     }
     /**

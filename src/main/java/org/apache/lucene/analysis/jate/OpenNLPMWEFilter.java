@@ -143,13 +143,16 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
                     string.append(toks[i]).append(" ");
                 }
                 int chars = string.toString().trim().length();
-                if ((maxCharLength != 0 && chars > maxCharLength) || (minCharLength != 0 && chars < minCharLength))
+                if ((maxCharLength != 0 && chars > maxCharLength) || (minCharLength != 0 && chars < minCharLength)) {
                     it.remove();
+                    continue;
+                }
             }
 
             String lookup = span.getStart() + "," + span.getEnd();
             if (existing.contains(lookup)) {
                 it.remove();
+
                 continue;
             }
 

@@ -33,4 +33,23 @@ public class JATEUtilTest {
         assert jateDocument.getContent() != null;
         assert jateDocument.getContent().length() > 200;
     }
+
+    @Test
+    public void testLoadACLRDTECDocument() throws FileNotFoundException, JATEException {
+        Path cleanedXMLDoc = Paths.get(workingDir, "src", "test", "resource", "eval", "P06-1139_cln.xml");
+        JATEDocument jateDocument = JATEUtil.loadACLRDTECDocument(new FileInputStream(cleanedXMLDoc.toFile()));
+
+        assert jateDocument != null;
+        assert jateDocument.getId() != null;
+        assert jateDocument.getId().equals("P06-1139");
+        assert jateDocument.getContent() != null;
+
+        //ignore reference title
+        Assert.assertEquals(-1,jateDocument.getContent().indexOf("generation.Introduction"));
+        //ignore reference title
+        Assert.assertEquals(-1, jateDocument.getContent().indexOf("5.0.Fast"));
+        //ignore reference title
+        Assert.assertEquals(-1, jateDocument.getContent().indexOf("Fast decoding and optimal"));
+        Assert.assertEquals(-1, jateDocument.getContent().indexOf("generation.Statistical"));
+    }
 }
