@@ -2,6 +2,8 @@ package uk.ac.shef.dcs.jate.app;
 
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.search.SolrIndexSearcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.algorithm.Weirdness;
@@ -19,6 +21,8 @@ import java.util.Map;
  * Created by zqz on 24/09/2015.
  */
 public class AppWeirdness extends App {
+    private final Logger log = LoggerFactory.getLogger(AppWeirdness.class.getName());
+
     public static void main(String[] args) {
         if (args.length < 1) {
             printHelp();
@@ -56,36 +60,41 @@ public class AppWeirdness extends App {
         return extract(core, properties);
     }
 
-    public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException, IOException {
+    public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {
         SolrIndexSearcher searcher = core.getSearcher().get();
-        try {
+//        try {
 
-            this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
-            this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
+        this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
+        this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 
-            FrequencyTermBasedFBMaster fwbb = new FrequencyTermBasedFBMaster(searcher, properties, 1);
-            FrequencyTermBased fwb = (FrequencyTermBased) fwbb.build();
+        FrequencyTermBasedFBMaster fwbb = new FrequencyTermBasedFBMaster(searcher, properties, 1);
+        FrequencyTermBased fwb = (FrequencyTermBased) fwbb.build();
 
-            TTFReferenceFeatureFileBuilder ftrb = new TTFReferenceFeatureFileBuilder(this.referenceFrequencyFilePath);
-            FrequencyTermBased frb = ftrb.build();
+        TTFReferenceFeatureFileBuilder ftrb = new TTFReferenceFeatureFileBuilder(this.referenceFrequencyFilePath);
+        FrequencyTermBased frb = ftrb.build();
 
-            Weirdness weirdness = new Weirdness();
-            weirdness.registerFeature(FrequencyTermBased.class.getName() + Weirdness.SUFFIX_WORD, fwb);
-            weirdness.registerFeature(FrequencyTermBased.class.getName() + Weirdness.SUFFIX_REF, frb);
+        Weirdness weirdness = new Weirdness();
+        weirdness.registerFeature(FrequencyTermBased.class.getName() + Weirdness.SUFFIX_WORD, fwb);
+        weirdness.registerFeature(FrequencyTermBased.class.getName() + Weirdness.SUFFIX_REF, frb);
 
-            List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
+        List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 
-            filterByTTF(candidates);
+        filterByTTF(candidates);
 
-            List<JATETerm> terms = weirdness.execute(candidates);
-            terms = cutoff(terms);
+        List<JATETerm> terms = weirdness.execute(candidates);
+        terms = cutoff(terms);
 
-            addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
-                    properties.getSolrFieldNameID());
-            return terms;
-        } finally {
-            searcher.close();
-        }
+        addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
+                properties.getSolrFieldNameID());
+        return terms;
+//        } finally {
+//            try {
+//                searcher.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                log.error("Failed to close current SolrIndexSearcher!" + e.getCause().toString());
+//            }
+//        }
     }
 
     protected static void printHelp() {

@@ -2,6 +2,8 @@ package uk.ac.shef.dcs.jate.app;
 
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.search.SolrIndexSearcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.algorithm.Algorithm;
@@ -15,10 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by zqz on 24/09/2015.
- */
+
 public class AppTTF extends App {
+    private final Logger log = LoggerFactory.getLogger(AppTTF.class.getName());
+
     public static void main(String[] args) {
         if (args.length < 1) {
             printHelp();
@@ -56,27 +58,32 @@ public class AppTTF extends App {
         return extract(core, properties);
     }
 
-    public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException, IOException {
+    public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {
         SolrIndexSearcher searcher = core.getSearcher().get();
-        try {
-            this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
-            this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
+//        try {
+        this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
+        this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 
-            Algorithm ttf = new TTF();
-            ttf.registerFeature(FrequencyTermBased.class.getName(), this.freqFeature);
+        Algorithm ttf = new TTF();
+        ttf.registerFeature(FrequencyTermBased.class.getName(), this.freqFeature);
 
-            List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
+        List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 
-            filterByTTF(candidates);
+        filterByTTF(candidates);
 
-            List<JATETerm> terms = ttf.execute(candidates);
-            terms = cutoff(terms);
+        List<JATETerm> terms = ttf.execute(candidates);
+        terms = cutoff(terms);
 
-            addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
-                    properties.getSolrFieldNameID());
-            return terms;
-        } finally {
-            searcher.close();
-        }
+        addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
+                properties.getSolrFieldNameID());
+        return terms;
+//        } finally {
+//            try {
+//                searcher.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                log.error("Failed to close current SolrIndexSearcher!" + e.getCause().toString());
+//            }
+//        }
     }
 }

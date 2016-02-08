@@ -17,95 +17,101 @@ import java.util.List;
 import java.util.Map;
 
 public class AppGlossEx extends App {
-	private final Logger log = LoggerFactory.getLogger(getClass());
-	
-	public static void main(String[] args) {
-		if (args.length < 1) {
-			printHelp();
-			System.exit(1);
-		}
-		String solrHomePath = args[args.length - 3];
-		String solrCoreName = args[args.length - 2];
-		String jatePropertyFile = args[args.length - 1];
+    private final Logger log = LoggerFactory.getLogger(AppGlossEx.class.getName());
 
-		Map<String, String> params = getParams(args);
+    public static void main(String[] args) {
+        if (args.length < 1) {
+            printHelp();
+            System.exit(1);
+        }
+        String solrHomePath = args[args.length - 3];
+        String solrCoreName = args[args.length - 2];
+        String jatePropertyFile = args[args.length - 1];
 
-		List<JATETerm> terms;
-		try {
-			App app = new AppGlossEx(params);
-			terms = app.extract(solrHomePath, solrCoreName, jatePropertyFile);
+        Map<String, String> params = getParams(args);
 
-			app.write(terms);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (JATEException e) {
-			e.printStackTrace();
-		}
-	}
+        List<JATETerm> terms;
+        try {
+            App app = new AppGlossEx(params);
+            terms = app.extract(solrHomePath, solrCoreName, jatePropertyFile);
 
-	public AppGlossEx(Map<String, String> initParams) throws JATEException {		
-		super(initParams);
-		initalizeRefFreqParam(initParams);
-	}
+            app.write(terms);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JATEException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public AppGlossEx(Map<String, String> initParams) throws JATEException {
+        super(initParams);
+        //TODO: made it to use default reference file if not set at run-time
+        initalizeRefFreqParam(initParams);
+    }
 
 
-	@Override
-	public List<JATETerm> extract(SolrCore core, String jatePropertyFile)
-			throws IOException, JATEException {
-		log.info("start GlossEx term extraction for whole index ...");
-		JATEProperties properties = new JATEProperties(jatePropertyFile);
+    @Override
+    public List<JATETerm> extract(SolrCore core, String jatePropertyFile)
+            throws IOException, JATEException {
+        log.info("start GlossEx term extraction for whole index ...");
+        JATEProperties properties = new JATEProperties(jatePropertyFile);
 
-		return extract(core, properties);
-	}
+        return extract(core, properties);
+    }
 
-	public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException, IOException {
-		SolrIndexSearcher searcher = core.getSearcher().get();
-		try {
-			this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties,0);
-			this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
+    public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {
+        SolrIndexSearcher searcher = core.getSearcher().get();
+//        try {
+        this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
+        this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 
-			FrequencyTermBasedFBMaster fwbb = new FrequencyTermBasedFBMaster(searcher, properties,1);
-			FrequencyTermBased fwb = (FrequencyTermBased) fwbb.build();
+        FrequencyTermBasedFBMaster fwbb = new FrequencyTermBasedFBMaster(searcher, properties, 1);
+        FrequencyTermBased fwb = (FrequencyTermBased) fwbb.build();
 
-			TTFReferenceFeatureFileBuilder ftrb = new TTFReferenceFeatureFileBuilder(this.referenceFrequencyFilePath);
-			FrequencyTermBased frb = ftrb.build();
+        TTFReferenceFeatureFileBuilder ftrb = new TTFReferenceFeatureFileBuilder(this.referenceFrequencyFilePath);
+        FrequencyTermBased frb = ftrb.build();
 
-			GlossEx glossex = new GlossEx();
-			glossex.registerFeature(FrequencyTermBased.class.getName(), this.freqFeature);
-			glossex.registerFeature(FrequencyTermBased.class.getName() + GlossEx.SUFFIX_WORD, fwb);
-			glossex.registerFeature(FrequencyTermBased.class.getName() + GlossEx.SUFFIX_REF, frb);
+        GlossEx glossex = new GlossEx();
+        glossex.registerFeature(FrequencyTermBased.class.getName(), this.freqFeature);
+        glossex.registerFeature(FrequencyTermBased.class.getName() + GlossEx.SUFFIX_WORD, fwb);
+        glossex.registerFeature(FrequencyTermBased.class.getName() + GlossEx.SUFFIX_REF, frb);
 
-			List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
+        List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 
-			filterByTTF(candidates);
+        filterByTTF(candidates);
 
-			List<JATETerm> terms = glossex.execute(candidates);
-			terms = cutoff(terms);
+        List<JATETerm> terms = glossex.execute(candidates);
+        terms = cutoff(terms);
 
-			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
-					properties.getSolrFieldNameID());
+        addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
+                properties.getSolrFieldNameID());
 
-			log.info("complete GlossEx term extraction.");
-			return terms;
-		} finally {
-			searcher.close();
-		}
-	}
+        log.info("complete GlossEx term extraction.");
+        return terms;
+//        } finally {
+//            try {
+//                searcher.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                log.error("Failed to close current SolrIndexSearcher!" + e.getCause().toString());
+//            }
+//        }
+    }
 
-	protected static void printHelp() {
-		StringBuilder sb = new StringBuilder("GlossEx Usage:\n");
-		sb.append("java -cp '[CLASSPATH]' ").append(AppATTF.class.getName()).append(" [OPTIONS] ")
-				.append("-r [REF_TERM_TF_FILE] [LUCENE_INDEX_PATH] [JATE_PROPERTY_FILE]").append("\nE.g.:\n");
-		sb.append(
-				"java -cp '/libs/*' -t 20 -r /resource/bnc_unifrqs.normal /solr/server/solr/jate/data jate.properties ...\n\n");
-		sb.append("[OPTIONS]:\n")
-				.append("\t\t-c\t\t'true' or 'false'. Whether to collect term information, e.g., offsets in documents. Default is false.\n")
-				.append("\t\t-t\t\tA number. Score threshold for selecting terms. If not set then default -n is used.")
-				.append("\n")
-				.append("\t\t-n\t\tA number. If an integer is given, top N candidates are selected as terms. \n")
-				.append("\t\t\t\tIf a decimal number is given, top N% of candidates are selected. Default is 0.25.\n");
-		sb.append("\t\t-o\t\tA file path. If provided, the output is written to the file. \n")
-				.append("\t\t\t\tOtherwise, output is written to the console.");
-		System.out.println(sb);
-	}
+    protected static void printHelp() {
+        StringBuilder sb = new StringBuilder("GlossEx Usage:\n");
+        sb.append("java -cp '[CLASSPATH]' ").append(AppATTF.class.getName()).append(" [OPTIONS] ")
+                .append("-r [REF_TERM_TF_FILE] [LUCENE_INDEX_PATH] [JATE_PROPERTY_FILE]").append("\nE.g.:\n");
+        sb.append(
+                "java -cp '/libs/*' -t 20 -r /resource/bnc_unifrqs.normal /solr/server/solr/jate/data jate.properties ...\n\n");
+        sb.append("[OPTIONS]:\n")
+                .append("\t\t-c\t\t'true' or 'false'. Whether to collect term information, e.g., offsets in documents. Default is false.\n")
+                .append("\t\t-t\t\tA number. Score threshold for selecting terms. If not set then default -n is used.")
+                .append("\n")
+                .append("\t\t-n\t\tA number. If an integer is given, top N candidates are selected as terms. \n")
+                .append("\t\t\t\tIf a decimal number is given, top N% of candidates are selected. Default is 0.25.\n");
+        sb.append("\t\t-o\t\tA file path. If provided, the output is written to the file. \n")
+                .append("\t\t\t\tOtherwise, output is written to the console.");
+        System.out.println(sb);
+    }
 }

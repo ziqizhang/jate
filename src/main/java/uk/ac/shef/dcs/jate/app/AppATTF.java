@@ -105,40 +105,40 @@ public class AppATTF extends App {
     /**
      * ranking and filtering
      *
-     * @param core, solr core
+     * @param core,       solr core
      * @param properties, jate properties file
      * @return List<JATETerm>
      * @throws JATEException
      */
     public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {
         SolrIndexSearcher searcher = core.getSearcher().get();
-        try {
-            this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, FrequencyTermBasedFBMaster.FEATURE_TYPE_TERM);
-            this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
+//        try {
+        this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, FrequencyTermBasedFBMaster.FEATURE_TYPE_TERM);
+        this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 
-            Algorithm attf = new ATTF();
-            attf.registerFeature(FrequencyTermBased.class.getName(), freqFeature);
+        Algorithm attf = new ATTF();
+        attf.registerFeature(FrequencyTermBased.class.getName(), freqFeature);
 
-            List<String> candidates = new ArrayList<>(freqFeature.getMapTerm2TTF().keySet());
+        List<String> candidates = new ArrayList<>(freqFeature.getMapTerm2TTF().keySet());
 
-            filterByTTF(candidates);
+        filterByTTF(candidates);
 
-            List<JATETerm> terms = attf.execute(candidates);
+        List<JATETerm> terms = attf.execute(candidates);
 
-            terms = cutoff(terms);
+        terms = cutoff(terms);
 
-            addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
-                    properties.getSolrFieldNameID());
+        addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
+                properties.getSolrFieldNameID());
 
-            return terms;
-        } finally {
-            try {
-            searcher.close();
-            } catch (IOException ioe) {
-                LOG.error(ioe.toString());
-                throw new JATEException("Failed to close Solr Index Searcher.");
-        }
-    }
+        return terms;
+//        } finally {
+//            try {
+//                searcher.close();
+//            } catch (IOException ioe) {
+//                LOG.error(ioe.toString());
+//                throw new JATEException("Failed to close Solr Index Searcher.");
+//            }
+//        }
     }
 
 //	public List<JATETerm> extract(SolrCore core, JATEProperties jateProperties) {

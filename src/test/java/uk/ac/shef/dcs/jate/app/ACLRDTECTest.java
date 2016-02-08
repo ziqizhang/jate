@@ -1,7 +1,6 @@
 package uk.ac.shef.dcs.jate.app;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.spi.RootLogger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -32,7 +31,7 @@ import java.util.zip.ZipInputStream;
  * ACL RD-TEC contains almost 11,000 scientific publications. Due to the performance and efficiency reasons,
  * the test and benchmarking tests can only be run manually.
  *
- * @see AppATTFACLRDTECTest
+ * @see AppATEACLRDTECTest
  * @see AppChiSquareACLRDTECTest
  *
  * <p>
@@ -58,6 +57,17 @@ public abstract class ACLRDTECTest {
 
     static String workingDir = System.getProperty("user.dir");
 
+    static String solrCoreName = "aclRdTecCore";
+
+    static Path corpusDir = Paths.get(workingDir, "src", "test", "resource", "eval", "acl_rd_tec", "cleansed_text", "xml");
+
+    static Path solrHome = Paths.get(workingDir, "testdata", "solr-testbed");
+
+    static Path FREQ_GENIC_FILE = Paths.get(workingDir,"src","main", "resource","bnc_unifrqs.normal");
+
+    static Path allAnnCandidTerms = Paths.get(workingDir, "src", "test", "resource", "eval",
+            "acl_rd_tec", "annotation", "_all_annotated_candid_term");
+
     // The corpus can be downloaded via
     // <a href="http://atmykitchen.info/datasets/acl_rd_tec/cleansed_text/index_cleansed_text.htm">
     // Cleansed Text Files in XML Format</a>
@@ -68,7 +78,7 @@ public abstract class ACLRDTECTest {
     static List<String> gsTerms = null;
     JATEProperties jateProp = null;
 
-    public ACLRDTECTest(String solrHomeDir, String solrCoreName) throws JATEException {
+    public void initialise(String solrHomeDir, String solrCoreName) throws JATEException {
         if (server == null) {
             CoreContainer solrContainer = new CoreContainer(solrHomeDir);
             solrContainer.load();
@@ -76,8 +86,6 @@ public abstract class ACLRDTECTest {
             server = new EmbeddedSolrServer(solrContainer, solrCoreName);
         }
 
-        Path allAnnCandidTerms = Paths.get(workingDir, "src", "test", "resource", "eval",
-                "acl_rd_tec", "annotation", "_all_annotated_candid_term");
         gsTerms = GSLoader.loadACLRDTECGSTerms(allAnnCandidTerms, true, true);
 
         if (gsTerms == null) {
@@ -101,6 +109,7 @@ public abstract class ACLRDTECTest {
         //File dir = new File(corpusDir);
         List<Path> files = JATEUtil.loadFiles(corpusDir);
 
+        LOG.info("indexing and extracting candidates...");
         files.forEach(file -> {
             try {
                 indexJATEDocuments(file, jateProp, false);
@@ -111,6 +120,7 @@ public abstract class ACLRDTECTest {
 
         try {
             server.commit();
+            LOG.info("complete indexing and candidate extraction.");
         } catch (SolrServerException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -151,34 +161,36 @@ public abstract class ACLRDTECTest {
         return 0;
     }
 
-    abstract List<JATETerm> rankAndFilter(String solrCoreName) throws JATEException;
+    abstract List<JATETerm> rankAndFilter(EmbeddedSolrServer server, String solrCoreName, JATEProperties jateProp) throws JATEException;
 
-    public void evaluate(List<JATETerm> jateTerms) throws JATEException {
+    public void evaluate(List<JATETerm> jateTerms, String algorithmName) throws JATEException {
+        LOG.info(String.format("evaluating %s ...", algorithmName));
         List<String> rankedTerms = ATEResultLoader.load(jateTerms);
         double top50Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 50);
         double top100Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 100);
-//        double top500Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 500);
-//        double top1000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 1000);
-//        double top3000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 3000);
-//        double top5000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 5000);
-//        double top8000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 8000);
-//        double top10000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 10000);
+        double top500Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 500);
+        double top1000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 1000);
+        double top3000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 3000);
+        double top5000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 5000);
+        double top8000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 8000);
+        double top10000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 10000);
 
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.34 == recall;
 
-        LOG.info("=============AppATTF ACL RD-TEC Benchmarking Results==================");
-
+        LOG.info(String.format("=============%s ACL RD-TEC Benchmarking Results==================" ,algorithmName));
+        validate_indexing();
         LOG.info("  top 50 Precision:" + top50Precision);
         LOG.info("  top 100 Precision:" + top100Precision);
-//        LOG.info("  top 500 Precision:" + top500Precision);
-//        LOG.info("  top 1000 Precision:" + top1000Precision);
-//        LOG.info("  top 3000 Precision:" + top3000Precision);
-//        LOG.info("  top 5000 Precision:" + top5000Precision);
-//        LOG.info("  top 8000 Precision:" + top8000Precision);
-//        LOG.info("  top 10000 Precision:" + top10000Precision);
+        LOG.info("  top 500 Precision:" + top500Precision);
+        LOG.info("  top 1000 Precision:" + top1000Precision);
+        LOG.info("  top 3000 Precision:" + top3000Precision);
+        LOG.info("  top 5000 Precision:" + top5000Precision);
+        LOG.info("  top 8000 Precision:" + top8000Precision);
+        LOG.info("  top 10000 Precision:" + top10000Precision);
         LOG.info("  overall recall:" + recall);
     }
+
     /**
      * Using a set of heuristics, sections such as ‘bibliography’ and ‘acknowledgements’ are removed from the corpus
      * and are organized in separate files. In addition, text cleaning is performed, e.g. broken words and text

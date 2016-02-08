@@ -79,47 +79,52 @@ public class AppChiSquare extends App {
 
     }
 
-    public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException, IOException {
+    public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {
         SolrIndexSearcher searcher = core.getSearcher().get();
-        try {
+//        try {
 
-            FrequencyTermBasedFBMaster ftbb = new FrequencyTermBasedFBMaster(searcher, properties, 0);
-            FrequencyTermBased ftb = (FrequencyTermBased) ftbb.build();
+        FrequencyTermBasedFBMaster ftbb = new FrequencyTermBasedFBMaster(searcher, properties, 0);
+        FrequencyTermBased ftb = (FrequencyTermBased) ftbb.build();
 
-            //sentence is a context
-            FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties,0);
-            FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
-            FrequencyCtxBased ref_fcsb = (FrequencyCtxBased) (new FrequencyCtxBasedCopier(searcher, properties, fcsb, ftb, frequentTermFT).build());
-            //window is a context
+        //sentence is a context
+        FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties, 0);
+        FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
+        FrequencyCtxBased ref_fcsb = (FrequencyCtxBased) (new FrequencyCtxBasedCopier(searcher, properties, fcsb, ftb, frequentTermFT).build());
+        //window is a context
             /*FrequencyCtxWindowBasedFBMaster fcsbb = new FrequencyCtxWindowBasedFBMaster(searcher, properties, null, 5, 0);
             FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
             FrequencyCtxBased ref_fcsb = (FrequencyCtxBased)
                     (new FrequencyCtxWindowBasedFBMaster(searcher, properties, fcsb.getMapCtx2TTF().keySet(), 5, 0).build());*/
 
-            List<String> inter = new ArrayList<>(fcsb.getCtxOverlapZones().keySet());
-            inter.removeAll(ref_fcsb.getCtxOverlapZones().keySet());
-            Collections.sort(inter);
-			/*for (String t : inter)
+        List<String> inter = new ArrayList<>(fcsb.getCtxOverlapZones().keySet());
+        inter.removeAll(ref_fcsb.getCtxOverlapZones().keySet());
+        Collections.sort(inter);
+            /*for (String t : inter)
 				System.out.println(t);*/
 
-            CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, ftb, this.prefilterMinTTF, fcsb, ref_fcsb, this.prefilterMinTCF);
-            Cooccurrence co = (Cooccurrence) cb.build();
+        CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, ftb, this.prefilterMinTTF, fcsb, ref_fcsb, this.prefilterMinTCF);
+        Cooccurrence co = (Cooccurrence) cb.build();
 
-            ChiSquare chi = new ChiSquare();
-            chi.registerFeature(FrequencyTermBased.class.getName(), ftb);
-            chi.registerFeature(FrequencyCtxBased.class.getName() + ChiSquare.SUFFIX_TERM, fcsb);
-            chi.registerFeature(FrequencyCtxBased.class.getName() + ChiSquare.SUFFIX_REF_TERM, ref_fcsb);
-            chi.registerFeature(Cooccurrence.class.getName(), co);
+        ChiSquare chi = new ChiSquare();
+        chi.registerFeature(FrequencyTermBased.class.getName(), ftb);
+        chi.registerFeature(FrequencyCtxBased.class.getName() + ChiSquare.SUFFIX_TERM, fcsb);
+        chi.registerFeature(FrequencyCtxBased.class.getName() + ChiSquare.SUFFIX_REF_TERM, ref_fcsb);
+        chi.registerFeature(Cooccurrence.class.getName(), co);
 
-            List<JATETerm> terms = chi.execute(co.getTerms());
-            terms = cutoff(terms);
+        List<JATETerm> terms = chi.execute(co.getTerms());
+        terms = cutoff(terms);
 
-            addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
-                    properties.getSolrFieldNameID());
-            return terms;
-        } finally {
-            searcher.close();
-        }
+        addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
+                properties.getSolrFieldNameID());
+        return terms;
+//        } finally {
+//            try {
+//                searcher.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                log.error("Failed to close current SolrIndexSearcher!" + e.getCause().toString());
+//            }
+//        }
     }
 
 }

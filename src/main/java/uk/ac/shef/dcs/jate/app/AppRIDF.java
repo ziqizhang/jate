@@ -2,6 +2,8 @@ package uk.ac.shef.dcs.jate.app;
 
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.search.SolrIndexSearcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.algorithm.RIDF;
@@ -15,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 public class AppRIDF extends App {
+
+    private final Logger log = LoggerFactory.getLogger(AppRIDF.class.getName());
 
     public AppRIDF(Map<String, String> initParams) throws JATEException {
         super(initParams);
@@ -53,29 +57,34 @@ public class AppRIDF extends App {
         return extract(core, properties);
     }
 
-    public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException, IOException {
+    public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {
         SolrIndexSearcher searcher = core.getSearcher().get();
-        try {
+//        try {
 
-            this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
-            this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
+        this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
+        this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 
-            RIDF attf = new RIDF();
-            attf.registerFeature(FrequencyTermBased.class.getName(), this.freqFeature);
+        RIDF attf = new RIDF();
+        attf.registerFeature(FrequencyTermBased.class.getName(), this.freqFeature);
 
-            List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
+        List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 
-            filterByTTF(candidates);
+        filterByTTF(candidates);
 
-            List<JATETerm> terms = attf.execute(candidates);
-            terms = cutoff(terms);
+        List<JATETerm> terms = attf.execute(candidates);
+        terms = cutoff(terms);
 
-            addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
-                    properties.getSolrFieldNameID());
-            return terms;
-        } finally {
-            searcher.close();
-        }
+        addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
+                properties.getSolrFieldNameID());
+        return terms;
+//        } finally {
+//            try {
+//                searcher.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                log.error("Failed to close current SolrIndexSearcher!" + e.getCause().toString());
+//            }
+//        }
     }
 
 }

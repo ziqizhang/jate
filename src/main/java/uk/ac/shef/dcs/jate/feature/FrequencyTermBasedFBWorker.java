@@ -85,7 +85,7 @@ class FrequencyTermBasedFBWorker extends JATERecursiveTaskWorker<String, int[]> 
             sb.append(ExceptionUtils.getFullStackTrace(e));
             LOG.error(sb.toString());
         }
-        LOG.info(totalSuccess + "/" + terms.size());
+        LOG.debug("progress : " + totalSuccess + "/" + terms.size());
         return new int[]{totalSuccess, terms.size()};
     }
 }

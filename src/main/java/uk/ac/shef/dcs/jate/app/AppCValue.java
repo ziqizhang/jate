@@ -55,34 +55,39 @@ public class AppCValue extends App {
         return extract(core, properties);
     }
 
-    public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException, IOException {
+    public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {
         SolrIndexSearcher searcher = core.getSearcher().get();
-        try {
+//        try {
 
-            this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
-            this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
+        this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
+        this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 
-            ContainmentFBMaster cb = new ContainmentFBMaster(searcher, properties);
-            Containment cf = (Containment) cb.build();
+        ContainmentFBMaster cb = new ContainmentFBMaster(searcher, properties);
+        Containment cf = (Containment) cb.build();
 
-            CValue cvalue = new CValue();
-            cvalue.registerFeature(FrequencyTermBased.class.getName(), this.freqFeature);
-            cvalue.registerFeature(Containment.class.getName(), cf);
+        CValue cvalue = new CValue();
+        cvalue.registerFeature(FrequencyTermBased.class.getName(), this.freqFeature);
+        cvalue.registerFeature(Containment.class.getName(), cf);
 
-            List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
+        List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 
-            filterByTTF(candidates);
+        filterByTTF(candidates);
 
-            List<JATETerm> terms = cvalue.execute(candidates);
-            terms = cutoff(terms);
+        List<JATETerm> terms = cvalue.execute(candidates);
+        terms = cutoff(terms);
 
-            addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
-                    properties.getSolrFieldNameID());
-            log.info("Complete CValue term extraction.");
-            return terms;
-        } finally {
-            searcher.close();
-        }
+        addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
+                properties.getSolrFieldNameID());
+        log.info("Complete CValue term extraction.");
+        return terms;
+//        } finally {
+//            try {
+//                searcher.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                log.error("Failed to close current SolrIndexSearcher!" + e.getCause().toString());
+//            }
+//        }
     }
 
 }

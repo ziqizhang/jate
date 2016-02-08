@@ -2,6 +2,8 @@ package uk.ac.shef.dcs.jate.app;
 
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.search.SolrIndexSearcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 
@@ -17,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 public class AppRAKE extends App {
+    private final Logger log = LoggerFactory.getLogger(AppRAKE.class.getName());
+
     public static void main(String[] args) {
         if (args.length < 1) {
             printHelp();
@@ -59,41 +63,46 @@ public class AppRAKE extends App {
         return extract(core, properties);
     }
 
-    public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException, IOException {
+    public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {
         SolrIndexSearcher searcher = core.getSearcher().get();
-        try {
+//        try {
 
-            this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
-            this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
+        this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
+        this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 
-            FrequencyTermBasedFBMaster fwbb = new FrequencyTermBasedFBMaster(searcher, properties, 1);
-            FrequencyTermBased fwb = (FrequencyTermBased) fwbb.build();
+        FrequencyTermBasedFBMaster fwbb = new FrequencyTermBasedFBMaster(searcher, properties, 1);
+        FrequencyTermBased fwb = (FrequencyTermBased) fwbb.build();
 
-            FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties,
-                    1);
-            FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
+        FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties,
+                1);
+        FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
 
-            CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, fwb, prefilterMinTTF, fcsb, fcsb, prefilterMinTCF);
-            Cooccurrence co = (Cooccurrence) cb.build();
+        CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, fwb, prefilterMinTTF, fcsb, fcsb, prefilterMinTCF);
+        Cooccurrence co = (Cooccurrence) cb.build();
 
-            RAKE rake = new RAKE();
-            rake.registerFeature(FrequencyTermBased.class.getName() + RAKE.SUFFIX_WORD, fwb);
-            rake.registerFeature(Cooccurrence.class.getName() + RAKE.SUFFIX_WORD, co);
+        RAKE rake = new RAKE();
+        rake.registerFeature(FrequencyTermBased.class.getName() + RAKE.SUFFIX_WORD, fwb);
+        rake.registerFeature(Cooccurrence.class.getName() + RAKE.SUFFIX_WORD, co);
 
-            List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
+        List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 
-            filterByTTF(candidates);
+        filterByTTF(candidates);
 
-            List<JATETerm> terms = rake.execute(candidates);
-            terms = cutoff(terms);
+        List<JATETerm> terms = rake.execute(candidates);
+        terms = cutoff(terms);
 
-            addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
-                    properties.getSolrFieldNameID());
-            return terms;
+        addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
+                properties.getSolrFieldNameID());
+        return terms;
 
-        } finally {
-            searcher.close();
-        }
+//        } finally {
+//            try {
+//                searcher.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                log.error("Failed to close current SolrIndexSearcher!" + e.getCause().toString());
+//            }
+//        }
     }
 
     protected static void printHelp() {
