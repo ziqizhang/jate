@@ -1,5 +1,6 @@
 package uk.ac.shef.dcs.jate.indexing;
 
+import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrInputDocument;
@@ -12,7 +13,6 @@ import uk.ac.shef.dcs.jate.util.SolrUtil;
 
 import java.io.IOException;
 import java.util.*;
-import org.apache.log4j.Logger;
 
 public class IndexingHandler {
 
@@ -90,7 +90,7 @@ public class IndexingHandler {
             solrClient.close();
         } catch (IOException e) {
             String message = "CANNOT CLOSE SOLR: \n";
-            LOG.error(message+ExceptionUtils.getStackTrace(e));
+            LOG.error(message + ExceptionUtils.getStackTrace(e));
         }
     }
 }

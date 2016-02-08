@@ -21,6 +21,14 @@ import org.apache.lucene.analysis.tokenattributes.PayloadAttribute;
  */
 public interface SentenceContextAware {
 
+    /**
+     *
+     * @param attribute the PayloadAttribute to store information of a SentenceContext object
+     * @param firstTokenIndex index of the first token of the MWE in the sentence
+     * @param lastTokenIndex index of the last token of the MWE in the sentence
+     * @param posTag PoS of the lexical unit (only valid for single token)
+     * @param sentenceIndex the index (id) of the sentence
+     */
     void addSentenceContext(PayloadAttribute attribute, int firstTokenIndex, int lastTokenIndex,
                             String posTag, int sentenceIndex);
 

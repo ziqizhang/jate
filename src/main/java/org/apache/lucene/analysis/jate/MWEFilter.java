@@ -14,22 +14,22 @@ import java.util.Set;
 public abstract class MWEFilter extends TokenFilter implements SentenceContextAware {
 
     /**
-     * default maximum shingle size is 2.
+     * default maximum tokens in an MWE is 2.
      */
     public static final int DEFAULT_MAX_TOKENS = 2;
 
     /**
-     * default minimum shingle size is 2.
+     * default minimum tokens in an MWE is 2.
      */
     public static final int DEFAULT_MIN_TOKENS = 2;
 
     /**
-     * default maximum shingle size is 2.
+     * default maximum character length of a MWE is 2.
      */
     public static final int DEFAULT_MAX_CHAR_LENGTH = 50;
 
     /**
-     * default minimum shingle size is 2.
+     * default minimum character length of a MWE is 1.
      */
     public static final int DEFAULT_MIN_CHAR_LENGTH = 1;
 
@@ -58,22 +58,22 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
 
 
     /**
-     * maximum shingle size (number of tokens)
+     * maximum tokens in a MWE (number of tokens)
      */
     protected int maxTokens;
 
     /**
-     * minimum shingle size (number of tokens)
+     * minimum tokens in a MWE (number of tokens)
      */
     protected int minTokens;
 
     /**
-     * maximum shingle size (number of tokens)
+     * maximum character length of a MWE (number of tokens)
      */
     protected int maxCharLength;
 
     /**
-     * minimum shingle size (number of tokens)
+     * minimum character length of a MWE (number of tokens)
      */
     protected int minCharLength;
 

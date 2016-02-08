@@ -12,7 +12,7 @@ import uk.ac.shef.dcs.jate.nlp.POSTagger;
 import java.io.IOException;
 import java.util.*;
 /**
- *
+ * Generate candidate terms using the OpenNLP noun phrase chunker
  */
 public final class OpenNLPNounPhraseFilter extends OpenNLPMWEFilter {
 

@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 
 /**
  * An implementation of the CValue term recognition algorithm. See Frantzi et. al 2000, <i>
- * Automatic recognition of multi-word terms:. the C-value/NC-value method</i>
+ * Automatic recognition of multi-word terms: the C-value/NC-value method</i>
  */
 public class CValue extends Algorithm {
     private static final Logger LOG = Logger.getLogger(CValue.class.getName());

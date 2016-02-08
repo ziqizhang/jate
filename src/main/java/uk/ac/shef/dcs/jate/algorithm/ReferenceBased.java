@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by zqz on 25/09/2015.
+ *
  */
 public abstract class ReferenceBased extends Algorithm{
     protected double nullWordProbInReference;

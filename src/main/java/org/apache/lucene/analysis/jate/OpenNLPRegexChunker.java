@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
+/**
+ * Generates candidate terms based on PoS regex
+ */
 public final class OpenNLPRegexChunker extends OpenNLPMWEFilter {
 
     private RegexNameFinder regexChunker;

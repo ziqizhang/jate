@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * Created by - on 12/10/2015.
+ *
  */
 public class OpenNLPNounPhraseFilterFactory extends MWEFilterFactory {
     private Chunker chunker;

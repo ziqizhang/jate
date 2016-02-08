@@ -2,7 +2,12 @@ package org.apache.lucene.analysis.jate;
 
 
 /**
- *
+ * Represents the context where a candidate term appears in a sentence. The following information is
+ * recorded:
+ * <br/> sentence id
+ * <br/> index of the first token of the candidate as it appears in the sentence
+ * <br/> index of the second token of the candidate as it appears in the sentence
+ * <br/> pos of the candidate, if makes sense
  */
 public class SentenceContext {
 

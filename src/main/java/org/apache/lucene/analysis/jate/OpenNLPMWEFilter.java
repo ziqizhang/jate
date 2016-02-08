@@ -101,6 +101,8 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
         return false;
     }
 
+    //performs various checking against the user set parameters for the MWE, including, e.g.
+    //leading and heading stopwords removal etc
     protected Span[] prune(Span[] chunks, String[] toks) {
         Set<String> existing = new HashSet<>();
         List<Span> list = new ArrayList<>(Arrays.asList(chunks));
@@ -229,7 +231,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
         chunkTypes.clear();
     }
 
-
+    //gather tokens and PoS's
     protected String[][] walkTokens() throws IOException {
         List<String> wordList = new ArrayList<>();
         List<String> posList = new ArrayList<>();
