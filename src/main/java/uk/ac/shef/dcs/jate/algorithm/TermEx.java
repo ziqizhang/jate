@@ -77,32 +77,34 @@ public class TermEx extends ReferenceBased {
         for (String tString : candidates) {
             String[] elements = tString.split(" ");
             double T = (double) elements.length;
-            double SUMwi = 0.0;
             double SUMfwi = 0.0;
 
             //the original paper looks up the term directly (tString). But in many case, technical terms
             //are unlikely to be found in reference corpus. So we break term into component words and look up words
             //then combine the scores
+            double DP_upper=0.0, DP_lower=0.0, totalWordsInSelectedRefCorpus=0.0;
+
             for (int i = 0; i < T; i++) {
                 String wi = elements[i];
+                SUMfwi += (double) fFeatureWords.getTTF(wi);
 
-                double max_freq_t_dj_norm = 0;
-                FrequencyTermBased selectedRefFeature = referenceFeatures.get(0);
+                DP_upper+=(double) fFeatureWords.getTTF(wi);
+                double max_freq_t_dj = 0;
+                FrequencyTermBased selectedRef = referenceFeatures.get(0);
                 for (FrequencyTermBased refFeature : referenceFeatures) {
-                    double freqNorm = refFeature.getTTFNorm(wi);
-                    if (freqNorm > max_freq_t_dj_norm) {
-                        max_freq_t_dj_norm = freqNorm;
-                        selectedRefFeature = refFeature;
+                    double freqNorm = refFeature.getTTF(wi);
+                    if (freqNorm > max_freq_t_dj) {
+                        max_freq_t_dj = freqNorm;
+                        selectedRef = refFeature;
+                        totalWordsInSelectedRefCorpus=refFeature.getCorpusTotal();
                     }
                 }
-                if (max_freq_t_dj_norm == 0)
-                    max_freq_t_dj_norm = mapNullWordProbInReference.get(selectedRefFeature);
-                double refScalar = mapRefScalars.get(selectedRefFeature);
-                max_freq_t_dj_norm *= refScalar;
-
-                SUMwi += (double) fFeatureWords.getTTF(wi) / totalWordsInCorpus /
-                        max_freq_t_dj_norm;
-                SUMfwi += (double) fFeatureWords.getTTF(wi);
+                if (max_freq_t_dj == 0)
+                    max_freq_t_dj = mapNullWordProbInReference.get(selectedRef);
+                double theRefScalar = mapRefScalars.get(selectedRef);
+                if(matchOOM)
+                    max_freq_t_dj *= theRefScalar;
+                DP_lower+=max_freq_t_dj;
             }
 
             //calc DC
@@ -122,13 +124,15 @@ public class TermEx extends ReferenceBased {
                 double norm = tfid == 0 ? 0 : (double) tfid / ttfid;
                 if (norm == 0) sum += 0;
                 else {
-                    sum += norm * Math.log(norm + 0.1);
+                    sum += norm * Math.log(norm/* + 0.1*/);
                 }
             }
 
-            double DP = SUMwi; //this term has been changed to ensure they are in the range of 0 and 1
-            double DC = sum;
-            double LC = SUMfwi == 0 ? 0 : (T * Math.log(fFeatureTerms.getTTF(tString) + 1) * fFeatureTerms.getTTF(tString)) / SUMfwi;
+            double DP = (DP_upper/totalWordsInCorpus)/(DP_lower/totalWordsInSelectedRefCorpus);
+
+            //double DP = SUMwi; //this term has been changed to ensure they are in the range of 0 and 1
+            double DC = 0-sum;
+            double LC = SUMfwi == 0 ? 0 : (T * Math.log(fFeatureTerms.getTTF(tString) + 0.000001) * fFeatureTerms.getTTF(tString)) / SUMfwi;
 
             double score = alpha * DP + beta * DC + zeta * LC;
             JATETerm term = new JATETerm(tString, score);

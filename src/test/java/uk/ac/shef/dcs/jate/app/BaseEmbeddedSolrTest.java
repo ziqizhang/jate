@@ -30,26 +30,23 @@ public abstract class BaseEmbeddedSolrTest {
     private static Logger LOG = Logger.getLogger(BaseEmbeddedSolrTest.class.getName());
 
     static String workingDir = System.getProperty("user.dir");
-
-    static String solrCoreName = "geniaCore";
     static Path solrHome = Paths.get(workingDir, "testdata", "solr-testbed");
 
     static Path FREQ_GENIC_FILE = Paths.get(workingDir,"src","main", "resource","bnc_unifrqs.normal");
 
     EmbeddedSolrServer server;
+    protected String solrCoreName;
+    protected boolean reindex;
 
-    @BeforeClass
-    public static void setupClass() throws Exception {
-        try {
-            cleanIndexDirectory(solrHome.toString(), solrCoreName);
-        } catch (IOException ioe) {
-            throw new JATEException("Unable to delete index data. Please clean index directory " +
-                    "[testdata/solr-testbed/jate/data] manually!");
-        }
-    }
+    protected abstract void setSolrCoreName();
+    protected abstract void setReindex();
 
     //@Before
     public void setup() throws Exception {
+        setSolrCoreName();
+        setReindex();
+        if(reindex)
+            cleanIndexDirectory(solrHome.toString(), solrCoreName);
         CoreContainer testBedContainer = new CoreContainer(solrHome.toString());
         testBedContainer.load();
         server = new EmbeddedSolrServer(testBedContainer, solrCoreName);
@@ -85,7 +82,7 @@ public abstract class BaseEmbeddedSolrTest {
         }
     }
 
-    public static void cleanIndexDirectory(String solrHome, String coreName) throws IOException {
+    private static void cleanIndexDirectory(String solrHome, String coreName) throws IOException {
 //       File indexDir = new File(solrHome + File.separator + coreName + File.separator +
 //                "data" + File.separator + "index" + File.separator);
         File indexDir = Paths.get(solrHome,coreName,"data","index").toFile();
@@ -96,17 +93,6 @@ public abstract class BaseEmbeddedSolrTest {
             }
         } catch (IOException e) {
             LOG.error("Failed to clean index directory! Please do it manually!");
-            throw e;
-        }
-    }
-
-    public void cleanData() throws IOException, SolrServerException {
-        LOG.info("clean all test data...");
-        try {
-            server.deleteByQuery("*:*");
-            server.commit();
-        } catch (SolrServerException e) {
-            LOG.error("Failed to clean test data in index! Please do it manually!");
             throw e;
         }
     }

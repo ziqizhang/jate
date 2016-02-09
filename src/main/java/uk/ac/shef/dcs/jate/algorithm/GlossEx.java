@@ -71,7 +71,8 @@ public class GlossEx extends ReferenceBased {
                 double pc_wi = fFeatureRef.getTTFNorm(wi);
                 if (pc_wi == 0)
                     pc_wi = nullWordProbInReference; //
-                pc_wi*=refScalar;
+                if(matchOOM)
+                    pc_wi*=refScalar;
                 SUMwi += /*Math.log(*/(double) fFeatureWords.getTTF(wi) / totalWordsInCorpus / pc_wi/*)*/;
                 SUMfwi += (double) fFeatureWords.getTTF(wi);
             }

@@ -34,7 +34,7 @@ public enum AppParams {
     PREFILTER_MIN_TERM_CONTEXT_FREQUENCY("-pf.mtcf", "min_term_context_freq"),
 
     //TODO: more comment to explain the parameter
-    CHISQUERE_FREQ_TERM_CUTOFF_PERCENTAGE("-ft", "ChiSquare only frequent term cutoff percentage. " +
+    CHISQUERE_FREQ_TERM_CUTOFF_PERCENTAGE("-ft", "ChiSquare only: frequent term cutoff percentage. " +
             "Value must be within (0,1.0]"),
 
     // file path to the reference corpus statistics (unigram

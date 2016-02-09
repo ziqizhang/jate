@@ -48,6 +48,15 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     List<String> gsTerms;
     Map<String, String> initParams = null;
 
+
+    protected void setSolrCoreName(){
+        solrCoreName="geniaCore";
+    }
+    protected void setReindex(){ //change this to false if you want to use existing index
+        reindex=false;
+    }
+
+
     @Before
     public void setup() throws Exception {
         super.setup();
@@ -55,7 +64,14 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         jateProperties.setSolrHome(solrHome.toString());
         jateProperties.setSolrCoreName(solrCoreName);
 
-        indexCorpus(loadGENIACorpus());
+        if(reindex) {
+            try {
+                indexCorpus(loadGENIACorpus());
+            } catch (IOException ioe) {
+                throw new JATEException("Unable to delete index data. Please clean index directory " +
+                        "[testdata/solr-testbed/jate/data] manually!");
+            }
+        }
 
         gsTerms = GSLoader.loadGenia(GENIA_CORPUS_CONCEPT_FILE.toFile(), true, true);
 
@@ -250,7 +266,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    @Test
+    //@Test
     public void benchmarking_appCValue() throws IOException, JATEException {
         AppCValue appCValue = new AppCValue(initParams);
         List<JATETerm> termList = appCValue.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
@@ -460,7 +476,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appTermEx() throws JATEException, IOException {
         initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), FREQ_GENIC_FILE.toString());
         AppTermEx appTermEx = new AppTermEx(initParams);
@@ -474,28 +490,28 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double top50Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 50);
-        assert 0.56 == top50Precision;
+        assert 0.88 == top50Precision;
 
         double top100Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 100);
-        assert 0.63 == top100Precision;
+        assert 0.9 == top100Precision;
 
         double top500Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 500);
-        assert 0.61 == top500Precision;
+        assert 0.87 == top500Precision;
 
         double top1000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 1000);
-        assert 0.6 == top1000Precision;
+        assert 0.85 == top1000Precision;
 
         double top3000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 3000);
-        assert 0.64 == top3000Precision;
+        assert 0.84 == top3000Precision;
 
         double top5000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 5000);
-        assert 0.66 == top5000Precision;
+        assert 0.82 == top5000Precision;
 
         double top8000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 8000);
-        assert 0.67 == top8000Precision;
+        assert 0.76 == top8000Precision;
 
         double top10000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 10000);
-        assert 0.64 == top10000Precision;
+        assert 0.66 == top10000Precision;
 
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.18 == recall;

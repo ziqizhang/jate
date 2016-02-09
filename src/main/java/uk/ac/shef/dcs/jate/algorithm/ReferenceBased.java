@@ -29,7 +29,7 @@ public abstract class ReferenceBased extends Algorithm{
             totalWords++;
             totalScore+=fFeatureRef.getTTFNorm(t);
         }
-        double meanRef=totalScore/totalWords;
+        double meanRef=totalScore/totalWords;//mean normalized word freq
 
         totalScore=0; totalWords=0;
         for(String t: fFeatureWords.getMapTerm2TTF().keySet()){

@@ -10,6 +10,6 @@ out/*
 *.log
 example/*
 /testdata/solr-testbed/geniaCore/data/*
-/testdata/solr-testbed/geniaCore/aclRdTecCore/*
+/testdata/solr-testbed/aclRdTecCore/data/*
 /target/
 .DS_Store
