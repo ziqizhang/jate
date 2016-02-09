@@ -49,21 +49,17 @@ public class ScorerTest {
         extractedTerms.add("platelet");
         extractedTerms.add("lymphokine");
 
-        double top5Precision1 = Scorer.computePrecisionAtRank(gsTerms,extractedTerms, 5);
+        double top5Precision1 = Scorer.precision(gsTerms, extractedTerms.subList(0, 5));
         assert 0.8 == top5Precision1;
 
-        double top5Precision2 = Scorer.precision(gsTerms, extractedTerms.subList(0, 5));
-        assert 0.8 == top5Precision2;
 
-        double top5Precision3 = Scorer.computePrecisionAtRank(gsTerms,extractedTerms, 10);
+        double top5Precision3 = Scorer.precision(gsTerms, extractedTerms.subList(0, 10));
         assert 0.5 == top5Precision3;
 
-        double top5Precision4 = Scorer.precision(gsTerms, extractedTerms.subList(0, 10));
-        assert 0.5 == top5Precision4;
     }
 
     @Test
-    public void testComputePrecisionWithNormalisation() throws JATEException {
+    public void testComputePrecision() throws JATEException {
         List<String> gsTerms = new ArrayList<>();
         List<String> extractedTerms = new ArrayList<>();
 
@@ -95,17 +91,14 @@ public class ScorerTest {
         extractedTerms.add("clone");
         extractedTerms.add("Normal Lymphokine");
 
-        double top5Precision = Scorer.computePrecisionWithNormalisation(gsTerms, extractedTerms, true, false, true, 5);
-        assert 0.8 == top5Precision;
-
-        double top7Precision = Scorer.computePrecisionWithNormalisation(gsTerms, extractedTerms, true, false, true, 7);
-        assert 0.57 == top7Precision;
-
-        double top10Precision = Scorer.computePrecisionWithNormalisation(gsTerms, extractedTerms, true, false, true, 10);
-        assert 0.5 == top10Precision;
-
-        double top14Precision = Scorer.computePrecisionWithNormalisation(gsTerms, extractedTerms, true, false, true, 14);
-        assert 0.36 == top14Precision;
+        double[] scores = Scorer.computePrecisionAtRank(gsTerms, extractedTerms,
+                true, false, true,
+                1, 100, 1, 10,
+                5, 7, 10, 14);
+        assert 0.8 == scores[0];
+        assert 0.57 == scores[1];
+        assert 0.5 == scores[2];
+        assert 0.36 == scores[3];
     }
 
     @Test

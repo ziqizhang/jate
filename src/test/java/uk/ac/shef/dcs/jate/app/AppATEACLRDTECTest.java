@@ -50,8 +50,6 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
             terms = appATTFTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
             appATTFTest.evaluate(terms, AppATTF.class.getSimpleName());
 
-            //TODO: bug uk.ac.shef.dcs.jate.JATEException: Cannot find expected field: jate_ngraminfo
-            //TODO: meanwhile failure to shutdown threads (see #22)
             AppChiSquareTest appChiSquareTest = new AppChiSquareTest();
             terms = appChiSquareTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
             appChiSquareTest.evaluate(terms, AppChiSquare.class.getSimpleName());
@@ -109,6 +107,8 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
                 e.printStackTrace();
             }
         }
+
+        System.exit(0);
     }
 }
 

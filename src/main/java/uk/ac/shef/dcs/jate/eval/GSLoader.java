@@ -39,7 +39,7 @@ public class GSLoader {
     }
 
     public static List<String> loadACLRDTECGSTerms(Path allAnnotatedCandidTerm) throws JATEException {
-        List<String> gsTerms = new ArrayList<>();
+        List<String> gsTerms;
         try {
             InputStream is = new FileInputStream(allAnnotatedCandidTerm.toFile());
 

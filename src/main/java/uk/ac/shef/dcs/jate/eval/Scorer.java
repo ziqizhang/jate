@@ -23,31 +23,6 @@ public class Scorer {
     private static String digitsPattern = "\\d+";
     private static String symbolsPattern = "\\p{Punct}";
 
-    public static void calculateACLRDJate1(String ateOutputFile, String gsFile, String outFile,
-                                           boolean ignoreSymbols, boolean ignoreDigits,boolean lowercase,
-                                           int minChar, int maxChar, int minTokens, int maxTokens,
-                                           int... ranks) throws IOException {
-        PrintWriter p = new PrintWriter(outFile);
-        List<String> gs = GSLoader.loadACLRD(gsFile, true, true);
-
-        List<List<String>> terms = ATEResultLoader.loadJATE1(ateOutputFile);
-
-        gs = prune(gs, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
-
-        for (int i = 0; i < ranks.length; i++) {
-            int correct = 0;
-            int rank=ranks[i];
-            for (int j = 0; j < rank && j < terms.size() && j < gs.size(); j++) {
-                List<String> variants = terms.get(j);
-                variants.retainAll(gs);
-                if (variants.size() > 0)
-                    correct++;
-            }
-            System.out.println("rank"+rank+"="+ (double) correct / rank);
-
-        }
-
-    }
 
     public static void createReportACLRD(String ateOutputFolder, String gsFile, String outFile,
                                          boolean ignoreSymbols, boolean ignoreDigits,boolean lowercase,
@@ -131,49 +106,9 @@ public class Scorer {
         p.close();
     }
 
-    public String generateGENIABenchmarkingReport(List<String> ateTermResults, String geniaCorpusConceptsFile,
-                                                  boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
-                                                  int minChar, int maxChar, int minTokens, int maxTokens,
-                                                  int... ranks
-                                                  ) throws JATEException {
-        //genia goldstandards concepts
-        List<String> gsConcepts = null;
-        try {
-             gsConcepts= GSLoader.loadGenia(geniaCorpusConceptsFile, true, true);
-        } catch (IOException e) {
-            throw new JATEException("Scorer exception: failed to load GENIS GoldStandards. " +
-                    "Check the correct path for GENIAcorpus concept file!");
-        }
-
-        Map<String, double[]> scores = new HashMap<>();
-        double[] s = computePrecisionAtRank(gsConcepts, ateTermResults, ignoreSymbols, ignoreDigits, lowercase, minChar,
-                    maxChar, minTokens, maxTokens, ranks);
-        scores.put("doc", s);
-
-        StringBuilder sb = new StringBuilder();
-        for (int i : ranks) {
-            sb.append(",").append(i);
-        }
-        sb.append("\n");
-
-        for (Map.Entry<String, double[]> en : scores.entrySet()) {
-            sb.append(en.getKey()).append(",");
-            double[] dd = en.getValue();
-            for (int i = 0; i < ranks.length; i++) {
-                sb.append(dd[i]).append(",");
-
-            }
-            sb.append("\n");
-        }
-
-        return sb.toString();
-    }
-
 
     /**
      * compute pre-configured top Ks precision with normalisation for both gold standard spans and ranked terms
-     *
-     * @deprecated
      * @param gs, gold standards
      * @param terms, extracted results
      * @param ignoreSymbols, remove symbols
@@ -194,8 +129,8 @@ public class Scorer {
 
         double[] scores = new double[ranks.length];
         for (int i = 0; i < ranks.length; i++) {
-            double p = computePrecisionAtRank(gs, terms, ranks[i]);
-            scores[i] = p;
+            double p = precision(gs, terms.subList(0, ranks[i]));
+            scores[i] = round(p,2);
 
         }
 
@@ -209,17 +144,14 @@ public class Scorer {
 //     */
 
     /**
+     * RESTORED Previous precision method. As it is redundant to normalise terms for every top K, and it is very
+     * computationally expensive for large list.
+     *
      * compute Top K precision with strict or lenient benchmarking
      *
-     * @param gsTerms, gold standards terms/spans
-     * @param terms, all ranked ATE terms for benchmarking
-     * @param ignoreSymbols, remove symbols for two dataset
-     * @param ignoreDigits, remove digits for two dataset
-     * @param lowercase, lowercase terms for two dataset
-     * @param topK, choose topK results in terms for benchmarking
-     * @return double, precision
+     *
      */
-    public static double computePrecisionWithNormalisation(List<String> gsTerms, List<String> terms,
+    /*public static double computePrecisionWithNormalisation(List<String> gsTerms, List<String> terms,
                                                              boolean ignoreSymbols, boolean ignoreDigits,
                                                              boolean lowercase, int topK) throws JATEException {
         double score = 0.0;
@@ -248,32 +180,13 @@ public class Scorer {
         //score=computePrecisionAtRank(gsTerms, terms,topK);
 
         return round(score, 2);
-    }
+    }*/
 
     public static double round(double value, int scale) {
         return new BigDecimal(value).setScale(scale, RoundingMode.HALF_UP).doubleValue();
     }
 
     // public static double[] computeTopKPrecision()
-
-    /**
-     * calculate top K precision
-     * @deprecated use precision() method instead
-     *
-     * @param gs, gold standards terms
-     * @param terms, ranked term
-     * @param rank, top K
-     * @return precision
-     */
-    public static double computePrecisionAtRank(List<String> gs, List<String> terms, int rank) {
-        int correct = 0;
-        for (int i = 0; i < rank && i < terms.size() && i < gs.size(); i++) {
-            String t = terms.get(i);
-            if (gs.contains(t))
-                correct++;
-        }
-        return (double) correct / rank;
-    }
 
     /**
      * calculate

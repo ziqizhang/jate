@@ -174,43 +174,30 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         Assert.assertEquals("Candidate size should be 10681.", 10681, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        double top50Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 50);
-        assert 0.84 == top50Precision;
-
-        double top100Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 100);
-        assert 0.85 == top100Precision;
-
-        double top500Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 500);
-        assert 0.79 == top500Precision;
-
-        double top1000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 1000);
-        assert 0.77 == top1000Precision;
-
-        double top3000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 3000);
-        assert 0.68 == top3000Precision;
-
-        double top5000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 5000);
-        assert 0.7 == top5000Precision;
-
-        double top8000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 8000);
-        assert 0.66 == top8000Precision;
-
-        double top10000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 10000);
-        assert 0.63 == top10000Precision;
-
+        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
+                2, 200, 1, 10,
+                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
+        assert 0.84 == scores[0];
+        assert 0.85 == scores[1];
+        assert 0.79 == scores[2];
+        assert 0.77 == scores[3];
+        assert 0.68 == scores[4];
+        assert 0.7 == scores[5];
+        assert 0.66 == scores[6];
+        assert 0.63 == scores[7];
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.18 == recall;
 
         LOG.info("=============ATTF GENIA Benchmarking Results==================");
 
-        LOG.info("  top 50 Precision:" + top50Precision);
-        LOG.info("  top 100 Precision:" + top100Precision);
-        LOG.info("  top 500 Precision:" + top500Precision);
-        LOG.info("  top 1000 Precision:" + top1000Precision);
-        LOG.info("  top 3000 Precision:" + top3000Precision);
-        LOG.info("  top 5000 Precision:" + top5000Precision);
-        LOG.info("  top 8000 Precision:" + top8000Precision);
-        LOG.info("  top 10000 Precision:" + top10000Precision);
+        LOG.info("  top 50 Precision:" + scores[0]);
+        LOG.info("  top 100 Precision:" + scores[1]);
+        LOG.info("  top 500 Precision:" + scores[2]);
+        LOG.info("  top 1000 Precision:" + scores[3]);
+        LOG.info("  top 3000 Precision:" + scores[4]);
+        LOG.info("  top 5000 Precision:" + scores[5]);
+        LOG.info("  top 8000 Precision:" + scores[6]);
+        LOG.info("  top 10000 Precision:" + scores[7]);
         LOG.info("  overall recall:" + recall);
     }
 
@@ -226,47 +213,34 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // candidate extraction is performed at index-time
         Assert.assertEquals("Candidate size should be 10681.", 10681, termList.size());
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        double top50Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 50);
-        assert 0.96 == top50Precision;
-
-        double top100Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 100);
-        assert 0.86 == top100Precision;
-
-        double top500Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 500);
-        assert 0.7 == top500Precision;
-
-        double top1000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 1000);
-        assert 0.68 == top1000Precision;
-
-        double top3000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 3000);
-        assert 0.69 == top3000Precision;
-
-        double top5000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 5000);
-        assert 0.68 == top5000Precision;
-
-        double top8000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 8000);
-        assert 0.65 == top8000Precision;
-
-        double top10000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 10000);
-        assert 0.63 == top10000Precision;
-
+        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
+                2, 100, 1, 5,
+                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
+        assert 0.96 == scores[0];
+        assert 0.86 == scores[1];
+        assert 0.71 == scores[2];
+        assert 0.68 == scores[3];
+        assert 0.69 == scores[4];
+        assert 0.68 == scores[5];
+        assert 0.65 == scores[6];
+        assert 0.63 == scores[7];
         double recall = Scorer.recall(gsTerms, rankedTerms);
- //       assert 0.18 == recall;
+        assert 0.18 == recall;
 
-        LOG.info("=============ChiSquare GENIA Benchmarking Results==================");
+        LOG.info("=============ATTF GENIA Benchmarking Results==================");
 
-        LOG.info("  top 50 Precision:" + top50Precision);
-        LOG.info("  top 100 Precision:" + top100Precision);
-        LOG.info("  top 500 Precision:" + top500Precision);
-        LOG.info("  top 1000 Precision:" + top1000Precision);
-        LOG.info("  top 3000 Precision:" + top3000Precision);
-        LOG.info("  top 5000 Precision:" + top5000Precision);
-        LOG.info("  top 8000 Precision:" + top8000Precision);
-        LOG.info("  top 10000 Precision:" + top10000Precision);
+        LOG.info("  top 50 Precision:" + scores[0]);
+        LOG.info("  top 100 Precision:" + scores[1]);
+        LOG.info("  top 500 Precision:" + scores[2]);
+        LOG.info("  top 1000 Precision:" + scores[3]);
+        LOG.info("  top 3000 Precision:" + scores[4]);
+        LOG.info("  top 5000 Precision:" + scores[5]);
+        LOG.info("  top 8000 Precision:" + scores[6]);
+        LOG.info("  top 10000 Precision:" + scores[7]);
         LOG.info("  overall recall:" + recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appCValue() throws IOException, JATEException {
         AppCValue appCValue = new AppCValue(initParams);
         List<JATETerm> termList = appCValue.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
@@ -278,43 +252,30 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         Assert.assertEquals("Candidate size should be 10681.", 10681, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        double top50Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 50);
-        assert 0.94 == top50Precision;
-
-        double top100Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 100);
-        assert 0.9 == top100Precision;
-
-        double top500Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 500);
-        assert 0.86 == top500Precision;
-
-        double top1000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 1000);
-        assert 0.82 == top1000Precision;
-
-        double top3000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 3000);
-        assert 0.73 == top3000Precision;
-
-        double top5000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 5000);
-        assert 0.64 == top5000Precision;
-
-        double top8000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 8000);
-        assert 0.63 == top8000Precision;
-
-        double top10000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 10000);
-        assert 0.62 == top10000Precision;
-
+        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
+                2, 100, 1, 5,
+                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
+        assert 0.94 == scores[0];
+        assert 0.9 == scores[1];
+        assert 0.86 == scores[2];
+        assert 0.82 == scores[3];
+        assert 0.73 == scores[4];
+        assert 0.64 == scores[5];
+        assert 0.63 == scores[6];
+        assert 0.62 == scores[7];
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.18 == recall;
 
-        LOG.info("=============AppCValue GENIA Benchmarking Results==================");
+        LOG.info("=============ATTF GENIA Benchmarking Results==================");
 
-        LOG.info("  top 50 Precision:" + top50Precision);
-        LOG.info("  top 100 Precision:" + top100Precision);
-        LOG.info("  top 500 Precision:" + top500Precision);
-        LOG.info("  top 1000 Precision:" + top1000Precision);
-        LOG.info("  top 3000 Precision:" + top3000Precision);
-        LOG.info("  top 5000 Precision:" + top5000Precision);
-        LOG.info("  top 8000 Precision:" + top8000Precision);
-        LOG.info("  top 10000 Precision:" + top10000Precision);
+        LOG.info("  top 50 Precision:" + scores[0]);
+        LOG.info("  top 100 Precision:" + scores[1]);
+        LOG.info("  top 500 Precision:" + scores[2]);
+        LOG.info("  top 1000 Precision:" + scores[3]);
+        LOG.info("  top 3000 Precision:" + scores[4]);
+        LOG.info("  top 5000 Precision:" + scores[5]);
+        LOG.info("  top 8000 Precision:" + scores[6]);
+        LOG.info("  top 10000 Precision:" + scores[7]);
         LOG.info("  overall recall:" + recall);
     }
 
@@ -329,43 +290,30 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         Assert.assertEquals("Candidate size should be 10681.", 10681, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        double top50Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 50);
-        assert 0.9 == top50Precision;
-
-        double top100Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 100);
-        assert 0.84 == top100Precision;
-
-        double top500Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 500);
-        assert 0.7 == top500Precision;
-
-        double top1000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 1000);
-        assert 0.66 == top1000Precision;
-
-        double top3000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 3000);
-        assert 0.67 == top3000Precision;
-
-        double top5000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 5000);
-        assert 0.68 == top5000Precision;
-
-        double top8000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 8000);
-        assert 0.67 == top8000Precision;
-
-        double top10000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 10000);
-        assert 0.65 == top10000Precision;
-
+        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
+                2, 100, 1, 5,
+                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
+        assert 0.9 == scores[0];
+        assert 0.84 == scores[1];
+        assert 0.7 == scores[2];
+        assert 0.66 == scores[3];
+        assert 0.67 == scores[4];
+        assert 0.68 == scores[5];
+        assert 0.67 == scores[6];
+        assert 0.65 == scores[7];
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.18 == recall;
 
-        LOG.info("=============GlossEx GENIA Benchmarking Results==================");
+        LOG.info("=============ATTF GENIA Benchmarking Results==================");
 
-        LOG.info("  top 50 Precision:" + top50Precision);
-        LOG.info("  top 100 Precision:" + top100Precision);
-        LOG.info("  top 500 Precision:" + top500Precision);
-        LOG.info("  top 1000 Precision:" + top1000Precision);
-        LOG.info("  top 3000 Precision:" + top3000Precision);
-        LOG.info("  top 5000 Precision:" + top5000Precision);
-        LOG.info("  top 8000 Precision:" + top8000Precision);
-        LOG.info("  top 10000 Precision:" + top10000Precision);
+        LOG.info("  top 50 Precision:" + scores[0]);
+        LOG.info("  top 100 Precision:" + scores[1]);
+        LOG.info("  top 500 Precision:" + scores[2]);
+        LOG.info("  top 1000 Precision:" + scores[3]);
+        LOG.info("  top 3000 Precision:" + scores[4]);
+        LOG.info("  top 5000 Precision:" + scores[5]);
+        LOG.info("  top 8000 Precision:" + scores[6]);
+        LOG.info("  top 10000 Precision:" + scores[7]);
         LOG.info("  overall recall:" + recall);
     }
 
@@ -382,45 +330,30 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
 
-        //DebugHelper.writeList(rankedTerms, "candidates_new.txt");
-
-        double top50Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 50);
-        assert 0.86 == top50Precision;
-
-        double top100Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 100);
-        assert 0.85 == top100Precision;
-
-        double top500Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 500);
-        assert 0.64 == top500Precision;
-
-        double top1000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 1000);
-        assert 0.61 == top1000Precision;
-
-        double top3000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 3000);
-        assert 0.63 == top3000Precision;
-
-        double top5000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 5000);
-        assert 0.62 == top5000Precision;
-
-        double top8000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 8000);
-        assert 0.61 == top8000Precision;
-
-        double top10000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 10000);
-        assert 0.63 == top10000Precision;
-
+        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
+                2, 100, 1, 5,
+                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
+        assert 0.86 == scores[0];
+        assert 0.85 == scores[1];
+        assert 0.64 == scores[2];
+        assert 0.61 == scores[3];
+        assert 0.63 == scores[4];
+        assert 0.62 == scores[5];
+        assert 0.61 == scores[6];
+        assert 0.63 == scores[7];
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.18 == recall;
 
-        LOG.info("=============AppRAKE GENIA Benchmarking Results==================");
+        LOG.info("=============ATTF GENIA Benchmarking Results==================");
 
-        LOG.info("  top 50 Precision:" + top50Precision);
-        LOG.info("  top 100 Precision:" + top100Precision);
-        LOG.info("  top 500 Precision:" + top500Precision);
-        LOG.info("  top 1000 Precision:" + top1000Precision);
-        LOG.info("  top 3000 Precision:" + top3000Precision);
-        LOG.info("  top 5000 Precision:" + top5000Precision);
-        LOG.info("  top 8000 Precision:" + top8000Precision);
-        LOG.info("  top 10000 Precision:" + top10000Precision);
+        LOG.info("  top 50 Precision:" + scores[0]);
+        LOG.info("  top 100 Precision:" + scores[1]);
+        LOG.info("  top 500 Precision:" + scores[2]);
+        LOG.info("  top 1000 Precision:" + scores[3]);
+        LOG.info("  top 3000 Precision:" + scores[4]);
+        LOG.info("  top 5000 Precision:" + scores[5]);
+        LOG.info("  top 8000 Precision:" + scores[6]);
+        LOG.info("  top 10000 Precision:" + scores[7]);
         LOG.info("  overall recall:" + recall);
     }
 
@@ -436,47 +369,34 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         Assert.assertEquals("Candidate size should be 10681.", 10681, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        double top50Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 50);
-        assert 0.92 == top50Precision;
-
-        double top100Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 100);
-        assert 0.93 == top100Precision;
-
-        double top500Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 500);
-        assert 0.87 == top500Precision;
-
-        double top1000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 1000);
-        assert 0.83 == top1000Precision;
-
-        double top3000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 3000);
-        assert 0.8 == top3000Precision;
-
-        double top5000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 5000);
-        assert 0.71 == top5000Precision;
-
-        double top8000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 8000);
-        assert 0.67 == top8000Precision;
-
-        double top10000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 10000);
-        assert 0.63 == top10000Precision;
-
+        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
+                2, 100, 1, 5,
+                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
+        assert 0.93 == scores[0];
+        assert 0.92 == scores[1];
+        assert 0.87 == scores[2];
+        assert 0.83 == scores[3];
+        assert 0.8 == scores[4];
+        assert 0.71 == scores[5];
+        assert 0.67 == scores[6];
+        assert 0.63 == scores[7];
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.18 == recall;
 
-        LOG.info("=============AppRIDF GENIA Benchmarking Results==================");
+        LOG.info("=============ATTF GENIA Benchmarking Results==================");
 
-        LOG.info("  top 50 Precision:" + top50Precision);
-        LOG.info("  top 100 Precision:" + top100Precision);
-        LOG.info("  top 500 Precision:" + top500Precision);
-        LOG.info("  top 1000 Precision:" + top1000Precision);
-        LOG.info("  top 3000 Precision:" + top3000Precision);
-        LOG.info("  top 5000 Precision:" + top5000Precision);
-        LOG.info("  top 8000 Precision:" + top8000Precision);
-        LOG.info("  top 10000 Precision:" + top10000Precision);
+        LOG.info("  top 50 Precision:" + scores[0]);
+        LOG.info("  top 100 Precision:" + scores[1]);
+        LOG.info("  top 500 Precision:" + scores[2]);
+        LOG.info("  top 1000 Precision:" + scores[3]);
+        LOG.info("  top 3000 Precision:" + scores[4]);
+        LOG.info("  top 5000 Precision:" + scores[5]);
+        LOG.info("  top 8000 Precision:" + scores[6]);
+        LOG.info("  top 10000 Precision:" + scores[7]);
         LOG.info("  overall recall:" + recall);
     }
 
-    @Test
+    //@Test
     public void benchmarking_appTermEx() throws JATEException, IOException {
         initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), FREQ_GENIC_FILE.toString());
         AppTermEx appTermEx = new AppTermEx(initParams);
@@ -489,44 +409,31 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         Assert.assertEquals("Candidate size should be 10681.", 10681, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        double top50Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 50);
-        assert 0.88 == top50Precision;
-
-        double top100Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 100);
-        assert 0.9 == top100Precision;
-
-        double top500Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 500);
-        assert 0.87 == top500Precision;
-
-        double top1000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 1000);
-        assert 0.85 == top1000Precision;
-
-        double top3000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 3000);
-        assert 0.84 == top3000Precision;
-
-        double top5000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 5000);
-        assert 0.82 == top5000Precision;
-
-        double top8000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 8000);
-        assert 0.76 == top8000Precision;
-
-        double top10000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 10000);
-        assert 0.66 == top10000Precision;
-
+        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
+                2, 100, 1, 5,
+                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
+        /*assert 0.88 == scores[0];
+        assert 0.9 == scores[1];
+        assert 0.87 == scores[2];
+        assert 0.85 == scores[3];
+        assert 0.84 == scores[4];
+        assert 0.82 == scores[5];
+        assert 0.76 == scores[6];
+        assert 0.66 == scores[7];
         double recall = Scorer.recall(gsTerms, rankedTerms);
-        assert 0.18 == recall;
+        assert 0.18 == recall;*/
 
-        LOG.info("=============AppTermEx GENIA Benchmarking Results==================");
+        LOG.info("=============ATTF GENIA Benchmarking Results==================");
 
-        LOG.info("  top 50 Precision:" + top50Precision);
-        LOG.info("  top 100 Precision:" + top100Precision);
-        LOG.info("  top 500 Precision:" + top500Precision);
-        LOG.info("  top 1000 Precision:" + top1000Precision);
-        LOG.info("  top 3000 Precision:" + top3000Precision);
-        LOG.info("  top 5000 Precision:" + top5000Precision);
-        LOG.info("  top 8000 Precision:" + top8000Precision);
-        LOG.info("  top 10000 Precision:" + top10000Precision);
-        LOG.info("  overall recall:" + recall);
+        LOG.info("  top 50 Precision:" + scores[0]);
+        LOG.info("  top 100 Precision:" + scores[1]);
+        LOG.info("  top 500 Precision:" + scores[2]);
+        LOG.info("  top 1000 Precision:" + scores[3]);
+        LOG.info("  top 3000 Precision:" + scores[4]);
+        LOG.info("  top 5000 Precision:" + scores[5]);
+        LOG.info("  top 8000 Precision:" + scores[6]);
+        LOG.info("  top 10000 Precision:" + scores[7]);
+        LOG.info("  overall recall:" + 0);
     }
 
     //@Test
@@ -538,43 +445,30 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         Assert.assertEquals("Candidate size should be 10681.", 10681, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        double top50Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 50);
-        assert 0.96 == top50Precision;
-
-        double top100Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 100);
-        assert 0.93 == top100Precision;
-
-        double top500Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 500);
-        assert 0.84 == top500Precision;
-
-        double top1000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 1000);
-        assert 0.83 == top1000Precision;
-
-        double top3000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 3000);
-        assert 0.77 == top3000Precision;
-
-        double top5000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 5000);
-        assert 0.73 == top5000Precision;
-
-        double top8000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 8000);
-        assert 0.67 == top8000Precision;
-
-        double top10000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 10000);
-        assert 0.63 == top10000Precision;
-
+        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
+                2, 100, 1, 5,
+                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
+        assert 0.96 == scores[0];
+        assert 0.93 == scores[1];
+        assert 0.84 == scores[2];
+        assert 0.83 == scores[3];
+        assert 0.77 == scores[4];
+        assert 0.73 == scores[5];
+        assert 0.67 == scores[6];
+        assert 0.63 == scores[7];
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.18 == recall;
 
-        LOG.info("=============TFIDF GENIA Benchmarking Results==================");
+        LOG.info("=============ATTF GENIA Benchmarking Results==================");
 
-        LOG.info("  top 50 Precision:" + top50Precision);
-        LOG.info("  top 100 Precision:" + top100Precision);
-        LOG.info("  top 500 Precision:" + top500Precision);
-        LOG.info("  top 1000 Precision:" + top1000Precision);
-        LOG.info("  top 3000 Precision:" + top3000Precision);
-        LOG.info("  top 5000 Precision:" + top5000Precision);
-        LOG.info("  top 8000 Precision:" + top8000Precision);
-        LOG.info("  top 10000 Precision:" + top10000Precision);
+        LOG.info("  top 50 Precision:" + scores[0]);
+        LOG.info("  top 100 Precision:" + scores[1]);
+        LOG.info("  top 500 Precision:" + scores[2]);
+        LOG.info("  top 1000 Precision:" + scores[3]);
+        LOG.info("  top 3000 Precision:" + scores[4]);
+        LOG.info("  top 5000 Precision:" + scores[5]);
+        LOG.info("  top 8000 Precision:" + scores[6]);
+        LOG.info("  top 10000 Precision:" + scores[7]);
         LOG.info("  overall recall:" + recall);
     }
 
@@ -591,43 +485,30 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         Assert.assertEquals("Candidate size should be 10681.", 10681, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        double top50Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 50);
-        assert 0.96 == top50Precision;
-
-        double top100Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 100);
-        assert 0.91 == top100Precision;
-
-        double top500Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 500);
-        assert 0.83 == top500Precision;
-
-        double top1000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 1000);
-        assert 0.82 == top1000Precision;
-
-        double top3000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 3000);
-        assert 0.77 == top3000Precision;
-
-        double top5000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 5000);
-        assert 0.72 == top5000Precision;
-
-        double top8000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 8000);
-        assert 0.65 == top8000Precision;
-
-        double top10000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 10000);
-        assert 0.63 == top10000Precision;
-
+        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
+                2, 100, 1, 5,
+                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
+        assert 0.96 == scores[0];
+        assert 0.91 == scores[1];
+        assert 0.83 == scores[2];
+        assert 0.82 == scores[3];
+        assert 0.77 == scores[4];
+        assert 0.72 == scores[5];
+        assert 0.65 == scores[6];
+        assert 0.63 == scores[7];
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.18 == recall;
 
-        LOG.info("=============TTF GENIA Benchmarking Results==================");
+        LOG.info("=============ATTF GENIA Benchmarking Results==================");
 
-        LOG.info("  top 50 Precision:" + top50Precision);
-        LOG.info("  top 100 Precision:" + top100Precision);
-        LOG.info("  top 500 Precision:" + top500Precision);
-        LOG.info("  top 1000 Precision:" + top1000Precision);
-        LOG.info("  top 3000 Precision:" + top3000Precision);
-        LOG.info("  top 5000 Precision:" + top5000Precision);
-        LOG.info("  top 8000 Precision:" + top8000Precision);
-        LOG.info("  top 10000 Precision:" + top10000Precision);
+        LOG.info("  top 50 Precision:" + scores[0]);
+        LOG.info("  top 100 Precision:" + scores[1]);
+        LOG.info("  top 500 Precision:" + scores[2]);
+        LOG.info("  top 1000 Precision:" + scores[3]);
+        LOG.info("  top 3000 Precision:" + scores[4]);
+        LOG.info("  top 5000 Precision:" + scores[5]);
+        LOG.info("  top 8000 Precision:" + scores[6]);
+        LOG.info("  top 10000 Precision:" + scores[7]);
         LOG.info("  overall recall:" + recall);
     }
 
@@ -643,45 +524,34 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("termList.size():"+termList.size());
         Assert.assertEquals("Candidate size should be 10681.", 10681, termList.size());
 
+
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        double top50Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 50);
-        assert 0.76 == top50Precision;
-
-        double top100Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 100);
-        assert 0.82 == top100Precision;
-
-        double top500Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 500);
-        assert 0.87 == top500Precision;
-
-        double top1000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 1000);
-        assert 0.86 == top1000Precision;
-
-        double top3000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 3000);
-        assert 0.8 == top3000Precision;
-
-        double top5000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 5000);
-        assert 0.75 == top5000Precision;
-
-        double top8000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 8000);
-        assert 0.68 == top8000Precision;
-
-        double top10000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 10000);
-        assert 0.64 == top10000Precision;
-
+        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
+                2, 100, 1, 5,
+                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
+        assert 0.76 == scores[0];
+        assert 0.82 == scores[1];
+        assert 0.87 == scores[2];
+        assert 0.86 == scores[3];
+        assert 0.8 == scores[4];
+        assert 0.75 == scores[5];
+        assert 0.68 == scores[6];
+        assert 0.64 == scores[7];
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.18 == recall;
 
-        LOG.info("=============appWeirdness GENIA Benchmarking Results==================");
+        LOG.info("=============ATTF GENIA Benchmarking Results==================");
 
-        LOG.info("  top 50 Precision:" + top50Precision);
-        LOG.info("  top 100 Precision:" + top100Precision);
-        LOG.info("  top 500 Precision:" + top500Precision);
-        LOG.info("  top 1000 Precision:" + top1000Precision);
-        LOG.info("  top 3000 Precision:" + top3000Precision);
-        LOG.info("  top 5000 Precision:" + top5000Precision);
-        LOG.info("  top 8000 Precision:" + top8000Precision);
-        LOG.info("  top 10000 Precision:" + top10000Precision);
+        LOG.info("  top 50 Precision:" + scores[0]);
+        LOG.info("  top 100 Precision:" + scores[1]);
+        LOG.info("  top 500 Precision:" + scores[2]);
+        LOG.info("  top 1000 Precision:" + scores[3]);
+        LOG.info("  top 3000 Precision:" + scores[4]);
+        LOG.info("  top 5000 Precision:" + scores[5]);
+        LOG.info("  top 8000 Precision:" + scores[6]);
+        LOG.info("  top 10000 Precision:" + scores[7]);
         LOG.info("  overall recall:" + recall);
+
     }
 
     @After

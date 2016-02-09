@@ -9,6 +9,7 @@ out/*
 *.DS_Store
 *.log
 example/*
+/src/test/resource/eval/acl_rd_tec/cleansed_text/xml/*
 /testdata/solr-testbed/geniaCore/data/*
 /testdata/solr-testbed/aclRdTecCore/data/*
 /target/

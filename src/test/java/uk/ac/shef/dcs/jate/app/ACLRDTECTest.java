@@ -14,12 +14,14 @@ import uk.ac.shef.dcs.jate.eval.GSLoader;
 import uk.ac.shef.dcs.jate.eval.Scorer;
 import uk.ac.shef.dcs.jate.model.JATEDocument;
 import uk.ac.shef.dcs.jate.model.JATETerm;
+import uk.ac.shef.dcs.jate.test.DebugHelper;
 import uk.ac.shef.dcs.jate.util.JATEUtil;
 
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -32,7 +34,7 @@ import java.util.zip.ZipInputStream;
  * the test and benchmarking tests can only be run manually.
  *
  * @see AppATEACLRDTECTest
- * @see AppChiSquareACLRDTECTest
+ * @see
  *
  * <p>
  * The ACL RD-TEC stands for The ACL Reference Dataset for Terminology Extraction and Classification.
@@ -89,7 +91,7 @@ public abstract class ACLRDTECTest {
         gsTerms = GSLoader.loadACLRDTECGSTerms(allAnnCandidTerms, true, true);
 
         if (gsTerms == null) {
-            throw new JATEException("GENIA CORPUS CONCEPT FILE CANNOT BE LOADED SUCCESSFULLY!");
+            throw new JATEException("ACLRDTEC CORPUS CONCEPT FILE CANNOT BE LOADED SUCCESSFULLY!");
         }
 
         jateProp = new JATEProperties();
@@ -166,28 +168,31 @@ public abstract class ACLRDTECTest {
     public void evaluate(List<JATETerm> jateTerms, String algorithmName) throws JATEException {
         LOG.info(String.format("evaluating %s ...", algorithmName));
         List<String> rankedTerms = ATEResultLoader.load(jateTerms);
-        double top50Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 50);
-        double top100Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 100);
-        double top500Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 500);
-        double top1000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 1000);
-        double top3000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 3000);
-        double top5000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 5000);
-        double top8000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 8000);
-        double top10000Precision = Scorer.computePrecisionWithNormalisation(gsTerms, rankedTerms, true, false, true, 10000);
+        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms,
+                true, false,true,
+                2,100,1,10,
+                50,100,500,1000,3000,5000,8000,10000);
 
         double recall = Scorer.recall(gsTerms, rankedTerms);
+
+        //>>>>>>
+        gsTerms.removeAll(rankedTerms);
+        Collections.sort(gsTerms);
+        DebugHelper.writeList(gsTerms,"missed.txt");
+        System.exit(1);
+        //>>>>>>
         assert 0.34 == recall;
 
         LOG.info(String.format("=============%s ACL RD-TEC Benchmarking Results==================" ,algorithmName));
         validate_indexing();
-        LOG.info("  top 50 Precision:" + top50Precision);
-        LOG.info("  top 100 Precision:" + top100Precision);
-        LOG.info("  top 500 Precision:" + top500Precision);
-        LOG.info("  top 1000 Precision:" + top1000Precision);
-        LOG.info("  top 3000 Precision:" + top3000Precision);
-        LOG.info("  top 5000 Precision:" + top5000Precision);
-        LOG.info("  top 8000 Precision:" + top8000Precision);
-        LOG.info("  top 10000 Precision:" + top10000Precision);
+        LOG.info("  top 50 Precision:" + scores[0]);
+        LOG.info("  top 100 Precision:" + scores[1]);
+        LOG.info("  top 500 Precision:" + scores[2]);
+        LOG.info("  top 1000 Precision:" + scores[3]);
+        LOG.info("  top 3000 Precision:" + scores[4]);
+        LOG.info("  top 5000 Precision:" + scores[5]);
+        LOG.info("  top 8000 Precision:" + scores[6]);
+        LOG.info("  top 10000 Precision:" + scores[7]);
         LOG.info("  overall recall:" + recall);
     }
 

@@ -258,9 +258,9 @@
 						stopWords="stopwords.txt" stopWordsIgnoreCase="true"
 						outputUnigrams="true" outputUnigramsIfNoShingles="false" tokenSeparator=" "/>
 				<filter class="solr.EnglishMinimalStemFilterFactory"/>
-				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
 				<filter class="org.apache.lucene.analysis.jate.PunctuationRemoverFactory" stripAnySymbols="false"
 						stripLeadingSymbols="true" stripTrailingSymbols="true"/>
+				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />				
 			</analyzer>
 		</fieldType>		
 
@@ -298,9 +298,9 @@
 							stopWords="stopwords.txt" stopWordsIgnoreCase="true"/>
 				<filter class="solr.LowerCaseFilterFactory" />					
 				<filter class="solr.EnglishMinimalStemFilterFactory"/>
-				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
 				<filter class="org.apache.lucene.analysis.jate.PunctuationRemoverFactory" stripAnySymbols="false"
 						stripLeadingSymbols="true" stripTrailingSymbols="true"/>
+				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
 			</analyzer>
 		</fieldType>
 		
