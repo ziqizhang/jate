@@ -10,10 +10,7 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * compute scores
@@ -199,9 +196,13 @@ public class Scorer {
     }
 
     public static double recall(List<String> gsTerms, List<String> termResults) {
-        double recall = FMeasure.recall(gsTerms.toArray(), termResults.toArray());
+        /*double recall = FMeasure.recall(gsTerms.toArray(), termResults.toArray());
+        System.out.println(new Date());*/
 
-        return round(recall, 2);
+        Set<String> copy = new HashSet<>(gsTerms);
+        copy.retainAll(new HashSet<>(termResults));
+
+        return round((double)copy.size()/gsTerms.size(), 2);
     }
 
     public static double fmeasure(List<String> gsTerms, List<String> termResults) {

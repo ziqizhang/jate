@@ -123,7 +123,7 @@ class AppATTFTest extends ACLRDTECTest {
         List<JATETerm> terms = new ArrayList<>();
         Map<String, String> initParam = new HashMap<>();
 
-        initParam.put(AppParams.PREFILTER_MIN_TERM_TOTAL_FREQUENCY.getParamKey(), "2");
+        initParam.put(AppParams.PREFILTER_MIN_TERM_TOTAL_FREQUENCY.getParamKey(), "0");
         initParam.put(AppParams.CUTOFF_TOP_K_PERCENT.getParamKey(), "0.99999");
 
         AppATTF appATTF = new AppATTF(initParam);

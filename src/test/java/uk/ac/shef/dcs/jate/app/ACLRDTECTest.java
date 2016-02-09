@@ -20,25 +20,20 @@ import uk.ac.shef.dcs.jate.util.JATEUtil;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 /**
  * Tests for App* of a set of ATE algorithms & The ACL RD-TEC based benchmarking test based on Embedded Solr.
- *
+ * <p>
  * ACL RD-TEC contains almost 11,000 scientific publications. Due to the performance and efficiency reasons,
  * the test and benchmarking tests can only be run manually.
  *
  * @see AppATEACLRDTECTest
- * @see
- *
- * <p>
+ * @see <p>
  * The ACL RD-TEC stands for The ACL Reference Dataset for Terminology Extraction and Classification.
- *
  * @see <a href="http://catalog.elra.info/product_info.php?products_id=1236">European Language Resources Association</a>
  * @see <a href="http://acl-arc.comp.nus.edu.sg/">ACL Anthology Reference Corpus (ACL ARC)</a>
  * @see <a href="http://atmykitchen.info/datasets/acl_rd_tec/">The dataset</a>
@@ -61,11 +56,11 @@ public abstract class ACLRDTECTest {
 
     static String solrCoreName = "aclRdTecCore";
 
-    static Path corpusDir = Paths.get(workingDir, "src", "test", "resource", "eval", "acl_rd_tec", "cleansed_text", "xml");
+    static Path corpusDir = Paths.get(workingDir, "src", "test", "resource", "eval", "acl_rd_tec", "cleansed_text", "files");
 
     static Path solrHome = Paths.get(workingDir, "testdata", "solr-testbed");
 
-    static Path FREQ_GENIC_FILE = Paths.get(workingDir,"src","main", "resource","bnc_unifrqs.normal");
+    static Path FREQ_GENIC_FILE = Paths.get(workingDir, "src", "main", "resource", "bnc_unifrqs.normal");
 
     static Path allAnnCandidTerms = Paths.get(workingDir, "src", "test", "resource", "eval",
             "acl_rd_tec", "annotation", "_all_annotated_candid_term");
@@ -112,13 +107,16 @@ public abstract class ACLRDTECTest {
         List<Path> files = JATEUtil.loadFiles(corpusDir);
 
         LOG.info("indexing and extracting candidates...");
-        files.forEach(file -> {
-            try {
+        int count = 0;
+        for (Path file : files) {
+            if (!file.toString().contains(".DS_Store")) {
                 indexJATEDocuments(file, jateProp, false);
-            } catch (JATEException e) {
-                e.printStackTrace();
+                count++;
+                if (count % 100 == 0)
+                    LOG.info("indexing done: " + count + "/" + files.size());
             }
-        });
+
+        }
 
         try {
             server.commit();
@@ -169,21 +167,26 @@ public abstract class ACLRDTECTest {
         LOG.info(String.format("evaluating %s ...", algorithmName));
         List<String> rankedTerms = ATEResultLoader.load(jateTerms);
         double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms,
-                true, false,true,
-                2,100,1,10,
-                50,100,500,1000,3000,5000,8000,10000);
+                true, false, true,
+                2, 100, 1, 10,
+                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
 
         double recall = Scorer.recall(gsTerms, rankedTerms);
 
         //>>>>>>
-        gsTerms.removeAll(rankedTerms);
-        Collections.sort(gsTerms);
-        DebugHelper.writeList(gsTerms,"missed.txt");
+        Set<String> copy = new HashSet<>(gsTerms);
+        copy.retainAll(new HashSet<>(rankedTerms));
+        Set<String> gsCopy = new HashSet<>(gsTerms);
+
+        gsCopy.removeAll(copy);
+        List<String> sorted = new ArrayList<>(gsCopy);
+        Collections.sort(sorted);
+        DebugHelper.writeList(sorted, "missed.txt");
         System.exit(1);
         //>>>>>>
         assert 0.34 == recall;
 
-        LOG.info(String.format("=============%s ACL RD-TEC Benchmarking Results==================" ,algorithmName));
+        LOG.info(String.format("=============%s ACL RD-TEC Benchmarking Results==================", algorithmName));
         validate_indexing();
         LOG.info("  top 50 Precision:" + scores[0]);
         LOG.info("  top 100 Precision:" + scores[1]);
