@@ -113,7 +113,9 @@ public class JATEUtil {
 
                 public void endElement(String uri, String localName,
                                        String qName) throws SAXException {
-                    //System.out.println("End Element :" + qName);
+                    if (qName.equalsIgnoreCase("Paragraph")) {
+                        paragraph = false;
+                    }
                 }
 
                 public void characters(char ch[], int start, int length) throws SAXException {
@@ -139,8 +141,9 @@ public class JATEUtil {
                     }
 
                     if (paragraph) {
-                        paragraph = false;
-                        paperParagraphs.append(new String(ch, start, length));
+                        String paragraph = new String(ch, start, length);
+
+                        paperParagraphs.append(paragraph);
                     }
                 }
             };
