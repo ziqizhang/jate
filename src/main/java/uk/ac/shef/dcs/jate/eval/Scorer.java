@@ -256,14 +256,18 @@ public class Scorer {
                 50, 100, 500, 1000, 5000, 10000);
         System.exit(1);*/
 
-        createReportGenia(args[0],args[1],args[2],true, false, true,2,150,1,5,
-                50, 100, 500, 1000, 5000,10000);
+        if(args[3].equals("genia")) {
+            createReportGenia(args[0], args[1], args[2], true, false, true, 2, 150, 1, 5,
+                    50, 100, 500, 1000, 5000, 10000);
 
-        System.out.println("finished GENIA report");
+            System.out.println("finished GENIA report");
+        }
 
-       /* createReportACLRD(args[0], args[1], args[2], true, false, true, 2, 150, 1, 5,
-                50, 100, 500, 1000, 5000, 10000);*/
+        else {
+            createReportACLRD(args[0], args[1], args[2], true, false, true, 2, 150, 1, 5,
+                    50, 100, 500, 1000, 5000, 10000);
 
-        System.out.println();
+            System.out.println();
+        }
     }
 }

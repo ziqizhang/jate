@@ -169,7 +169,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // the results depends on specified PoS patterns
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
-        Assert.assertEquals("Candidate size should be 10681.", 10681, termList.size());
+        Assert.assertEquals("Candidate size should be 10608.", 10608, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
@@ -209,7 +209,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // the results depends on specified PoS patterns
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
-        Assert.assertEquals("Candidate size should be 10681.", 10681, termList.size());
+        Assert.assertEquals("Candidate size should be 10608.", 10608, termList.size());
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
@@ -247,7 +247,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // the results depends on specified PoS patterns
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
-        Assert.assertEquals("Candidate size should be 10681.", 10681, termList.size());
+        Assert.assertEquals("Candidate size should be 10608.", 10608, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
@@ -285,7 +285,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         List<JATETerm> termList = appGlossEx.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
 
         LOG.info("termList.size():"+termList.size());
-        Assert.assertEquals("Candidate size should be 10681.", 10681, termList.size());
+        Assert.assertEquals("Candidate size should be 10608.", 10608, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
@@ -324,7 +324,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // the results depends on specified PoS patterns
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
-        Assert.assertEquals("Candidate size should be 10681.", 10681, termList.size());
+        Assert.assertEquals("Candidate size should be 10608.", 10608, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
 
@@ -364,7 +364,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // the results depends on specified PoS patterns
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
-        Assert.assertEquals("Candidate size should be 10681.", 10681, termList.size());
+        Assert.assertEquals("Candidate size should be 10608.", 10608, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
@@ -404,7 +404,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
         //LOG.info("termList.size():"+termList.size());
-        Assert.assertEquals("Candidate size should be 10681.", 10681, termList.size());
+        Assert.assertEquals("Candidate size should be 10608.", 10608, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
@@ -440,7 +440,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
         List<JATETerm> termList = appTFIDF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
         //LOG.info("termList.size():"+termList.size());
-        Assert.assertEquals("Candidate size should be 10681.", 10681, termList.size());
+        Assert.assertEquals("Candidate size should be 10608.", 10608, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
@@ -470,7 +470,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appTTF() throws JATEException, IOException {
         AppTTF appTTF = new AppTTF(initParams);
 
@@ -480,18 +480,18 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
         LOG.info("termList.size():"+termList.size());
-        Assert.assertEquals("Candidate size should be 10681.", 10681, termList.size());
+        Assert.assertEquals("Candidate size should be 10608.", 10608, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 500, 1000, 3000, 5000, 8000, 10000);
         assert 0.96 == scores[0];
-        assert 0.91 == scores[1];
-        assert 0.83 == scores[2];
-        assert 0.82 == scores[3];
-        assert 0.77 == scores[4];
-        assert 0.72 == scores[5];
+        assert 0.88 == scores[1];
+        assert 0.82 == scores[2];
+        assert 0.81 == scores[3];
+        assert 0.76 == scores[4];
+        assert 0.71 == scores[5];
         assert 0.65 == scores[6];
         assert 0.63 == scores[7];
         double recall = Scorer.recall(gsTerms, rankedTerms);
@@ -510,7 +510,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    @Test
+    //@Test
     public void benchmarking_appWeirdness()throws JATEException, IOException {
         initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), REF_FREQ_FILE.toString());
         AppWeirdness appWeirdness = new AppWeirdness(initParams);
@@ -520,7 +520,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
         LOG.info("termList.size():"+termList.size());
-        Assert.assertEquals("Candidate size should be 10681.", 10681, termList.size());
+        Assert.assertEquals("Candidate size should be 10608.", 10608, termList.size());
 
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
@@ -528,12 +528,12 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
                 2, 100, 1, 5,
                 50, 100, 500, 1000, 3000, 5000, 8000, 10000);
         assert 0.76 == scores[0];
-        assert 0.83 == scores[1];
+        assert 0.82 == scores[1];
         assert 0.87 == scores[2];
-        assert 0.87 == scores[3];
-        assert 0.81 == scores[4];
-        assert 0.76 == scores[5];
-        assert 0.69 == scores[6];
+        assert 0.86 == scores[3];
+        assert 0.8 == scores[4];
+        assert 0.75 == scores[5];
+        assert 0.68 == scores[6];
         assert 0.64 == scores[7];
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.18 == recall;

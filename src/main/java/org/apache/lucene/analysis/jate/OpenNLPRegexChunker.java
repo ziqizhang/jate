@@ -56,7 +56,12 @@ public final class OpenNLPRegexChunker extends OpenNLPMWEFilter {
             Span[] chunks = regexChunker.find(pos);
             chunks = prune(chunks, words);
             for (Span sp : chunks) {
-                chunkSpans.put(sp.getStart(), sp.getEnd());
+                List<Integer> ends = chunkSpans.get(sp.getStart());
+                if(ends==null)
+                    ends=new ArrayList<>();
+                ends.add(sp.getEnd());
+
+                chunkSpans.put(sp.getStart(), ends);
                 chunkTypes.put(sp.getStart(), sp.getType());
             }
             first = false;
@@ -68,15 +73,16 @@ public final class OpenNLPRegexChunker extends OpenNLPMWEFilter {
             return false;
         }
 
-        if (chunkStart != -1 && tokenIdx == chunkEnd) {  //already found a new chunk and now we found its end
-            boolean added=addMWE();
+        if (chunkStart != -1 && chunkEnds.contains(tokenIdx)) {  //already found a new chunk and now we found its end
+            boolean added=addMWE(tokenIdx);
             //do not increment token index here because end span is exclusive
+            //tokenIdx++;
             return true;
         }
-        if (chunkSpans.containsKey(tokenIdx)) { //at the beginning of a new chunk
+        if (chunkSpans.containsKey(tokenIdx)) { //found a new chunk, the current tokindex is the beginning of the chunk
             chunkStart = tokenIdx;
-            chunkEnd = chunkSpans.get(tokenIdx);
-            tokenIdx++;
+            chunkEnds = chunkSpans.get(tokenIdx);
+            tokenIdx = chunkEnds.get(0); //set tokenIdx to be the next end index for the beginning index
             return true;
         } else { //a token that is not part of a chunk
             tokenIdx++;

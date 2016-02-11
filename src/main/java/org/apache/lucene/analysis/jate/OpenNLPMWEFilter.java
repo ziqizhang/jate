@@ -25,10 +25,10 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
     protected static String SENTENCE_BREAK = "[.?!]";
     // cloned attrs of all tokens
     protected List<AttributeSource> tokenAttrs = new ArrayList<>();
-    protected Map<Integer, Integer> chunkSpans = new HashMap<>(); //start, end; end is exclusive
+    protected Map<Integer, List<Integer>> chunkSpans = new HashMap<>(); //start, end; end is exclusive
     protected Map<Integer, String> chunkTypes = new HashMap<>();
     protected int chunkStart = -1;
-    protected int chunkEnd = -1;
+    protected List<Integer> chunkEnds = new ArrayList<>(); //multiple chunks with the same start index but different end index are possible
     protected int tokenIdx = 0;
 
 
@@ -49,7 +49,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
     }
 
 
-    protected boolean addMWE(){
+    protected boolean addMWE(int chunkEnd){
         AttributeSource start = tokenAttrs.get(chunkStart);
         AttributeSource end = tokenAttrs.get(chunkEnd - 1);
 
@@ -71,8 +71,14 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
             //System.out.println(phrase.toString().trim()+","+sentenceContextAtt.getPayload().utf8ToString());
         }
 
-        chunkStart = -1;
-        chunkEnd = -1;
+        chunkEnds.remove(Integer.valueOf(chunkEnd));
+        if(chunkEnds.size()==0) {
+            tokenIdx=chunkStart+1;
+            chunkStart = -1;
+        }else{
+            tokenIdx=chunkEnds.get(0); //set the next token index to be the next phrase's end token index
+        }
+
         return added;
     }
     private SentenceContext parseSentenceContextPayload(PayloadAttribute attribute){
@@ -226,7 +232,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
         first = true;
         tokenIdx = 0;
         chunkStart = -1;
-        chunkEnd = -1;
+        chunkEnds.clear();;
         chunkSpans.clear();
         chunkTypes.clear();
     }
@@ -261,6 +267,8 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
             words[i] = wordList.get(i);
             pos[i]=posList.get(i);
         }
+
+        clearAttributes();
         return new String[][]{words,pos};
     }
 

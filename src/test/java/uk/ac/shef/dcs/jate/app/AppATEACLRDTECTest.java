@@ -51,13 +51,14 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
             if (numOfDocs == 0 || reindex) {
                 appATETest.indexAndExtract(corpusDir);
             }
-            System.exit(1);
+            //System.exit(1);
 
             List<JATETerm> terms = null;
 
             AppATTFTest appATTFTest = new AppATTFTest();
             terms = appATTFTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
             appATTFTest.evaluate(terms, AppATTF.class.getSimpleName());
+            System.exit(0);
 
             AppChiSquareTest appChiSquareTest = new AppChiSquareTest();
             terms = appChiSquareTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);

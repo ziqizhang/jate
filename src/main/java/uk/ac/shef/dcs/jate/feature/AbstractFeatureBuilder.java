@@ -11,8 +11,8 @@ import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.util.SolrUtil;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.PrintWriter;
+import java.util.*;
 
 /**
  *
