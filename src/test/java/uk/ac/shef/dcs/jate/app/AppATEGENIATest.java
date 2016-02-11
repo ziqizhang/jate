@@ -38,10 +38,10 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     private static Logger LOG = Logger.getLogger(AppATEGENIATest.class.getName());
 
     public static final Path GENIA_CORPUS_ZIPPED_FILE = Paths.get(workingDir, "src", "test", "resource",
-        "eval", "GENIAcorpus-files.zip");
+        "eval", "GENIA", "corpus.zip");
 
     public static final Path GENIA_CORPUS_CONCEPT_FILE = Paths.get(workingDir, "src", "test", "resource",
-            "eval", "GENIAcorpus-concept.txt");
+            "eval", "GENIA","terms.txt");
 
     JATEProperties jateProperties = null;
 
@@ -50,7 +50,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
 
     protected void setSolrCoreName(){
-        solrCoreName="geniaCore";
+        solrCoreName="GENIA";
     }
     protected void setReindex(){ //change this to false if you want to use existing index
         reindex=false;
@@ -281,7 +281,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
     //@Test
     public void benchmarking_appGlossEx() throws JATEException, IOException {
-        initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), FREQ_GENIC_FILE.toString());
+        initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), REF_FREQ_FILE.toString());
         AppGlossEx appGlossEx = new AppGlossEx(initParams);
 
         List<JATETerm> termList = appGlossEx.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
@@ -398,7 +398,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
     //@Test
     public void benchmarking_appTermEx() throws JATEException, IOException {
-        initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), FREQ_GENIC_FILE.toString());
+        initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), REF_FREQ_FILE.toString());
         AppTermEx appTermEx = new AppTermEx(initParams);
 
         List<JATETerm> termList = appTermEx.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
@@ -514,7 +514,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
     @Test
     public void benchmarking_appWeirdness()throws JATEException, IOException {
-        initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), FREQ_GENIC_FILE.toString());
+        initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), REF_FREQ_FILE.toString());
         AppWeirdness appWeirdness = new AppWeirdness(initParams);
 
         List<JATETerm> termList = appWeirdness.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);

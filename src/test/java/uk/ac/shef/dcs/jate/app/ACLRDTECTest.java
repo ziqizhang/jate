@@ -54,22 +54,23 @@ public abstract class ACLRDTECTest {
 
     static String workingDir = System.getProperty("user.dir");
 
-    static String solrCoreName = "aclRdTecCore";
+    static String solrCoreName = "ACLRDTEC";
 
-    static Path corpusDir = Paths.get(workingDir, "src", "test", "resource", "eval", "acl_rd_tec", "cleansed_text", "files");
+    static Path corpusDir = Paths.get(workingDir, "src", "test", "resource", "eval", "ACL_RD-TEC", "corpus", "full","xml");
 
     static Path solrHome = Paths.get(workingDir, "testdata", "solr-testbed");
 
-    static Path FREQ_GENIC_FILE = Paths.get(workingDir, "src", "main", "resource", "bnc_unifrqs.normal");
+    static Path FREQ_GENIC_FILE = Paths.get(workingDir, "testdata","solr-testbed", "ACLRDTEC",
+            "conf","bnc_unifrqs.normal");
 
     static Path allAnnCandidTerms = Paths.get(workingDir, "src", "test", "resource", "eval",
-            "acl_rd_tec", "annotation", "_all_annotated_candid_term");
+            "ACL_RD-TEC", "terms.txt");
 
     // The corpus can be downloaded via
     // <a href="http://atmykitchen.info/datasets/acl_rd_tec/cleansed_text/index_cleansed_text.htm">
     // Cleansed Text Files in XML Format</a>
     public static final Path ACL_RD_TEC_CORPUS_ZIPPED_FILE =
-            Paths.get(workingDir, "src", "test", "resource", "eval", "acl_rd_tec", "cleansed_text", "xml.zip");
+            Paths.get(workingDir, "src", "test", "resource", "eval", "ACL_RD-TEC", "corpus", "full","xml.zip");
 
     static EmbeddedSolrServer server = null;
     static List<String> gsTerms = null;
@@ -174,7 +175,7 @@ public abstract class ACLRDTECTest {
         double recall = Scorer.recall(gsTerms, rankedTerms);
 
         //>>>>>>
-        Set<String> copy = new HashSet<>(gsTerms);
+        /*Set<String> copy = new HashSet<>(gsTerms);
         copy.retainAll(new HashSet<>(rankedTerms));
         Set<String> gsCopy = new HashSet<>(gsTerms);
 
@@ -182,7 +183,7 @@ public abstract class ACLRDTECTest {
         List<String> sorted = new ArrayList<>(gsCopy);
         Collections.sort(sorted);
         DebugHelper.writeList(sorted, "missed.txt");
-        System.exit(1);
+        System.exit(1);*/
         //>>>>>>
         assert 0.34 == recall;
 

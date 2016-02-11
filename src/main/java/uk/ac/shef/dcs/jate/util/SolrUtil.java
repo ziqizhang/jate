@@ -33,7 +33,7 @@ public class SolrUtil {
         try {
             Terms vector = solrIndexSearcher.getLeafReader().getTermVector(docId, fieldname);
             if (vector == null)
-                throw new JATEException("Cannot find expected field: " + fieldname);
+                throw new JATEException("Cannot find expected field: " + fieldname+". This could be caused by empty document content. If so, empty documents should be removed from indexing.");
             return vector;
         } catch (IOException ioe) {
             StringBuilder sb = new StringBuilder(String.format("Cannot find expected field: %s. Error stacktrack:\n", fieldname));

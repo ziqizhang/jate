@@ -39,10 +39,19 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
         try {
             AppATEACLRDTECTest appATETest = new AppATEACLRDTECTest(solrHome.toString(), solrCoreName);
 
+            boolean reindex = false;
+            if (args.length > 0) {
+                try {
+                    reindex = Boolean.valueOf(args[0]);
+                } catch (Exception e) {
+                }
+            }
+
             long numOfDocs = validate_indexing();
-            if (numOfDocs == 0) {
+            if (numOfDocs == 0 || reindex) {
                 appATETest.indexAndExtract(corpusDir);
             }
+            System.exit(1);
 
             List<JATETerm> terms = null;
 
@@ -53,6 +62,7 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
             AppChiSquareTest appChiSquareTest = new AppChiSquareTest();
             terms = appChiSquareTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
             appChiSquareTest.evaluate(terms, AppChiSquare.class.getSimpleName());
+
 
             AppCValueTest appCValueTest = new AppCValueTest();
             terms = appCValueTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
@@ -123,7 +133,7 @@ class AppATTFTest extends ACLRDTECTest {
         List<JATETerm> terms = new ArrayList<>();
         Map<String, String> initParam = new HashMap<>();
 
-        initParam.put(AppParams.PREFILTER_MIN_TERM_TOTAL_FREQUENCY.getParamKey(), "0");
+        initParam.put(AppParams.PREFILTER_MIN_TERM_TOTAL_FREQUENCY.getParamKey(), "2");
         initParam.put(AppParams.CUTOFF_TOP_K_PERCENT.getParamKey(), "0.99999");
 
         AppATTF appATTF = new AppATTF(initParam);

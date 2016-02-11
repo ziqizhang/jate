@@ -11,7 +11,7 @@ import java.util.List;
 
 public class SentenceSplitterOpenNLPTest {
     static String workingDir = System.getProperty("user.dir");
-    Path EN_SENT_MODEL_FILE = Paths.get(workingDir, "src", "main", "resource", "opennlp-models", "en-sent.bin");
+    Path EN_SENT_MODEL_FILE = Paths.get(workingDir, "src", "test", "resource", "opennlp-models", "en-sent.bin");
 
     @Test
     public void testOpenNLPSentenceSplitter() throws IOException {

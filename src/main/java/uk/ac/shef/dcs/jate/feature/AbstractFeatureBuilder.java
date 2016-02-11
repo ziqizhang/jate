@@ -1,5 +1,6 @@
 package uk.ac.shef.dcs.jate.feature;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.lucene.index.PostingsEnum;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
@@ -63,6 +64,26 @@ public abstract class AbstractFeatureBuilder {
      */
     protected Set<String> getUniqueTerms() throws JATEException, IOException {
         Terms terms =SolrUtil.getTermVector(properties.getSolrFieldNameJATECTerms(),solrIndexSearcher);
+
+
+        //>>>>>>>>>
+        /*TermsEnum source = terms.iterator();
+        String term = //"thrownawayorusedjustforelementarystatistical profile";
+        "notethattheextendedgraphstillcontainstherepresentation";
+        //"ordertoavoidadependencyofthebaselineresultontherandom";
+
+                if (source.seekExact(new BytesRef(term.getBytes("UTF-8")))) {
+                    PostingsEnum docEnum = source.postings(null);
+                    int doc = 0;
+                    while ((doc = docEnum.nextDoc()) != PostingsEnum.NO_MORE_DOCS) {
+                        int tfid = docEnum.freq();  //tf in document
+
+                    }
+
+                } else {
+
+                }*/
+        //>>>>>>>>>
 
         TermsEnum termsEnum = terms.iterator();
         Set<String> allTermCandidates = new HashSet<>();

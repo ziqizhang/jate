@@ -30,6 +30,10 @@ public class AppATTF extends App {
 
     static EmbeddedSolrServer server = null;
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         if (args.length < 1) {
             printHelp();
@@ -57,42 +61,6 @@ public class AppATTF extends App {
     public AppATTF(Map<String, String> initParams) throws JATEException {
         super(initParams);
     }
-
-//    /**
-//     * Index, extract, rank and filter term candidate from the given corpus
-//     *
-//     *
-//     * @param corpusDir, a collection of documents in the corpus directory
-//     * @param solrHomeDir, Solr home directory where a given corpus will be indexed to
-//     * @param solrCoreName, solr core name
-//     * @param jateProperties, jate properties file
-//     * @return List<JATETerm>
-//     */
-//    public List<JATETerm> extract(Path corpusDir, String solrHomeDir, String solrCoreName, String jateProperties)
-//            throws JATEException {
-//        if (server == null) {
-//            CoreContainer solrContainer = new CoreContainer(solrHomeDir);
-//            solrContainer.load();
-//
-//            server = new EmbeddedSolrServer(solrContainer, solrCoreName);
-//        }
-//        List<JATETerm> terms = new ArrayList<>();
-//
-//        List<Path> files = loadFiles(corpusDir);
-//        indexJATEDocuments(files);
-//
-//        return terms;
-//    }
-//
-//    private void indexJATEDocuments(List<Path> files) {
-//        List<JATEDocument> corpus = new ArrayList<>();
-//
-//
-//
-//        files.parallelStream().forEach(file -> {
-//
-//        });
-//    }
 
     @Override
     public List<JATETerm> extract(SolrCore core, String jatePropertyFile)
@@ -126,6 +94,7 @@ public class AppATTF extends App {
         List<JATETerm> terms = attf.execute(candidates);
 
         terms = cutoff(terms);
+        LOG.info("Complete ATTF term extraction.");
 
         addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
                 properties.getSolrFieldNameID());

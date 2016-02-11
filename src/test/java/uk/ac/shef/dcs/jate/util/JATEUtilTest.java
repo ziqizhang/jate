@@ -27,7 +27,10 @@ public class JATEUtilTest {
 
     @Test
     public void loadDocumentText() throws FileNotFoundException, JATEException {
-        Path cleanedXMLDoc = Paths.get(workingDir, "src", "test", "resource", "eval", "A00-1001_cln.xml");
+        Path cleanedXMLDoc = Paths.get(workingDir, "src", "test", "resource", "eval",
+                "ACL_RD-TEC",
+                "corpus","util_test",
+                "A00-1001_cln.xml");
         JATEDocument jateDocument = JATEUtil.loadACLRDTECDocument(new FileInputStream(cleanedXMLDoc.toFile()));
         assert jateDocument.getId().equals("A00-1001");
         assert jateDocument.getContent() != null;
@@ -37,7 +40,8 @@ public class JATEUtilTest {
     @Test
     public void loadDocumentText2() throws FileNotFoundException, JATEException {
         //check parsing error
-        Path cleanedXMLDoc = Paths.get(workingDir, "src", "test", "resource", "eval", "E06-2023_cln.xml");
+        Path cleanedXMLDoc = Paths.get(workingDir, "src", "test", "resource", "eval", "ACL_RD-TEC",
+                "corpus","util_test","E06-2023_cln.xml");
         JATEDocument jateDocument = JATEUtil.loadACLRDTECDocument(new FileInputStream(cleanedXMLDoc.toFile()));
         assert jateDocument.getId().equals("E06-2023");
         assert jateDocument.getContent() != null;
@@ -74,12 +78,13 @@ public class JATEUtilTest {
 
     @Test
     public void testLoadACLRDTECDocument() throws FileNotFoundException, JATEException {
-        Path cleanedXMLDoc = Paths.get(workingDir, "src", "test", "resource", "eval", "E06-2023_cln.xml");
+        Path cleanedXMLDoc = Paths.get(workingDir, "src", "test", "resource", "eval", "ACL_RD-TEC",
+                "corpus","util_test","E06-2023_cln.xml");
         JATEDocument jateDocument = JATEUtil.loadACLRDTECDocument(new FileInputStream(cleanedXMLDoc.toFile()));
 
         assert jateDocument != null;
         assert jateDocument.getId() != null;
-        assert jateDocument.getId().equals("P06-1139");
+        assert jateDocument.getId().equals("E06-2023");
         assert jateDocument.getContent() != null;
 
         //ignore reference title

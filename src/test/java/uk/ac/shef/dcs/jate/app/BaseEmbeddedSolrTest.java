@@ -32,7 +32,8 @@ public abstract class BaseEmbeddedSolrTest {
     static String workingDir = System.getProperty("user.dir");
     static Path solrHome = Paths.get(workingDir, "testdata", "solr-testbed");
 
-    static Path FREQ_GENIC_FILE = Paths.get(workingDir,"src","main", "resource","bnc_unifrqs.normal");
+    static Path REF_FREQ_FILE = Paths.get(workingDir,"testdata","solr-testbed", "GENIA",
+            "conf","bnc_unifrqs.normal");
 
     EmbeddedSolrServer server;
     protected String solrCoreName;
