@@ -61,8 +61,6 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     public void setup() throws Exception {
         super.setup();
         jateProperties = new JATEProperties();
-        jateProperties.setSolrHome(solrHome.toString());
-        jateProperties.setSolrCoreName(solrCoreName);
 
         if(reindex) {
             try {

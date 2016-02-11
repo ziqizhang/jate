@@ -21,8 +21,8 @@ public class Indexing {
         JATEProperties prop = new JATEProperties(args[0]);
         boolean deletePrevious = Boolean.valueOf(args[2]);
         SolrClient solrClient =
-                new EmbeddedSolrServer(Paths.get(prop.getSolrHome()),
-                        prop.getSolrCoreName());
+                new EmbeddedSolrServer(Paths.get(args[3]),
+                        args[4]);
         if (deletePrevious) {
             logger.info("DELETING PREVIOUS INDEX");
             solrClient.deleteByQuery("*:*");

@@ -20,10 +20,7 @@ public class JATEProperties {
     private Properties prop = new Properties();
 
     public static final String PROPERTIES_FILE = "jate.properties";
-    // solr home (core container) property
-    public static final String PROPERTY_SOLR_HOME = "solrhome";
-    // solr core name property
-    public static final String PROPERTY_SOLR_CORE = "solrcore";
+
     // The Solr uniqueKey field
     public static final String PROPERTY_SOLR_FIELD_ID = "solr_field_id";
     // n-grams field from a corpus
@@ -33,10 +30,7 @@ public class JATEProperties {
     // document metadata extracted from Tika where term will be extracted from
     // see also @code{uk.ac.shef.dcs.jate.io.TikaMultiFieldDocumentCreator}
     public static final String PROPERTY_SOLR_FIELD_MAP_DOC_PARTS = "solr_field_map_doc_parts";
-    //minimum frequency allowed for term candidates
-    public static final String PROPERTY_MIN_TOTAL_TERM_FREQ = "min_total_term_freq";
-    //min frequency of a term appearing in different context
-    public static final String PROPERTY_MIN_TERM_CONTEXT_FREQ = "min_term_context_freq";
+
     // Maximum of data units each thread (worker) of a SolrParallelIndexingWorker should commit to solr
     public static final String PROPERTY_INDEXER_MAX_UNITS_TO_COMMIT = "indexer_max_units_to_commit";
     // Maximum % of parallel CPU cores used
@@ -89,27 +83,6 @@ public class JATEProperties {
         }
     }
 
-    public String getSolrCoreName() throws JATEException {
-        String solrCoreName = getString(PROPERTY_SOLR_CORE);
-        if (solrCoreName == null)
-            throw new JATEException(String.format("'%s' not defined in jate.properties", PROPERTY_SOLR_CORE));
-        return solrCoreName;
-    }
-
-    public void setSolrCoreName(String coreName) {
-        prop.setProperty(PROPERTY_SOLR_CORE, coreName);
-    }
-
-    public String getSolrHome() throws JATEException {
-        String solrHome = getString(PROPERTY_SOLR_HOME);
-        if (solrHome == null)
-            throw new JATEException(String.format("'%s' not defined in jate.properties", PROPERTY_SOLR_HOME));
-        return solrHome;
-    }
-
-    public void setSolrHome(String solrHome) {
-        prop.setProperty(PROPERTY_SOLR_HOME, solrHome);
-    }
 
     public String getSolrFieldNameID() throws JATEException {
         String idField = getString(PROPERTY_SOLR_FIELD_ID);
@@ -154,30 +127,6 @@ public class JATEProperties {
 
     public void setSolrFieldNameJATETermsF(String solrFieldNameJATETermsF) {
         prop.setProperty(PROPERTY_SOLR_FIELD_MAP_DOC_PARTS, solrFieldNameJATETermsF);
-    }
-
-    public String getMinTotalTermFreq() {
-        String min_total_term_freq = getString(PROPERTY_MIN_TOTAL_TERM_FREQ);
-        if (min_total_term_freq == null) {
-            log.warn(String.format("Frequency threshold '%s' for term candidate filtering is not defined in jate.property", PROPERTY_MIN_TOTAL_TERM_FREQ));
-        }
-        return min_total_term_freq;
-    }
-
-    public void setMinTotalTermFreq(Integer minTotalTermFreq) {
-        prop.setProperty(PROPERTY_MIN_TOTAL_TERM_FREQ, String.valueOf(minTotalTermFreq));
-    }
-
-    public String getMinTermContextFreq() {
-        String min_term_context_freq = getString(PROPERTY_MIN_TERM_CONTEXT_FREQ);
-        if (min_term_context_freq == null) {
-            log.debug(String.format("Context frequency threshold '%s' (optional) for term candidate filtering is not defined in jate.property", PROPERTY_MIN_TERM_CONTEXT_FREQ));
-        }
-        return min_term_context_freq;
-    }
-
-    public void setMinTermContextFreq(Integer minTermContextFreq) {
-        prop.setProperty(PROPERTY_MIN_TERM_CONTEXT_FREQ, String.valueOf(minTermContextFreq));
     }
 
     private String getString(String propertyName) {

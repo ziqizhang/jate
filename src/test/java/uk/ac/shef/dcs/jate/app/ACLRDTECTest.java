@@ -91,9 +91,7 @@ public abstract class ACLRDTECTest {
         }
 
         jateProp = new JATEProperties();
-        jateProp.setSolrHome(solrHomeDir);
-        jateProp.setSolrCoreName(solrCoreName);
-        jateProp.setMinTotalTermFreq(2);
+
     }
 
     /**

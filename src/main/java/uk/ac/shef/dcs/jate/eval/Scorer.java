@@ -259,7 +259,7 @@ public class Scorer {
         createReportGenia(args[0],args[1],args[2],true, false, true,2,150,1,5,
                 50, 100, 500, 1000, 5000,10000);
 
-        System.out.println();
+        System.out.println("finished GENIA report");
 
        /* createReportACLRD(args[0], args[1], args[2], true, false, true, 2, 150, 1, 5,
                 50, 100, 500, 1000, 5000, 10000);*/
