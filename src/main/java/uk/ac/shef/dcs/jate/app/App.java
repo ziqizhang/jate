@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import org.apache.lucene.index.LeafReader;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
+import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.search.SolrIndexSearcher;
 import org.slf4j.Logger;
@@ -266,7 +267,6 @@ public abstract class App {
         try {
             solrServer = new EmbeddedSolrServer(Paths.get(solrHomePath), coreName);
             core = solrServer.getCoreContainer().getCore(coreName);
-
             result = extract(core, jatePropertyFile);
         } finally {
             if (core != null) {

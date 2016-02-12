@@ -156,7 +156,7 @@ public class JATEUtil {
             String normalizedText = Normalizer.normalize(fullText.toString(), Normalizer.Form.NFD);
             String cleanedText = cleanText(normalizedText);
             jateDocument = new JATEDocument(paperId.toString());
-            jateDocument.setContent(cleanedText);
+            jateDocument.setContent(cleanedText.trim());
 
         } catch (ParserConfigurationException e) {
             throw new JATEException("Failed to initialise SAXParser!" + e.toString());

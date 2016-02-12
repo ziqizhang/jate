@@ -106,7 +106,7 @@ public abstract class ACLRDTECTest {
         List<Path> files = JATEUtil.loadFiles(corpusDir);
         Collections.sort(files);
 
-        LOG.info("indexing and extracting candidates...");
+        //LOG.info("indexing and extracting candidates...");
         int count = 0;
         for (Path file : files) {
             try {
@@ -137,7 +137,8 @@ public abstract class ACLRDTECTest {
         try {
             JATEDocument jateDocument = JATEUtil.loadACLRDTECDocument(new FileInputStream(file.toFile()));
 
-            JATEUtil.addNewDoc(server, jateDocument.getId(), jateDocument.getId(), jateDocument.getContent(), jateProp, commit);
+            if(jateDocument.getContent().trim().length()!=0)
+                JATEUtil.addNewDoc(server, jateDocument.getId(), jateDocument.getId(), jateDocument.getContent(), jateProp, commit);
         } catch (FileNotFoundException ffe) {
             throw new JATEException(ffe.toString());
         } catch (IOException ioe) {
