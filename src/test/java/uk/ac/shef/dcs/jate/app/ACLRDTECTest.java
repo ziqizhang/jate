@@ -104,15 +104,21 @@ public abstract class ACLRDTECTest {
     public void indexAndExtract(Path corpusDir) throws JATEException {
         //File dir = new File(corpusDir);
         List<Path> files = JATEUtil.loadFiles(corpusDir);
+        Collections.sort(files);
 
         LOG.info("indexing and extracting candidates...");
         int count = 0;
         for (Path file : files) {
-            if (!file.toString().contains(".DS_Store")) {
-                indexJATEDocuments(file, jateProp, false);
-                count++;
-                if (count % 100 == 0)
-                    LOG.info("indexing done: " + count + "/" + files.size());
+            try {
+                LOG.info(file);
+                if (!file.toString().contains(".DS_Store")) {
+                    indexJATEDocuments(file, jateProp, false);
+                    count++;
+                    if (count % 100 == 0)
+                        LOG.info("indexing done: " + count + "/" + files.size());
+                }
+            }catch (NullPointerException e){
+                e.printStackTrace();
             }
 
         }
