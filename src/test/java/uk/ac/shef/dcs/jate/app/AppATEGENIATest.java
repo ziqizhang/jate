@@ -52,8 +52,10 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     protected void setSolrCoreName(){
         solrCoreName="GENIA";
     }
-    protected void setReindex(){ //change this to false if you want to use existing index
-        reindex=false;
+    protected void setReindex(){
+        //change this to false if you want to use existing index
+        //always set to true for the automatic test
+        reindex=true;
     }
 
 
