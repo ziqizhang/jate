@@ -51,7 +51,6 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
             if (numOfDocs == 0 || reindex) {
                 appATETest.indexAndExtract(corpusDir);
             }
-            System.exit(1);
 
             List<JATETerm> terms = null;
 
@@ -90,28 +89,18 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
             appTFIDFTest.evaluate(terms, AppTFIDF.class.getSimpleName());
 
             AppTTFTest appTTFTest = new AppTTFTest();
-            terms = appTTFTest.rankAndFilter(server, solrCoreName, appTTFTest.jateProp);
+            terms = appTTFTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
             appTTFTest.evaluate(terms, AppTTF.class.getSimpleName());
 
             AppWeirdnessTest appWeirdnessTest = new AppWeirdnessTest();
-            terms = appWeirdnessTest.rankAndFilter(server, solrCoreName, appWeirdnessTest.jateProp);
+            terms = appWeirdnessTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
             appWeirdnessTest.evaluate(terms, AppWeirdness.class.getSimpleName());
-
-//                    CValue:
-//            2016-02-07 22:05:01 INFO  ACLRDTECTest:183 -   top 50 Precision:0.9
-//            2016-02-07 22:05:01 INFO  ACLRDTECTest:184 -   top 100 Precision:0.94
-//            2016-02-07 22:05:01 INFO  ACLRDTECTest:185 -   top 500 Precision:0.92
-//            2016-02-07 22:05:01 INFO  ACLRDTECTest:186 -   top 1000 Precision:0.92
-//            2016-02-07 22:05:01 INFO  ACLRDTECTest:187 -   top 3000 Precision:0.91
-//            2016-02-07 22:05:01 INFO  ACLRDTECTest:188 -   top 5000 Precision:0.83
-//            2016-02-07 22:05:01 INFO  ACLRDTECTest:189 -   top 8000 Precision:0.72
-//            2016-02-07 22:05:01 INFO  ACLRDTECTest:190 -   top 10000 Precision:0.65
-//            2016-02-07 22:05:01 INFO  ACLRDTECTest:191 -   overall recall:0.23
 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
+                server.getCoreContainer().getCore(solrCoreName).close();
                 server.getCoreContainer().shutdown();
                 server.close();
             } catch (IOException e) {

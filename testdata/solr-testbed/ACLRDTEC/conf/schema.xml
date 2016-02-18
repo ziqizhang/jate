@@ -292,7 +292,7 @@
 							posTaggerModel="en-pos-maxent.bin"
 							patterns="aclrdtec.patterns"
 							minTokens="1" maxTokens="5"
-							maxCharLength="50" minCharLength="1" removeLeadingStopWords="true"
+							maxCharLength="30" minCharLength="1" removeLeadingStopWords="true"
 							removeTrailingStopWords="true" removeLeadingSymbolicTokens="true"
 							removeTrailingSymbolicTokens="true"
 							stopWords="stopwords.txt" stopWordsIgnoreCase="true"/>
@@ -318,7 +318,7 @@
 				<filter class="org.apache.lucene.analysis.jate.OpenNLPNounPhraseFilterFactory"
 							chunkerModel="en-chunker.bin"
 							minTokens="1" maxTokens="5"
-							maxCharLength="50" minCharLength="1" removeLeadingStopWords="true"
+							maxCharLength="30" minCharLength="1" removeLeadingStopWords="true"
 							removeTrailingStopWords="true" removeLeadingSymbolicTokens="true"
 							removeTrailingSymbolicTokens="true"
 							stopWords="stopwords.txt" stopWordsIgnoreCase="true"/>
@@ -347,7 +347,7 @@
 							posTaggerModel="en-pos-maxent.bin"
 							patterns="aclrdtec.patterns"
 							minTokens="1" maxTokens="5"
-							maxCharLength="50" minCharLength="1" removeLeadingStopWords="true"
+							maxCharLength="30" minCharLength="1" removeLeadingStopWords="true"
 							removeTrailingStopWords="true" removeLeadingSymbolictokens="true"
 							removeTrailingSymbolicTokens="true" sentenceBoundaryAware="true"
 							stopWords="stopwords.txt" stopWordsIgnoreCase="true"/>
