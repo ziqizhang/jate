@@ -51,7 +51,7 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
             if (numOfDocs == 0 || reindex) {
                 appATETest.indexAndExtract(corpusDir);
             }
-            System.exit(0);
+            //System.exit(0);
 
             List<JATETerm> terms = null;
 
