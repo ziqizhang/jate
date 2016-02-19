@@ -110,7 +110,6 @@ public abstract class ACLRDTECTest {
         int count = 0;
         for (Path file : files) {
             try {
-                LOG.info(file);
                 if (!file.toString().contains(".DS_Store")) {
                     indexJATEDocuments(file, jateProp, false);
                     count++;
