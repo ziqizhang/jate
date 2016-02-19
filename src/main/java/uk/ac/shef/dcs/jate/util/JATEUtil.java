@@ -1,5 +1,6 @@
 package uk.ac.shef.dcs.jate.util;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.common.SolrInputDocument;
@@ -154,6 +155,7 @@ public class JATEUtil {
             fullText.append(paperTitle).append("\n").append(paperParagraphs);
 
             String normalizedText = Normalizer.normalize(fullText.toString(), Normalizer.Form.NFD);
+            normalizedText= StringEscapeUtils.unescapeXml(normalizedText);
             String cleanedText = cleanText(normalizedText);
             jateDocument = new JATEDocument(paperId.toString());
             jateDocument.setContent(cleanedText.trim());
