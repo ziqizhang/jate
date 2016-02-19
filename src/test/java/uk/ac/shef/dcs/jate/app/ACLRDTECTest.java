@@ -106,7 +106,7 @@ public abstract class ACLRDTECTest {
         List<Path> files = JATEUtil.loadFiles(corpusDir);
         Collections.sort(files);
 
-        //LOG.info("indexing and extracting candidates...");
+        LOG.info("indexing and extracting candidates...");
         int count = 0;
         for (Path file : files) {
             try {
