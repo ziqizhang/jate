@@ -14,3 +14,6 @@ testdata/solr-testbed/ACLRDTEC/data/*
 testdata/solr-testbed/GENIA/data/*
 /target/
 .DS_Store
+debug/*
+testdata.tar.gz
+src/test/resource/eval/ACL_RD-TEC/corpus/full/debug/

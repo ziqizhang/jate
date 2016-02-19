@@ -1,6 +1,7 @@
 package uk.ac.shef.dcs.jate.eval;
 
 import opennlp.tools.util.eval.FMeasure;
+import org.apache.lucene.analysis.en.EnglishMinimalStemmer;
 import uk.ac.shef.dcs.jate.JATEException;
 
 import java.io.File;
@@ -121,6 +122,7 @@ public class Scorer {
                                                   boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
                                                   int minChar, int maxChar, int minTokens, int maxTokens,
                                                   int... ranks) {
+        gs=stem(gs);
         gs = prune(gs, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
         terms = prune(terms, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
 
@@ -209,6 +211,18 @@ public class Scorer {
         FMeasure fMeasure = new FMeasure();
         fMeasure.updateScores(gsTerms.toArray(), termResults.toArray());
         return fMeasure.getFMeasure();
+    }
+
+    public static List<String> stem(List<String> gsTerms){
+        EnglishMinimalStemmer stemmer = new EnglishMinimalStemmer();
+        List<String> result = new ArrayList<>();
+        for (String term : gsTerms) {
+            int trim=stemmer.stem(term.toCharArray(), term.length());
+            String newTerm = term.substring(0, trim);
+            result.add(newTerm.trim());
+        }
+        return result;
+
     }
 
     /**

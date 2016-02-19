@@ -1,6 +1,7 @@
 package uk.ac.shef.dcs.jate.test;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.lucene.analysis.en.EnglishMinimalStemmer;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.eval.Scorer;
 
@@ -9,12 +10,70 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by - on 04/02/2016.
  */
 public class DebugHelper {
+
+    public static void stem(String inFile, String outFile) throws IOException {
+        List<String> lines=FileUtils.readLines(new File(inFile));
+
+        Map<String, Integer> freq = new HashMap<>();
+        for(String l: lines){
+            l=l.trim();
+            String[] toks = l.split("\\s+");
+            try {
+                freq.put(toks[1], Integer.valueOf(toks[0]));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        EnglishMinimalStemmer stemmer = new EnglishMinimalStemmer();
+
+        PrintWriter p  =new PrintWriter(outFile);
+        for(String k: freq.keySet()){
+            int trim=stemmer.stem(k.toCharArray(), k.length());
+            String newTerm = k.substring(0, trim);
+
+            Integer f = freq.get(newTerm);
+            if(f!=null)
+                p.println(f + "\t" + k);
+            else
+                p.println(freq.get(k)+"\t"+newTerm);
+
+        }
+        p.close();
+    }
+
+    public static String depluralize(String name){
+
+
+               // first check for already in plural form
+                     if (name.endsWith("List") || (name.endsWith("s") && !name.endsWith("ss"))) {
+                             return name;
+                         }
+
+                     // convert singular form to plural
+                     if (name.endsWith("y") && !name.endsWith("ay") && !name.endsWith("ey") && !name.endsWith("iy") &&
+                                 !name.endsWith("oy") && !name.endsWith("uy")) {
+                             if (name.equalsIgnoreCase("any")) {
+                                     return name;
+                                 } else {
+                                     return name.substring(0, name.length() - 1) + "ies";
+                                 }
+                         } else if (name.endsWith("ss")) {
+                             return name + "es";
+                         } else {
+                             return name + 's';
+                         }
+
+    }
+
     public static void writeList(List<String> content, String filename){
         List<String> sorted = new ArrayList<>(content);
         //Collections.sort(sorted);
@@ -75,6 +134,13 @@ public class DebugHelper {
 
     }
     public static void main(String[] args) throws IOException, JATEException {
+        stem("/Users/-/work/jate/src/test/resource/bnc_unifrqs.normal",
+                "/Users/-/work/jate/debug/bnc_unifrqs.normal.stem");
+        System.exit(1);
+
+        System.out.println(depluralize("cats"));
+        System.exit(1);
+
         //compareList("/Users/-/work/jate/candidates_old.txt","candidates_new.txt");
         compareNewAndOldPredictions(
                 "/Users/-/work/jate/src/test/resource/eval/GENIAcorpus-concept.txt",
