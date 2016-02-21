@@ -2,6 +2,7 @@ package uk.ac.shef.dcs.jate.app;
 
 import com.google.gson.Gson;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.lucene.index.LeafReader;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.core.CoreContainer;
@@ -269,11 +270,16 @@ public abstract class App {
             core = solrServer.getCoreContainer().getCore(coreName);
             result = extract(core, jatePropertyFile);
         } finally {
-            if (core != null) {
-                core.close();
-            }
-            if (solrServer != null) {
-                solrServer.close();
+            try {
+                if (core != null) {
+                    core.close();
+                }
+                if (solrServer != null) {
+                    solrServer.close();
+                }
+            }catch (Exception e){
+                log.error("Unable to close solr index, error cause:");
+                log.error(ExceptionUtils.getFullStackTrace(e));
             }
         }
         return result;

@@ -56,7 +56,7 @@ public abstract class ACLRDTECTest {
 
     static String solrCoreName = "ACLRDTEC";
 
-    static Path corpusDir = Paths.get(workingDir, "src", "test", "resource", "eval", "ACL_RD-TEC", "corpus", "full","debug");
+    static Path corpusDir = Paths.get(workingDir, "src", "test", "resource", "eval", "ACL_RD-TEC", "corpus", "full","xml");
 
     static Path solrHome = Paths.get(workingDir, "testdata", "solr-testbed");
 
@@ -106,7 +106,7 @@ public abstract class ACLRDTECTest {
         List<Path> files = JATEUtil.loadFiles(corpusDir);
         Collections.sort(files);
 
-        LOG.info("indexing and extracting candidates...");
+        LOG.info("indexing and extracting candidates from "+files.size()+" files...");
         int count = 0;
         for (Path file : files) {
             try {
