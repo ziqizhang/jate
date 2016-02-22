@@ -1,10 +1,7 @@
 package uk.ac.shef.dcs.jate.algorithm;
 
 import uk.ac.shef.dcs.jate.JATEException;
-import uk.ac.shef.dcs.jate.feature.AbstractFeature;
-import uk.ac.shef.dcs.jate.feature.Cooccurrence;
-import uk.ac.shef.dcs.jate.feature.FrequencyCtxBased;
-import uk.ac.shef.dcs.jate.feature.FrequencyTermBased;
+import uk.ac.shef.dcs.jate.feature.*;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import java.util.*;
@@ -27,20 +24,18 @@ public class ChiSquare extends Algorithm {
 
     @Override
     public List<JATETerm> execute(Collection<String> candidates) throws JATEException {
-        AbstractFeature feature = features.get(FrequencyTermBased.class.getName());
-        validateFeature(feature, FrequencyTermBased.class);
-        FrequencyTermBased fFeatureTerms = (FrequencyTermBased) feature;
-        AbstractFeature feature2 = features.get(Cooccurrence.class.getName());
-        validateFeature(feature2, Cooccurrence.class);
-        Cooccurrence fFeatureCoocurr = (Cooccurrence) feature2;
+        AbstractFeature feature1 = features.get(Cooccurrence.class.getName());
+        validateFeature(feature1, Cooccurrence.class);
+        Cooccurrence fFeatureCoocurr = (Cooccurrence) feature1;
 
-        AbstractFeature feature3 = features.get(FrequencyCtxBased.class.getName() + SUFFIX_TERM);
-        validateFeature(feature3, FrequencyCtxBased.class);
-        FrequencyCtxBased termFeatureCtxBased = (FrequencyCtxBased) feature3;
+        AbstractFeature feature2 = features.get(FrequencyCtxBased.class.getName() + SUFFIX_TERM);
+        validateFeature(feature2, FrequencyCtxBased.class);
+        FrequencyCtxBased termFeatureCtxBased = (FrequencyCtxBased) feature2;
 
-        AbstractFeature feature4 = features.get(FrequencyCtxBased.class.getName() + SUFFIX_REF_TERM);
-        validateFeature(feature4, FrequencyCtxBased.class);
-        FrequencyCtxBased refTermFeatureCtxBased = (FrequencyCtxBased) feature4;
+
+        AbstractFeature feature3 = features.get(ChiSquareFrequentTerms.class.getName());
+        validateFeature(feature3, ChiSquareFrequentTerms.class);
+        ChiSquareFrequentTerms refTermExpProb = (ChiSquareFrequentTerms) feature3;
 
         int cores =Runtime.getRuntime().availableProcessors();
         int maxPerWorker = candidates.size()/cores;
@@ -49,8 +44,9 @@ public class ChiSquare extends Algorithm {
                 append(" max terms per worker thread=").append(maxPerWorker);
         LOG.info(msg.toString());
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
-        ChiSquareWorker worker = new ChiSquareWorker(new ArrayList<>(candidates), maxPerWorker, fFeatureTerms,
-                termFeatureCtxBased, refTermFeatureCtxBased,fFeatureCoocurr
+
+        ChiSquareWorker worker = new ChiSquareWorker(new ArrayList<>(candidates), maxPerWorker,
+                termFeatureCtxBased, fFeatureCoocurr, refTermExpProb
                 );
         List<JATETerm> result = forkJoinPool.invoke(worker);
         Collections.sort(result);

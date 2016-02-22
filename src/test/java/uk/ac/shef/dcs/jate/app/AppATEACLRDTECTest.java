@@ -50,14 +50,14 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
             long numOfDocs = validate_indexing();
             if (numOfDocs == 0 || reindex) {
                 appATETest.indexAndExtract(corpusDir);
-                /*try {
+                try {
                     server.getCoreContainer().getCore(solrCoreName).close();
                     server.getCoreContainer().shutdown();
                     server.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                System.exit(0);*/
+                System.exit(0);
             }
 
 

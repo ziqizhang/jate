@@ -105,13 +105,26 @@ public class AppChiSquare extends App {
         CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, ftb, this.prefilterMinTTF, fcsb, ref_fcsb, this.prefilterMinTCF);
         Cooccurrence co = (Cooccurrence) cb.build();
 
-        ChiSquare chi = new ChiSquare();
-        chi.registerFeature(FrequencyTermBased.class.getName(), ftb);
-        chi.registerFeature(FrequencyCtxBased.class.getName() + ChiSquare.SUFFIX_TERM, fcsb);
-        chi.registerFeature(FrequencyCtxBased.class.getName() + ChiSquare.SUFFIX_REF_TERM, ref_fcsb);
-        chi.registerFeature(Cooccurrence.class.getName(), co);
+        //feature expected probability for frequent terms
+        ChiSquareFrequentTermsFBMaster cf = new ChiSquareFrequentTermsFBMaster(
+                ref_fcsb.getMapCtx2TTF(), ref_fcsb.getTerm2Ctx(),ftb.getCorpusTotal());
+        ChiSquareFrequentTerms cff = (ChiSquareFrequentTerms) cf.build();
 
-        List<JATETerm> terms = chi.execute(co.getTerms());
+        ChiSquare chi = new ChiSquare();
+        chi.registerFeature(FrequencyCtxBased.class.getName() + ChiSquare.SUFFIX_TERM, fcsb);
+        chi.registerFeature(Cooccurrence.class.getName(), co);
+        chi.registerFeature(ChiSquareFrequentTerms.class.getName(), cff);
+
+        //List<JATETerm> terms = chi.execute(co.getTerms());
+        //<<<<<debug
+        List<String> ss = new ArrayList<>();
+        ss.addAll(co.getTerms());
+        System.out.println("sorting...");
+        Collections.sort(ss);
+        System.out.println("done.");
+        List<JATETerm> terms = chi.execute(ss);
+        ////////
+
         terms = cutoff(terms);
 
         addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),

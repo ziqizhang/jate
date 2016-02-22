@@ -27,6 +27,10 @@ public class FrequencyCtxBased extends AbstractFeature {
         return id2Ctx.get(id);
     }
 
+    public Map<String, Set<ContextWindow>> getTerm2Ctx(){
+        return term2Ctx;
+    }
+
     public Map<ContextWindow, Integer> getMapCtx2TTF() {
         return ctx2TTF;
     }
