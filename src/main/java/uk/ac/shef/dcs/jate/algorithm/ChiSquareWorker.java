@@ -78,16 +78,15 @@ class ChiSquareWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> {
                 int freq_wg = entry.getValue(); //co-occurrence of target term w and reference frequent term g
 
                 double p_g = fChiSquareFTExpProb.get(g_term);//lookup expected prob of this frequent term g that co-occur with target term w
-                sumChiSquare_w-=p_g; //deduce p_g, which is when we assume freq_wg=0;
-
                 double nw_mult_pg = n_w*p_g;
+                sumChiSquare_w-=nw_mult_pg; //deduce p_g, which is when we assume freq_wg=0;
+
                 double diff = freq_wg - nw_mult_pg;
                 double chi_g =diff*diff/nw_mult_pg;
                 sumChiSquare_w+= chi_g; //readjust score by adding back the chisquare for g, using formula 1 and the real freq_wg
 
                 if(chi_g>maxChiSquare)
                     maxChiSquare=chi_g;
-
             }
 
             //if a term has no co-occurrence info, it has a score of 0

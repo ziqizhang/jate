@@ -107,7 +107,7 @@ public class AppChiSquare extends App {
 
         //feature expected probability for frequent terms
         ChiSquareFrequentTermsFBMaster cf = new ChiSquareFrequentTermsFBMaster(
-                ref_fcsb.getMapCtx2TTF(), ref_fcsb.getTerm2Ctx(),ftb.getCorpusTotal());
+                ref_fcsb.getMapCtx2TTF(), ref_fcsb.getTerm2Ctx(),ftb.getCorpusTotal(),properties);
         ChiSquareFrequentTerms cff = (ChiSquareFrequentTerms) cf.build();
 
         ChiSquare chi = new ChiSquare();
@@ -115,16 +115,7 @@ public class AppChiSquare extends App {
         chi.registerFeature(Cooccurrence.class.getName(), co);
         chi.registerFeature(ChiSquareFrequentTerms.class.getName(), cff);
 
-        //List<JATETerm> terms = chi.execute(co.getTerms());
-        //<<<<<debug
-        List<String> ss = new ArrayList<>();
-        ss.addAll(co.getTerms());
-        System.out.println("sorting...");
-        Collections.sort(ss);
-        System.out.println("done.");
-        List<JATETerm> terms = chi.execute(ss);
-        ////////
-
+        List<JATETerm> terms = chi.execute(co.getTerms());
         terms = cutoff(terms);
 
         addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
