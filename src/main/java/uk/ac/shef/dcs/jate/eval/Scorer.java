@@ -194,6 +194,9 @@ public class Scorer {
      * @return double , precision score
      */
     public static double precision(List<String> gsTerms, List<String> topKTerms) {
+        /*Set<String> correct = new HashSet<>(gsTerms);
+        correct.retainAll(topKTerms);*/
+
         return FMeasure.precision(gsTerms.toArray(),topKTerms.toArray());
     }
 
