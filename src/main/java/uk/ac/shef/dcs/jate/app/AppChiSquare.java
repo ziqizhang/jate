@@ -84,34 +84,36 @@ public class AppChiSquare extends App {
 //        try {
 
         FrequencyTermBasedFBMaster ftbb = new FrequencyTermBasedFBMaster(searcher, properties, 0);
-        FrequencyTermBased ftb = (FrequencyTermBased) ftbb.build();
+        FrequencyTermBased ft = (FrequencyTermBased) ftbb.build();
 
         //sentence is a context
         FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties, 0);
-        FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
-        FrequencyCtxBased ref_fcsb = (FrequencyCtxBased) (new FrequencyCtxBasedCopier(searcher, properties, fcsb, ftb, frequentTermFT).build());
+        FrequencyCtxBased fcs = (FrequencyCtxBased) fcsbb.build();
+        FrequencyCtxBased ref_fcs = (FrequencyCtxBased)
+                (new FrequencyCtxBasedCopier(searcher, properties, fcs, ft, frequentTermFT).build());
         //window is a context
             /*FrequencyCtxWindowBasedFBMaster fcsbb = new FrequencyCtxWindowBasedFBMaster(searcher, properties, null, 5, 0);
             FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
             FrequencyCtxBased ref_fcsb = (FrequencyCtxBased)
                     (new FrequencyCtxWindowBasedFBMaster(searcher, properties, fcsb.getMapCtx2TTF().keySet(), 5, 0).build());*/
 
-        List<String> inter = new ArrayList<>(fcsb.getCtxOverlapZones().keySet());
-        inter.removeAll(ref_fcsb.getCtxOverlapZones().keySet());
+        List<String> inter = new ArrayList<>(fcs.getCtxOverlapZones().keySet());
+        inter.removeAll(ref_fcs.getCtxOverlapZones().keySet());
         Collections.sort(inter);
             /*for (String t : inter)
 				System.out.println(t);*/
 
-        CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, ftb, this.prefilterMinTTF, fcsb, ref_fcsb, this.prefilterMinTCF);
-        Cooccurrence co = (Cooccurrence) cb.build();
+        CooccurrenceFBMaster cob = new CooccurrenceFBMaster(searcher, properties, ft,
+                this.prefilterMinTTF, fcs, ref_fcs, this.prefilterMinTCF);
+        Cooccurrence co = (Cooccurrence) cob.build();
 
         //feature expected probability for frequent terms
         ChiSquareFrequentTermsFBMaster cf = new ChiSquareFrequentTermsFBMaster(
-                ref_fcsb.getMapCtx2TTF(), ref_fcsb.getTerm2Ctx(),ftb.getCorpusTotal(),properties);
+                ref_fcs.getMapCtx2TTF(), ref_fcs.getTerm2Ctx(),ft.getCorpusTotal(),properties);
         ChiSquareFrequentTerms cff = (ChiSquareFrequentTerms) cf.build();
 
         ChiSquare chi = new ChiSquare();
-        chi.registerFeature(FrequencyCtxBased.class.getName() + ChiSquare.SUFFIX_TERM, fcsb);
+        chi.registerFeature(FrequencyCtxBased.class.getName() + ChiSquare.SUFFIX_TERM, fcs);
         chi.registerFeature(Cooccurrence.class.getName(), co);
         chi.registerFeature(ChiSquareFrequentTerms.class.getName(), cff);
 

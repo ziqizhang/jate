@@ -10,15 +10,15 @@ class ChiSquareWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> {
 	
 	private static final long serialVersionUID = -5293190120654351590L;
 	protected FrequencyCtxBased termFeatureCtxBased;
-    protected Cooccurrence fFeatureCoocurr;
+    protected Cooccurrence fCoocurr;
     protected ChiSquareFrequentTerms fChiSquareFTExpProb;
 
     public ChiSquareWorker(List<String> terms, int maxTasksPerWorker,
                            FrequencyCtxBased termFeatureCtxBased,
-                           Cooccurrence fFeatureCoocurr,
+                           Cooccurrence fCoocurr,
                            ChiSquareFrequentTerms fChiSquareFTExpProb) {
         super(terms, maxTasksPerWorker);
-        this.fFeatureCoocurr = fFeatureCoocurr;
+        this.fCoocurr = fCoocurr;
         this.termFeatureCtxBased = termFeatureCtxBased;
         this.fChiSquareFTExpProb=fChiSquareFTExpProb;
     }
@@ -26,7 +26,7 @@ class ChiSquareWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> {
     @Override
     protected JATERecursiveTaskWorker<String, List<JATETerm>> createInstance(List<String> terms) {
         return new ChiSquareWorker(terms, maxTasksPerThread,
-                termFeatureCtxBased,fFeatureCoocurr
+                termFeatureCtxBased, fCoocurr
                 ,fChiSquareFTExpProb);
     }
 
@@ -69,12 +69,12 @@ class ChiSquareWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> {
             double sumChiSquare_w = n_w * fChiSquareFTExpProb.getSumExpProb(); //this is equivalent to the sum of foreach (g in G), n_w*p_g
             //which is then equivalent to formula (1) in the paper, setting freq(w,g) to 0 for all g
 
-            Map<Integer, Integer> coocurRefTermIdx2Freq = fFeatureCoocurr.getCoocurrence(tString);
+            Map<Integer, Integer> coocurRefTermIdx2Freq = fCoocurr.getCoocurrence(tString);
 
 
             for (Map.Entry<Integer, Integer> entry : coocurRefTermIdx2Freq.entrySet()) {
                 int g_id = entry.getKey();
-                String g_term = fFeatureCoocurr.lookupRefTerm(g_id);
+                String g_term = fCoocurr.lookupRefTerm(g_id);
                 int freq_wg = entry.getValue(); //co-occurrence of target term w and reference frequent term g
 
                 double p_g = fChiSquareFTExpProb.get(g_term);//lookup expected prob of this frequent term g that co-occur with target term w
@@ -87,10 +87,18 @@ class ChiSquareWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> {
 
                 if(chi_g>maxChiSquare)
                     maxChiSquare=chi_g;
+
             }
 
             //if a term has no co-occurrence info, it has a score of 0
             double score = sumChiSquare_w - maxChiSquare;
+
+            //<<<<debug
+            /*if (Double.isNaN(score)) {
+                System.err.println("NaN, " + tString);
+                System.exit(1);
+            }*/
+            ///
             JATETerm term = new JATETerm(tString, score);
             result.add(term);
         }

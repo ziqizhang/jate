@@ -1,9 +1,8 @@
 package uk.ac.shef.dcs.jate.feature;
 
-import cern.colt.list.tint.IntArrayList;
-import cern.colt.matrix.tint.IntMatrix1D;
-import cern.colt.matrix.tint.IntMatrix2D;
-import cern.colt.matrix.tint.impl.SparseIntMatrix2D;
+
+import no.uib.cipr.matrix.sparse.FlexCompRowMatrix;
+import no.uib.cipr.matrix.sparse.SparseVector;
 
 import java.util.*;
 
@@ -11,7 +10,7 @@ import java.util.*;
  *
  */
 public class Cooccurrence extends AbstractFeature {
-    protected IntMatrix2D cooccurrence;
+    protected FlexCompRowMatrix cooccurrence;
     protected Map<Integer, String> mapIdx2Term = new HashMap<>();
     protected Map<String, Integer> mapTerm2Idx = new HashMap<>();
 
@@ -23,11 +22,11 @@ public class Cooccurrence extends AbstractFeature {
     protected int ctxTermCounter =-1;
 
     public Cooccurrence(int terms, int refTerms){
-        cooccurrence =new SparseIntMatrix2D(terms, refTerms);
+        cooccurrence =new FlexCompRowMatrix(terms, refTerms);
     }
 
     void deduce(int rowIndex, int colIndex, int value){
-        int newValue = cooccurrence.get(rowIndex, colIndex);
+        double newValue = cooccurrence.get(rowIndex, colIndex);
         if(newValue==0) {
             System.out.println(rowIndex+"|"+colIndex);
             System.out.println(lookupTerm(rowIndex) + "|" + lookupRefTerm(colIndex));
@@ -35,16 +34,13 @@ public class Cooccurrence extends AbstractFeature {
         newValue-=value;
         newValue=newValue<0?0:newValue;
 
-        cooccurrence.setQuick(rowIndex, colIndex, newValue);
-    }
-
-    public int getNumTerms(){
-        return cooccurrence.rows();
+        cooccurrence.set(rowIndex, colIndex, newValue);
     }
 
     public Set<String> getTerms(){
         return mapTerm2Idx.keySet();
     }
+    public Set<String> getRefTerms() {return mapRefTerm2Idx.keySet();}
 
     protected synchronized int lookupAndIndexTerm(String term){
         Integer idx = mapTerm2Idx.get(term);
@@ -67,6 +63,7 @@ public class Cooccurrence extends AbstractFeature {
 
     protected synchronized int lookupAndIndexRefTerm(String refTerm){
         Integer idx = mapRefTerm2Idx.get(refTerm);
+
         if(idx==null) {
             ctxTermCounter++;
             mapIdx2RefTerm.put(ctxTermCounter, refTerm);
@@ -75,6 +72,7 @@ public class Cooccurrence extends AbstractFeature {
         }
         return idx;
     }
+
 
     protected int lookupRefTerm(String refTerm){
         Integer index= mapRefTerm2Idx.get(refTerm);
@@ -85,8 +83,8 @@ public class Cooccurrence extends AbstractFeature {
     }
 
     protected synchronized void increment(int termIdx, int refTermIdx, int freq){
-        int newFreq=cooccurrence.getQuick(termIdx, refTermIdx)+freq;
-        cooccurrence.setQuick(termIdx, refTermIdx,
+        double newFreq=cooccurrence.get(termIdx, refTermIdx)+freq;
+        cooccurrence.set(termIdx, refTermIdx,
                 newFreq);
     }
 
@@ -111,19 +109,16 @@ public class Cooccurrence extends AbstractFeature {
     }
 
     Map<Integer, Integer> getCooccurrence(int index){
-        IntMatrix1D cooccur= cooccurrence.viewRow(index);
-        IntArrayList nzIndexes= new IntArrayList();
-        IntArrayList nzValues = new IntArrayList();
-        cooccur.getNonZeros(nzIndexes, nzValues);
         Map<Integer, Integer> result = new HashMap<>();
-        List index_elements=nzIndexes.toList();
-        //System.out.println("\t"+getCurrentTimeStamp() + "row="+currentRow+" "+index_elements.size()+" non-zeros");
-        for(int i=0; i<index_elements.size(); i++){
-            int idx=(int)index_elements.get(i);
-            int v = nzValues.get(i);
-            result.put(idx, v);
+        SparseVector vec=cooccurrence.getRow(index);
+        int[] nonZeroIndexes=vec.getIndex();
+
+        for(int i=0; i<nonZeroIndexes.length; i++){
+            int idx=nonZeroIndexes[i];
+            double v = cooccurrence.get(index,idx);
+            result.put(idx, (int)v);
         }
+
         return result;
     }
-
 }

@@ -65,7 +65,11 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
 
     @Override
     public AbstractFeature build() throws JATEException {
+        //we are interested in target terms cooccuring with reference terms. So we only need to process
+        //context windows where reference terms are found
         List<ContextWindow> contextWindows = new ArrayList<>(ref_frequencyCtxBased.getMapCtx2TTF().keySet());
+        Collections.sort(contextWindows);
+
         //start workers
         int cores = properties.getMaxCPUCores();
         cores = cores == 0 ? 1 : cores;
@@ -80,7 +84,7 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
 
         LOG.info("Filtering candidates with min.ttf=" + minTTF + " min.tcf=" + minTCF);
         Set<String> termsPassingPrefilter = new HashSet<>();
-        for (ContextWindow ctx : contextWindows) {
+        for (ContextWindow ctx : contextWindows) {//now go thru the selected context windows, select target terms that satisfy selection thresholds
             Map<String, Integer> termsInContext = frequencyCtxBased.getTFIC(ctx);
             if (minTTF == 0 && minTCF == 0)
                 termsPassingPrefilter.addAll(termsInContext.keySet());
@@ -91,6 +95,7 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
                 }
             }
         }
+
         Cooccurrence feature = new Cooccurrence(termsPassingPrefilter.size(),
                 ref_frequencyCtxBased.getMapTerm2Ctx().size());
         LOG.info("Beginning building features. Total terms=" + termsPassingPrefilter.size() + ", total contexts=" + contextWindows.size());
@@ -166,6 +171,8 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
 
 
         sb = new StringBuilder("Complete building features, total contexts processed=" + total);
+        sb.append("; total indexed candidate terms=").append(feature.termCounter).append(";")
+                .append(" total indexed reference terms=").append(feature.ctxTermCounter);
         LOG.info(sb.toString());
 
         return feature;

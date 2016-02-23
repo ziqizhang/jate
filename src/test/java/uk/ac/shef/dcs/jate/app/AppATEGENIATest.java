@@ -162,7 +162,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
             ioe.printStackTrace();
         }
     }
-    @Test
+    //@Test
     public void benchmarking_appATTF() throws JATEException, IOException {
         AppATTF appATTF = new AppATTF(initParams);
         List<JATETerm> termList = appATTF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
@@ -201,7 +201,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appChiSquare() throws IOException, JATEException {
         initParams.put(AppParams.CHISQUERE_FREQ_TERM_CUTOFF_PERCENTAGE.getParamKey(), "0.3");
         AppChiSquare appChiSquare = new AppChiSquare(initParams);
@@ -211,7 +211,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // the results depends on specified PoS patterns
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
-        Assert.assertEquals("Candidate size should be 10608.", 10608, termList.size());
+        Assert.assertEquals("Candidate size should be 10616.", 10616, termList.size());
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,

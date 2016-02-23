@@ -16,7 +16,6 @@ import org.apache.log4j.Logger;
 public class ChiSquare extends Algorithm {
     private static final Logger LOG = Logger.getLogger(ChiSquare.class.getName());
     public static final String SUFFIX_TERM = "_TERM";
-    public static final String SUFFIX_REF_TERM = "_REF_TERM";
 
     public ChiSquare() {
     }

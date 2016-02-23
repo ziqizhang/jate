@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Created by - on 19/02/2016.
  */
-public class EnglishLemmatisationFilter extends TokenFilter {
+public final class EnglishLemmatisationFilter extends TokenFilter {
     private final EngLemmatiser lemmatiser;
     private Map<String, Integer> tagLookUp;
     private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);

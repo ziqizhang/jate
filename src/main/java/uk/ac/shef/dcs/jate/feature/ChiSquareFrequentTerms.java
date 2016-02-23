@@ -24,8 +24,10 @@ public class ChiSquareFrequentTerms extends AbstractFeature {
 
     public double get(String freqTerm){
         Double d = expProb.get(freqTerm);
-        if(d==null)
+        if(d==null) {
+            System.err.println("no such ref term:"+freqTerm);
             return 0.0;
+        }
         return d;
     }
 
