@@ -28,20 +28,19 @@ import java.util.zip.ZipFile;
 
 /**
  * Unit tests for App* of a set of ATE algorithms & GENIA based benchmarking test based on Embedded Solr
- *
+ * <p>
  * Default Solr config is retrieved through testdata/solr-testbed
  * Default jate.properties is loaded from classpath
  * Enable PoS pattern based candidate extraction in Solr (see field type "jate_text_2_terms" for reference)
- *
  */
 public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     private static Logger LOG = Logger.getLogger(AppATEGENIATest.class.getName());
 
     public static final Path GENIA_CORPUS_ZIPPED_FILE = Paths.get(workingDir, "src", "test", "resource",
-        "eval", "GENIA", "corpus.zip");
+            "eval", "GENIA", "corpus.zip");
 
     public static final Path GENIA_CORPUS_CONCEPT_FILE = Paths.get(workingDir, "src", "test", "resource",
-            "eval", "GENIA","terms.txt");
+            "eval", "GENIA", "terms.txt");
 
     JATEProperties jateProperties = null;
 
@@ -49,13 +48,16 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     Map<String, String> initParams = null;
 
 
-    protected void setSolrCoreName(){
-        solrCoreName="GENIA";
+    public static String SOLR_CORE_NAME = "GENIA";
+
+    protected void setSolrCoreName() {
+        solrCoreName = "GENIA";
     }
-    protected void setReindex(){
+
+    protected void setReindex() {
         //change this to false if you want to use existing index
         //always set to true for the automatic test
-        reindex=true;
+        reindex = true;
     }
 
 
@@ -64,7 +66,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         super.setup();
         jateProperties = new JATEProperties();
 
-        if(reindex) {
+        if (reindex) {
             try {
                 indexCorpus(loadGENIACorpus());
             } catch (IOException ioe) {
@@ -99,7 +101,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
                 ZipEntry entry = entries.nextElement();
                 String fileName = entry.getName();
                 //skip file in MAC OS
-                if(entry.isDirectory()||fileName.startsWith("__MACOSX/")||fileName.contains(".DS_Store"))
+                if (entry.isDirectory() || fileName.startsWith("__MACOSX/") || fileName.contains(".DS_Store"))
                     continue;
 
                 InputStream stream = geniaCorpus.getInputStream(entry);
@@ -124,13 +126,13 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     }
 
     protected void indexCorpus(List<JATEDocument> corpus) throws IOException, SolrServerException {
-        int count=0;
-        for (JATEDocument doc: corpus) {
+        int count = 0;
+        for (JATEDocument doc : corpus) {
             try {
                 count++;
                 super.addNewDoc(doc.getId(), doc.getId(), doc.getContent(), jateProperties, false);
-                if (count%500==0){
-                    LOG.info(String.format("%s documents indexed.",count));
+                if (count % 500 == 0) {
+                    LOG.info(String.format("%s documents indexed.", count));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -146,7 +148,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         server.commit();
     }
 
-    //@Test
+    @Test
     public void validate_indexing() {
         ModifiableSolrParams params = new ModifiableSolrParams();
         params.set("q", "*:*");
@@ -162,7 +164,8 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
             ioe.printStackTrace();
         }
     }
-    //@Test
+
+    @Test
     public void benchmarking_appATTF() throws JATEException, IOException {
         AppATTF appATTF = new AppATTF(initParams);
         List<JATETerm> termList = appATTF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
@@ -171,22 +174,21 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // the results depends on specified PoS patterns
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
-        Assert.assertEquals("Candidate size should be 10608.", 10608, termList.size());
+        Assert.assertEquals("Candidate size should be 9628.", 9628, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
                 2, 200, 1, 10,
-                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
-        assert 0.84 == scores[0];
-        assert 0.85 == scores[1];
-        assert 0.78 == scores[2];
+                50, 100, 500, 1000, 3000, 5000, 8000);
+        assert 0.82 == scores[0];
+        assert 0.83 == scores[1];
+        assert 0.77 == scores[2];
         assert 0.77 == scores[3];
         assert 0.68 == scores[4];
-        assert 0.69 == scores[5];
-        assert 0.66 == scores[6];
-        assert 0.63 == scores[7];
+        assert 0.71 == scores[5];
+        assert 0.65 == scores[6];
         double recall = Scorer.recall(gsTerms, rankedTerms);
-        assert 0.18 == recall;
+        assert 0.16 == recall;
 
         LOG.info("=============ATTF GENIA Benchmarking Results==================");
 
@@ -197,7 +199,6 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  top 3000 Precision:" + scores[4]);
         LOG.info("  top 5000 Precision:" + scores[5]);
         LOG.info("  top 8000 Precision:" + scores[6]);
-        LOG.info("  top 10000 Precision:" + scores[7]);
         LOG.info("  overall recall:" + recall);
     }
 
@@ -211,21 +212,20 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // the results depends on specified PoS patterns
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
-        Assert.assertEquals("Candidate size should be 10616.", 10616, termList.size());
+        Assert.assertEquals("Candidate size should be 9628.", 9628, termList.size());
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
-                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
-        assert 0.96 == scores[0];
-        assert 0.85 == scores[1];
-        assert 0.7 == scores[2];
-        assert 0.68 == scores[3];
-        assert 0.68 == scores[4];
-        assert 0.68 == scores[5];
-        assert 0.65 == scores[6];
-        assert 0.63 == scores[7];
+                50, 100, 500, 1000, 3000, 5000, 8000);
+        assert 0.94 == scores[0];
+        assert 0.83 == scores[1];
+        assert 0.77 == scores[2];
+        assert 0.76 == scores[3];
+        assert 0.7 == scores[4];
+        assert 0.67 == scores[5];
+        assert 0.64 == scores[6];
         double recall = Scorer.recall(gsTerms, rankedTerms);
-        assert 0.18 == recall;
+        assert 0.16 == recall;
 
         LOG.info("=============CHISQUARE GENIA Benchmarking Results==================");
 
@@ -236,11 +236,10 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  top 3000 Precision:" + scores[4]);
         LOG.info("  top 5000 Precision:" + scores[5]);
         LOG.info("  top 8000 Precision:" + scores[6]);
-        LOG.info("  top 10000 Precision:" + scores[7]);
         LOG.info("  overall recall:" + recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appCValue() throws IOException, JATEException {
         AppCValue appCValue = new AppCValue(initParams);
         List<JATETerm> termList = appCValue.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
@@ -249,22 +248,21 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // the results depends on specified PoS patterns
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
-        Assert.assertEquals("Candidate size should be 10608.", 10608, termList.size());
+        Assert.assertEquals("Candidate size should be 9628.", 9628, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
-                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
+                50, 100, 500, 1000, 3000, 5000, 8000);
         assert 0.94 == scores[0];
-        assert 0.91 == scores[1];
-        assert 0.86 == scores[2];
-        assert 0.82 == scores[3];
+        assert 0.88 == scores[1];
+        assert 0.84 == scores[2];
+        assert 0.81 == scores[3];
         assert 0.73 == scores[4];
         assert 0.65 == scores[5];
         assert 0.64 == scores[6];
-        assert 0.63 == scores[7];
         double recall = Scorer.recall(gsTerms, rankedTerms);
-        assert 0.18 == recall;
+        assert 0.16 == recall;
 
         LOG.info("=============CVALUE GENIA Benchmarking Results==================");
 
@@ -275,34 +273,32 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  top 3000 Precision:" + scores[4]);
         LOG.info("  top 5000 Precision:" + scores[5]);
         LOG.info("  top 8000 Precision:" + scores[6]);
-        LOG.info("  top 10000 Precision:" + scores[7]);
         LOG.info("  overall recall:" + recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appGlossEx() throws JATEException, IOException {
         initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), REF_FREQ_FILE.toString());
         AppGlossEx appGlossEx = new AppGlossEx(initParams);
 
         List<JATETerm> termList = appGlossEx.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
 
-        LOG.info("termList.size():"+termList.size());
-        Assert.assertEquals("Candidate size should be 10608.", 10608, termList.size());
+        LOG.info("termList.size():" + termList.size());
+        Assert.assertEquals("Candidate size should be 9628.", 9628, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
-                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
+                50, 100, 500, 1000, 3000, 5000, 8000);
         assert 0.94 == scores[0];
         assert 0.83 == scores[1];
-        assert 0.72 == scores[2];
-        assert 0.67 == scores[3];
-        assert 0.68 == scores[4];
-        assert 0.69 == scores[5];
+        assert 0.71 == scores[2];
+        assert 0.7 == scores[3];
+        assert 0.7 == scores[4];
+        assert 0.7 == scores[5];
         assert 0.68 == scores[6];
-        assert 0.64 == scores[7];
         double recall = Scorer.recall(gsTerms, rankedTerms);
-        assert 0.18 == recall;
+        assert 0.16 == recall;
 
         LOG.info("=============GLOSSEX GENIA Benchmarking Results==================");
 
@@ -313,11 +309,10 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  top 3000 Precision:" + scores[4]);
         LOG.info("  top 5000 Precision:" + scores[5]);
         LOG.info("  top 8000 Precision:" + scores[6]);
-        LOG.info("  top 10000 Precision:" + scores[7]);
         LOG.info("  overall recall:" + recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appRAKE() throws JATEException, IOException {
         AppRAKE appRAKE = new AppRAKE(initParams);
         List<JATETerm> termList = appRAKE.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
@@ -326,23 +321,22 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // the results depends on specified PoS patterns
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
-        Assert.assertEquals("Candidate size should be 10608.", 10608, termList.size());
+        Assert.assertEquals("Candidate size should be 9628.", 9628, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
 
         double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
-                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
-        assert 0.9 == scores[0];
-        assert 0.77 == scores[1];
-        assert 0.65 == scores[2];
-        assert 0.65 == scores[3];
-        assert 0.64 == scores[4];
+                50, 100, 500, 1000, 3000, 5000, 8000);
+        assert 0.72 == scores[0];
+        assert 0.74 == scores[1];
+        assert 0.69 == scores[2];
+        assert 0.68 == scores[3];
+        assert 0.67 == scores[4];
         assert 0.62 == scores[5];
-        assert 0.62 == scores[6];
-        assert 0.63 == scores[7];
+        assert 0.63 == scores[6];
         double recall = Scorer.recall(gsTerms, rankedTerms);
-        assert 0.18 == recall;
+        assert 0.16 == recall;
 
         LOG.info("=============RAKE GENIA Benchmarking Results==================");
 
@@ -353,11 +347,10 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  top 3000 Precision:" + scores[4]);
         LOG.info("  top 5000 Precision:" + scores[5]);
         LOG.info("  top 8000 Precision:" + scores[6]);
-        LOG.info("  top 10000 Precision:" + scores[7]);
         LOG.info("  overall recall:" + recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appRIDF() throws JATEException, IOException {
         AppRIDF appRIDF = new AppRIDF(initParams);
         List<JATETerm> termList = appRIDF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
@@ -366,22 +359,21 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // the results depends on specified PoS patterns
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
-        Assert.assertEquals("Candidate size should be 10608.", 10608, termList.size());
+        Assert.assertEquals("Candidate size should be 9628.", 9628, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
-                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
-        assert 0.92 == scores[0];
-        assert 0.93 == scores[1];
-        assert 0.87 == scores[2];
-        assert 0.84 == scores[3];
-        assert 0.8 == scores[4];
-        assert 0.72 == scores[5];
-        assert 0.67 == scores[6];
-        assert 0.63 == scores[7];
+                50, 100, 500, 1000, 3000, 5000, 8000);
+        assert 0.86 == scores[0];
+        assert 0.89 == scores[1];
+        assert 0.85 == scores[2];
+        assert 0.82 == scores[3];
+        assert 0.78 == scores[4];
+        assert 0.71 == scores[5];
+        assert 0.65 == scores[6];
         double recall = Scorer.recall(gsTerms, rankedTerms);
-        assert 0.18 == recall;
+        assert 0.16 == recall;
 
         LOG.info("=============RIDF GENIA Benchmarking Results==================");
 
@@ -392,11 +384,10 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  top 3000 Precision:" + scores[4]);
         LOG.info("  top 5000 Precision:" + scores[5]);
         LOG.info("  top 8000 Precision:" + scores[6]);
-        LOG.info("  top 10000 Precision:" + scores[7]);
         LOG.info("  overall recall:" + recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appTermEx() throws JATEException, IOException {
         initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), REF_FREQ_FILE.toString());
         AppTermEx appTermEx = new AppTermEx(initParams);
@@ -406,22 +397,21 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
         //LOG.info("termList.size():"+termList.size());
-        Assert.assertEquals("Candidate size should be 10608.", 10608, termList.size());
+        Assert.assertEquals("Candidate size should be 9628.", 9628, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
-                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
-        assert 0.92 == scores[0];
-        assert 0.91 == scores[1];
-        assert 0.87 == scores[2];
+                50, 100, 500, 1000, 3000, 5000, 8000);
+        assert 0.88 == scores[0];
+        assert 0.9 == scores[1];
+        assert 0.84 == scores[2];
         assert 0.85 == scores[3];
         assert 0.83 == scores[4];
-        assert 0.82 == scores[5];
-        assert 0.76 == scores[6];
-        assert 0.65 == scores[7];
+        assert 0.81 == scores[5];
+        assert 0.72 == scores[6];
         double recall = Scorer.recall(gsTerms, rankedTerms);
-        assert 0.18 == recall;
+        assert 0.16 == recall;
 
         LOG.info("=============TERMEX GENIA Benchmarking Results==================");
 
@@ -432,32 +422,30 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  top 3000 Precision:" + scores[4]);
         LOG.info("  top 5000 Precision:" + scores[5]);
         LOG.info("  top 8000 Precision:" + scores[6]);
-        LOG.info("  top 10000 Precision:" + scores[7]);
         LOG.info("  overall recall:" + 0);
     }
 
-    //@Test
-    public void benchmarking_appTFIDF()throws JATEException, IOException {
+    @Test
+    public void benchmarking_appTFIDF() throws JATEException, IOException {
         AppTFIDF appTFIDF = new AppTFIDF(initParams);
 
         List<JATETerm> termList = appTFIDF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
         //LOG.info("termList.size():"+termList.size());
-        Assert.assertEquals("Candidate size should be 10608.", 10608, termList.size());
+        Assert.assertEquals("Candidate size should be 9628.", 9628, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
-                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
-        assert 0.96 == scores[0];
-        assert 0.89 == scores[1];
-        assert 0.83 == scores[2];
-        assert 0.82 == scores[3];
-        assert 0.77 == scores[4];
-        assert 0.73 == scores[5];
-        assert 0.67 == scores[6];
-        assert 0.63 == scores[7];
+                50, 100, 500, 1000, 3000, 5000, 8000);
+        assert 0.92 == scores[0];
+        assert 0.84 == scores[1];
+        assert 0.81 == scores[2];
+        assert 0.81 == scores[3];
+        assert 0.76 == scores[4];
+        assert 0.72 == scores[5];
+        assert 0.65 == scores[6];
         double recall = Scorer.recall(gsTerms, rankedTerms);
-        assert 0.18 == recall;
+        assert 0.16 == recall;
 
         LOG.info("=============TFIDF GENIA Benchmarking Results==================");
 
@@ -468,11 +456,10 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  top 3000 Precision:" + scores[4]);
         LOG.info("  top 5000 Precision:" + scores[5]);
         LOG.info("  top 8000 Precision:" + scores[6]);
-        LOG.info("  top 10000 Precision:" + scores[7]);
         LOG.info("  overall recall:" + recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appTTF() throws JATEException, IOException {
         AppTTF appTTF = new AppTTF(initParams);
 
@@ -481,23 +468,22 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // the results depends on specified PoS patterns
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
-        LOG.info("termList.size():"+termList.size());
-        Assert.assertEquals("Candidate size should be 10608.", 10608, termList.size());
+        LOG.info("termList.size():" + termList.size());
+        Assert.assertEquals("Candidate size should be 9628.", 9628, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
-                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
-        assert 0.96 == scores[0];
-        assert 0.88 == scores[1];
-        assert 0.82 == scores[2];
-        assert 0.81 == scores[3];
-        assert 0.76 == scores[4];
-        assert 0.71 == scores[5];
-        assert 0.65 == scores[6];
-        assert 0.63 == scores[7];
+                50, 100, 500, 1000, 3000, 5000, 8000);
+        assert 0.92 == scores[0];
+        assert 0.82 == scores[1];
+        assert 0.8 == scores[2];
+        assert 0.8 == scores[3];
+        assert 0.75 == scores[4];
+        assert 0.7 == scores[5];
+        assert 0.64 == scores[6];
         double recall = Scorer.recall(gsTerms, rankedTerms);
-        assert 0.18 == recall;
+        assert 0.16 == recall;
 
         LOG.info("=============TTF GENIA Benchmarking Results==================");
 
@@ -508,12 +494,11 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  top 3000 Precision:" + scores[4]);
         LOG.info("  top 5000 Precision:" + scores[5]);
         LOG.info("  top 8000 Precision:" + scores[6]);
-        LOG.info("  top 10000 Precision:" + scores[7]);
         LOG.info("  overall recall:" + recall);
     }
 
-    //@Test
-    public void benchmarking_appWeirdness()throws JATEException, IOException {
+    @Test
+    public void benchmarking_appWeirdness() throws JATEException, IOException {
         initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), REF_FREQ_FILE.toString());
         AppWeirdness appWeirdness = new AppWeirdness(initParams);
 
@@ -521,24 +506,23 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // the results depends on specified PoS patterns
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
-        LOG.info("termList.size():"+termList.size());
-        Assert.assertEquals("Candidate size should be 10608.", 10608, termList.size());
+        LOG.info("termList.size():" + termList.size());
+        Assert.assertEquals("Candidate size should be 9628.", 9628, termList.size());
 
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
-                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
-        assert 0.76 == scores[0];
-        assert 0.82 == scores[1];
-        assert 0.87 == scores[2];
-        assert 0.86 == scores[3];
-        assert 0.8 == scores[4];
-        assert 0.75 == scores[5];
+                50, 100, 500, 1000, 3000, 5000, 8000);
+        assert 0.86 == scores[0];
+        assert 0.89 == scores[1];
+        assert 0.89 == scores[2];
+        assert 0.88 == scores[3];
+        assert 0.81 == scores[4];
+        assert 0.74 == scores[5];
         assert 0.68 == scores[6];
-        assert 0.64 == scores[7];
         double recall = Scorer.recall(gsTerms, rankedTerms);
-        assert 0.18 == recall;
+        assert 0.16 == recall;
 
         LOG.info("=============WEIRDNESS GENIA Benchmarking Results==================");
 
@@ -549,7 +533,6 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  top 3000 Precision:" + scores[4]);
         LOG.info("  top 5000 Precision:" + scores[5]);
         LOG.info("  top 8000 Precision:" + scores[6]);
-        LOG.info("  top 10000 Precision:" + scores[7]);
         LOG.info("  overall recall:" + recall);
 
     }

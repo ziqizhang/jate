@@ -6,7 +6,9 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.core.CoreContainer;
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 
@@ -31,22 +33,23 @@ public abstract class BaseEmbeddedSolrTest {
     static String workingDir = System.getProperty("user.dir");
     static Path solrHome = Paths.get(workingDir, "testdata", "solr-testbed");
 
-    static Path REF_FREQ_FILE = Paths.get(workingDir,"testdata","solr-testbed", "GENIA",
-            "conf","bnc_unifrqs.normal");
+    static Path REF_FREQ_FILE = Paths.get(workingDir, "testdata", "solr-testbed", "GENIA",
+            "conf", "bnc_unifrqs.normal");
 
     EmbeddedSolrServer server;
     protected String solrCoreName;
     protected boolean reindex;
 
     protected abstract void setSolrCoreName();
+
     protected abstract void setReindex();
 
     //@Before
     public void setup() throws Exception {
         setSolrCoreName();
         setReindex();
-        if(reindex)
-            cleanIndexDirectory(solrHome.toString(), solrCoreName);
+//        if(reindex)
+//            cleanIndexDirectory(solrHome.toString(), solrCoreName);
         CoreContainer testBedContainer = new CoreContainer(solrHome.toString());
         testBedContainer.load();
         server = new EmbeddedSolrServer(testBedContainer, solrCoreName);
@@ -82,10 +85,10 @@ public abstract class BaseEmbeddedSolrTest {
         }
     }
 
-    private static void cleanIndexDirectory(String solrHome, String coreName) throws IOException {
+    public static void cleanIndexDirectory(String solrHome, String coreName) throws IOException {
 //       File indexDir = new File(solrHome + File.separator + coreName + File.separator +
 //                "data" + File.separator + "index" + File.separator);
-        File indexDir = Paths.get(solrHome,coreName,"data","index").toFile();
+        File indexDir = Paths.get(solrHome, coreName, "data", "index").toFile();
 
         try {
             if (indexDir.exists()) {
@@ -97,26 +100,25 @@ public abstract class BaseEmbeddedSolrTest {
         }
     }
 
-    //@After
+    @After
     public void tearDown() throws IOException {
         if (server != null && server.getCoreContainer() != null) {
             LOG.info("shutting down core in :" + server.getCoreContainer().getCoreRootDirectory());
 
-            server.getCoreContainer().getCore(solrCoreName).close();
-            server.getCoreContainer().shutdown();
-            server.close();
-
             try {
-                // wait for server shutting down
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
+                server.getCoreContainer().getCore(solrCoreName).close();
+                server.getCoreContainer().shutdown();
+                server.close();
+
+                File lock = Paths.get(solrHome.toString(), solrCoreName, "data", "index", "write.lock").toFile();
+                if (lock.exists()) {
+                    System.err.println("solr did not shut down cleanly");
+                    Assert.assertTrue(lock.delete());
+                }
+//            cleanIndexDirectory(solrHome.toString(), solrCoreName);
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-//            try {
-//                cleanIndexDirectory(solrHome, solrCoreName);
-//            } catch (IOException ioe) {
-//                LOG.warn("Unable to delete indice file. Please do it manually! ");
-//            }
         } else {
             LOG.error("embedded server or core is not created and loaded successfully.");
         }
@@ -125,11 +127,12 @@ public abstract class BaseEmbeddedSolrTest {
     @AfterClass
     public static void tearDownClass() throws JATEException {
 //        try {
-//            cleanIndexDirectory(solrHome, solrCoreName);
+//            cleanIndexDirectory(solrHome.toString(), solrCoreName);
 //        } catch (IOException ioe) {
 //            throw new JATEException("Unable to delete index data. Please clean index directory " +
 //                    "[testdata\\solr-testbed\\testCore\\data] manually!");
 //        }
     }
+
 
 }
