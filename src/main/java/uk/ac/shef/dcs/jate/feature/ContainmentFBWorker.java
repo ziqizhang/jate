@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 class ContainmentFBWorker extends JATERecursiveTaskWorker<String, int[]> {
 	
 	private static final long serialVersionUID = -1208424489000405913L;
-	private static final Logger LOG = Logger.getLogger(FrequencyTermBasedFBWorker.class.getName());
+	private static final Logger LOG = Logger.getLogger(ContainmentFBWorker.class.getName());
     private JATEProperties properties;
     private Map<Integer, Set<String>> numTokens2Terms;
     private Containment feature;
@@ -68,7 +68,7 @@ class ContainmentFBWorker extends JATERecursiveTaskWorker<String, int[]> {
             }
             count++;
             if(count%1000==0)
-                LOG.debug(count + "/" + taskTerms.size());
+                LOG.info(count + "/" + taskTerms.size());
         }
         return new int[]{count, taskTerms.size()};
     }
