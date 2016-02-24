@@ -34,7 +34,7 @@ public class RAKE extends Algorithm {
         msg.append(" total terms=" + candidates.size());
         int count=0;
 
-        LOG.debug(msg.toString());
+        LOG.info(msg.toString());
 
         for (String tString : candidates) {
             String[] elements = tString.split(" ");
@@ -59,7 +59,7 @@ public class RAKE extends Algorithm {
             count++;
 
             if(count%1000==0) {
-                LOG.debug("done batch="+count);
+                LOG.info("done batch="+count);
             }
         }
 
