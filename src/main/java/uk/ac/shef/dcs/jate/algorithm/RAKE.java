@@ -8,6 +8,8 @@ import uk.ac.shef.dcs.jate.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import java.util.*;
+import java.util.concurrent.ForkJoinPool;
+
 /**
  * Rose, S., Engel, D., Cramer, N., & Cowley, W. (2010).
  * Automatic Keyword Extraction from Individual Documents. In M. W. Berry & J. Kogan (Eds.),
@@ -28,42 +30,22 @@ public class RAKE extends Algorithm {
         validateFeature(ccFeature, Cooccurrence.class);
         Cooccurrence fFeatureCoocurr = (Cooccurrence) ccFeature;
 
-        List<JATETerm> result = new ArrayList<>();
-        Set<String> cooccurrenceDictionary = fFeatureCoocurr.getTerms();
-        StringBuilder msg = new StringBuilder("Beginning computing RAKE values,");
-        msg.append(" total terms=" + candidates.size());
-        int count=0;
+        int cores = Runtime.getRuntime().availableProcessors();
+        int maxPerWorker=candidates.size()/cores;
 
+        StringBuilder msg = new StringBuilder("Beginning computing RAKE values, cores=");
+        msg.append(cores).append(" total terms=" + candidates.size()).append(",")
+        .append(" max terms per worker thread=").append(maxPerWorker);
+
+        
         LOG.info(msg.toString());
-
-        for (String tString : candidates) {
-            String[] elements = tString.split(" ");
-            double score = 0;
-            for (String word : elements) {
-                int freq = fFeatureWords.getTTF(word);
-                if(freq==0)    //composing word can be stop words that have been filtered
-                    continue;
-                int degree = freq;
-                if (cooccurrenceDictionary.contains(word)) {
-                    Map<Integer, Integer> coocurWordIdx2Freq = fFeatureCoocurr.getCoocurrence(word);
-                    for (int f : coocurWordIdx2Freq.values())
-                        degree += f;
-                }
-
-                double wScore = (double) degree / freq;
-                score += wScore;
-            }
-
-            JATETerm term = new JATETerm(tString, score);
-            result.add(term);
-            count++;
-
-            if(count%1000==0) {
-                LOG.info("done batch="+count);
-            }
-        }
-
+        ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
+        RAKEWorker worker = new RAKEWorker(new ArrayList<>(candidates), maxPerWorker, fFeatureWords,
+                fFeatureCoocurr
+        );
+        List<JATETerm> result = forkJoinPool.invoke(worker);
         Collections.sort(result);
+
         LOG.info("Complete");
         return result;
     }
