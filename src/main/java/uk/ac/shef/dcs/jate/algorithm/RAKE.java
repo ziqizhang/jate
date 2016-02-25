@@ -39,6 +39,8 @@ public class RAKE extends Algorithm {
 
         int cores = Runtime.getRuntime().availableProcessors();
         int maxPerWorker=candidates.size()/cores;
+        if (maxPerWorker == 0)
+            maxPerWorker = 50;
 
         StringBuilder msg = new StringBuilder("Beginning computing RAKE values, cores=");
         msg.append(cores).append(" total terms=" + candidates.size()).append(",")
@@ -47,7 +49,7 @@ public class RAKE extends Algorithm {
 
         LOG.info(msg.toString());
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
-        RAKEWorker worker = new RAKEWorker(new ArrayList<>(candidates), maxPerWorker, fFeatureWords, fFeatureTerms,
+        RAKEWorker worker = new RAKEWorker(new ArrayList<>(candidates), Integer.MAX_VALUE, fFeatureWords, fFeatureTerms,
                 fFeatureTermCompIndex
         );
         List<JATETerm> result = forkJoinPool.invoke(worker);
