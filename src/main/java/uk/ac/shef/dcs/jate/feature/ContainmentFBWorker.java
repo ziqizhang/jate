@@ -57,7 +57,7 @@ class ContainmentFBWorker extends JATERecursiveTaskWorker<String, int[]> {
                 Iterator<Pair<String, Integer>> it = candidates.iterator();
                 while (it.hasNext()) {
                     Pair<String, Integer> c = it.next();
-                    if (c.getValue() < tokens.length)
+                    if (c.getValue() <= tokens.length)
                         break;
                     compareCandidates.add(c.getKey());
                 }

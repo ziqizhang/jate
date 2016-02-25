@@ -57,7 +57,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     protected void setReindex() {
         //change this to false if you want to use existing index
         //always set to true for the automatic test
-        reindex = true;
+        reindex = false;
     }
 
 
@@ -239,7 +239,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appCValue() throws IOException, JATEException {
         AppCValue appCValue = new AppCValue(initParams);
         List<JATETerm> termList = appCValue.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
@@ -312,7 +312,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    @Test
+    //@Test
     public void benchmarking_appRAKE() throws JATEException, IOException {
         AppRAKE appRAKE = new AppRAKE(initParams);
         List<JATETerm> termList = appRAKE.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
