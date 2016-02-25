@@ -10,17 +10,17 @@ import java.util.concurrent.ForkJoinPool;
 /**
  * Created by - on 25/02/2016.
  */
-public class CValueTermComponentIndexFBMaster extends AbstractFeatureBuilder {
-    private static final Logger LOG = Logger.getLogger(CValueTermComponentIndexFBMaster.class.getName());
+public class TermComponentIndexFBMaster extends AbstractFeatureBuilder {
+    private static final Logger LOG = Logger.getLogger(TermComponentIndexFBMaster.class.getName());
     private List<String> candidates;
-    public CValueTermComponentIndexFBMaster(JATEProperties properties, List<String> candidates) {
+    public TermComponentIndexFBMaster(JATEProperties properties, List<String> candidates) {
         super(null, properties);
         this.candidates=candidates;
     }
 
     @Override
     public AbstractFeature build() throws JATEException {
-        CValueTermComponentIndex feature = new CValueTermComponentIndex();
+        TermComponentIndex feature = new TermComponentIndex();
 
         int cores = properties.getMaxCPUCores();
         cores = cores == 0 ? 1 : cores;
@@ -28,10 +28,10 @@ public class CValueTermComponentIndexFBMaster extends AbstractFeatureBuilder {
         if (maxPerThread == 0)
             maxPerThread = 50;
 
-        LOG.info("Beginning building features (CValueTermComponentIndex). Total terms=" + candidates.size() + ", cpu cores=" +
+        LOG.info("Beginning building features (TermComponentIndex). Total terms=" + candidates.size() + ", cpu cores=" +
                 cores + ", max per core=" + maxPerThread);
-        CValueTermComponentIndexFBWorker worker = new
-                CValueTermComponentIndexFBWorker(candidates, maxPerThread,
+        TermComponentIndexFBWorker worker = new
+                TermComponentIndexFBWorker(candidates, maxPerThread,
                 feature);
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
         int total = forkJoinPool.invoke(worker);

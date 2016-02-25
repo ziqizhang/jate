@@ -2,24 +2,23 @@ package uk.ac.shef.dcs.jate.feature;
 
 import uk.ac.shef.dcs.jate.JATERecursiveTaskWorker;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
  * Created by - on 25/02/2016.
  */
-public class CValueTermComponentIndexFBWorker extends JATERecursiveTaskWorker<String, Integer> {
+public class TermComponentIndexFBWorker extends JATERecursiveTaskWorker<String, Integer> {
 
-    private CValueTermComponentIndex ctciFeature;
-    public CValueTermComponentIndexFBWorker(List<String> tasks, int maxTasksPerWorker,
-                                            CValueTermComponentIndex ctciFeature) {
+    private TermComponentIndex ctciFeature;
+    public TermComponentIndexFBWorker(List<String> tasks, int maxTasksPerWorker,
+                                      TermComponentIndex ctciFeature) {
         super(tasks, maxTasksPerWorker);
         this.ctciFeature=ctciFeature;
     }
 
     @Override
     protected JATERecursiveTaskWorker<String, Integer> createInstance(List<String> splitTasks) {
-        return new CValueTermComponentIndexFBWorker(splitTasks, maxTasksPerThread, ctciFeature);
+        return new TermComponentIndexFBWorker(splitTasks, maxTasksPerThread, ctciFeature);
     }
 
     @Override

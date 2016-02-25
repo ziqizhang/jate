@@ -2,7 +2,6 @@ package uk.ac.shef.dcs.jate.feature;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.common.util.Pair;
-import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.JATERecursiveTaskWorker;
 
 import java.util.*;
@@ -16,11 +15,11 @@ class ContainmentFBWorker extends JATERecursiveTaskWorker<String, int[]> {
     private static final long serialVersionUID = -1208424489000405913L;
     private static final Logger LOG = Logger.getLogger(ContainmentFBWorker.class.getName());
     private Containment feature;
-    private CValueTermComponentIndex featureTermCompIndex;
+    private TermComponentIndex featureTermCompIndex;
 
     ContainmentFBWorker(List<String> taskTerms, int maxTasksPerWorker,
                         Containment feature,
-                        CValueTermComponentIndex featureTermCompIndex) {
+                        TermComponentIndex featureTermCompIndex) {
         super(taskTerms, maxTasksPerWorker);
         this.feature = feature;
         this.featureTermCompIndex = featureTermCompIndex;
@@ -77,7 +76,7 @@ class ContainmentFBWorker extends JATERecursiveTaskWorker<String, int[]> {
 
             count++;
             if (count % 2000 == 0)
-                LOG.info(count + "/" + taskTerms.size());
+                LOG.debug(count + "/" + taskTerms.size());
         }
         return new int[]{count, taskTerms.size()};
     }

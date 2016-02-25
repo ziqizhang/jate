@@ -73,16 +73,14 @@ public class AppRAKE extends App {
         FrequencyTermBasedFBMaster fwbb = new FrequencyTermBasedFBMaster(searcher, properties, 1);
         FrequencyTermBased fwb = (FrequencyTermBased) fwbb.build();
 
-        FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties,
-                1);
-        FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
-
-        CooccurrenceFBMaster cb = new CooccurrenceFBMaster(searcher, properties, fwb, prefilterMinTTF, fcsb, fcsb, prefilterMinTCF);
-        Cooccurrence co = (Cooccurrence) cb.build();
+        TermComponentIndexFBMaster tcib = new TermComponentIndexFBMaster(properties,
+                new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet()));
+        TermComponentIndex termComponentIndex = (TermComponentIndex) tcib.build();
 
         RAKE rake = new RAKE();
+        rake.registerFeature(FrequencyTermBased.class.getName() + RAKE.SUFFIX_TERM, this.freqFeature);
         rake.registerFeature(FrequencyTermBased.class.getName() + RAKE.SUFFIX_WORD, fwb);
-        rake.registerFeature(Cooccurrence.class.getName() + RAKE.SUFFIX_WORD, co);
+        rake.registerFeature(TermComponentIndex.class.getName(), termComponentIndex);
 
         List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 

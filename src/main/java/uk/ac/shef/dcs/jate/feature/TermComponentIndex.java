@@ -10,7 +10,7 @@ import java.util.*;
  * The index is a map from uni-grams to a list of pairs. Each pair contains a candidate term containing that unigram and the length of the term in terms of
  * number of tokens (uni-grams) in that term
  */
-public class CValueTermComponentIndex extends AbstractFeature {
+public class TermComponentIndex extends AbstractFeature {
     private Map<String, List<Pair<String, Integer>>> index = new HashMap<>();
 
     public synchronized void add(String unigram, String term, int numTokens) {

@@ -64,9 +64,9 @@ public class AppCValue extends App {
         this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 
         Set<String> uniqueCandidateTerms = freqFeature.getMapTerm2TTF().keySet();
-        CValueTermComponentIndexFBMaster termCompIndexFeatureBuilder = new CValueTermComponentIndexFBMaster(properties,
+        TermComponentIndexFBMaster termCompIndexFeatureBuilder = new TermComponentIndexFBMaster(properties,
                 new ArrayList<>(uniqueCandidateTerms));
-        CValueTermComponentIndex termComponentIndexFeature = (CValueTermComponentIndex) termCompIndexFeatureBuilder.build();
+        TermComponentIndex termComponentIndexFeature = (TermComponentIndex) termCompIndexFeatureBuilder.build();
 
         ContainmentFBMaster cb = new ContainmentFBMaster(searcher, properties,termComponentIndexFeature,uniqueCandidateTerms);
         Containment cf = (Containment) cb.build();

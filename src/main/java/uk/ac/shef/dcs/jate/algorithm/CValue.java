@@ -2,7 +2,6 @@ package uk.ac.shef.dcs.jate.algorithm;
 
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.feature.AbstractFeature;
-import uk.ac.shef.dcs.jate.feature.CValueTermComponentIndex;
 import uk.ac.shef.dcs.jate.feature.Containment;
 import uk.ac.shef.dcs.jate.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.model.JATETerm;

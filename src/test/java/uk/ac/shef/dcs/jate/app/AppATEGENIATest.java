@@ -57,7 +57,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     protected void setReindex() {
         //change this to false if you want to use existing index
         //always set to true for the automatic test
-        reindex = false;
+        reindex = true;
     }
 
 
@@ -148,7 +148,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         server.commit();
     }
 
-    //@Test
+    @Test
     public void validate_indexing() {
         ModifiableSolrParams params = new ModifiableSolrParams();
         params.set("q", "*:*");
@@ -165,7 +165,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         }
     }
 
-    //@Test
+    @Test
     public void benchmarking_appATTF() throws JATEException, IOException {
         AppATTF appATTF = new AppATTF(initParams);
         List<JATETerm> termList = appATTF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
@@ -202,7 +202,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appChiSquare() throws IOException, JATEException {
         initParams.put(AppParams.CHISQUERE_FREQ_TERM_CUTOFF_PERCENTAGE.getParamKey(), "0.3");
         AppChiSquare appChiSquare = new AppChiSquare(initParams);
@@ -276,7 +276,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appGlossEx() throws JATEException, IOException {
         initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), REF_FREQ_FILE.toString());
         AppGlossEx appGlossEx = new AppGlossEx(initParams);
@@ -312,7 +312,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appRAKE() throws JATEException, IOException {
         AppRAKE appRAKE = new AppRAKE(initParams);
         List<JATETerm> termList = appRAKE.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
@@ -350,7 +350,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appRIDF() throws JATEException, IOException {
         AppRIDF appRIDF = new AppRIDF(initParams);
         List<JATETerm> termList = appRIDF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
@@ -387,7 +387,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appTermEx() throws JATEException, IOException {
         initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), REF_FREQ_FILE.toString());
         AppTermEx appTermEx = new AppTermEx(initParams);
@@ -425,7 +425,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + 0);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appTFIDF() throws JATEException, IOException {
         AppTFIDF appTFIDF = new AppTFIDF(initParams);
 
@@ -459,7 +459,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appTTF() throws JATEException, IOException {
         AppTTF appTTF = new AppTTF(initParams);
 
@@ -497,7 +497,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("  overall recall:" + recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appWeirdness() throws JATEException, IOException {
         initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), REF_FREQ_FILE.toString());
         AppWeirdness appWeirdness = new AppWeirdness(initParams);

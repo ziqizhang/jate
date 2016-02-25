@@ -1,13 +1,9 @@
 package uk.ac.shef.dcs.jate.feature;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.lucene.index.*;
+
 import org.apache.solr.search.SolrIndexSearcher;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
-import uk.ac.shef.dcs.jate.util.SolrUtil;
-
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 
@@ -18,11 +14,11 @@ public class ContainmentFBMaster extends AbstractFeatureBuilder {
 
     private static final Logger LOG = Logger.getLogger(ContainmentFBMaster.class.getName());
 
-    private CValueTermComponentIndex termComponentIndex;
+    private TermComponentIndex termComponentIndex;
     private Set<String> uniqueCandidateTerms;
 
     public ContainmentFBMaster(SolrIndexSearcher solrIndexSearcher, JATEProperties properties,
-                               CValueTermComponentIndex termComponentIndex,
+                               TermComponentIndex termComponentIndex,
                                Set<String> uniqueCandidateTerms) {
         super(solrIndexSearcher, properties);
         this.termComponentIndex = termComponentIndex;
