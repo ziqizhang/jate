@@ -36,6 +36,9 @@ public class OpenNLPNounPhraseFilterFactory extends MWEFilterFactory {
                 minTokens, maxTokens, minCharLength, maxCharLength,
                 removeLeadingStopwords, removeTrailingStopwords,
                 removeLeadingSymbolicTokens, removeTrailingSymbolicTokens,
+                stripLeadingSymbolChars,
+                stripTrailingSymbolChars,
+                stripAnySymbolChars,
                 stopWords, stopWordsIgnoreCase);
     }
 

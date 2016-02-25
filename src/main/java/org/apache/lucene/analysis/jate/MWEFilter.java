@@ -56,6 +56,12 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
 
     public static final boolean DEFAULT_STOP_WORDS_IGNORE_CASE = false;
 
+    /**
+     * if true, leading non alpha numeric chars are removed
+     */
+    public static final boolean DEFAULT_STRIP_LEADING_SYMBOL_CHARS=false;
+    public static final boolean DEFAULT_STRIP_TRAILING_SYMBOL_CHARS=false;
+    public static final boolean DEFAULT_STRIP_ANY_SYMBOL_CHARS=false;
 
     /**
      * maximum tokens in a MWE (number of tokens)
@@ -81,6 +87,9 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
     protected boolean removeTrailingStopwords;
     protected boolean removeLeadingSymbolicTokens;
     protected boolean removeTrailingSymbolicTokens;
+    protected boolean stripLeadingSymbolChars;
+    protected boolean stripTrailingSymbolChars;
+    protected boolean stripAllSymbolChars;
 
     protected Set<String> stopWords;
     protected boolean stopWordsIgnoreCase;
@@ -102,6 +111,9 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
                      boolean removeTrailingStopwords,
                      boolean removeLeadingSymbolicTokens,
                      boolean removeTrailingSymbolicTokens,
+                     boolean stripLeadingSymbolChars,
+                     boolean stripTrailingSymbolChars,
+                     boolean stripAllSymbolChars,
                      Set<String> stopWords,
                      boolean stopWordsIgnoreCase) {
         super(input);
@@ -113,6 +125,10 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
         this.removeTrailingStopwords = removeTrailingStopwords;
         this.removeLeadingSymbolicTokens = removeLeadingSymbolicTokens;
         this.removeTrailingSymbolicTokens = removeTrailingSymbolicTokens;
+        this.stripAllSymbolChars=stripAllSymbolChars;
+        this.stripLeadingSymbolChars=stripLeadingSymbolChars;
+        this.stripTrailingSymbolChars=stripTrailingSymbolChars;
+
         this.stopWords = stopWords;
         this.stopWordsIgnoreCase = stopWordsIgnoreCase;
     }
@@ -131,6 +147,11 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
         } catch (UnsupportedEncodingException uee) {
             sentenceContext.setPayload(new BytesRef(s.toString().getBytes()));
         }
+    }
+
+    protected String stripSymbolChars(String in){
+        return PunctuationRemover.
+                stripPunctuations(in,stripAllSymbolChars, stripLeadingSymbolChars, stripTrailingSymbolChars);
     }
 
 }

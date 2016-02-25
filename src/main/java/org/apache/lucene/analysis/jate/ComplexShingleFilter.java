@@ -138,10 +138,14 @@ public final class ComplexShingleFilter extends MWEFilter implements SentenceCon
                                 boolean removeTrailingStopwords,
                                 boolean removeLeadingSymbolicTokens,
                                 boolean removeTrailingSymbolicTokens,
+                                boolean stripLeadingSymbolChars,
+                                boolean stripTrailingSymbolChars,
+                                boolean stripAllSymbolChars,
                                 Set<String> stopWords,
                                 boolean stopWordsIgnoreCase) {
         super(input, minTokens, maxTokens, minCharLength, maxCharLength,
                 removeLeadingStopWords, removeTrailingStopwords, removeLeadingSymbolicTokens, removeTrailingSymbolicTokens,
+                stripLeadingSymbolChars, stripTrailingSymbolChars, stripAllSymbolChars,
                 stopWords, stopWordsIgnoreCase);
         this.outputUnigrams = outputUnigrams;
         this.outputUnigramsIfNoShingles = outputUnigramsIfNoShingles;
@@ -209,8 +213,12 @@ public final class ComplexShingleFilter extends MWEFilter implements SentenceCon
                 }
             }
             if (!isAllFiller && builtGramSize == gramSize.getValue()) {
-                if (gramBuilder.length() > maxCharLength || gramBuilder.length() < minCharLength)
+                String normalized = stripSymbolChars(gramBuilder.toString());
+                if (normalized.length() > maxCharLength || normalized.length() < minCharLength) {
+/*                    if(gramBuilder.toString().equals("t)")||gramBuilder.toString().equals("t("))
+                        System.out.println();*/
                     outputThisShingle = false;
+                }
 
                 if (outputThisShingle) {
                     inputWindow.getFirst().attSource.copyTo(this);
@@ -226,7 +234,7 @@ public final class ComplexShingleFilter extends MWEFilter implements SentenceCon
 
                     if (!crossBoundary(firstTokenSentCtx, lastTokenSentCtx)) {
                         posIncrAtt.setPositionIncrement(isOutputHere ? 0 : 1);
-                        termAtt.setEmpty().append(gramBuilder);
+                        termAtt.setEmpty().append(normalized);
                         if (gramSize.getValue() > 1) {
                             typeAtt.setType(tokenType);
                             noShingleOutput = false;

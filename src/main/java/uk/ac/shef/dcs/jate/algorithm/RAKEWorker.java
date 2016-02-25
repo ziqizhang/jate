@@ -52,13 +52,15 @@ public class RAKEWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> 
 
         int count=0;
         for (String tString : candidates) {
-            if(tString.equals("s. p. harrison")||tString.equals("a. a. polikarpov"))
-                System.out.println("here");
+/*            if(tString.equals("receptors in human mononuclear leukocyte"))
+                System.out.println();*/
             String[] elements = tString.split(" ");
             double score = 0;
             //a term's RAKE score is the sum of its elements
             for (String e : elements) {
                 //now compute RAKE score of individual words
+/*                if(e.equals("t"))
+                    System.out.printf("here");*/
 
                 //first, frequency
                 int freq = fFeatureWords.getTTF(e);

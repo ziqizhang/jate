@@ -15,7 +15,7 @@ import java.util.*;
 
 /**
  */
-public abstract class OpenNLPMWEFilter extends MWEFilter{
+public abstract class OpenNLPMWEFilter extends MWEFilter {
 
     protected final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
     protected final OffsetAttribute offsetAtt = addAttribute(OffsetAttribute.class);
@@ -36,11 +36,18 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
                             int minCharLength, int maxCharLength,
                             boolean removeLeadingStopWords, boolean removeTrailingStopwords,
                             boolean removeLeadingSymbolicTokens, boolean removeTrailingSymbolicTokens,
+
+                            boolean stripLeadingSymbolChars,
+                            boolean stripTrailingSymbolChars,
+                            boolean stripAllSymbolChars,
                             Set<String> stopWords, boolean stopWordsIgnoreCase) {
         super(input, minTokens, maxTokens,
                 minCharLength, maxCharLength,
                 removeLeadingStopWords, removeTrailingStopwords,
                 removeLeadingSymbolicTokens, removeTrailingSymbolicTokens,
+                stripLeadingSymbolChars,
+                stripTrailingSymbolChars,
+                stripAllSymbolChars,
                 stopWords, stopWordsIgnoreCase);
     }
 
@@ -49,39 +56,55 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
     }
 
 
-    protected boolean addMWE(int chunkEnd){
+    protected boolean addMWE(int chunkEnd) {
         AttributeSource start = tokenAttrs.get(chunkStart);
         AttributeSource end = tokenAttrs.get(chunkEnd - 1);
 
         SentenceContext firstTokenSentCtx = parseSentenceContextPayload(start.getAttribute(PayloadAttribute.class));
         SentenceContext lastTokenSentCtx = parseSentenceContextPayload(end.getAttribute(PayloadAttribute.class));
 
-        boolean added=false;
-        if(!crossBoundary(firstTokenSentCtx, lastTokenSentCtx)) {
+        boolean added = false;
+        if (!crossBoundary(firstTokenSentCtx, lastTokenSentCtx)) {
             StringBuilder phrase = new StringBuilder();
             for (int i = chunkStart; i <= chunkEnd - 1; i++)
                 phrase.append(tokenAttrs.get(i).getAttribute(CharTermAttribute.class).buffer()).append(" ");
 
-            termAtt.setEmpty().append(phrase.toString().trim());
-            offsetAtt.setOffset(start.getAttribute(OffsetAttribute.class).startOffset(),
-                    end.getAttribute(OffsetAttribute.class).endOffset());
-            typeAtt.setType(chunkTypes.get(chunkStart));
-            addSentenceContextPayload(firstTokenSentCtx, lastTokenSentCtx);
-            added=true;
+            //check char length
+            String normalized = null;
+            boolean passCharLengthCheck = false;
+            if (maxCharLength != 0 || minCharLength != 0) {
+                normalized = stripSymbolChars(phrase.toString().trim());
+                if (normalized.length() <= maxCharLength && normalized.length() >= minCharLength) {
+                    passCharLengthCheck = true;
+                }
+/*
+                else if (!normalized.equals(phrase.toString().trim()))
+                    System.out.println("here");*/
+            }
+
+            if (passCharLengthCheck) {
+                termAtt.setEmpty().append(normalized);
+                offsetAtt.setOffset(start.getAttribute(OffsetAttribute.class).startOffset(),
+                        end.getAttribute(OffsetAttribute.class).endOffset());
+                typeAtt.setType(chunkTypes.get(chunkStart));
+                addSentenceContextPayload(firstTokenSentCtx, lastTokenSentCtx);
+                added = true;
+            }
             //System.out.println(phrase.toString().trim()+","+sentenceContextAtt.getPayload().utf8ToString());
         }
 
         chunkEnds.remove(Integer.valueOf(chunkEnd));
-        if(chunkEnds.size()==0) {
-            tokenIdx=chunkStart+1;
+        if (chunkEnds.size() == 0) {
+            tokenIdx = chunkStart + 1;
             chunkStart = -1;
-        }else{
-            tokenIdx=chunkEnds.get(0); //set the next token index to be the next phrase's end token index
+        } else {
+            tokenIdx = chunkEnds.get(0); //set the next token index to be the next phrase's end token index
         }
 
         return added;
     }
-    private SentenceContext parseSentenceContextPayload(PayloadAttribute attribute){
+
+    private SentenceContext parseSentenceContextPayload(PayloadAttribute attribute) {
         BytesRef bfTokenSentCtx = attribute != null ? attribute.getPayload() : null;
         SentenceContext tokenSentCtx = bfTokenSentCtx == null ? null : new SentenceContext(
                 bfTokenSentCtx.utf8ToString()
@@ -90,8 +113,8 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
     }
 
     private void addSentenceContextPayload(SentenceContext firstTokenSentCtx,
-                                           SentenceContext lastTokenSentCtx){
-        if(firstTokenSentCtx!=null && lastTokenSentCtx!=null){
+                                           SentenceContext lastTokenSentCtx) {
+        if (firstTokenSentCtx != null && lastTokenSentCtx != null) {
             addSentenceContext(sentenceContext, firstTokenSentCtx.getFirstTokenIdx(),
                     lastTokenSentCtx.getLastTokenIdx(),
                     firstTokenSentCtx.getPosTag(),
@@ -100,9 +123,9 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
     }
 
     private boolean crossBoundary(SentenceContext firstTokenSentCtx,
-                                  SentenceContext lastTokenSentCtx){
-        if(firstTokenSentCtx!=null && lastTokenSentCtx!=null){
-            return firstTokenSentCtx.getSentenceId()!=lastTokenSentCtx.getSentenceId();
+                                  SentenceContext lastTokenSentCtx) {
+        if (firstTokenSentCtx != null && lastTokenSentCtx != null) {
+            return firstTokenSentCtx.getSentenceId() != lastTokenSentCtx.getSentenceId();
         }
         return false;
     }
@@ -119,12 +142,12 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
             while (it.hasNext()) {
                 Span span = it.next();
                 int[] newspan = clean(span.getStart(), span.getEnd(), toks);
-                if(newspan==null){
+                if (newspan == null) {
                     it.remove();
                     continue;
                 }
 
-                if (newspan[0] != span.getStart()||newspan[1]!=span.getEnd()) {
+                if (newspan[0] != span.getStart() || newspan[1] != span.getEnd()) {
                     modified.add(new Span(newspan[0], newspan[1], span.getType(), span.getProb()));
                     it.remove();
                 }
@@ -133,7 +156,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
         list.addAll(modified);
         Collections.sort(list);
 
-        //second pass check other restrictions
+        //second pass check # of tokens restriction
         it = list.iterator();
         while (it.hasNext()) {
             Span span = it.next();
@@ -145,7 +168,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
                 it.remove();
                 continue;
             }
-            if (maxCharLength != 0 || minCharLength != 0) {
+            /*if (maxCharLength != 0 || minCharLength != 0) {
                 StringBuilder string = new StringBuilder();
                 for (int i = span.getStart(); i < span.getEnd(); i++) {
                     string.append(toks[i]).append(" ");
@@ -155,7 +178,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
                     it.remove();
                     continue;
                 }
-            }
+            }*/
 
             String lookup = span.getStart() + "," + span.getEnd();
             if (existing.contains(lookup)) {
@@ -171,9 +194,8 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
     }
 
     /**
-     *
      * @param start
-     * @param end THIS IS EXCLUSIVE
+     * @param end    THIS IS EXCLUSIVE
      * @param tokens
      * @return
      */
@@ -191,7 +213,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
         }
 
         if (removeTrailingStopwords) {
-            String tok = tokens[newEnd-1];
+            String tok = tokens[newEnd - 1];
             if (stopWordsIgnoreCase)
                 tok = tok.toLowerCase();
             if (stopWords.contains(tok)) {
@@ -211,7 +233,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
             }
         }
         if (removeLeadingSymbolicTokens) {
-            String tok = tokens[newEnd-1];
+            String tok = tokens[newEnd - 1];
             String normalized = tok.replaceAll("[\\p{Punct}]", "");
             if (normalized.length() == 0) {
                 newEnd--;
@@ -220,9 +242,9 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
             }
         }
 
-        if(newEnd==end && newStart==start)
+        if (newEnd == end && newStart == start)
             return new int[]{newStart, newEnd};
-        else if(newEnd-newStart==1)
+        else if (newEnd - newStart == 1)
             return new int[]{newStart, newEnd};
         else
             return clean(newStart, newEnd, tokens);
@@ -232,7 +254,8 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
         first = true;
         tokenIdx = 0;
         chunkStart = -1;
-        chunkEnds.clear();;
+        chunkEnds.clear();
+        ;
         chunkSpans.clear();
         chunkTypes.clear();
     }
@@ -248,13 +271,13 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
             String word = new String(buffer, 0, offsetAtt.endOffset() - offsetAtt.startOffset());
             wordList.add(word);
             PayloadAttribute posAtt = input.getAttribute(PayloadAttribute.class);
-            if(posAtt!=null){
+            if (posAtt != null) {
                 posList.add(new SentenceContext(posAtt.getPayload().utf8ToString()).getPosTag());
             }
             AttributeSource attrs = input.cloneAttributes();
             tokenAttrs.add(attrs);
         }
-        if(wordList.size()!=posList.size()){
+        if (wordList.size() != posList.size()) {
             StringBuilder sb = new StringBuilder(this.getClass().getName());
             sb.append(" requires both token and token POS. Tokens=").append(wordList.size())
                     .append(", POS=").append(posList.size()).append(", and they are inconsistent.")
@@ -265,11 +288,11 @@ public abstract class OpenNLPMWEFilter extends MWEFilter{
         String[] pos = new String[posList.size()];
         for (int i = 0; i < words.length; i++) {
             words[i] = wordList.get(i);
-            pos[i]=posList.get(i);
+            pos[i] = posList.get(i);
         }
 
         clearAttributes();
-        return new String[][]{words,pos};
+        return new String[][]{words, pos};
     }
 
 

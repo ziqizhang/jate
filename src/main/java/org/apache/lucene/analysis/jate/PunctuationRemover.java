@@ -23,8 +23,8 @@ public final class PunctuationRemover extends TokenFilter {
     public static boolean DEFAULT_STRIP_TRAILING_SYMBOLS=false;
     public static boolean DEFAULT_STRIP_ANY_SYMBOLS=false;
 
-    private Pattern leadingSymbolPattern = Pattern.compile("^[\\p{Punct}]+[\\s]*[\\p{Punct}]*");
-    private Pattern trailingSymbolPattern = Pattern.compile("[\\p{Punct}]*[\\s]*[\\p{Punct}]+$");
+    protected static Pattern leadingSymbolPattern = Pattern.compile("^[\\p{Punct}]+[\\s]*[\\p{Punct}]*");
+    protected static Pattern trailingSymbolPattern = Pattern.compile("[\\p{Punct}]*[\\s]*[\\p{Punct}]+$");
     //private Pattern leadingSymbolPattern = Pattern.compile("^[\\p{Punct}]+[\\s]*");
     //private Pattern trailingSymbolPattern = Pattern.compile("[\\s]*[\\p{Punct}]+$");
     private boolean stripLeadingSymbols;
@@ -53,31 +53,39 @@ public final class PunctuationRemover extends TokenFilter {
             String tok = new String(termAtt.buffer(),0, termAtt.length());
             tok=tok.trim();
             if(tok.length()>0) {
-                if (stripAnySymbols) {
-                    tok = tok.replaceAll("\\p{Punct}", " ").replaceAll("\\s+", " ").trim();
-                    if (tok.length() == 0)
-                        clearAttributes();
-                    else
-                        termAtt.setEmpty().append(tok);
-                } else {
-                    if (stripLeadingSymbols) {
-                        Matcher m = leadingSymbolPattern.matcher(tok);
-                        if (m.find())
-                            tok = tok.substring(m.end());
-                    }
-                    if (stripTrailingSymbols) {
-                        Matcher m = trailingSymbolPattern.matcher(tok);
-                        if (m.find())
-                            tok = tok.substring(0, m.start());
-                    }
-                    tok = tok.trim();
+                String normalised=stripPunctuations(tok, stripAnySymbols, stripLeadingSymbols, stripTrailingSymbols);
+                if(normalised.length()==0)
+                    clearAttributes();
+                else
                     termAtt.setEmpty().append(tok);
-                }
             }
 
             return true;
         } else {
             return false;
+        }
+    }
+
+    public static String stripPunctuations(String tok,
+                                           boolean stripAnySymbols,
+                                           boolean stripLeadingSymbols,
+                                           boolean stripTrailingSymbols){
+        if (stripAnySymbols) {
+            tok = tok.replaceAll("\\p{Punct}", " ").replaceAll("\\s+", " ").trim();
+            return tok;
+        } else {
+            if (stripLeadingSymbols) {
+                Matcher m = leadingSymbolPattern.matcher(tok);
+                if (m.find())
+                    tok = tok.substring(m.end());
+            }
+            if (stripTrailingSymbols) {
+                Matcher m = trailingSymbolPattern.matcher(tok);
+                if (m.find())
+                    tok = tok.substring(0, m.start());
+            }
+            tok = tok.trim();
+            return tok;
         }
     }
 }

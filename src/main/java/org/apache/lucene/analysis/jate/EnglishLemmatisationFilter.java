@@ -60,7 +60,11 @@ public final class EnglishLemmatisationFilter extends TokenFilter {
                 }
             }
             //String original=tok;
-            tok = normalize(tok, pos);
+            if(tok.length()>2) { //words with only 2 chars are unlikely to be inflectional
+                //theoretically this is the right way. But in practice, pos is expected to be noun, so using NN is better
+                //tok = normalize(tok, pos);
+                tok=normalize(tok, "NN");
+            }
 
             termAtt.setEmpty().append(tok);
             return true;

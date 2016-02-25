@@ -255,14 +255,16 @@
 						maxCharLength="50" minCharLength="2" removeLeadingStopWords="true"
 						removeTrailingStopWords="true" removeLeadingSymbolicTokens="true"
 						removeTrailingSymbolicTokens="true"
+						stripAnySymbolChars="false"
+						stripLeadingSymbolChars="true" stripTrailingSymbolChars="true"
 						stopWords="stopwords.txt" stopWordsIgnoreCase="true"
 						outputUnigrams="true" outputUnigramsIfNoShingles="false" tokenSeparator=" "/>
-				<!--filter class="solr.EnglishMinimalStemFilterFactory"/-->
+				<!--filter class="solr.EnglishMinimalStemFilterFactory"/-->				
 				<filter class="org.apache.lucene.analysis.jate.EnglishLemmatisationFilterFactory"
 					lemmaResourceDir="lemmatiser"/>
-				<filter class="org.apache.lucene.analysis.jate.PunctuationRemoverFactory" stripAnySymbols="false"
-						stripLeadingSymbols="true" stripTrailingSymbols="true"/>
-				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />				
+				<!--filter class="org.apache.lucene.analysis.jate.PunctuationRemoverFactory" stripAnySymbols="false"
+						stripLeadingSymbols="true" stripTrailingSymbols="true"/-->
+				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
 			</analyzer>
 		</fieldType>		
 
@@ -294,16 +296,18 @@
 							posTaggerModel="en-pos-maxent.bin"
 							patterns="aclrdtec.patterns"
 							minTokens="1" maxTokens="5"
-							maxCharLength="30" minCharLength="2" removeLeadingStopWords="true"
+							maxCharLength="50" minCharLength="2" removeLeadingStopWords="true"
 							removeTrailingStopWords="true" removeLeadingSymbolicTokens="true"
 							removeTrailingSymbolicTokens="true"
+							stripAnySymbolChars="false"
+						stripLeadingSymbolChars="true" stripTrailingSymbolChars="true"
 							stopWords="stopwords.txt" stopWordsIgnoreCase="true"/>
 				<filter class="solr.LowerCaseFilterFactory" />					
-				<!--filter class="solr.EnglishMinimalStemFilterFactory"/-->
+				<!--filter class="solr.EnglishMinimalStemFilterFactory"/-->				
 				<filter class="org.apache.lucene.analysis.jate.EnglishLemmatisationFilterFactory"
 					lemmaResourceDir="lemmatiser"/>
-				<filter class="org.apache.lucene.analysis.jate.PunctuationRemoverFactory" stripAnySymbols="false"
-						stripLeadingSymbols="true" stripTrailingSymbols="true"/>
+				<!--filter class="org.apache.lucene.analysis.jate.PunctuationRemoverFactory" stripAnySymbols="false"
+						stripLeadingSymbols="true" stripTrailingSymbols="true"/-->
 				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
 			</analyzer>
 		</fieldType>
@@ -322,7 +326,7 @@
 				<filter class="org.apache.lucene.analysis.jate.OpenNLPNounPhraseFilterFactory"
 							chunkerModel="en-chunker.bin"
 							minTokens="1" maxTokens="5"
-							maxCharLength="30" minCharLength="1" removeLeadingStopWords="true"
+							maxCharLength="50" minCharLength="1" removeLeadingStopWords="true"
 							removeTrailingStopWords="true" removeLeadingSymbolicTokens="true"
 							removeTrailingSymbolicTokens="true"
 							stopWords="stopwords.txt" stopWordsIgnoreCase="true"/>
@@ -351,7 +355,7 @@
 							posTaggerModel="en-pos-maxent.bin"
 							patterns="aclrdtec.patterns"
 							minTokens="1" maxTokens="5"
-							maxCharLength="30" minCharLength="1" removeLeadingStopWords="true"
+							maxCharLength="50" minCharLength="1" removeLeadingStopWords="true"
 							removeTrailingStopWords="true" removeLeadingSymbolictokens="true"
 							removeTrailingSymbolicTokens="true" sentenceBoundaryAware="true"
 							stopWords="stopwords.txt" stopWordsIgnoreCase="true"/>

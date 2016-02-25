@@ -44,6 +44,9 @@ public class ComplexShingleFilterFactory extends MWEFilterFactory {
                 tokenSeparator, fillerToken,
                 removeLeadingStopwords, removeTrailingStopwords,
                 removeLeadingSymbolicTokens, removeTrailingSymbolicTokens,
+                stripLeadingSymbolChars,
+                stripTrailingSymbolChars,
+                stripAnySymbolChars,
                 stopWords,stopWordsIgnoreCase);
         return r;
     }

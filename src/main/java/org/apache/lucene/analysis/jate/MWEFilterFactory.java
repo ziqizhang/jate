@@ -27,6 +27,9 @@ public abstract class MWEFilterFactory extends TokenFilterFactory implements Res
     protected boolean removeLeadingSymbolicTokens;
     protected boolean removeTrailingSymbolicTokens;
     protected boolean stopWordsIgnoreCase;
+    protected boolean stripLeadingSymbolChars;
+    protected boolean stripTrailingSymbolChars;
+    protected boolean stripAnySymbolChars;
 
     protected final String stopWordFile;
 
@@ -71,6 +74,11 @@ public abstract class MWEFilterFactory extends TokenFilterFactory implements Res
         removeTrailingStopwords=getBoolean(args, "removeTrailingStopWords", MWEFilter.DEFAULT_REMOVE_TRAILING_STOPWORDS);
         removeLeadingSymbolicTokens=getBoolean(args, "removeLeadingSymbolicTokens", MWEFilter.DEFAULT_REMOVE_LEADING_SYMBOLS);
         removeTrailingSymbolicTokens=getBoolean(args, "removeTrailingSymbolicTokens", MWEFilter.DEFAULT_REMOVE_TRAILING_SYMBOLS);
+
+        stripAnySymbolChars = getBoolean(args, "stripAnySymbolChars", MWEFilter.DEFAULT_STRIP_ANY_SYMBOL_CHARS);
+        stripLeadingSymbolChars = getBoolean(args, "stripLeadingSymbolChars", MWEFilter.DEFAULT_STRIP_LEADING_SYMBOL_CHARS);
+        stripTrailingSymbolChars = getBoolean(args, "stripTrailingSymbolChars", MWEFilter.DEFAULT_STRIP_TRAILING_SYMBOL_CHARS);
+
     }
 
     @Override

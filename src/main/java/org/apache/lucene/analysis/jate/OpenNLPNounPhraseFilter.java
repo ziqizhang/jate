@@ -30,12 +30,18 @@ public final class OpenNLPNounPhraseFilter extends OpenNLPMWEFilter {
                                       boolean removeTrailingStopwords,
                                       boolean removeLeadingSymbolicTokens,
                                       boolean removeTrailingSymbolicTokens,
+                                      boolean stripLeadingSymbolChars,
+                                      boolean stripTrailingSymbolChars,
+                                      boolean stripAllSymbolChars,
                                       Set<String> stopWords,
                                       boolean stopWordsIgnoreCase) {
         super(input, minTokens, maxTokens,
                 minCharLength, maxCharLength,
                 removeLeadingStopWords, removeTrailingStopwords,
                 removeLeadingSymbolicTokens, removeTrailingSymbolicTokens,
+                stripLeadingSymbolChars,
+                stripTrailingSymbolChars,
+                stripAllSymbolChars,
                 stopWords, stopWordsIgnoreCase);
         this.npChunker=npChunker;
     }

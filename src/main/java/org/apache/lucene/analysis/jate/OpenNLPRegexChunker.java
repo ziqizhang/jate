@@ -31,11 +31,17 @@ public final class OpenNLPRegexChunker extends OpenNLPMWEFilter {
             boolean removeTrailingStopwords,
             boolean removeLeadingSymbolicTokens,
             boolean removeTrailingSymbolicTokens,
+            boolean stripLeadingSymbolChars,
+            boolean stripTrailingSymbolChars,
+            boolean stripAllSymbolChars,
             Set<String> stopWords,
             boolean stopWordsIgnoreCase) {
         super(input, minTokens, maxTokens, minCharLength, maxCharLength,
                 removeLeadingStopWords, removeTrailingStopwords,
                 removeLeadingSymbolicTokens, removeTrailingSymbolicTokens,
+                stripLeadingSymbolChars,
+                stripTrailingSymbolChars,
+                stripAllSymbolChars,
                 stopWords, stopWordsIgnoreCase);
         regexChunker = new RegexNameFinder(patterns);
     }
