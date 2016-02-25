@@ -23,8 +23,10 @@ public final class PunctuationRemover extends TokenFilter {
     public static boolean DEFAULT_STRIP_TRAILING_SYMBOLS=false;
     public static boolean DEFAULT_STRIP_ANY_SYMBOLS=false;
 
-    private Pattern leadingSymbolPattern = Pattern.compile("^[\\p{Punct}]+[\\s]*");
-    private Pattern trailingSymbolPattern = Pattern.compile("[\\s]*[\\p{Punct}]+$");
+    private Pattern leadingSymbolPattern = Pattern.compile("^[\\p{Punct}]+[\\s]*[\\p{Punct}]*");
+    private Pattern trailingSymbolPattern = Pattern.compile("[\\p{Punct}]*[\\s]*[\\p{Punct}]+$");
+    //private Pattern leadingSymbolPattern = Pattern.compile("^[\\p{Punct}]+[\\s]*");
+    //private Pattern trailingSymbolPattern = Pattern.compile("[\\s]*[\\p{Punct}]+$");
     private boolean stripLeadingSymbols;
     private boolean stripTrailingSymbols;
     private boolean stripAnySymbols;
@@ -49,6 +51,7 @@ public final class PunctuationRemover extends TokenFilter {
     public boolean incrementToken() throws IOException {
         if (input.incrementToken()) {
             String tok = new String(termAtt.buffer(),0, termAtt.length());
+            tok=tok.trim();
             if(tok.length()>0) {
                 if (stripAnySymbols) {
                     tok = tok.replaceAll("\\p{Punct}", " ").replaceAll("\\s+", " ").trim();

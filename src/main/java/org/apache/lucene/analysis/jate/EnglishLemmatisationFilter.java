@@ -84,7 +84,7 @@ public final class EnglishLemmatisationFilter extends TokenFilter {
 
         String part1 = value.substring(0,space);
         String part2 = lemmatiser.lemmatize(value.substring(space+1),tag);
-        return part1+" "+part2.trim();
+        return (part1+" "+part2).trim();
 
     }
 }
