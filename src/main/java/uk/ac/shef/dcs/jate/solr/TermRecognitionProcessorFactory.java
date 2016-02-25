@@ -18,7 +18,6 @@ public class TermRecognitionProcessorFactory {
 		processors.add(new ATTFProcessor());
 		processors.add(new ChiSquareProcessor());
 		processors.add(new CValueProcessor());
-		processors.add(new NCValueProcessor());
 		processors.add(new GlossExProcessor());
 		processors.add(new RAKEProcessor());
 		processors.add(new TermExProcessor());

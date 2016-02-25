@@ -20,7 +20,7 @@ public class TTF extends Algorithm {
         FrequencyTermBased fFeature = (FrequencyTermBased) feature;
         List<JATETerm> result = new ArrayList<>();
 
-        StringBuilder msg = new StringBuilder("Beginning computing TermEx values,");
+        StringBuilder msg = new StringBuilder("Beginning computing TTF values,");
         msg.append(", total terms=" + candidates.size());
         LOG.info(msg.toString());
         for(String tString: candidates){

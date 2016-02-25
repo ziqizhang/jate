@@ -71,7 +71,7 @@ public class RAKEWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> 
             result.add(term);
             count++;
 
-            if(count%1000==0) {
+            if(count%2000==0) {
                 LOG.info("done ="+count+"/"+candidates.size());
             }
         }

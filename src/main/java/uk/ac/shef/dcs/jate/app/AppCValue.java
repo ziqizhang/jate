@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class AppCValue extends App {
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -62,7 +63,12 @@ public class AppCValue extends App {
         this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
         this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 
-        ContainmentFBMaster cb = new ContainmentFBMaster(searcher, properties);
+        Set<String> uniqueCandidateTerms = freqFeature.getMapTerm2TTF().keySet();
+        CValueTermComponentIndexFBMaster termCompIndexFeatureBuilder = new CValueTermComponentIndexFBMaster(properties,
+                new ArrayList<>(uniqueCandidateTerms));
+        CValueTermComponentIndex termComponentIndexFeature = (CValueTermComponentIndex) termCompIndexFeatureBuilder.build();
+
+        ContainmentFBMaster cb = new ContainmentFBMaster(searcher, properties,termComponentIndexFeature,uniqueCandidateTerms);
         Containment cf = (Containment) cb.build();
 
         CValue cvalue = new CValue();

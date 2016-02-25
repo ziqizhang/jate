@@ -1,38 +1,36 @@
 package uk.ac.shef.dcs.jate.feature;
 
 import org.apache.log4j.Logger;
+import org.apache.solr.common.util.Pair;
 import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.JATERecursiveTaskWorker;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
  * Created by zqz on 17/09/2015.
  */
 class ContainmentFBWorker extends JATERecursiveTaskWorker<String, int[]> {
-	
-	private static final long serialVersionUID = -1208424489000405913L;
-	private static final Logger LOG = Logger.getLogger(ContainmentFBWorker.class.getName());
-    private JATEProperties properties;
-    private Map<Integer, Set<String>> numTokens2Terms;
-    private Containment feature;
 
-    ContainmentFBWorker(JATEProperties properties, List<String> taskTerms,
-                        Map<Integer, Set<String>> numTokens2Terms,
-                        Containment feature, int maxTasksPerWorker) {
+    private static final long serialVersionUID = -1208424489000405913L;
+    private static final Logger LOG = Logger.getLogger(ContainmentFBWorker.class.getName());
+    private Containment feature;
+    private CValueTermComponentIndex featureTermCompIndex;
+
+    ContainmentFBWorker(List<String> taskTerms, int maxTasksPerWorker,
+                        Containment feature,
+                        CValueTermComponentIndex featureTermCompIndex) {
         super(taskTerms, maxTasksPerWorker);
-        this.properties = properties;
         this.feature = feature;
-        this.numTokens2Terms = numTokens2Terms;
+        this.featureTermCompIndex = featureTermCompIndex;
     }
 
     @Override
     protected JATERecursiveTaskWorker<String, int[]> createInstance(List<String> termSplit) {
-        return new ContainmentFBWorker(properties, termSplit, numTokens2Terms,
-                feature, maxTasksPerThread);
+        return new ContainmentFBWorker(termSplit, maxTasksPerThread,
+                feature,
+                featureTermCompIndex);
     }
 
     @Override
@@ -49,25 +47,36 @@ class ContainmentFBWorker extends JATERecursiveTaskWorker<String, int[]> {
     @Override
     protected int[] computeSingleWorker(List<String> taskTerms) {
         int count = 0;
-        LOG.info("Total terms to process="+taskTerms.size());
+        LOG.info("Total terms to process=" + taskTerms.size());
         for (String termString : taskTerms) {
-            int tokens = termString.split(" ").length;
+            String[] tokens = termString.split(" ");
+
+            Set<String> compareCandidates = new HashSet<>();
+            for (String tok : tokens) {
+                List<Pair<String, Integer>> candidates = featureTermCompIndex.getSorted(tok);
+                Iterator<Pair<String, Integer>> it = candidates.iterator();
+                while (it.hasNext()) {
+                    Pair<String, Integer> c = it.next();
+                    if (c.getValue() < tokens.length)
+                        break;
+                    compareCandidates.add(c.getKey());
+                }
+
+            }
 
             StringBuilder pStr = new StringBuilder("(?<!\\w)");
             pStr.append(Pattern.quote(termString)).append("(?!\\w)");
             Pattern pattern = Pattern.compile(pStr.toString());
 
-            for (Map.Entry<Integer, Set<String>> entry : numTokens2Terms.entrySet()){
-                if(entry.getKey()<=tokens)
-                    continue;
-                for(String pterm: entry.getValue()) {
-                    if (pattern.matcher(pterm).find()) {  //ref term contains term
-                        feature.add(termString, pterm);
-                    }
+
+            for (String pterm : compareCandidates) {
+                if (pattern.matcher(pterm).find()) {  //ref term contains term
+                    feature.add(termString, pterm);
                 }
             }
+
             count++;
-            if(count%1000==0)
+            if (count % 2000 == 0)
                 LOG.info(count + "/" + taskTerms.size());
         }
         return new int[]{count, taskTerms.size()};

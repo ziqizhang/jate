@@ -37,7 +37,7 @@ public class RAKE extends Algorithm {
         msg.append(cores).append(" total terms=" + candidates.size()).append(",")
         .append(" max terms per worker thread=").append(maxPerWorker);
 
-        
+
         LOG.info(msg.toString());
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
         RAKEWorker worker = new RAKEWorker(new ArrayList<>(candidates), maxPerWorker, fFeatureWords,
