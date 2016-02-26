@@ -55,7 +55,7 @@ public class FrequencyCtxDocBasedFBMaster extends AbstractFeatureBuilder {
             ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
             int total = forkJoinPool.invoke(worker);
             StringBuilder sb = new StringBuilder("Complete building features. Total processed terms = " + total);
-            sb.append("/").append(feature.getMapCtx2TTF().size());
+            sb.append("/").append(allLuceneTerms.size());
             LOG.info(sb.toString());
 
         } catch (IOException ioe) {

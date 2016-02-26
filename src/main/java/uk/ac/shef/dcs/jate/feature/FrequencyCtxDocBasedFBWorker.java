@@ -68,6 +68,7 @@ public class FrequencyCtxDocBasedFBWorker extends JATERecursiveTaskWorker<String
                             feature.increment(ctx, tfid);
                             feature.increment(ctx, termStr, tfid);
                         }
+                        total++;
                     }else {
                         StringBuilder msg = new StringBuilder(termStr);
                         msg.append(" is a candidate term, but not indexed in the n-gram information field. It's score may be mis-computed.");
