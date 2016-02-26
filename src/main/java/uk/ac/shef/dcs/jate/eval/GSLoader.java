@@ -26,11 +26,6 @@ public class GSLoader {
         return terms;
         //return loadGenia(new File(file), lowercase, normalize);
     }
-    
-    private static Function<String, String> mapToTerm = (line) -> {
-        String[] p = line.split("\t");
-        return p[1];
-    };
 
     public static List<String> loadACLRD(String file) throws IOException {
         List<String> raw = FileUtils.readLines(new File(file));
