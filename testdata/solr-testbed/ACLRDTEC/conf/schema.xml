@@ -296,7 +296,7 @@
 							posTaggerModel="en-pos-maxent.bin"
 							patterns="aclrdtec.patterns"
 							minTokens="1" maxTokens="5"
-							maxCharLength="50" minCharLength="2" removeLeadingStopWords="true"
+							maxCharLength="40" minCharLength="2" removeLeadingStopWords="true"
 							removeTrailingStopWords="true" removeLeadingSymbolicTokens="true"
 							removeTrailingSymbolicTokens="true"
 							stripAnySymbolChars="false"
