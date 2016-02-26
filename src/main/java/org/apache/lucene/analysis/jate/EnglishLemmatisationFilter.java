@@ -4,9 +4,9 @@ import dragon.nlp.tool.lemmatiser.EngLemmatiser;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.analysis.tokenattributes.KeywordAttribute;
 import org.apache.lucene.analysis.tokenattributes.PayloadAttribute;
 import org.apache.lucene.util.BytesRef;
+import uk.ac.shef.dcs.jate.nlp.Lemmatiser;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -16,31 +16,13 @@ import java.util.Map;
  * Created by - on 19/02/2016.
  */
 public final class EnglishLemmatisationFilter extends TokenFilter {
-    private final EngLemmatiser lemmatiser;
-    private Map<String, Integer> tagLookUp;
+    private final Lemmatiser lemmatiser;
     private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
     private final PayloadAttribute exitingPayload = addAttribute(PayloadAttribute.class);
 
-    public EnglishLemmatisationFilter(EngLemmatiser lemmatiser, TokenStream input) {
+    public EnglishLemmatisationFilter(EngLemmatiser dragontoolLemmatiser, TokenStream input) {
         super(input);
-        this.lemmatiser=lemmatiser;
-        tagLookUp = new HashMap<>();
-        tagLookUp.put("NN", 1);
-        tagLookUp.put("NNS", 1);
-        tagLookUp.put("NNP", 1);
-        tagLookUp.put("NNPS", 1);
-        tagLookUp.put("VB", 2);
-        tagLookUp.put("VBG", 2);
-        tagLookUp.put("VBD", 2);
-        tagLookUp.put("VBN", 2);
-        tagLookUp.put("VBP", 2);
-        tagLookUp.put("VBZ", 2);
-        tagLookUp.put("JJ", 3);
-        tagLookUp.put("JJR", 3);
-        tagLookUp.put("JJS", 3);
-        tagLookUp.put("RB", 4);
-        tagLookUp.put("RBR", 4);
-        tagLookUp.put("RBS", 4);
+        lemmatiser = new Lemmatiser(dragontoolLemmatiser);
     }
 
     @Override
@@ -63,7 +45,7 @@ public final class EnglishLemmatisationFilter extends TokenFilter {
             if(tok.length()>2) { //words with only 2 chars are unlikely to be inflectional
                 //theoretically this is the right way. But in practice, pos is expected to be noun, so using NN is better
                 //tok = normalize(tok, pos);
-                tok=normalize(tok, "NN");
+                tok=lemmatiser.normalize(tok, "NN");
             }
 
             termAtt.setEmpty().append(tok);
@@ -71,24 +53,5 @@ public final class EnglishLemmatisationFilter extends TokenFilter {
         } else {
             return false;
         }
-    }
-
-    /**
-     * Lemmatise a phrase or word. If a phrase, only lemmatise the most RHS word.
-     * @param value
-     * @return
-     */
-    public String normalize(String value, String pos) {
-        Integer tag = tagLookUp.get(pos);
-        tag=tag==null?1:tag;
-        int space = value.lastIndexOf(" ");
-        if(space==-1||value.endsWith("'s")) //if string is a single word, or it is in "XYZ's" form where the ' char has been removed
-            return lemmatiser.lemmatize(value,tag).trim();
-
-
-        String part1 = value.substring(0,space);
-        String part2 = lemmatiser.lemmatize(value.substring(space+1),tag);
-        return (part1+" "+part2).trim();
-
     }
 }

@@ -1,5 +1,6 @@
 package uk.ac.shef.dcs.jate.app;
 
+import dragon.nlp.tool.lemmatiser.EngLemmatiser;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
@@ -14,6 +15,7 @@ import uk.ac.shef.dcs.jate.eval.GSLoader;
 import uk.ac.shef.dcs.jate.eval.Scorer;
 import uk.ac.shef.dcs.jate.model.JATEDocument;
 import uk.ac.shef.dcs.jate.model.JATETerm;
+import uk.ac.shef.dcs.jate.nlp.Lemmatiser;
 import uk.ac.shef.dcs.jate.test.DebugHelper;
 import uk.ac.shef.dcs.jate.util.JATEUtil;
 
@@ -76,7 +78,11 @@ public abstract class ACLRDTECTest {
     static List<String> gsTerms = null;
     JATEProperties jateProp = null;
 
-    public void initialise(String solrHomeDir, String solrCoreName) throws JATEException {
+    static Lemmatiser lemmatiser = new Lemmatiser(new EngLemmatiser(
+            Paths.get(workingDir, "src", "test", "resource", "lemmatiser").toString(), false, false
+    ));
+
+    public void initialise(String solrHomeDir, String solrCoreName) throws JATEException, IOException {
         if (server == null) {
             CoreContainer solrContainer = new CoreContainer(solrHomeDir);
             solrContainer.load();
@@ -84,7 +90,7 @@ public abstract class ACLRDTECTest {
             server = new EmbeddedSolrServer(solrContainer, solrCoreName);
         }
 
-        gsTerms = GSLoader.loadACLRDTECGSTerms(allAnnCandidTerms, true, true);
+        gsTerms = GSLoader.loadACLRD(allAnnCandidTerms.toString());
 
         if (gsTerms == null) {
             throw new JATEException("ACLRDTEC CORPUS CONCEPT FILE CANNOT BE LOADED SUCCESSFULLY!");
@@ -171,7 +177,7 @@ public abstract class ACLRDTECTest {
     public void evaluate(List<JATETerm> jateTerms, String algorithmName) throws JATEException {
         LOG.info(String.format("evaluating %s ...", algorithmName));
         List<String> rankedTerms = ATEResultLoader.load(jateTerms);
-        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms,
+        double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms,
                 true, false, true,
                 2, 100, 1, 10,
                 50, 100, 500, 1000, 3000, 5000, 8000, 10000);
@@ -189,7 +195,7 @@ public abstract class ACLRDTECTest {
         DebugHelper.writeList(sorted, "missed.txt");
         System.exit(1);*/
         //>>>>>>
-        assert 0.34 == recall;
+        assert 0.75 == recall;
 
         LOG.info(String.format("=============%s ACL RD-TEC Benchmarking Results==================", algorithmName));
         validate_indexing();

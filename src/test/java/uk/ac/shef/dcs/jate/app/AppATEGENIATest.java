@@ -1,5 +1,6 @@
 package uk.ac.shef.dcs.jate.app;
 
+import dragon.nlp.tool.lemmatiser.EngLemmatiser;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -18,6 +19,7 @@ import uk.ac.shef.dcs.jate.eval.GSLoader;
 import uk.ac.shef.dcs.jate.eval.Scorer;
 import uk.ac.shef.dcs.jate.model.JATEDocument;
 import uk.ac.shef.dcs.jate.model.JATETerm;
+import uk.ac.shef.dcs.jate.nlp.Lemmatiser;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -43,6 +45,9 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
             "eval", "GENIA", "terms.txt");
 
     public static final int EXPECTED_CANDIDATE_SIZE=10582;
+    static Lemmatiser lemmatiser = new Lemmatiser(new EngLemmatiser(
+            Paths.get(workingDir, "src", "test", "resource", "lemmatiser").toString(), false, false
+    ));
 
     JATEProperties jateProperties = null;
 
@@ -62,7 +67,6 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         reindex = true;
     }
 
-
     @Before
     public void setup() throws Exception {
         super.setup();
@@ -77,7 +81,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
             }
         }
 
-        gsTerms = GSLoader.loadGenia(GENIA_CORPUS_CONCEPT_FILE.toFile(), true, true);
+        gsTerms = GSLoader.loadGenia(GENIA_CORPUS_CONCEPT_FILE.toString());
 
         if (gsTerms == null) {
             throw new JATEException("GENIA CORPUS CONCEPT FILE CANNOT BE LOADED SUCCESSFULLY!");
@@ -179,7 +183,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
+        double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 200, 1, 10,
                 50, 100, 500, 1000, 3000, 5000, 8000);
         assert 0.82 == scores[0];
@@ -216,7 +220,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // candidate extraction is performed at index-time
         Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
+        double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 500, 1000, 3000, 5000, 8000);
         assert 0.94 == scores[0];
@@ -253,7 +257,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
+        double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 500, 1000, 3000, 5000, 8000);
         assert 0.92 == scores[0];
@@ -289,7 +293,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
+        double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 500, 1000, 3000, 5000, 8000);
         assert 0.94 == scores[0];
@@ -327,7 +331,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
 
-        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
+        double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 500, 1000, 3000, 5000, 8000);
         assert 0.78 == scores[0];
@@ -364,7 +368,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
+        double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 500, 1000, 3000, 5000, 8000);
         assert 0.9 == scores[0];
@@ -402,7 +406,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
+        double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 500, 1000, 3000, 5000, 8000);
         assert 0.9 == scores[0];
@@ -436,7 +440,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
+        double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 500, 1000, 3000, 5000, 8000);
         assert 0.92 == scores[0];
@@ -474,7 +478,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
+        double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 500, 1000, 3000, 5000, 8000);
         assert 0.92 == scores[0];
@@ -513,7 +517,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        double[] scores = Scorer.computePrecisionAtRank(gsTerms, rankedTerms, true, false, true,
+        double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 500, 1000, 3000, 5000, 8000);
         assert 0.84 == scores[0];

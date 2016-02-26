@@ -18,7 +18,7 @@ import java.util.Map;
 public class AppATEACLRDTECTest extends ACLRDTECTest {
     private static Logger LOG = Logger.getLogger(AppATEACLRDTECTest.class.getName());
 
-    public AppATEACLRDTECTest(String solrHomeDir, String solrCoreName) throws JATEException {
+    public AppATEACLRDTECTest(String solrHomeDir, String solrCoreName) throws JATEException, IOException {
         initialise(solrHomeDir, solrCoreName);
     }
 
@@ -50,14 +50,14 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
             long numOfDocs = validate_indexing();
             if (numOfDocs == 0 || reindex) {
                 appATETest.indexAndExtract(corpusDir);
-                try {
+                /*try {
                     server.getCoreContainer().getCore(solrCoreName).close();
                     server.getCoreContainer().shutdown();
                     server.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                System.exit(0);
+                System.exit(0);*/
             }
 
 
@@ -80,7 +80,6 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
             AppGlossExTest appGlossExTest = new AppGlossExTest();
             terms = appGlossExTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
             appGlossExTest.evaluate(terms, AppGlossEx.class.getSimpleName());
-
             AppRAKETest appRAKETest = new AppRAKETest();
             terms = appRAKETest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
             appRAKETest.evaluate(terms, AppRAKE.class.getSimpleName());

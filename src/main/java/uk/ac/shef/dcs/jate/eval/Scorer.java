@@ -1,16 +1,13 @@
 package uk.ac.shef.dcs.jate.eval;
 
+import dragon.nlp.tool.lemmatiser.EngLemmatiser;
 import opennlp.tools.util.eval.FMeasure;
-import org.apache.lucene.analysis.en.EnglishMinimalStemmer;
 import uk.ac.shef.dcs.jate.JATEException;
+import uk.ac.shef.dcs.jate.nlp.Lemmatiser;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -22,12 +19,12 @@ public class Scorer {
     private static String symbolsPattern = "\\p{Punct}";
 
 
-    public static void createReportACLRD(String ateOutputFolder, String gsFile, String outFile,
+    public static void createReportACLRD(Lemmatiser lemmatiser, String ateOutputFolder, String gsFile, String outFile,
                                          boolean ignoreSymbols, boolean ignoreDigits,boolean lowercase,
                                          int minChar, int maxChar, int minTokens, int maxTokens,
-                                         int... ranks) throws IOException {
+                                         int... ranks) throws IOException, JATEException {
         PrintWriter p = new PrintWriter(outFile);
-        List<String> gs = GSLoader.loadACLRD(gsFile, true, true);
+        List<String> gs = GSLoader.loadACLRD(gsFile);
         Map<String, double[]> scores = new HashMap<>();
 
         for (File f : new File(ateOutputFolder).listFiles()) {
@@ -37,9 +34,10 @@ public class Scorer {
             System.out.println(f);
             List<String> terms = ATEResultLoader.load(f.toString());
 
-            double[] s = computePrecisionAtRank(gs, terms, ignoreSymbols, ignoreDigits, lowercase, minChar,
+            double[] s = computePrecisionAtRank(lemmatiser,gs, terms, ignoreSymbols, ignoreDigits, lowercase, minChar,
                     maxChar, minTokens, maxTokens, ranks);
             scores.put(name, s);
+
         }
 
         //generate report
@@ -63,12 +61,12 @@ public class Scorer {
         p.close();
     }
 
-    public static void createReportGenia(String ateOutputFolder, String gsFile, String outFile,
+    public static void createReportGenia(Lemmatiser lemmatiser, String ateOutputFolder, String gsFile, String outFile,
                                          boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
                                          int minChar, int maxChar, int minTokens, int maxTokens,
                                          int... ranks) throws IOException {
         PrintWriter p = new PrintWriter(outFile);
-        List<String> gs = GSLoader.loadGenia(gsFile, true, true);
+        List<String> gs = GSLoader.loadGenia(gsFile);
         Map<String, double[]> scores = new HashMap<>();
 
         for (File f : new File(ateOutputFolder).listFiles()) {
@@ -78,7 +76,7 @@ public class Scorer {
             System.out.println(f);
             List<String> terms = ATEResultLoader.load(f.toString());
 
-            double[] s = computePrecisionAtRank(gs, terms, ignoreSymbols, ignoreDigits, lowercase, minChar,
+            double[] s = computePrecisionAtRank(lemmatiser, gs, terms, ignoreSymbols, ignoreDigits, lowercase, minChar,
                     maxChar, minTokens, maxTokens, ranks);
             scores.put(name, s);
         }
@@ -118,12 +116,12 @@ public class Scorer {
      * @param ranks
      * @return
      */
-    public static double[] computePrecisionAtRank(List<String> gs, List<String> terms,
+    public static double[] computePrecisionAtRank(Lemmatiser lemmatiser, List<String> gs, List<String> terms,
                                                   boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
                                                   int minChar, int maxChar, int minTokens, int maxTokens,
                                                   int... ranks) {
-        gs=stem(gs);
         gs = prune(gs, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
+        gs= normalize(gs, lemmatiser);
         terms = prune(terms, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
 
         double[] scores = new double[ranks.length];
@@ -216,13 +214,13 @@ public class Scorer {
         return fMeasure.getFMeasure();
     }
 
-    public static List<String> stem(List<String> gsTerms){
-        EnglishMinimalStemmer stemmer = new EnglishMinimalStemmer();
+
+    public static List<String> normalize(List<String> gsTerms, Lemmatiser lemmatiser){
         List<String> result = new ArrayList<>();
         for (String term : gsTerms) {
-            int trim=stemmer.stem(term.toCharArray(), term.length());
-            String newTerm = term.substring(0, trim);
-            result.add(newTerm.trim());
+            term=lemmatiser.normalize(term, "NN").trim();
+            if(term.length()>0)
+                result.add(term);
         }
         return result;
 
@@ -252,7 +250,22 @@ public class Scorer {
             if (ignoreSymbols)
                 term = term.replaceAll(symbolsPattern, " ").replaceAll("\\s+", " ");
 
-            term = term.trim();
+            int start = 0, end = term.length();
+            for (int i = 0; i < term.length(); i++) {
+                if (Character.isLetterOrDigit(term.charAt(i))) {
+                    start = i;
+                    break;
+                }
+            }
+            for (int i = term.length() - 1; i > -1; i--) {
+                if (Character.isLetterOrDigit(term.charAt(i))) {
+                    end = i + 1;
+                    break;
+                }
+            }
+
+            term = term.substring(start, end).trim();
+
             if (term.length() >= minChar && term.length() <= maxChar) {
                 int tokens = term.split("\\s+").length;
                 if (tokens >= minTokens && tokens <= maxTokens)
@@ -266,25 +279,25 @@ public class Scorer {
         return result;
     }
 
-    public static void main(String[] args) throws IOException {
+
+
+
+    public static void main(String[] args) throws IOException, JATEException {
 
         /*calculateACLRDJate1("/Users/-/work/jate/experiment/CValue_ALGORITHM.txt", args[1], args[2], true, false, true,
                 2, 150, 1, 5,
                 50, 100, 500, 1000, 5000, 10000);
         System.exit(1);*/
 
+        Lemmatiser lem = new Lemmatiser(new EngLemmatiser(args[4],
+                false, false));
         if(args[3].equals("genia")) {
-            createReportGenia(args[0], args[1], args[2], true, false, true, 2, 150, 1, 5,
+            createReportGenia(lem,args[0], args[1], args[2], true, false, true, 2, 100, 1, 10,
                     50, 100, 500, 1000, 5000, 10000);
-
-            System.out.println("finished GENIA report");
         }
-
         else {
-            createReportACLRD(args[0], args[1], args[2], true, false, true, 2, 150, 1, 5,
+            createReportACLRD(lem, args[0], args[1], args[2], true, false, true, 2, 100, 1, 10,
                     50, 100, 500, 1000, 5000, 10000);
-
-            System.out.println();
         }
     }
 }
