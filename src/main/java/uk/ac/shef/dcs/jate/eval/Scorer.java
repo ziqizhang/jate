@@ -6,6 +6,7 @@ import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.nlp.Lemmatiser;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -193,7 +194,11 @@ public class Scorer {
      */
     public static double precision(List<String> gsTerms, List<String> topKTerms) {
         /*Set<String> correct = new HashSet<>(gsTerms);
-        correct.retainAll(topKTerms);*/
+        correct.retainAll(topKTerms);
+        ArrayList<String> sorted = new ArrayList<>(correct);
+        Collections.sort(sorted);
+        for(String s: sorted)
+            System.out.println(s);*/
 
         return FMeasure.precision(gsTerms.toArray(),topKTerms.toArray());
     }
@@ -268,12 +273,15 @@ public class Scorer {
 
             if (term.length() >= minChar && term.length() <= maxChar) {
                 int tokens = term.split("\\s+").length;
-                if (tokens >= minTokens && tokens <= maxTokens)
+                if (tokens >= minTokens && tokens <= maxTokens) {
                     if (lowercase) {
                         result.add(term.toLowerCase());
                     } else {
                         result.add(term);
                     }
+                }
+                else{}
+
             }
         }
         return result;
@@ -292,7 +300,7 @@ public class Scorer {
         Lemmatiser lem = new Lemmatiser(new EngLemmatiser(args[4],
                 false, false));
         if(args[3].equals("genia")) {
-            createReportGenia(lem,args[0], args[1], args[2], true, false, true, 2, 100, 1, 10,
+            createReportGenia(lem,args[0], args[1], args[2], true, false, true, 2, 100, 1, 5,
                     50, 100, 500, 1000, 5000, 10000);
         }
         else {
