@@ -63,14 +63,15 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
 
             List<JATETerm> terms = null;
 
-            AppATTFTest appATTFTest = new AppATTFTest();
+            /*AppATTFTest appATTFTest = new AppATTFTest();
             terms = appATTFTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
-            appATTFTest.evaluate(terms, AppATTF.class.getSimpleName());
+            appATTFTest.evaluate(terms, AppATTF.class.getSimpleName());*/
             //System.exit(0);
 
             AppChiSquareTest appChiSquareTest = new AppChiSquareTest();
             terms = appChiSquareTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
             appChiSquareTest.evaluate(terms, AppChiSquare.class.getSimpleName());
+            System.exit(0);
 
 
             AppCValueTest appCValueTest = new AppCValueTest();
@@ -154,6 +155,7 @@ class AppChiSquareTest extends ACLRDTECTest {
         Map<String, String> initParam = new HashMap<>();
         initParam.put(AppParams.PREFILTER_MIN_TERM_TOTAL_FREQUENCY.getParamKey(), "2");
         initParam.put(AppParams.CUTOFF_TOP_K_PERCENT.getParamKey(), "0.99999");
+        initParam.put(AppParams.PREFILTER_MIN_TERM_CONTEXT_FREQUENCY.getParamKey(), "0");
 
         initParam.put(AppParams.CHISQUERE_FREQ_TERM_CUTOFF_PERCENTAGE.getParamKey(), "0.3");
 

@@ -65,8 +65,8 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<ContextWindow,
         for (ContextWindow ctx : contextWindows) {
             //get the reference terms appearing in this ctx object and their frequency
             Map<String, Integer> refTerm2TFIC=ref_frequencyCtxBased.getTFIC(ctx);
-            if(refTerm2TFIC.size()==0)
-                continue;
+            /*if(refTerm2TFIC.size()==0) //it is possible because ref-term may not appear in this context
+                continue;*/
             //get the target terms appearing in this ctx object and their frequency
             Map<String, Integer> term2TFIC = frequencyCtxBased.getTFIC(ctx);
             //all terms in this ctxid
@@ -87,7 +87,7 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<ContextWindow,
                 for(Map.Entry<String, Integer> en : refTerm2TFIC.entrySet()){
                     String refTerm=en.getKey();
                     if (refTerm.equals(targetTerm))
-                        continue;//todo should index reference term?
+                        continue;
 
                     int refTermFIC = en.getValue();
                     int refIdx = feature.lookupAndIndexRefTerm(refTerm);

@@ -65,9 +65,10 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
 
     @Override
     public AbstractFeature build() throws JATEException {
-        //we are interested in target terms cooccuring with reference terms. So we only need to process
-        //context windows where reference terms are found
-        List<ContextWindow> contextWindows = new ArrayList<>(ref_frequencyCtxBased.getMapCtx2TTF().keySet());
+        //Context windows where target candidate terms appear. It is possible that many reference terms
+        //do not appear in these context windows, because reference terms are not identical set to target terms
+        List<ContextWindow> contextWindows = new ArrayList<>(frequencyCtxBased.getMapCtx2TTF().keySet());
+        //List<ContextWindow> contextWindows = new ArrayList<>(ref_frequencyCtxBased.getMapCtx2TTF().keySet());
         Collections.sort(contextWindows);
 
         //start workers
@@ -96,6 +97,8 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
             }
         }
 
+        //It is possible that many reference terms
+        //do not appear in these context windows, because reference terms are not identical set to target terms
         Cooccurrence feature = new Cooccurrence(termsPassingPrefilter.size(),
                 ref_frequencyCtxBased.getMapTerm2Ctx().size());
         LOG.info("Beginning building features. Total terms=" + termsPassingPrefilter.size() + ", total contexts=" + contextWindows.size());
