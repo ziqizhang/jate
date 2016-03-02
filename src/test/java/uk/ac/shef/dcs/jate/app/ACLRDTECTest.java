@@ -8,6 +8,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.core.CoreContainer;
+import org.junit.Assert;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.eval.ATEResultLoader;
@@ -84,6 +85,13 @@ public abstract class ACLRDTECTest {
 
     public void initialise(String solrHomeDir, String solrCoreName) throws JATEException, IOException {
         if (server == null) {
+
+            File lock = Paths.get(solrHome.toString(), solrCoreName, "data", "index", "write.lock").toFile();
+            if (lock.exists()) {
+                System.err.println("Previous solr did not shut down cleanly. Unlock it ...");
+                Assert.assertTrue(lock.delete());
+            }
+
             CoreContainer solrContainer = new CoreContainer(solrHomeDir);
             solrContainer.load();
 

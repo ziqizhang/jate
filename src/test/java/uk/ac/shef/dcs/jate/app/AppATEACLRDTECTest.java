@@ -63,16 +63,13 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
 
             List<JATETerm> terms = null;
 
-            /*AppATTFTest appATTFTest = new AppATTFTest();
+            AppATTFTest appATTFTest = new AppATTFTest();
             terms = appATTFTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
-            appATTFTest.evaluate(terms, AppATTF.class.getSimpleName());*/
-            //System.exit(0);
+            appATTFTest.evaluate(terms, AppATTF.class.getSimpleName());
 
             AppChiSquareTest appChiSquareTest = new AppChiSquareTest();
             terms = appChiSquareTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
             appChiSquareTest.evaluate(terms, AppChiSquare.class.getSimpleName());
-            System.exit(0);
-
 
             AppCValueTest appCValueTest = new AppCValueTest();
             terms = appCValueTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
