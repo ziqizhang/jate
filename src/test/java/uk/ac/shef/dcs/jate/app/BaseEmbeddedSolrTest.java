@@ -110,17 +110,21 @@ public abstract class BaseEmbeddedSolrTest {
                 server.getCoreContainer().shutdown();
                 server.close();
 
-                File lock = Paths.get(solrHome.toString(), solrCoreName, "data", "index", "write.lock").toFile();
-                if (lock.exists()) {
-                    System.err.println("solr did not shut down cleanly");
-                    Assert.assertTrue(lock.delete());
-                }
+                unlock();
 //            cleanIndexDirectory(solrHome.toString(), solrCoreName);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
             LOG.error("embedded server or core is not created and loaded successfully.");
+        }
+    }
+
+    protected void unlock() {
+        File lock = Paths.get(solrHome.toString(), solrCoreName, "data", "index", "write.lock").toFile();
+        if (lock.exists()) {
+            System.err.println("solr did not shut down cleanly");
+            Assert.assertTrue(lock.delete());
         }
     }
 

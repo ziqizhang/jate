@@ -64,7 +64,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     protected void setReindex() {
         //change this to false if you want to use existing index
         //always set to true for the automatic test
-        reindex = false;
+        reindex = true;
     }
 
     @Before
@@ -154,7 +154,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         server.commit();
     }
 
-    //@Test
+    @Test
     public void validate_indexing() {
         ModifiableSolrParams params = new ModifiableSolrParams();
         params.set("q", "*:*");
@@ -171,7 +171,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         }
     }
 
-    //@Test
+    @Test
     public void benchmarking_appATTF() throws JATEException, IOException {
         AppATTF appATTF = new AppATTF(initParams);
         List<JATETerm> termList = appATTF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
@@ -185,28 +185,29 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 200, 1, 10,
-                50, 100, 500, 1000, 3000, 5000, 8000,10000);
+                50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         assert 0.84 == scores[0];
         assert 0.85 == scores[1];
-        assert 0.78 == scores[2];
-        assert 0.77 == scores[3];
-        assert 0.69 == scores[4];
-        assert 0.7 == scores[5];
-        assert 0.66 == scores[6];
-        assert 0.63==scores[7];
+        assert 0.77 == scores[2];
+        assert 0.78 == scores[3];
+        assert 0.77 == scores[4];
+        assert 0.77 == scores[5];
+        assert 0.76 == scores[6];
+        assert 0.72 == scores[7];
+        assert 0.69 == scores[8];
+        assert 0.7 == scores[9];
+        assert 0.7 == scores[10];
+        assert 0.71 == scores[11];
+        assert 0.69 == scores[12];
+        assert 0.66 == scores[13];
+        assert 0.65 == scores[14];
+        assert 0.63 == scores[15];
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.1 == recall;
 
         LOG.info("=============ATTF GENIA Benchmarking Results==================");
 
-        LOG.info("  top 50 Precision:" + scores[0]);
-        LOG.info("  top 100 Precision:" + scores[1]);
-        LOG.info("  top 500 Precision:" + scores[2]);
-        LOG.info("  top 1000 Precision:" + scores[3]);
-        LOG.info("  top 3000 Precision:" + scores[4]);
-        LOG.info("  top 5000 Precision:" + scores[5]);
-        LOG.info("  top 8000 Precision:" + scores[6]);
-        LOG.info("  overall recall:" + recall);
+        printResults(scores, recall);
     }
 
     @Test
@@ -224,31 +225,32 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
-                50, 100, 500, 1000, 3000, 5000, 8000,10000);
+                50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         assert 0.96 == scores[0];
         assert 0.89 == scores[1];
-        assert 0.8 == scores[2];
-        assert 0.78 == scores[3];
-        assert 0.73 == scores[4];
-        assert 0.69 == scores[5];
-        assert 0.65 == scores[6];
-        assert 0.63==scores[7];
+        assert 0.84 == scores[2];
+        assert 0.8 == scores[3];
+        assert 0.79 == scores[4];
+        assert 0.78 == scores[5];
+        assert 0.76 == scores[6];
+        assert 0.75 == scores[7];
+        assert 0.73 == scores[8];
+        assert 0.71 == scores[9];
+        assert 0.69 == scores[10];
+        assert 0.67 == scores[11];
+        assert 0.66 == scores[12];
+        assert 0.65 == scores[13];
+        assert 0.64 == scores[14];
+        assert 0.63 == scores[15];
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.1 == recall;
 
         LOG.info("=============CHISQUARE GENIA Benchmarking Results==================");
 
-        LOG.info("  top 50 Precision:" + scores[0]);
-        LOG.info("  top 100 Precision:" + scores[1]);
-        LOG.info("  top 500 Precision:" + scores[2]);
-        LOG.info("  top 1000 Precision:" + scores[3]);
-        LOG.info("  top 3000 Precision:" + scores[4]);
-        LOG.info("  top 5000 Precision:" + scores[5]);
-        LOG.info("  top 8000 Precision:" + scores[6]);
-        LOG.info("  overall recall:" + recall);
+        printResults(scores, recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appCValue() throws IOException, JATEException {
         AppCValue appCValue = new AppCValue(initParams);
         List<JATETerm> termList = appCValue.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
@@ -262,31 +264,33 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
-                50, 100, 500, 1000, 3000, 5000, 8000,10000);
+                50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         assert 0.94 == scores[0];
         assert 0.91 == scores[1];
-        assert 0.86 == scores[2];
-        assert 0.82 == scores[3];
-        assert 0.74 == scores[4];
-        assert 0.65 == scores[5];
-        assert 0.65 == scores[6];
-        assert 0.63==scores[7];
+        assert 0.9 == scores[2];
+        assert 0.86 == scores[3];
+        assert 0.84 == scores[4];
+        assert 0.82 == scores[5];
+        assert 0.79 == scores[6];
+        assert 0.77 == scores[7];
+        assert 0.74 == scores[8];
+        assert 0.71 == scores[9];
+        assert 0.65 == scores[10];
+        assert 0.64 == scores[11];
+        assert 0.65 == scores[12];
+        assert 0.65 == scores[13];
+        assert 0.64 == scores[14];
+        assert 0.63 == scores[15];
+
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.1 == recall;
 
         LOG.info("=============CVALUE GENIA Benchmarking Results==================");
 
-        LOG.info("  top 50 Precision:" + scores[0]);
-        LOG.info("  top 100 Precision:" + scores[1]);
-        LOG.info("  top 500 Precision:" + scores[2]);
-        LOG.info("  top 1000 Precision:" + scores[3]);
-        LOG.info("  top 3000 Precision:" + scores[4]);
-        LOG.info("  top 5000 Precision:" + scores[5]);
-        LOG.info("  top 8000 Precision:" + scores[6]);
-        LOG.info("  overall recall:" + recall);
+        printResults(scores, recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appGlossEx() throws JATEException, IOException {
         initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), REF_FREQ_FILE.toString());
         AppGlossEx appGlossEx = new AppGlossEx(initParams);
@@ -299,31 +303,52 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
-                50, 100, 500, 1000, 3000, 5000, 8000,10000);
+                50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         assert 0.94 == scores[0];
         assert 0.84 == scores[1];
-        assert 0.71 == scores[2];
-        assert 0.68 == scores[3];
+        assert 0.78 == scores[2];
+        assert 0.71 == scores[3];
         assert 0.7 == scores[4];
-        assert 0.7 == scores[5];
-        assert 0.68 == scores[6];
-        assert 0.65==scores[7];
+        assert 0.68 == scores[5];
+        assert 0.67 == scores[6];
+        assert 0.68 == scores[7];
+        assert 0.7 == scores[8];
+        assert 0.7 == scores[9];
+        assert 0.7 == scores[10];
+        assert 0.7 == scores[11];
+        assert 0.69 == scores[12];
+        assert 0.68 == scores[13];
+        assert 0.67 == scores[14];
+        assert 0.65 == scores[15];
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.1 == recall;
 
         LOG.info("=============GLOSSEX GENIA Benchmarking Results==================");
 
+        printResults(scores, recall);
+    }
+
+    private void printResults(double[] scores, double recall) {
         LOG.info("  top 50 Precision:" + scores[0]);
         LOG.info("  top 100 Precision:" + scores[1]);
-        LOG.info("  top 500 Precision:" + scores[2]);
-        LOG.info("  top 1000 Precision:" + scores[3]);
-        LOG.info("  top 3000 Precision:" + scores[4]);
-        LOG.info("  top 5000 Precision:" + scores[5]);
-        LOG.info("  top 8000 Precision:" + scores[6]);
+        LOG.info("  top 300 Precision:" + scores[2]);
+        LOG.info("  top 500 Precision:" + scores[3]);
+        LOG.info("  top 800 Precision:" + scores[4]);
+        LOG.info("  top 1000 Precision:" + scores[5]);
+        LOG.info("  top 1500 Precision:" + scores[6]);
+        LOG.info("  top 2000 Precision:" + scores[7]);
+        LOG.info("  top 3000 Precision:" + scores[8]);
+        LOG.info("  top 4000 Precision:" + scores[9]);
+        LOG.info("  top 5000 Precision:" + scores[10]);
+        LOG.info("  top 6000 Precision:" + scores[11]);
+        LOG.info("  top 7000 Precision:" + scores[12]);
+        LOG.info("  top 8000 Precision:" + scores[13]);
+        LOG.info("  top 9000 Precision:" + scores[14]);
+        LOG.info("  top 10000 Precision:" + scores[15]);
         LOG.info("  overall recall:" + recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appRAKE() throws JATEException, IOException {
         AppRAKE appRAKE = new AppRAKE(initParams);
         List<JATETerm> termList = appRAKE.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
@@ -338,31 +363,32 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
-                50, 100, 500, 1000, 3000, 5000, 8000,10000);
+                50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         assert 0.82 == scores[0];
         assert 0.81 == scores[1];
-        assert 0.67 == scores[2];
-        assert 0.7 == scores[3];
-        assert 0.66 == scores[4];
-        assert 0.68 == scores[5];
-        assert 0.67 == scores[6];
-        assert 0.64==scores[7];
+        assert 0.72 == scores[2];
+        assert 0.67 == scores[3];
+        assert 0.71 == scores[4];
+        assert 0.7 == scores[5];
+        assert 0.69 == scores[6];
+        assert 0.68 == scores[7];
+        assert 0.66 == scores[8];
+        assert 0.67 == scores[9];
+        assert 0.68 == scores[10];
+        assert 0.68 == scores[11];
+        assert 0.67 == scores[12];
+        assert 0.67 == scores[13];
+        assert 0.66 == scores[14];
+        assert 0.64 == scores[15];
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.1 == recall;
 
         LOG.info("=============RAKE GENIA Benchmarking Results==================");
 
-        LOG.info("  top 50 Precision:" + scores[0]);
-        LOG.info("  top 100 Precision:" + scores[1]);
-        LOG.info("  top 500 Precision:" + scores[2]);
-        LOG.info("  top 1000 Precision:" + scores[3]);
-        LOG.info("  top 3000 Precision:" + scores[4]);
-        LOG.info("  top 5000 Precision:" + scores[5]);
-        LOG.info("  top 8000 Precision:" + scores[6]);
-        LOG.info("  overall recall:" + recall);
+        printResults(scores, recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appRIDF() throws JATEException, IOException {
         AppRIDF appRIDF = new AppRIDF(initParams);
         List<JATETerm> termList = appRIDF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
@@ -376,30 +402,32 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
-                50, 100, 500, 1000, 3000, 5000, 8000,10000);
+                50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         assert 0.92 == scores[0];
         assert 0.91 == scores[1];
-        assert 0.87 == scores[2];
-        assert 0.83 == scores[3];
-        assert 0.8 == scores[4];
-        assert 0.72 == scores[5];
-        assert 0.68 == scores[6];
+        assert 0.88 == scores[2];
+        assert 0.87 == scores[3];
+        assert 0.83 == scores[4];
+        assert 0.83 == scores[5];
+        assert 0.83 == scores[6];
+        assert 0.82 == scores[7];
+        assert 0.8 == scores[8];
+        assert 0.75 == scores[9];
+        assert 0.72 == scores[10];
+        assert 0.71 == scores[11];
+        assert 0.7 == scores[12];
+        assert 0.68 == scores[13];
+        assert 0.65 == scores[14];
+        assert 0.64 == scores[15];
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.1 == recall;
 
         LOG.info("=============RIDF GENIA Benchmarking Results==================");
 
-        LOG.info("  top 50 Precision:" + scores[0]);
-        LOG.info("  top 100 Precision:" + scores[1]);
-        LOG.info("  top 500 Precision:" + scores[2]);
-        LOG.info("  top 1000 Precision:" + scores[3]);
-        LOG.info("  top 3000 Precision:" + scores[4]);
-        LOG.info("  top 5000 Precision:" + scores[5]);
-        LOG.info("  top 8000 Precision:" + scores[6]);
-        LOG.info("  overall recall:" + recall);
+        printResults(scores, recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appTermEx() throws JATEException, IOException {
         initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), REF_FREQ_FILE.toString());
         AppTermEx appTermEx = new AppTermEx(initParams);
@@ -414,31 +442,32 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
-                50, 100, 500, 1000, 3000, 5000, 8000,10000);
+                50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         assert 0.9 == scores[0];
         assert 0.93 == scores[1];
-        assert 0.88 == scores[2];
-        assert 0.86 == scores[3];
-        assert 0.84 == scores[4];
-        assert 0.83 == scores[5];
-        assert 0.77 == scores[6];
-        assert 0.65==scores[7];
+        assert 0.9 == scores[2];
+        assert 0.88 == scores[3];
+        assert 0.85 == scores[4];
+        assert 0.86 == scores[5];
+        assert 0.87 == scores[6];
+        assert 0.86 == scores[7];
+        assert 0.84 == scores[8];
+        assert 0.84 == scores[9];
+        assert 0.83 == scores[10];
+        assert 0.81 == scores[11];
+        assert 0.79 == scores[12];
+        assert 0.77 == scores[13];
+        assert 0.72 == scores[14];
+        assert 0.65 == scores[15];
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.1 == recall;
 
         LOG.info("=============TERMEX GENIA Benchmarking Results==================");
 
-        LOG.info("  top 50 Precision:" + scores[0]);
-        LOG.info("  top 100 Precision:" + scores[1]);
-        LOG.info("  top 500 Precision:" + scores[2]);
-        LOG.info("  top 1000 Precision:" + scores[3]);
-        LOG.info("  top 3000 Precision:" + scores[4]);
-        LOG.info("  top 5000 Precision:" + scores[5]);
-        LOG.info("  top 8000 Precision:" + scores[6]);
-        LOG.info("  overall recall:" + 0);
+        printResults(scores, recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appTFIDF() throws JATEException, IOException {
         AppTFIDF appTFIDF = new AppTFIDF(initParams);
 
@@ -449,31 +478,32 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
-                50, 100, 500, 1000, 3000, 5000, 8000,10000);
+                50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         assert 0.96 == scores[0];
         assert 0.89 == scores[1];
-        assert 0.83 == scores[2];
+        assert 0.85 == scores[2];
         assert 0.83 == scores[3];
-        assert 0.77 == scores[4];
-        assert 0.73 == scores[5];
-        assert 0.68 == scores[6];
-        assert 0.64==scores[7];
+        assert 0.83 == scores[4];
+        assert 0.83 == scores[5];
+        assert 0.81 == scores[6];
+        assert 0.8 == scores[7];
+        assert 0.77 == scores[8];
+        assert 0.75 == scores[9];
+        assert 0.73 == scores[10];
+        assert 0.71 == scores[11];
+        assert 0.69 == scores[12];
+        assert 0.68 == scores[13];
+        assert 0.65 == scores[14];
+        assert 0.64 == scores[15];
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.1 == recall;
 
         LOG.info("=============TFIDF GENIA Benchmarking Results==================");
 
-        LOG.info("  top 50 Precision:" + scores[0]);
-        LOG.info("  top 100 Precision:" + scores[1]);
-        LOG.info("  top 500 Precision:" + scores[2]);
-        LOG.info("  top 1000 Precision:" + scores[3]);
-        LOG.info("  top 3000 Precision:" + scores[4]);
-        LOG.info("  top 5000 Precision:" + scores[5]);
-        LOG.info("  top 8000 Precision:" + scores[6]);
-        LOG.info("  overall recall:" + recall);
+        printResults(scores, recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appTTF() throws JATEException, IOException {
         AppTTF appTTF = new AppTTF(initParams);
 
@@ -488,32 +518,33 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
-                50, 100, 500, 1000, 3000, 5000, 8000,10000);
+                50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         assert 0.96 == scores[0];
         assert 0.88 == scores[1];
-        assert 0.82 == scores[2];
+        assert 0.84 == scores[2];
         assert 0.82 == scores[3];
-        assert 0.77 == scores[4];
-        assert 0.72 == scores[5];
-        assert 0.66 == scores[6];
-        assert 0.63 == scores[7];
+        assert 0.82 == scores[4];
+        assert 0.82 == scores[5];
+        assert 0.8 == scores[6];
+        assert 0.79 == scores[7];
+        assert 0.77 == scores[8];
+        assert 0.74 == scores[9];
+        assert 0.72 == scores[10];
+        assert 0.7 == scores[11];
+        assert 0.68 == scores[12];
+        assert 0.66 == scores[13];
+        assert 0.65 == scores[14];
+        assert 0.63 == scores[15];
 
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.1 == recall;
 
         LOG.info("=============TTF GENIA Benchmarking Results==================");
 
-        LOG.info("  top 50 Precision:" + scores[0]);
-        LOG.info("  top 100 Precision:" + scores[1]);
-        LOG.info("  top 500 Precision:" + scores[2]);
-        LOG.info("  top 1000 Precision:" + scores[3]);
-        LOG.info("  top 3000 Precision:" + scores[4]);
-        LOG.info("  top 5000 Precision:" + scores[5]);
-        LOG.info("  top 8000 Precision:" + scores[6]);
-        LOG.info("  overall recall:" + recall);
+        printResults(scores, recall);
     }
 
-    //@Test
+    @Test
     public void benchmarking_appWeirdness() throws JATEException, IOException {
         initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), REF_FREQ_FILE.toString());
         AppWeirdness appWeirdness = new AppWeirdness(initParams);
@@ -529,28 +560,29 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
-                50, 100, 500, 1000, 3000, 5000, 8000,10000);
+                50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         assert 0.88 == scores[0];
         assert 0.91 == scores[1];
-        assert 0.89 == scores[2];
+        assert 0.91 == scores[2];
         assert 0.89 == scores[3];
-        assert 0.81 == scores[4];
-        assert 0.76 == scores[5];
-        assert 0.69 == scores[6];
-        assert 0.64 == scores[7];
+        assert 0.89 == scores[4];
+        assert 0.89 == scores[5];
+        assert 0.86 == scores[6];
+        assert 0.85 == scores[7];
+        assert 0.81 == scores[8];
+        assert 0.78 == scores[9];
+        assert 0.76 == scores[10];
+        assert 0.73 == scores[11];
+        assert 0.72 == scores[12];
+        assert 0.69 == scores[13];
+        assert 0.67 == scores[14];
+        assert 0.64 == scores[15];
         double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.1 == recall;
 
         LOG.info("=============WEIRDNESS GENIA Benchmarking Results==================");
 
-        LOG.info("  top 50 Precision:" + scores[0]);
-        LOG.info("  top 100 Precision:" + scores[1]);
-        LOG.info("  top 500 Precision:" + scores[2]);
-        LOG.info("  top 1000 Precision:" + scores[3]);
-        LOG.info("  top 3000 Precision:" + scores[4]);
-        LOG.info("  top 5000 Precision:" + scores[5]);
-        LOG.info("  top 8000 Precision:" + scores[6]);
-        LOG.info("  overall recall:" + recall);
+        printResults(scores, recall);
 
     }
 
