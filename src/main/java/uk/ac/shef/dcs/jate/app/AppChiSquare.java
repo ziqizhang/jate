@@ -97,12 +97,6 @@ public class AppChiSquare extends App {
             FrequencyCtxBased ref_fcsb = (FrequencyCtxBased)
                     (new FrequencyCtxWindowBasedFBMaster(searcher, properties, fcsb.getMapCtx2TTF().keySet(), 5, 0).build());*/
 
-        List<String> inter = new ArrayList<>(fcs.getCtxOverlapZones().keySet());
-        inter.removeAll(ref_fcs.getCtxOverlapZones().keySet());
-        Collections.sort(inter);
-            /*for (String t : inter)
-				System.out.println(t);*/
-
         CooccurrenceFBMaster cob = new CooccurrenceFBMaster(searcher, properties, ft,
                 this.prefilterMinTTF, fcs, ref_fcs, this.prefilterMinTCF);
         Cooccurrence co = (Cooccurrence) cob.build();

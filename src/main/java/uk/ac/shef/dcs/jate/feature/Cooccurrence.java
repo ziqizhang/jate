@@ -83,9 +83,18 @@ public class Cooccurrence extends AbstractFeature {
     }
 
     protected synchronized void increment(int termIdx, int refTermIdx, int freq){
-        double newFreq=cooccurrence.get(termIdx, refTermIdx)+freq;
-        cooccurrence.set(termIdx, refTermIdx,
-                newFreq);
+        //try {
+            double newFreq = cooccurrence.get(termIdx, refTermIdx) + freq;
+            cooccurrence.set(termIdx, refTermIdx,
+                    newFreq);
+        /*}catch (Exception e){
+            System.err.println("rows="+cooccurrence.numRows()+", columns="+cooccurrence.numColumns()+". row="+termIdx+"" +
+                    " column="+refTermIdx);
+            e.printStackTrace();
+
+            System.err.println("\n\n\nTrying again, ");
+            System.out.println("value="+cooccurrence.get(termIdx, refTermIdx));
+        }*/
     }
 
     public String lookupTerm(int index){

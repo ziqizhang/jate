@@ -106,7 +106,7 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
         CooccurrenceFBWorker worker = new
                 CooccurrenceFBWorker(feature, contextWindows,
                 frequencyTermBased, minTTF, frequencyCtxBased, ref_frequencyCtxBased,
-                minTCF, maxPerThread);
+                minTCF, Integer.MAX_VALUE);
 
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
         int total = forkJoinPool.invoke(worker);

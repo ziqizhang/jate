@@ -19,6 +19,12 @@ import java.util.Map;
  */
 public class DebugHelper {
 
+    public static void loop(){
+        for (int i= 0; i< 1616135; i++){
+
+        }
+    }
+
     public static void stem(String inFile, String outFile) throws IOException {
         List<String> lines=FileUtils.readLines(new File(inFile));
 
