@@ -118,23 +118,28 @@ public abstract class ACLRDTECTest {
     public void indexAndExtract(Path corpusDir) throws JATEException {
         //File dir = new File(corpusDir);
         List<Path> files = JATEUtil.loadFiles(corpusDir);
-        Collections.sort(files);
+        //Collections.sort(files);
 
         LOG.info("indexing and extracting candidates from "+files.size()+" files...");
         int count = 0;
         for (Path file : files) {
             try {
-                if (!file.toString().contains(".DS_Store")) {
-                    indexJATEDocuments(file, jateProp, false);
-                    count++;
-                    if (count % 100 == 0)
-                        LOG.info("indexing done: " + count + "/" + files.size());
-                }
+                indexJATEDocuments(file, jateProp, false);
+                count++;
+                if (count % 100 == 0)
+                    LOG.info("indexing done: " + count + "/" + files.size());
             }catch (NullPointerException e){
                 e.printStackTrace();
             }
-
         }
+
+//        files.parallelStream().forEach(file -> {
+//            try {
+//                indexJATEDocuments(file, jateProp, false);
+//            } catch (JATEException e) {
+//                e.printStackTrace();
+//            }
+//        });
 
         try {
             server.commit();
@@ -147,6 +152,10 @@ public abstract class ACLRDTECTest {
     }
 
     static void indexJATEDocuments(Path file, JATEProperties jateProp, boolean commit) throws JATEException {
+        if (file == null || file.toString().contains(".DS_Store")) {
+            return;
+        }
+
         try {
             JATEDocument jateDocument = JATEUtil.loadACLRDTECDocument(new FileInputStream(file.toFile()));
 
@@ -188,7 +197,7 @@ public abstract class ACLRDTECTest {
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms,
                 true, false, true,
                 2, 100, 1, 10,
-                50, 100, 500, 1000, 3000, 5000, 8000, 10000);
+                50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
 
         double recall = Scorer.recall(gsTerms, rankedTerms);
 
@@ -207,14 +216,23 @@ public abstract class ACLRDTECTest {
 
         LOG.info(String.format("=============%s ACL RD-TEC Benchmarking Results==================", algorithmName));
         validate_indexing();
+
         LOG.info("  top 50 Precision:" + scores[0]);
         LOG.info("  top 100 Precision:" + scores[1]);
-        LOG.info("  top 500 Precision:" + scores[2]);
-        LOG.info("  top 1000 Precision:" + scores[3]);
-        LOG.info("  top 3000 Precision:" + scores[4]);
-        LOG.info("  top 5000 Precision:" + scores[5]);
-        LOG.info("  top 8000 Precision:" + scores[6]);
-        LOG.info("  top 10000 Precision:" + scores[7]);
+        LOG.info("  top 300 Precision:" + scores[2]);
+        LOG.info("  top 500 Precision:" + scores[3]);
+        LOG.info("  top 800 Precision:" + scores[4]);
+        LOG.info("  top 1000 Precision:" + scores[5]);
+        LOG.info("  top 1500 Precision:" + scores[6]);
+        LOG.info("  top 2000 Precision:" + scores[7]);
+        LOG.info("  top 3000 Precision:" + scores[8]);
+        LOG.info("  top 4000 Precision:" + scores[9]);
+        LOG.info("  top 5000 Precision:" + scores[10]);
+        LOG.info("  top 6000 Precision:" + scores[11]);
+        LOG.info("  top 7000 Precision:" + scores[12]);
+        LOG.info("  top 8000 Precision:" + scores[13]);
+        LOG.info("  top 9000 Precision:" + scores[14]);
+        LOG.info("  top 10000 Precision:" + scores[15]);
         LOG.info("  overall recall:" + recall);
     }
 

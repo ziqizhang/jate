@@ -90,9 +90,12 @@
   <!-- an exact 'path' can be used instead of a 'dir' to specify a 
        specific jar file.  This will cause a serious error to be logged 
        if it can't be loaded.
+
+       The examples below shows the use of JATE in plugin model.
+       You should load jate lib along with their external dependencies.
     -->
   <!--
-     <lib path="../a-jar-that-does-not-exist.jar" /> 
+     <lib dir="${solr.install.dir:../../..}/contrib/jate/lib/" regex=".*\.jar" />
   -->
   
   <!-- Data Directory

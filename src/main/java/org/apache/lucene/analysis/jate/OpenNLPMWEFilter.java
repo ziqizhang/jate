@@ -1,14 +1,11 @@
 package org.apache.lucene.analysis.jate;
 
 import opennlp.tools.util.Span;
+import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
-import org.apache.lucene.analysis.tokenattributes.PayloadAttribute;
-import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
+import org.apache.lucene.analysis.tokenattributes.*;
 import org.apache.lucene.util.AttributeSource;
 import org.apache.lucene.util.BytesRef;
-import uk.ac.shef.dcs.jate.nlp.POSTagger;
 
 import java.io.IOException;
 import java.util.*;
@@ -16,6 +13,7 @@ import java.util.*;
 /**
  */
 public abstract class OpenNLPMWEFilter extends MWEFilter {
+    private static Logger LOG = Logger.getLogger(OpenNLPMWEFilter.class.getSimpleName());
 
     protected final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
     protected final OffsetAttribute offsetAtt = addAttribute(OffsetAttribute.class);
@@ -268,7 +266,16 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
             CharTermAttribute textAtt = input.getAttribute(CharTermAttribute.class);
             OffsetAttribute offsetAtt = input.getAttribute(OffsetAttribute.class);
             char[] buffer = textAtt.buffer();
-            String word = new String(buffer, 0, offsetAtt.endOffset() - offsetAtt.startOffset());
+            String word = null;
+
+            try {
+                word = new String(buffer, 0, offsetAtt.endOffset() - offsetAtt.startOffset());
+            } catch (StringIndexOutOfBoundsException ioe) {
+                LOG.error(ioe.toString());
+                //quick fix see #25
+                word = ((PackedTokenAttributeImpl) offsetAtt).toString();
+            }
+
             wordList.add(word);
             PayloadAttribute posAtt = input.getAttribute(PayloadAttribute.class);
             if (posAtt != null) {

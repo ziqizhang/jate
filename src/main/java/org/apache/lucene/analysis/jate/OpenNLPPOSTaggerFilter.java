@@ -1,10 +1,9 @@
 package org.apache.lucene.analysis.jate;
 
+import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
-import org.apache.lucene.analysis.tokenattributes.PayloadAttribute;
+import org.apache.lucene.analysis.tokenattributes.*;
 import org.apache.lucene.util.Attribute;
 import org.apache.lucene.util.AttributeSource;
 import org.apache.lucene.util.BytesRef;
@@ -17,6 +16,8 @@ import java.util.List;
 
 
 public final class OpenNLPPOSTaggerFilter extends TokenFilter {
+    private static Logger LOG = Logger.getLogger(OpenNLPPOSTaggerFilter.class.getSimpleName());
+
     private POSTagger tagger;
     private int tokenIdx = 0;
     protected boolean first = true;
@@ -34,7 +35,7 @@ public final class OpenNLPPOSTaggerFilter extends TokenFilter {
      */
     protected OpenNLPPOSTaggerFilter(TokenStream input, POSTagger tagger) {
         super(input);
-        this.tagger=tagger;
+        this.tagger = tagger;
     }
 
     @Override
@@ -59,15 +60,15 @@ public final class OpenNLPPOSTaggerFilter extends TokenFilter {
 
         AttributeSource as = tokenAttrs.get(tokenIdx);
         Iterator<? extends Class<? extends Attribute>> it = as.getAttributeClassesIterator();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             Class<? extends Attribute> attrClass = it.next();
-            if (! hasAttribute(attrClass)) {
+            if (!hasAttribute(attrClass)) {
                 addAttribute(attrClass);
             }
         }
         as.copyTo(this);
-        String string = exitingPayload.getPayload()==null?"":exitingPayload.getPayload().utf8ToString()+",p=";
-        exitingPayload.setPayload(new BytesRef((string+posTags[tokenIdx]).getBytes("UTF-8")));
+        String string = exitingPayload.getPayload() == null ? "p=" : exitingPayload.getPayload().utf8ToString() + ",p=";
+        exitingPayload.setPayload(new BytesRef((string + posTags[tokenIdx]).getBytes("UTF-8")));
         tokenIdx++;
         return true;
     }
@@ -78,8 +79,17 @@ public final class OpenNLPPOSTaggerFilter extends TokenFilter {
             CharTermAttribute textAtt = input.getAttribute(CharTermAttribute.class);
             OffsetAttribute offsetAtt = input.getAttribute(OffsetAttribute.class);
             char[] buffer = textAtt.buffer();
-            String word = new String(buffer, 0, offsetAtt.endOffset() - offsetAtt.startOffset());
+            String word = null;
+            try {
+                word = new String(buffer, 0, offsetAtt.endOffset() - offsetAtt.startOffset());
+            } catch (StringIndexOutOfBoundsException ioe) {
+                LOG.error(ioe.toString());
+                //TODO: just quick fix! ziqi pls check, example data for testing is A00-1002_cln.xml. see #25
+                word = ((PackedTokenAttributeImpl) offsetAtt).toString();
+            }
+
             wordList.add(word);
+
             AttributeSource attrs = input.cloneAttributes();
             tokenAttrs.add(attrs);
         }
@@ -118,6 +128,6 @@ public final class OpenNLPPOSTaggerFilter extends TokenFilter {
     protected void resetParams() {
         first = true;
         tokenIdx = 0;
-        posTags=null;
+        posTags = null;
     }
 }

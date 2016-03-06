@@ -96,14 +96,14 @@ public class TestRAKE {
             Assert.assertEquals(Double.valueOf(2.5),termScoreMap.get("solutions and algorithm"));
             Assert.assertEquals(Double.valueOf(2.25),termScoreMap.get("set"));
             Assert.assertEquals(Double.valueOf(1.6666666666666667),termScoreMap.get("type"));
-            Assert.assertEquals(Double.valueOf(1.6666666666666667),termScoreMap.get("considered type"));
+            Assert.assertEquals(Double.valueOf(3.166666666666667),termScoreMap.get("considered type"));
             Assert.assertEquals(Double.valueOf(1.4),termScoreMap.get("system"));
             Assert.assertEquals(Double.valueOf(1.4),termScoreMap.get("systems and system"));
             Assert.assertEquals(Double.valueOf(1.0),termScoreMap.get("upper"));
             Assert.assertEquals(Double.valueOf(1.0),termScoreMap.get("component"));
             Assert.assertEquals(Double.valueOf(1.0),termScoreMap.get("solution"));
             Assert.assertEquals(Double.valueOf(1.0),termScoreMap.get("construction"));
-            Assert.assertEquals(Double.valueOf(1.0),termScoreMap.get("compatibility,1.0"));
+            Assert.assertEquals(Double.valueOf(1.0),termScoreMap.get("compatibility"));
         } finally {
             if (server!=null) {
                 server.getCoreContainer().getCore(solrCoreName).close();

@@ -1,5 +1,6 @@
 package uk.ac.shef.dcs.jate.util;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
@@ -13,6 +14,7 @@ import uk.ac.shef.dcs.jate.model.JATEDocument;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -62,6 +64,34 @@ public class JATEUtil {
     }
 
     public static JATEDocument loadACLRDTECDocument(InputStream fileInputStream) throws JATEException {
+        return loadJATEDocFromXML(fileInputStream);
+    }
+
+    /**
+     * load ACL RD-TEC documents from raw text corpus
+     *
+     * @param rawTxtFile
+     * @return
+     */
+    public static JATEDocument loadACLRDTECDocumentFromRaw(File rawTxtFile) {
+        JATEDocument jateDocument = new JATEDocument(rawTxtFile.toURI());
+        jateDocument.setId(rawTxtFile.getName());
+
+        StringBuilder rawTextBuffer = new StringBuilder();
+        try {
+            List<String> lines = FileUtils.readLines(rawTxtFile);
+            if (lines.size() > 0) {
+                lines.forEach(rawTextBuffer::append);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        jateDocument.setContent(rawTextBuffer.toString());
+        return jateDocument;
+    }
+
+    private static JATEDocument loadJATEDocFromXML(InputStream fileInputStream) throws JATEException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
 
         SAXParser saxParser = null;
@@ -155,7 +185,7 @@ public class JATEUtil {
             fullText.append(paperTitle).append("\n").append(paperParagraphs);
 
             String normalizedText = Normalizer.normalize(fullText.toString(), Normalizer.Form.NFD);
-            normalizedText= StringEscapeUtils.unescapeXml(normalizedText);
+            normalizedText = StringEscapeUtils.unescapeXml(normalizedText);
             String cleanedText = cleanText(normalizedText);
             jateDocument = new JATEDocument(paperId.toString());
             jateDocument.setContent(cleanedText.trim());
@@ -167,7 +197,6 @@ public class JATEUtil {
         } catch (IOException ioe) {
             throw new JATEException("I/O Exception when parsing input file!" + ioe.toString());
         }
-
         return jateDocument;
     }
 
@@ -242,7 +271,7 @@ public class JATEUtil {
     }
 
     public static void addNewDoc(EmbeddedSolrServer server, String docId, String docTitle,
-                          String text, JATEProperties jateProperties, boolean commit)
+                                 String text, JATEProperties jateProperties, boolean commit)
             throws IOException, SolrServerException, JATEException {
         SolrInputDocument newDoc = new SolrInputDocument();
         newDoc.addField("id", docId);

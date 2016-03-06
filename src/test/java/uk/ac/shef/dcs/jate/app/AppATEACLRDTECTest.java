@@ -2,11 +2,14 @@ package uk.ac.shef.dcs.jate.app;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
+import org.junit.Assert;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +17,7 @@ import java.util.Map;
 
 /**
  * To run on external/remote Solr server, it needs jate-2.0Alpha-SNAPSHOT-jar-with-dependencies.jar
+ * and lib\dragontool.jar
  */
 public class AppATEACLRDTECTest extends ACLRDTECTest {
     private static Logger LOG = Logger.getLogger(AppATEACLRDTECTest.class.getName());
@@ -32,11 +36,12 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
      * <p>
      * mvn exec:java -Dexec.mainClass="uk.ac.shef.dcs.jate.app.AppATEACLRDTECTest" -Dexec.classpathScope="test"
      *
-     * @param args
+     * @param args, true or false for indexing
      * @throws JATEException
      */
     public static void main(String[] args) throws JATEException {
         try {
+
             AppATEACLRDTECTest appATETest = new AppATEACLRDTECTest(solrHome.toString(), solrCoreName);
 
             boolean reindex = false;
@@ -44,10 +49,12 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
                 try {
                     reindex = Boolean.valueOf(args[0]);
                 } catch (Exception e) {
+                    throw new JATEException(e);
                 }
             }
 
             long numOfDocs = validate_indexing();
+            LOG.info("start to indexing and candidate extraction...");
             if (numOfDocs == 0 || reindex) {
                 appATETest.indexAndExtract(corpusDir);
                 /*try {
@@ -59,7 +66,7 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
                 }
                 System.exit(0);*/
             }
-
+            LOG.info("complete indexing and candidate extraction.");
 
             List<JATETerm> terms = null;
 
@@ -67,9 +74,9 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
             terms = appATTFTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
             appATTFTest.evaluate(terms, AppATTF.class.getSimpleName());
 
-            AppChiSquareTest appChiSquareTest = new AppChiSquareTest();
-            terms = appChiSquareTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
-            appChiSquareTest.evaluate(terms, AppChiSquare.class.getSimpleName());
+//            AppChiSquareTest appChiSquareTest = new AppChiSquareTest();
+//            terms = appChiSquareTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
+//            appChiSquareTest.evaluate(terms, AppChiSquare.class.getSimpleName());
 
             AppCValueTest appCValueTest = new AppCValueTest();
             terms = appCValueTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
@@ -103,18 +110,28 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
             appWeirdnessTest.evaluate(terms, AppWeirdness.class.getSimpleName());
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new JATEException(e);
         } finally {
             try {
                 server.getCoreContainer().getCore(solrCoreName).close();
                 server.getCoreContainer().shutdown();
                 server.close();
+
+                unlock();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
         System.exit(0);
+    }
+
+    private static void unlock() {
+        File lock = Paths.get(solrHome.toString(), solrCoreName, "data", "index", "write.lock").toFile();
+        if (lock.exists()) {
+            System.err.println("Previous solr did not shut down cleanly. Unlock it ...");
+            Assert.assertTrue(lock.delete());
+        }
     }
 }
 
@@ -129,13 +146,21 @@ class AppATTFTest extends ACLRDTECTest {
         List<JATETerm> terms = new ArrayList<>();
         Map<String, String> initParam = new HashMap<>();
 
-        initParam.put(AppParams.PREFILTER_MIN_TERM_TOTAL_FREQUENCY.getParamKey(), "0");
+        initParam.put(AppParams.PREFILTER_MIN_TERM_TOTAL_FREQUENCY.getParamKey(), "2");
         initParam.put(AppParams.CUTOFF_TOP_K_PERCENT.getParamKey(), "0.99999");
 
         AppATTF appATTF = new AppATTF(initParam);
 
         terms = appATTF.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
         LOG.info("complete ranking and filtering.");
+
+        LOG.info("Export results for evaluation ...");
+        try {
+            appATTF.outputFile = "attf_acltdtec.json";
+            appATTF.write(terms);
+        } catch (IOException e) {
+            throw new JATEException("Fail to export results.");
+        }
         return terms;
     }
 }
@@ -152,7 +177,7 @@ class AppChiSquareTest extends ACLRDTECTest {
         Map<String, String> initParam = new HashMap<>();
         initParam.put(AppParams.PREFILTER_MIN_TERM_TOTAL_FREQUENCY.getParamKey(), "2");
         initParam.put(AppParams.CUTOFF_TOP_K_PERCENT.getParamKey(), "0.99999");
-        initParam.put(AppParams.PREFILTER_MIN_TERM_CONTEXT_FREQUENCY.getParamKey(), "0");
+        initParam.put(AppParams.PREFILTER_MIN_TERM_CONTEXT_FREQUENCY.getParamKey(), "2");
 
         initParam.put(AppParams.CHISQUERE_FREQ_TERM_CUTOFF_PERCENTAGE.getParamKey(), "0.3");
 
@@ -160,6 +185,14 @@ class AppChiSquareTest extends ACLRDTECTest {
         terms = appChiSquare.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
 
         LOG.info("complete ranking and filtering.");
+
+        LOG.info("Export results for evaluation ...");
+        try {
+            appChiSquare.outputFile = "chi_square_acltdtec.json";
+            appChiSquare.write(terms);
+        } catch (IOException e) {
+            throw new JATEException("Fail to export results.");
+        }
         return terms;
     }
 }
@@ -182,6 +215,14 @@ class AppCValueTest extends ACLRDTECTest {
         terms = appCValue.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
 
         LOG.info("complete ranking and filtering.");
+
+        LOG.info("Export results for evaluation ...");
+        try {
+            appCValue.outputFile = "cvalue_acltdtec.json";
+            appCValue.write(terms);
+        } catch (IOException e) {
+            throw new JATEException("Fail to export results.");
+        }
         return terms;
     }
 }
@@ -191,7 +232,8 @@ class AppGlossExTest extends ACLRDTECTest {
     private static Logger LOG = Logger.getLogger(AppGlossExTest.class.getName());
 
     @Override
-    List<JATETerm> rankAndFilter(EmbeddedSolrServer server, String solrCoreName, JATEProperties jateProp) throws JATEException {
+    List<JATETerm> rankAndFilter(EmbeddedSolrServer server, String solrCoreName, JATEProperties jateProp)
+            throws JATEException {
         LOG.info("AppGlossEx ranking and filtering ... ");
 
         List<JATETerm> terms = new ArrayList<>();
@@ -206,6 +248,15 @@ class AppGlossExTest extends ACLRDTECTest {
         terms = appGlossEx.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
 
         LOG.info("complete ranking and filtering.");
+
+        LOG.info("Export results for evaluation ...");
+        try {
+            appGlossEx.outputFile = "glossEx_acltdtec.json";
+            appGlossEx.write(terms);
+        } catch (IOException e) {
+            throw new JATEException("Fail to export results.");
+        }
+
         return terms;
     }
 }
@@ -215,7 +266,8 @@ class AppRAKETest extends ACLRDTECTest {
     private static Logger LOG = Logger.getLogger(AppRAKETest.class.getName());
 
     @Override
-    List<JATETerm> rankAndFilter(EmbeddedSolrServer server, String solrCoreName, JATEProperties jateProp) throws JATEException {
+    List<JATETerm> rankAndFilter(EmbeddedSolrServer server, String solrCoreName, JATEProperties jateProp)
+            throws JATEException {
         LOG.info("AppRAKE ranking and filtering ... ");
         List<JATETerm> terms = new ArrayList<>();
         Map<String, String> initParam = new HashMap<>();
@@ -226,6 +278,14 @@ class AppRAKETest extends ACLRDTECTest {
         terms = appRAKE.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
 
         LOG.info("complete ranking and filtering.");
+
+        LOG.info("Export results for evaluation ...");
+        try {
+            appRAKE.outputFile = "rake_acltdtec.json";
+            appRAKE.write(terms);
+        } catch (IOException e) {
+            throw new JATEException("Fail to export results.");
+        }
         return terms;
     }
 }
@@ -235,7 +295,8 @@ class AppRIDFTest extends ACLRDTECTest {
     private static Logger LOG = Logger.getLogger(AppRIDFTest.class.getName());
 
     @Override
-    List<JATETerm> rankAndFilter(EmbeddedSolrServer server, String solrCoreName, JATEProperties jateProp) throws JATEException {
+    List<JATETerm> rankAndFilter(EmbeddedSolrServer server, String solrCoreName, JATEProperties jateProp)
+            throws JATEException {
         LOG.info("AppRIDF ranking and filtering ... ");
 
         List<JATETerm> terms = new ArrayList<>();
@@ -247,6 +308,15 @@ class AppRIDFTest extends ACLRDTECTest {
         terms = appRIDF.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
 
         LOG.info("complete ranking and filtering.");
+
+        LOG.info("Export results for evaluation ...");
+        try {
+            appRIDF.outputFile = "ridf_acltdtec.json";
+            appRIDF.write(terms);
+        } catch (IOException e) {
+            throw new JATEException("Fail to export results.");
+        }
+
         return terms;
     }
 }
@@ -256,7 +326,8 @@ class AppTermExTest extends ACLRDTECTest {
     private static Logger LOG = Logger.getLogger(AppTermExTest.class.getName());
 
     @Override
-    List<JATETerm> rankAndFilter(EmbeddedSolrServer server, String solrCoreName, JATEProperties jateProp) throws JATEException {
+    List<JATETerm> rankAndFilter(EmbeddedSolrServer server, String solrCoreName, JATEProperties jateProp)
+            throws JATEException {
         LOG.info("AppTermEx ranking and filtering ... ");
 
         List<JATETerm> terms = new ArrayList<>();
@@ -270,6 +341,14 @@ class AppTermExTest extends ACLRDTECTest {
         terms = appTermEx.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
 
         LOG.info("complete ranking and filtering.");
+
+        LOG.info("Export results for evaluation ...");
+        try {
+            appTermEx.outputFile = "termEx_acltdtec.json";
+            appTermEx.write(terms);
+        } catch (IOException e) {
+            throw new JATEException("Fail to export results.");
+        }
         return terms;
     }
 }
@@ -279,7 +358,8 @@ class AppTFIDFTest extends ACLRDTECTest {
     private static Logger LOG = Logger.getLogger(AppTFIDFTest.class.getName());
 
     @Override
-    List<JATETerm> rankAndFilter(EmbeddedSolrServer server, String solrCoreName, JATEProperties jateProp) throws JATEException {
+    List<JATETerm> rankAndFilter(EmbeddedSolrServer server, String solrCoreName, JATEProperties jateProp)
+            throws JATEException {
         LOG.info("AppTFIDF ranking and filtering ... ");
 
         List<JATETerm> terms = new ArrayList<>();
@@ -291,6 +371,14 @@ class AppTFIDFTest extends ACLRDTECTest {
         terms = appTFIDF.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
 
         LOG.info("complete ranking and filtering.");
+
+        LOG.info("Export results for evaluation ...");
+        try {
+            appTFIDF.outputFile = "tfidf_acltdtec.json";
+            appTFIDF.write(terms);
+        } catch (IOException e) {
+            throw new JATEException("Fail to export results.");
+        }
         return terms;
     }
 }
@@ -299,7 +387,8 @@ class AppTTFTest extends ACLRDTECTest {
     private static Logger LOG = Logger.getLogger(AppTTFTest.class.getName());
 
     @Override
-    List<JATETerm> rankAndFilter(EmbeddedSolrServer server, String solrCoreName, JATEProperties jateProp) throws JATEException {
+    List<JATETerm> rankAndFilter(EmbeddedSolrServer server, String solrCoreName, JATEProperties jateProp)
+            throws JATEException {
         LOG.info("AppTTF ranking and filtering ... ");
 
         List<JATETerm> terms = new ArrayList<>();
@@ -311,6 +400,14 @@ class AppTTFTest extends ACLRDTECTest {
         terms = appTTF.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
 
         LOG.info("complete ranking and filtering.");
+
+        LOG.info("Export results for evaluation ...");
+        try {
+            appTTF.outputFile = "ttf_acltdtec.json";
+            appTTF.write(terms);
+        } catch (IOException e) {
+            throw new JATEException("Fail to export results.");
+        }
         return terms;
     }
 }
@@ -319,7 +416,8 @@ class AppWeirdnessTest extends ACLRDTECTest {
     private static Logger LOG = Logger.getLogger(AppWeirdnessTest.class.getName());
 
     @Override
-    List<JATETerm> rankAndFilter(EmbeddedSolrServer server, String solrCoreName, JATEProperties jateProp) throws JATEException {
+    List<JATETerm> rankAndFilter(EmbeddedSolrServer server, String solrCoreName, JATEProperties jateProp)
+            throws JATEException {
         LOG.info("AppWeirdness ranking and filtering ... ");
 
         List<JATETerm> terms = new ArrayList<>();
@@ -334,6 +432,13 @@ class AppWeirdnessTest extends ACLRDTECTest {
 
         LOG.info("complete ranking and filtering.");
 
+        LOG.info("Export results for evaluation ...");
+        try {
+            appWeirdness.outputFile = "weirdness_acltdtec.json";
+            appWeirdness.write(terms);
+        } catch (IOException e) {
+            throw new JATEException("Fail to export results.");
+        }
         return terms;
     }
 }

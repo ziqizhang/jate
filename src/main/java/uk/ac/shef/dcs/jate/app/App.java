@@ -372,7 +372,7 @@ public abstract class App {
     }
 
 
-    protected void write(List<JATETerm> terms) throws IOException {
+    public void write(List<JATETerm> terms) throws IOException {
         Gson gson = new Gson();
         if (outputFile == null) {
             throw new IOException("Output file is null");

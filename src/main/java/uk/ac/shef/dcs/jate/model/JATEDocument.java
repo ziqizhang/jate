@@ -21,6 +21,9 @@ public class JATEDocument {
     	this.path = fileURI.toString();    	
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
     public String getId(){return id;}
     public void setPath(String path){
         this.path=path;
