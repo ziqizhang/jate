@@ -60,30 +60,30 @@ class FrequencyTermBasedFBWorker extends JATERecursiveTaskWorker<String, int[]> 
                         PostingsEnum docEnum = ngramInfoIterator.postings(null);
                         int doc = 0;
                         while ((doc = docEnum.nextDoc()) != PostingsEnum.NO_MORE_DOCS) {
-                            int tfid = docEnum.freq();  //tf in document
+                            //tf in document
+                            int tfid = docEnum.freq();
                             feature.increment(term, tfid);
                             feature.incrementTermFrequencyInDocument(term, doc, tfid);
                         }
                         totalSuccess++;
                     } else {
-                        StringBuilder msg = new StringBuilder(term);
-                        msg.append(" is a candidate term, but not indexed in the n-gram information field. It's score may be mis-computed.");
-                        msg.append(" (You may have used different text analysis process (e.g., different tokenizers) for the two fields.) ");
-                        LOG.warn(msg.toString());
+                        String warning = String.format("'%s'  is a candidate term, but not indexed in the n-gram " +
+                                "information field. It's score may be mis-computed. You may have used different text " +
+                                "analysis process (e.g., different tokenizers, different analysis order, limited " +
+                                "n-gram range) for the text-2-candidate-term and text-2-ngram fields.) ", term);
+                        LOG.warn(warning);
                     }
-                /*if(totalSuccess%2000==0)
-                    LOG.info(totalSuccess+"/"+terms.size());*/
+
                 } catch (IOException ioe) {
-                    StringBuilder sb = new StringBuilder("Unable to build feature for candidate:");
-                    sb.append(term).append("\n");
-                    sb.append(ExceptionUtils.getFullStackTrace(ioe));
-                    LOG.error(sb.toString());
+                    String error = String.format("Unable to build feature for candidate: '%s'. \\n Exception: %s",
+                            term, ExceptionUtils.getFullStackTrace(ioe));
+                    LOG.error(error.toString());
                 }
             }
-        } catch (IOException e) {
-            StringBuilder sb = new StringBuilder("Unable to read ngram information field:");
-            sb.append(ExceptionUtils.getFullStackTrace(e));
-            LOG.error(sb.toString());
+        } catch (IOException ioe) {
+            String error = String.format("Unable to read ngram information field:. \\n Exception: %s",
+                    ExceptionUtils.getFullStackTrace(ioe));
+            LOG.error(error);
         }
         LOG.debug("progress : " + totalSuccess + "/" + terms.size());
         return new int[]{totalSuccess, terms.size()};

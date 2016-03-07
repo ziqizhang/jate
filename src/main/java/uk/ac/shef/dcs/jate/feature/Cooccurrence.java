@@ -3,6 +3,7 @@ package uk.ac.shef.dcs.jate.feature;
 
 import no.uib.cipr.matrix.sparse.FlexCompRowMatrix;
 import no.uib.cipr.matrix.sparse.SparseVector;
+import org.apache.log4j.Logger;
 
 import java.util.*;
 
@@ -10,6 +11,8 @@ import java.util.*;
  *
  */
 public class Cooccurrence extends AbstractFeature {
+    private static Logger LOG = Logger.getLogger(Cooccurrence.class.getSimpleName());
+
     protected FlexCompRowMatrix cooccurrence;
     protected Map<Integer, String> mapIdx2Term = new HashMap<>();
     protected Map<String, Integer> mapTerm2Idx = new HashMap<>();
@@ -28,8 +31,8 @@ public class Cooccurrence extends AbstractFeature {
     void deduce(int rowIndex, int colIndex, int value){
         double newValue = cooccurrence.get(rowIndex, colIndex);
         if(newValue==0) {
-            System.out.println(rowIndex+"|"+colIndex);
-            System.out.println(lookupTerm(rowIndex) + "|" + lookupRefTerm(colIndex));
+            LOG.debug(rowIndex + "|" + colIndex);
+            LOG.debug(lookupTerm(rowIndex) + "|" + lookupRefTerm(colIndex));
         }
         newValue-=value;
         newValue=newValue<0?0:newValue;

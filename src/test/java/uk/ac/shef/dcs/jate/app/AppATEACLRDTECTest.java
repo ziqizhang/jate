@@ -2,6 +2,7 @@ package uk.ac.shef.dcs.jate.app;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
+import org.apache.solr.common.SolrException;
 import org.junit.Assert;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
@@ -44,7 +45,7 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
 
             AppATEACLRDTECTest appATETest = new AppATEACLRDTECTest(solrHome.toString(), solrCoreName);
 
-            boolean reindex = false;
+            boolean reindex = true;
             if (args.length > 0) {
                 try {
                     reindex = Boolean.valueOf(args[0]);
@@ -56,7 +57,10 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
             long numOfDocs = validate_indexing();
             LOG.info("start to indexing and candidate extraction...");
             if (numOfDocs == 0 || reindex) {
+                long startTime = System.currentTimeMillis();
                 appATETest.indexAndExtract(corpusDir);
+                long endTime = System.currentTimeMillis();
+                LOG.info(String.format("Indexing and Candidate Extraction took [%s] milliseconds", (endTime - startTime)));
                 /*try {
                     server.getCoreContainer().getCore(solrCoreName).close();
                     server.getCoreContainer().shutdown();
@@ -74,9 +78,9 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
             terms = appATTFTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
             appATTFTest.evaluate(terms, AppATTF.class.getSimpleName());
 
-//            AppChiSquareTest appChiSquareTest = new AppChiSquareTest();
-//            terms = appChiSquareTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
-//            appChiSquareTest.evaluate(terms, AppChiSquare.class.getSimpleName());
+            AppChiSquareTest appChiSquareTest = new AppChiSquareTest();
+            terms = appChiSquareTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
+            appChiSquareTest.evaluate(terms, AppChiSquare.class.getSimpleName());
 
             AppCValueTest appCValueTest = new AppCValueTest();
             terms = appCValueTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
@@ -85,6 +89,7 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
             AppGlossExTest appGlossExTest = new AppGlossExTest();
             terms = appGlossExTest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
             appGlossExTest.evaluate(terms, AppGlossEx.class.getSimpleName());
+
             AppRAKETest appRAKETest = new AppRAKETest();
             terms = appRAKETest.rankAndFilter(server, solrCoreName, appATETest.jateProp);
             appRAKETest.evaluate(terms, AppRAKE.class.getSimpleName());
@@ -116,12 +121,16 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
                 server.getCoreContainer().getCore(solrCoreName).close();
                 server.getCoreContainer().shutdown();
                 server.close();
-
-                unlock();
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (SolrException solrEx) {
+                solrEx.printStackTrace();
+            } finally {
+                System.exit(0);
             }
         }
+
+        unlock();
 
         System.exit(0);
     }
@@ -150,8 +159,10 @@ class AppATTFTest extends ACLRDTECTest {
         initParam.put(AppParams.CUTOFF_TOP_K_PERCENT.getParamKey(), "0.99999");
 
         AppATTF appATTF = new AppATTF(initParam);
-
+        long startTime = System.currentTimeMillis();
         terms = appATTF.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("AppATTF ranking took [%s] milliseconds", (endTime - startTime)));
         LOG.info("complete ranking and filtering.");
 
         LOG.info("Export results for evaluation ...");
@@ -182,7 +193,10 @@ class AppChiSquareTest extends ACLRDTECTest {
         initParam.put(AppParams.CHISQUERE_FREQ_TERM_CUTOFF_PERCENTAGE.getParamKey(), "0.3");
 
         AppChiSquare appChiSquare = new AppChiSquare(initParam);
+        long startTime = System.currentTimeMillis();
         terms = appChiSquare.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("AppChiSquare ranking took [%s] milliseconds", (endTime - startTime)));
 
         LOG.info("complete ranking and filtering.");
 
@@ -211,8 +225,10 @@ class AppCValueTest extends ACLRDTECTest {
         initParam.put(AppParams.CUTOFF_TOP_K_PERCENT.getParamKey(), "0.99999");
 
         AppCValue appCValue = new AppCValue(initParam);
-
+        long startTime = System.currentTimeMillis();
         terms = appCValue.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("AppCValue ranking took [%s] milliseconds", (endTime - startTime)));
 
         LOG.info("complete ranking and filtering.");
 
@@ -245,7 +261,10 @@ class AppGlossExTest extends ACLRDTECTest {
         initParam.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), FREQ_GENIC_FILE.toString());
         AppGlossEx appGlossEx = new AppGlossEx(initParam);
 
+        long startTime = System.currentTimeMillis();
         terms = appGlossEx.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("appGlossEx ranking took [%s] milliseconds", (endTime - startTime)));
 
         LOG.info("complete ranking and filtering.");
 
@@ -275,7 +294,10 @@ class AppRAKETest extends ACLRDTECTest {
         initParam.put(AppParams.CUTOFF_TOP_K_PERCENT.getParamKey(), "0.99999");
 
         AppRAKE appRAKE = new AppRAKE(initParam);
+        long startTime = System.currentTimeMillis();
         terms = appRAKE.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("appRAKE ranking took [%s] milliseconds", (endTime - startTime)));
 
         LOG.info("complete ranking and filtering.");
 
@@ -305,7 +327,10 @@ class AppRIDFTest extends ACLRDTECTest {
         initParam.put(AppParams.CUTOFF_TOP_K_PERCENT.getParamKey(), "0.99999");
 
         AppRIDF appRIDF = new AppRIDF(initParam);
+        long startTime = System.currentTimeMillis();
         terms = appRIDF.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("AppRIDF ranking took [%s] milliseconds", (endTime - startTime)));
 
         LOG.info("complete ranking and filtering.");
 
@@ -338,8 +363,10 @@ class AppTermExTest extends ACLRDTECTest {
         initParam.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), FREQ_GENIC_FILE.toString());
 
         AppTermEx appTermEx = new AppTermEx(initParam);
+        long startTime = System.currentTimeMillis();
         terms = appTermEx.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
-
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("AppTermEx ranking took [%s] milliseconds", (endTime - startTime)));
         LOG.info("complete ranking and filtering.");
 
         LOG.info("Export results for evaluation ...");
@@ -368,7 +395,10 @@ class AppTFIDFTest extends ACLRDTECTest {
         initParam.put(AppParams.CUTOFF_TOP_K_PERCENT.getParamKey(), "0.99999");
 
         AppTFIDF appTFIDF = new AppTFIDF(initParam);
+        long startTime = System.currentTimeMillis();
         terms = appTFIDF.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("AppTFIDF ranking took [%s] milliseconds", (endTime - startTime)));
 
         LOG.info("complete ranking and filtering.");
 
@@ -397,7 +427,10 @@ class AppTTFTest extends ACLRDTECTest {
         initParam.put(AppParams.CUTOFF_TOP_K_PERCENT.getParamKey(), "0.99999");
 
         AppTTF appTTF = new AppTTF(initParam);
+        long startTime = System.currentTimeMillis();
         terms = appTTF.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("AppTTF ranking took [%s] milliseconds", (endTime - startTime)));
 
         LOG.info("complete ranking and filtering.");
 
@@ -428,7 +461,10 @@ class AppWeirdnessTest extends ACLRDTECTest {
         initParam.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), FREQ_GENIC_FILE.toString());
 
         AppWeirdness appWeirdness = new AppWeirdness(initParam);
+        long startTime = System.currentTimeMillis();
         terms = appWeirdness.extract(server.getCoreContainer().getCore(solrCoreName), jateProp);
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("AppWeirdness ranking took [%s] milliseconds", (endTime - startTime)));
 
         LOG.info("complete ranking and filtering.");
 

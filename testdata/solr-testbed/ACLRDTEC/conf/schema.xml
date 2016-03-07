@@ -235,15 +235,31 @@
         <fieldType name="random" class="solr.RandomSortField" indexed="true"/>
 
         <!-- ###################### JATE Start #############################-->
-        <!-- A field type for terminology recognition. Any text put into this type of field is
-            processed to extract token-n-grams (not candidates). The text field that uses
-            this type should store the following information: start/end offsets, term vector
-            These token-n-grams are used for lookup of such information of candidate terms,
-            which should be handled by a different field (see below).
+        <!-- A required field type for terminology recognition. Any text processed by this field type will be transformed 
+			into ngram tokens (not candidates). The text field associated with this field type should store the necessary 
+			information including start/end offsets and term vector.
+			
+            These auto-generated n-gram tokens from raw text are required by ranking algorithms for the lookup of frequency 
+			information of candidate terms.
 
-            WARNING: YOU MUST ENSURE YOUR fieldType DEFINITION FOR YOUR CANDIDATE TERM (and/or)
-            WORD FIELDS(s) USE THE SAME tokenizer AND SETS OF filters. OTHERWISE, IT IS LIKELY
-            THAT SOME CANDIDATE TERMS WILL NOT HAVE CORRECT INFORMATION EXTRACTED.
+            WARNING: YOU MUST ENSURE YOUR fieldType DEFINITION FOR YOUR CANDIDATE TERM field (i.e., jate_text_2_terms in 
+			default setting) USE THE SAME tokenizer AND SETS OF (PRE/POST) filters. OTHERWISE, IT IS LIKELY THAT SOME 
+			CANDIDATE TERMS WILL NOT HAVE CORRECT INFORMATION EXTRACTED DUE TO MISSING NECESSARY FREQUENCY INFORMATION.
+
+			Default config setting options:
+			tokenisation:
+			    1) <tokenizer class="solr.StandardTokenizerFactory" />
+			    2) <filter class="org.apache.lucene.analysis.jate.OpenNLPPOSTaggerFactory"
+                        posTaggerClass="uk.ac.shef.dcs.jate.nlp.opennlp.POSTaggerOpenNLP"
+                        posTaggerModel="en-pos-maxent.bin"/>
+            term stemming/Lemmatisation:
+                1) <filter class="solr.EnglishMinimalStemFilterFactory"/>
+                2) <filter class="org.apache.lucene.analysis.jate.EnglishLemmatisationFilterFactory"
+                    lemmaResourceDir="lemmatiser"/>
+            term ngram generator:
+                1) <filter class="org.apache.lucene.analysis.jate.ComplexShingleFilterFactory" .../>
+                2) <filter class="solr.ShingleFilterFactory" minShingleSize="2" maxShingleSize="6"
+						outputUnigrams="true" outputUnigramsIfNoShingles="false" tokenSeparator=" "/>
             -->
         <fieldType name="jate_text_2_ngrams" class="solr.TextField" positionIncrementGap="100">
             <analyzer type="index">
@@ -270,20 +286,20 @@
                 <filter class="org.apache.lucene.analysis.jate.OpenNLPPOSTaggerFactory"
                         posTaggerClass="uk.ac.shef.dcs.jate.nlp.opennlp.POSTaggerOpenNLP"
                         posTaggerModel="en-pos-maxent.bin"/>
-                <filter class="solr.LowerCaseFilterFactory"/>
-                <filter class="org.apache.lucene.analysis.jate.ComplexShingleFilterFactory" minTokens="2" maxTokens="5"
-                        maxCharLength="50" minCharLength="2" removeLeadingStopWords="true"
+                <filter class="org.apache.lucene.analysis.jate.ComplexShingleFilterFactory" minTokens="2" maxTokens="6"
+                        maxCharLength="40" minCharLength="2" removeLeadingStopWords="true"
                         removeTrailingStopWords="true" removeLeadingSymbolicTokens="true"
                         removeTrailingSymbolicTokens="true"
                         stripAnySymbolChars="false"
                         stripLeadingSymbolChars="true" stripTrailingSymbolChars="true"
                         stopWords="stopwords.txt" stopWordsIgnoreCase="true"
                         outputUnigrams="true" outputUnigramsIfNoShingles="false" tokenSeparator=" "/>
+                <filter class="solr.LowerCaseFilterFactory"/>
                 <!--<filter class="solr.EnglishMinimalStemFilterFactory"/>-->
+                <filter class="org.apache.lucene.analysis.jate.PunctuationRemoverFactory" stripAnySymbols="false"
+                        stripLeadingSymbols="true" stripTrailingSymbols="true"/>
                 <filter class="org.apache.lucene.analysis.jate.EnglishLemmatisationFilterFactory"
                     lemmaResourceDir="lemmatiser"/>
-                <!--filter class="org.apache.lucene.analysis.jate.PunctuationRemoverFactory" stripAnySymbols="false"
-                        stripLeadingSymbols="true" stripTrailingSymbols="true"/-->
                 <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"
                         enablePositionIncrements="true"/>
             </analyzer>
@@ -303,6 +319,7 @@
             USE THE SAME SET OF filters
             -->
 
+        <!--a configuration for PoS based candidate extraction-->
         <fieldType name="jate_text_2_terms" class="solr.TextField" positionIncrementGap="100">
             <analyzer type="index">
                 <!-- html unicode character filter for irregular text -->
@@ -321,73 +338,74 @@
 
                 <charFilter class="solr.HTMLStripCharFilterFactory"/>
                 <!--<tokenizer class="solr.StandardTokenizerFactory" />-->
+                <tokenizer class="org.apache.lucene.analysis.jate.OpenNLPTokenizerFactory"
+                           sentenceModel="en-sent.bin"
+                           tokenizerModel="en-token.bin"/>
+                <filter class="solr.ASCIIFoldingFilterFactory"/>
                 <filter class="org.apache.lucene.analysis.jate.OpenNLPPOSTaggerFactory"
                         posTaggerClass="uk.ac.shef.dcs.jate.nlp.opennlp.POSTaggerOpenNLP"
                         posTaggerModel="en-pos-maxent.bin"/>
-                <filter class="solr.ASCIIFoldingFilterFactory"/>
-                <filter class="org.apache.lucene.analysis.jate.OpenNLPPOSTaggerFactory"
-                            posTaggerClass="uk.ac.shef.dcs.jate.nlp.opennlp.POSTaggerOpenNLP"
-                            posTaggerModel="en-pos-maxent.bin"/>
                 <filter class="org.apache.lucene.analysis.jate.OpenNLPRegexChunkerFactory"
-                            posTaggerClass="uk.ac.shef.dcs.jate.nlp.opennlp.POSTaggerOpenNLP"
-                            posTaggerModel="en-pos-maxent.bin"
-                            patterns="aclrdtec.patterns"
-                            minTokens="1" maxTokens="5"
-                            maxCharLength="40" minCharLength="2" removeLeadingStopWords="true"
-                            removeTrailingStopWords="true" removeLeadingSymbolicTokens="true"
-                            removeTrailingSymbolicTokens="true"
-                            stripAnySymbolChars="false"
+                        posTaggerClass="uk.ac.shef.dcs.jate.nlp.opennlp.POSTaggerOpenNLP"
+                        posTaggerModel="en-pos-maxent.bin"
+                        patterns="aclrdtec.patterns"
+                        minTokens="1" maxTokens="5"
+                        maxCharLength="40" minCharLength="1" removeLeadingStopWords="true"
+                        removeTrailingStopWords="true" removeLeadingSymbolicTokens="true"
+                        removeTrailingSymbolicTokens="true"
+                        stripAnySymbolChars="false"
                         stripLeadingSymbolChars="true" stripTrailingSymbolChars="true"
-                            stopWords="stopwords.txt" stopWordsIgnoreCase="true"/>
+                        stopWords="stopwords.txt" stopWordsIgnoreCase="true"/>
                 <filter class="solr.LowerCaseFilterFactory" />
                 <!--<filter class="solr.EnglishMinimalStemFilterFactory"/>-->
                 <filter class="org.apache.lucene.analysis.jate.EnglishLemmatisationFilterFactory"
-                    lemmaResourceDir="lemmatiser"/>
+                        lemmaResourceDir="lemmatiser"/>
                 <!--filter class="org.apache.lucene.analysis.jate.PunctuationRemoverFactory" stripAnySymbols="false"
                 stripLeadingSymbols="true" stripTrailingSymbols="true"/-->
                 <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
-        </analyzer>
-    </fieldType>
-
-        <!--a configuration for NP extraction-->
-        <!--
-        <fieldType name="jate_text_2_terms" class="solr.TextField" positionIncrementGap="100">
-            <analyzer type="index">
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u0027" replacement=" ' " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u000a" replacement=" \\n " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u0009" replacement=" \\t " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u0008" replacement=" \\b " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u000d" replacement=" \\r " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u000c" replacement=" \\f " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u0022" replacement=" &quot; " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u005c" replacement=" \\ " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u003c" replacement=" &lt; " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u003e" replacement=" &gt; " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u003d" replacement=" = " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u0026" replacement=" &amp; " />
-
-                <charFilter class="solr.HTMLStripCharFilterFactory"/>
-                <tokenizer class="solr.StandardTokenizerFactory" />
-                <filter class="solr.ASCIIFoldingFilterFactory"/>
-                <filter class="org.apache.lucene.analysis.jate.OpenNLPPOSTaggerFactory"
-                        posTaggerClass="uk.ac.shef.dcs.jate.nlp.opennlp.POSTaggerOpenNLP"
-                        posTaggerModel="en-pos-maxent.bin"/>
-                <filter class="org.apache.lucene.analysis.jate.OpenNLPNounPhraseFilterFactory"
-                        chunkerModel="en-chunker.bin"
-                        minTokens="1" maxTokens="5"
-                        maxCharLength="50" minCharLength="1" removeLeadingStopWords="true"
-                        removeTrailingStopWords="true" removeLeadingSymbolicTokens="true"
-                        removeTrailingSymbolicTokens="true"
-                        stopWords="stopwords.txt" stopWordsIgnoreCase="true"/>
-                <filter class="solr.LowerCaseFilterFactory"/>
-                <filter class="solr.EnglishMinimalStemFilterFactory"/>
-                <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"
-                        enablePositionIncrements="true"/>
-                <filter class="org.apache.lucene.analysis.jate.PunctuationRemoverFactory" stripAnySymbols="false"
-                        stripLeadingSymbols="true" stripTrailingSymbols="true"/>
             </analyzer>
-        </fieldType>-->
+        </fieldType>
 
+        <!--a configuration for NP Chunking based candidate extraction-->
+        <!--<fieldType name="jate_text_2_terms" class="solr.TextField" positionIncrementGap="100">-->
+            <!--<analyzer type="index">-->
+                <!--<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u0027" replacement=" ' " />-->
+                <!--<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u000a" replacement=" \\n " />-->
+                <!--<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u0009" replacement=" \\t " />-->
+                <!--<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u0008" replacement=" \\b " />-->
+                <!--<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u000d" replacement=" \\r " />-->
+                <!--<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u000c" replacement=" \\f " />-->
+                <!--<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u0022" replacement=" &quot; " />-->
+                <!--<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u005c" replacement=" \\ " />-->
+                <!--<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u003c" replacement=" &lt; " />-->
+                <!--<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u003e" replacement=" &gt; " />-->
+                <!--<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u003d" replacement=" = " />-->
+                <!--<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u0026" replacement=" &amp; " />-->
+
+                <!--<charFilter class="solr.HTMLStripCharFilterFactory"/>-->
+                <!--<tokenizer class="org.apache.lucene.analysis.jate.OpenNLPTokenizerFactory"-->
+                           <!--sentenceModel="en-sent.bin"-->
+                           <!--tokenizerModel="en-token.bin"/>-->
+                <!--<filter class="solr.ASCIIFoldingFilterFactory"/>-->
+                <!--<filter class="org.apache.lucene.analysis.jate.OpenNLPPOSTaggerFactory"-->
+                        <!--posTaggerClass="uk.ac.shef.dcs.jate.nlp.opennlp.POSTaggerOpenNLP"-->
+                        <!--posTaggerModel="en-pos-maxent.bin"/>-->
+                <!--<filter class="org.apache.lucene.analysis.jate.OpenNLPNounPhraseFilterFactory"-->
+                        <!--chunkerModel="en-chunker.bin"-->
+                        <!--minTokens="1" maxTokens="5"-->
+                        <!--maxCharLength="40" minCharLength="1" removeLeadingStopWords="true"-->
+                        <!--removeTrailingStopWords="true" removeLeadingSymbolicTokens="true"-->
+                        <!--removeTrailingSymbolicTokens="true"-->
+                        <!--stopWords="stopwords.txt" stopWordsIgnoreCase="true"/>-->
+                <!--<filter class="solr.LowerCaseFilterFactory"/>-->
+                <!--<filter class="org.apache.lucene.analysis.jate.PunctuationRemoverFactory" stripAnySymbols="false"-->
+                        <!--stripLeadingSymbols="true" stripTrailingSymbols="true"/>-->
+                <!--<filter class="org.apache.lucene.analysis.jate.EnglishLemmatisationFilterFactory"-->
+                        <!--lemmaResourceDir="lemmatiser"/>-->
+                <!--<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"-->
+                        <!--enablePositionIncrements="true"/>-->
+            <!--</analyzer>-->
+        <!--</fieldType>-->
 
         <!-- a configuration for n-gram extractor-->
         <!--

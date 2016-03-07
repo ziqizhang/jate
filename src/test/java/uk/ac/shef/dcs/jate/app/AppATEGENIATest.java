@@ -133,6 +133,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
     protected void indexCorpus(List<JATEDocument> corpus) throws IOException, SolrServerException {
         int count = 0;
+        long startTime = System.currentTimeMillis();
         for (JATEDocument doc : corpus) {
             try {
                 count++;
@@ -151,6 +152,8 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
                         JATEProperties.PROPERTY_SOLR_FIELD_CONTENT_TERMS));
             }
         }
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("Indexing and candidate extraction took [%s] milliseconds", (endTime - startTime)));
         server.commit();
     }
 
@@ -174,7 +177,10 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     @Test
     public void benchmarking_appATTF() throws JATEException, IOException {
         AppATTF appATTF = new AppATTF(initParams);
+        long startTime = System.currentTimeMillis();
         List<JATETerm> termList = appATTF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("appATTF ranking took [%s] milliseconds", (endTime - startTime)));
 
         assert termList != null;
         // the results depends on specified PoS patterns
@@ -186,6 +192,11 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 200, 1, 10,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
+
+        LOG.info("=============ATTF GENIA Benchmarking Results==================");
+        double recall = Scorer.recall(gsTerms, rankedTerms);
+        printResults(scores, recall);
+
         assert 0.84 == scores[0];
         assert 0.85 == scores[1];
         assert 0.77 == scores[2];
@@ -202,12 +213,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         assert 0.66 == scores[13];
         assert 0.65 == scores[14];
         assert 0.63 == scores[15];
-        double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.1 == recall;
-
-        LOG.info("=============ATTF GENIA Benchmarking Results==================");
-
-        printResults(scores, recall);
     }
 
     @Test
@@ -215,7 +221,11 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         initParams.put(AppParams.PREFILTER_MIN_TERM_CONTEXT_FREQUENCY.getParamKey(),"2");
         initParams.put(AppParams.CHISQUERE_FREQ_TERM_CUTOFF_PERCENTAGE.getParamKey(), "0.1");
         AppChiSquare appChiSquare = new AppChiSquare(initParams);
+
+        long startTime = System.currentTimeMillis();
         List<JATETerm> termList = appChiSquare.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("appChiSquare ranking took [%s] milliseconds", (endTime - startTime)));
 
         assert termList != null;
         // the results depends on specified PoS patterns
@@ -226,6 +236,11 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
+
+        LOG.info("=============CHISQUARE GENIA Benchmarking Results==================");
+        double recall = Scorer.recall(gsTerms, rankedTerms);
+        printResults(scores, recall);
+
         assert 0.96 == scores[0];
         assert 0.89 == scores[1];
         assert 0.84 == scores[2];
@@ -242,18 +257,16 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         assert 0.65 == scores[13];
         assert 0.64 == scores[14];
         assert 0.63 == scores[15];
-        double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.1 == recall;
-
-        LOG.info("=============CHISQUARE GENIA Benchmarking Results==================");
-
-        printResults(scores, recall);
     }
 
     @Test
     public void benchmarking_appCValue() throws IOException, JATEException {
         AppCValue appCValue = new AppCValue(initParams);
+        long startTime = System.currentTimeMillis();
         List<JATETerm> termList = appCValue.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("appCValue ranking took [%s] milliseconds", (endTime - startTime)));
 
         assert termList != null;
         // the results depends on specified PoS patterns
@@ -265,6 +278,11 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
+
+        LOG.info("=============CVALUE GENIA Benchmarking Results==================");
+        double recall = Scorer.recall(gsTerms, rankedTerms);
+        printResults(scores, recall);
+
         assert 0.94 == scores[0];
         assert 0.91 == scores[1];
         assert 0.9 == scores[2];
@@ -281,13 +299,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         assert 0.65 == scores[13];
         assert 0.64 == scores[14];
         assert 0.63 == scores[15];
-
-        double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.1 == recall;
-
-        LOG.info("=============CVALUE GENIA Benchmarking Results==================");
-
-        printResults(scores, recall);
     }
 
     @Test
@@ -295,7 +307,10 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), REF_FREQ_FILE.toString());
         AppGlossEx appGlossEx = new AppGlossEx(initParams);
 
+        long startTime = System.currentTimeMillis();
         List<JATETerm> termList = appGlossEx.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("appGlossEx ranking took [%s] milliseconds", (endTime - startTime)));
 
         LOG.info("termList.size():" + termList.size());
         Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
@@ -304,6 +319,11 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
+
+        LOG.info("=============GLOSSEX GENIA Benchmarking Results==================");
+        double recall = Scorer.recall(gsTerms, rankedTerms);
+        printResults(scores, recall);
+
         assert 0.94 == scores[0];
         assert 0.84 == scores[1];
         assert 0.78 == scores[2];
@@ -320,12 +340,9 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         assert 0.68 == scores[13];
         assert 0.67 == scores[14];
         assert 0.65 == scores[15];
-        double recall = Scorer.recall(gsTerms, rankedTerms);
+
         assert 0.1 == recall;
 
-        LOG.info("=============GLOSSEX GENIA Benchmarking Results==================");
-
-        printResults(scores, recall);
     }
 
     private void printResults(double[] scores, double recall) {
@@ -351,7 +368,10 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     @Test
     public void benchmarking_appRAKE() throws JATEException, IOException {
         AppRAKE appRAKE = new AppRAKE(initParams);
+        long startTime = System.currentTimeMillis();
         List<JATETerm> termList = appRAKE.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("appRAKE ranking took [%s] milliseconds", (endTime - startTime)));
 
         assert termList != null;
         // the results depends on specified PoS patterns
@@ -364,6 +384,11 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
+
+        LOG.info("=============RAKE GENIA Benchmarking Results==================");
+        double recall = Scorer.recall(gsTerms, rankedTerms);
+        printResults(scores, recall);
+
         assert 0.82 == scores[0];
         assert 0.81 == scores[1];
         assert 0.72 == scores[2];
@@ -380,18 +405,16 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         assert 0.67 == scores[13];
         assert 0.66 == scores[14];
         assert 0.64 == scores[15];
-        double recall = Scorer.recall(gsTerms, rankedTerms);
         assert 0.1 == recall;
-
-        LOG.info("=============RAKE GENIA Benchmarking Results==================");
-
-        printResults(scores, recall);
     }
 
     @Test
     public void benchmarking_appRIDF() throws JATEException, IOException {
         AppRIDF appRIDF = new AppRIDF(initParams);
+        long startTime = System.currentTimeMillis();
         List<JATETerm> termList = appRIDF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("appRIDF ranking took [%s] milliseconds", (endTime - startTime)));
 
         assert termList != null;
         // the results depends on specified PoS patterns
@@ -432,7 +455,11 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), REF_FREQ_FILE.toString());
         AppTermEx appTermEx = new AppTermEx(initParams);
 
+        long startTime = System.currentTimeMillis();
         List<JATETerm> termList = appTermEx.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("appTermEx ranking took [%s] milliseconds", (endTime - startTime)));
+
         // the results depends on specified PoS patterns
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
@@ -471,8 +498,11 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     public void benchmarking_appTFIDF() throws JATEException, IOException {
         AppTFIDF appTFIDF = new AppTFIDF(initParams);
 
+        long startTime = System.currentTimeMillis();
         List<JATETerm> termList = appTFIDF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
-        //LOG.info("termList.size():"+termList.size());
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("appTFIDF ranking took [%s] milliseconds", (endTime - startTime)));
+
         Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
@@ -506,8 +536,10 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     @Test
     public void benchmarking_appTTF() throws JATEException, IOException {
         AppTTF appTTF = new AppTTF(initParams);
-
+        long startTime = System.currentTimeMillis();
         List<JATETerm> termList = appTTF.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("appTTF ranking took [%s] milliseconds", (endTime - startTime)));
 
         // the results depends on specified PoS patterns
         // refer to genia.patterns in solr config for the default candidate extraction patterns
@@ -548,8 +580,11 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     public void benchmarking_appWeirdness() throws JATEException, IOException {
         initParams.put(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(), REF_FREQ_FILE.toString());
         AppWeirdness appWeirdness = new AppWeirdness(initParams);
-
+        long startTime = System.currentTimeMillis();
         List<JATETerm> termList = appWeirdness.extract(server.getCoreContainer().getCore(solrCoreName), jateProperties);
+        long endTime = System.currentTimeMillis();
+        LOG.info(String.format("appTTF ranking took [%s] milliseconds", (endTime - startTime)));
+
         // the results depends on specified PoS patterns
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
