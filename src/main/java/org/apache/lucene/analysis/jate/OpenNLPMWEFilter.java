@@ -1,6 +1,7 @@
 package org.apache.lucene.analysis.jate;
 
 import opennlp.tools.util.Span;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.*;
@@ -271,9 +272,9 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
             try {
                 word = new String(buffer, 0, offsetAtt.endOffset() - offsetAtt.startOffset());
             } catch (StringIndexOutOfBoundsException ioe) {
-                LOG.error(ioe.toString());
-                //quick fix see #25
-                word = ((PackedTokenAttributeImpl) offsetAtt).toString();
+                LOG.error(ExceptionUtils.getFullStackTrace(ioe));
+                //quick fix see #25 todo: what setting is required to replicate this
+                word = offsetAtt.toString();
             }
 
             wordList.add(word);

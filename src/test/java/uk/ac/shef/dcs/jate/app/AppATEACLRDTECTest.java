@@ -71,6 +71,7 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
                 System.exit(0);*/
             }
             LOG.info("complete indexing and candidate extraction.");
+//            System.exit(0);
 
             List<JATETerm> terms = null;
 
@@ -115,7 +116,7 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
             appWeirdnessTest.evaluate(terms, AppWeirdness.class.getSimpleName());
 
         } catch (Exception e) {
-            throw new JATEException(e);
+            e.printStackTrace();
         } finally {
             try {
                 server.getCoreContainer().getCore(solrCoreName).close();

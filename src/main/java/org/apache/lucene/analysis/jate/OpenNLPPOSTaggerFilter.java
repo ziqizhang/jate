@@ -85,7 +85,7 @@ public final class OpenNLPPOSTaggerFilter extends TokenFilter {
             } catch (StringIndexOutOfBoundsException ioe) {
                 LOG.error(ioe.toString());
                 //TODO: just quick fix! ziqi pls check, example data for testing is A00-1002_cln.xml. see #25
-                word = ((PackedTokenAttributeImpl) offsetAtt).toString();
+                word = offsetAtt.toString();
             }
 
             wordList.add(word);

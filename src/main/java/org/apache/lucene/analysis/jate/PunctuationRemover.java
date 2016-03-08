@@ -57,7 +57,7 @@ public final class PunctuationRemover extends TokenFilter {
                 if(normalised.length()==0)
                     clearAttributes();
                 else
-                    termAtt.setEmpty().append(tok);
+                    termAtt.setEmpty().append(normalised);
             }
 
             return true;
