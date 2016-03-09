@@ -9,10 +9,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 
 
 /**
@@ -45,7 +42,45 @@ public class GENIACorpusParser {
 
     }
 
+    public static int countWordsInTerms(String xmlFile) throws ParserConfigurationException, IOException, SAXException {
+        //Get the DOM Builder Factory
+        DocumentBuilder docBuilder =DocumentBuilderFactory.newInstance().newDocumentBuilder();
+
+        Document document =
+                docBuilder.parse(
+                        new FileInputStream(new File(xmlFile)));
+
+        int total=0;
+        NodeList nodeList = document.getDocumentElement().getElementsByTagName("cons");
+        for(int i=0; i<nodeList.getLength(); i++){
+            Node con = nodeList.item(i);
+            String context = con.getTextContent().replaceAll("[^a-zA-Z0-9]"," ").trim();
+            total+=context.split("\\s+").length;
+        }
+        return total;
+    }
+
+    public static int countWords(String xmlFile) throws ParserConfigurationException, IOException, SAXException {
+        //Get the DOM Builder Factory
+        DocumentBuilder docBuilder =DocumentBuilderFactory.newInstance().newDocumentBuilder();
+
+        Document document =
+                docBuilder.parse(
+                        new FileInputStream(new File(xmlFile)));
+
+        int total=0;
+        NodeList nodeList = document.getDocumentElement().getElementsByTagName("sentence");
+        for(int i=0; i<nodeList.getLength(); i++){
+                Node sent = nodeList.item(i);
+            String sentext = sent.getTextContent().replaceAll("[^a-zA-Z0-9]"," ").trim();
+            total+=sentext.split("\\s+").length;
+        }
+        return total;
+    }
+
     public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException {
+        System.out.println("words in GS terms:"+countWordsInTerms(args[0]));
+        System.out.println("words in total:"+countWords(args[0]));
         parse(args[0],args[1]);
     }
 }
