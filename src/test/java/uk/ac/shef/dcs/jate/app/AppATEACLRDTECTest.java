@@ -191,7 +191,7 @@ class AppChiSquareTest extends ACLRDTECTest {
         initParam.put(AppParams.CUTOFF_TOP_K_PERCENT.getParamKey(), "0.99999");
         initParam.put(AppParams.PREFILTER_MIN_TERM_CONTEXT_FREQUENCY.getParamKey(), "2");
 
-        initParam.put(AppParams.CHISQUERE_FREQ_TERM_CUTOFF_PERCENTAGE.getParamKey(), "0.3");
+        initParam.put(AppParams.CHISQUERE_FREQ_TERM_CUTOFF_PERCENTAGE.getParamKey(), "0.1");
 
         AppChiSquare appChiSquare = new AppChiSquare(initParam);
         long startTime = System.currentTimeMillis();
