@@ -38,7 +38,7 @@ public class Weirdness extends ReferenceBased {
         List<JATETerm> result = new ArrayList<>();
         double totalWordsInCorpus = fFeatureWords.getCorpusTotal();
 
-        StringBuilder msg = new StringBuilder("Beginning computing TermEx values,");
+        StringBuilder msg = new StringBuilder("Beginning computing Weirdness values,");
         msg.append(", total terms=" + candidates.size());
         LOG.info(msg.toString());
 

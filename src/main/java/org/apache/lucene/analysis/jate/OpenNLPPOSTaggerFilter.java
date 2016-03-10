@@ -79,15 +79,7 @@ public final class OpenNLPPOSTaggerFilter extends TokenFilter {
             CharTermAttribute textAtt = input.getAttribute(CharTermAttribute.class);
             OffsetAttribute offsetAtt = input.getAttribute(OffsetAttribute.class);
             char[] buffer = textAtt.buffer();
-            String word = null;
-            try {
-                word = new String(buffer, 0, offsetAtt.endOffset() - offsetAtt.startOffset());
-            } catch (StringIndexOutOfBoundsException ioe) {
-                LOG.error(ioe.toString());
-                //TODO: just quick fix! ziqi pls check, example data for testing is A00-1002_cln.xml. see #25
-                word = offsetAtt.toString();
-            }
-
+            String word =  new String(buffer, 0, offsetAtt.endOffset() - offsetAtt.startOffset());
             wordList.add(word);
 
             AttributeSource attrs = input.cloneAttributes();

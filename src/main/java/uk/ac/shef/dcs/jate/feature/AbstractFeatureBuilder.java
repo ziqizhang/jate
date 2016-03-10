@@ -64,12 +64,11 @@ public abstract class AbstractFeatureBuilder {
      */
     protected Set<String> getUniqueTerms() throws JATEException, IOException {
         Terms terms =SolrUtil.getTermVector(properties.getSolrFieldNameJATECTerms(),solrIndexSearcher);
-
-
+        
         //>>>>>>>>>
         /*TermsEnum source = terms.iterator();
         String term = //"thrownawayorusedjustforelementarystatistical profile";
-        "notethattheextendedgraphstillcontainstherepresentation";
+        "l hierar hy";
         //"ordertoavoidadependencyofthebaselineresultontherandom";
 
                 if (source.seekExact(new BytesRef(term.getBytes("UTF-8")))) {
@@ -93,6 +92,9 @@ public abstract class AbstractFeatureBuilder {
             if (t.length == 0)
                 continue;
             allTermCandidates.add(t.utf8ToString());
+
+            if(t.utf8ToString().equals("l hierar hy"))
+                System.out.println();
         }
         return allTermCandidates;
     }

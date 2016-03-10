@@ -24,6 +24,7 @@ import opennlp.tools.sentdetect.SentenceDetector;
 import opennlp.tools.util.Span;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
@@ -40,6 +41,7 @@ import org.apache.lucene.util.BytesRef;
  */
 public final class OpenNLPTokenizer extends Tokenizer implements SentenceContextAware {
     private static final int DEFAULT_BUFFER_SIZE = 256;
+    private static final Logger LOG = Logger.getLogger(OpenNLPTokenizer.class.getName());
 
     private int finalOffset;
     private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
@@ -88,6 +90,7 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
             wordSet = words[indexSentence];
         }
         clearAttributes();
+
         while (indexSentence < sentences.length) {
             while (indexWord == wordSet.length) {
                 indexSentence++;
@@ -103,6 +106,7 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
             // set termAtt from private buffer
             Span sentence = sentences[indexSentence];
             Span word = wordSet[indexWord];
+
             int spot = sentence.getStart() + word.getStart();
             termAtt.setEmpty();
             int termLength = word.getEnd() - word.getStart();
@@ -111,10 +115,19 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
             }
             termAtt.setLength(termLength);
             char[] buffer = termAtt.buffer();
-
             finalOffset = correctOffset(sentenceOffset + word.getEnd());
             int start = correctOffset(word.getStart() + sentenceOffset);
-            offsetAtt.setOffset(start, finalOffset);
+
+            //safeguard tweak to avoid invalid token offsets, see issue 26 on github
+            if(finalOffset-start>termLength) {
+                offsetAtt.setOffset(start, sentenceOffset + word.getEnd());
+                LOG.warn("Invalid token start and end offsets diff greater than term length. End offset is reset to be start+tokenlength. "+
+                    "start="+start+", invalid end="+finalOffset+", termlength="+termLength+". See Issue 26 on JATE webpage");
+            }
+            else
+                offsetAtt.setOffset(start, finalOffset);
+
+
             for (int i = 0; i < termLength; i++) {
                 buffer[i] = fullText[spot + i];
             }
@@ -123,6 +136,7 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
             //System.out.println(sentenceContextAtt.getPayload().utf8ToString()+","+new String(buffer,0, termAtt.length()));
 
             indexWord++;
+
             return true;
         }
         first = true;
@@ -156,6 +170,16 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
     void detectSentences() throws IOException {
         fullText.hashCode();
         sentences = sentenceOp.sentPosDetect(new String(fullText));
+       /* Span[] revised = new Span[sentences.length];
+        //correct offsets, in case charfilters have been used and will change offsets
+
+        for(int i=0; i<sentences.length; i++){
+            Span span = sentences[i];
+            int newStart =correctOffset(span.getStart());
+            int newEnd = correctOffset(span.getEnd());
+            revised[i] = new Span(newStart, newEnd, span.getType(), span.getProb());
+        }
+        sentences=revised;*/
     }
 
     void fillBuffer() throws IOException {

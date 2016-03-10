@@ -124,6 +124,7 @@ public abstract class ACLRDTECTest {
         int count = 0;
         for (Path file : files) {
             try {
+                System.out.println(file);
                 indexJATEDocuments(file, jateProp, false);
                 count++;
                 if (count % 100 == 0)
