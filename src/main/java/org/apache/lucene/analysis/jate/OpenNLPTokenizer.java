@@ -118,19 +118,21 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
             finalOffset = correctOffset(sentenceOffset + word.getEnd());
             int start = correctOffset(word.getStart() + sentenceOffset);
 
+            for (int i = 0; i < termLength; i++) {
+                buffer[i] = fullText[spot + i];
+            }
+
             //safeguard tweak to avoid invalid token offsets, see issue 26 on github
             if(finalOffset-start>termLength) {
                 offsetAtt.setOffset(start, start+termLength);
                 LOG.warn("Invalid token start and end offsets diff greater than term length. End offset is reset to be start+tokenlength. "+
                     "start="+start+", invalid end="+finalOffset+", termlength="+termLength+". See Issue 26 on JATE webpage");
+/*                String wordStr =  new String(buffer, 0, offsetAtt.endOffset() - offsetAtt.startOffset());
+                System.out.println(wordStr);*/
             }
             else
                 offsetAtt.setOffset(start, finalOffset);
 
-
-            for (int i = 0; i < termLength; i++) {
-                buffer[i] = fullText[spot + i];
-            }
             addSentenceContext(sentenceContextAtt, indexWord, indexWord,
                     null, indexSentence);
             //System.out.println(sentenceContextAtt.getPayload().utf8ToString()+","+new String(buffer,0, termAtt.length()));
