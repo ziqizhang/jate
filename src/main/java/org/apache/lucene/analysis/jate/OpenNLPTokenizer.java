@@ -120,7 +120,7 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
 
             //safeguard tweak to avoid invalid token offsets, see issue 26 on github
             if(finalOffset-start>termLength) {
-                offsetAtt.setOffset(start, sentenceOffset + word.getEnd());
+                offsetAtt.setOffset(start, start+termLength);
                 LOG.warn("Invalid token start and end offsets diff greater than term length. End offset is reset to be start+tokenlength. "+
                     "start="+start+", invalid end="+finalOffset+", termlength="+termLength+". See Issue 26 on JATE webpage");
             }
