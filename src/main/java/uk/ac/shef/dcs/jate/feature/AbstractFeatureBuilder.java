@@ -64,7 +64,7 @@ public abstract class AbstractFeatureBuilder {
      */
     protected Set<String> getUniqueTerms() throws JATEException, IOException {
         Terms terms =SolrUtil.getTermVector(properties.getSolrFieldNameJATECTerms(),solrIndexSearcher);
-        
+
         //>>>>>>>>>
         /*TermsEnum source = terms.iterator();
         String term = //"thrownawayorusedjustforelementarystatistical profile";
