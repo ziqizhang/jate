@@ -8,7 +8,14 @@ Zhang, Z., Gao, J., Ciravegna, F. 2016. JATE 2.0: Java Automatic Term Extraction
 
 **If you are after the old JATE 1.11 previously hosted on Google Code Project, you can download it from [here]. However the old version is no longer supported. To cite the old version, please use instead:** Zhang, Z., Iria, J., Brewster, C., and Ciravegna, F. 2008. A Comparative Evaluation of Term Recognition Algorithms. In Proceedings of The 6th Language Resources and Evaluation Conference, May 2008, Marrakech, Morocco. 
 
+### Contact
+If you have any **questions about using JATE**, please read the Wiki and/or [create an issue](https://github.com/ziqizhang/jate/issues). For anything else, you can find how to contact the team at:
 
+ - [Jie GAO](http://staffwww.dcs.shef.ac.uk/people/J.Gao/)
+ - [Ziqi ZHANG](http://staffwww.dcs.shef.ac.uk/people/Z.Zhang/)
+
+### Changes Overview
+[To update]
 
 
 
