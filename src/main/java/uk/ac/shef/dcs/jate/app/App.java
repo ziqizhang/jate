@@ -82,17 +82,19 @@ public abstract class App {
     // see also {@code AppATTF}
     protected FrequencyTermBased freqFeature = null;
 
-    public App(){}
+    private static String DEFAULT_OUTPUT_FILE = "terms.txt";
+
+    public App() {
+    }
 
     private int parseIntParam(String name, String value) throws JATEException {
         try {
             return Integer.parseInt(value);
         } catch (NumberFormatException nfe) {
-            StringBuilder msg = new StringBuilder(name);
-            msg.append(" is not set correctly. An integer value is expected, you have entered:");
-            msg.append(value);
-            log.error(msg.toString());
-            throw new JATEException(msg.toString());
+            String msg = String.format("%s is not set correctly. An integer value is expected. " +
+                    "Actual input is %s", name, value);
+            log.error(msg);
+            throw new JATEException(msg);
         }
     }
 
@@ -100,11 +102,10 @@ public abstract class App {
         try {
             return Double.parseDouble(value);
         } catch (NumberFormatException nfe) {
-            StringBuilder msg = new StringBuilder(name);
-            msg.append(" is not set correctly. An decimal value is expected, you have entered:");
-            msg.append(value);
-            log.error(msg.toString());
-            throw new JATEException(msg.toString());
+            String msg = String.format("%s is not set correctly. An integer value is expected. " +
+                    "Actual input is %s", name, value);
+            log.error(msg);
+            throw new JATEException(msg);
         }
     }
 
@@ -113,10 +114,11 @@ public abstract class App {
      * Initialise common run-time parameters
      *
      * @param params, command line run-time parameters (paramKey, value) for term
-     *                    ranking algorithms
-     *                    <p>
-     *                    see also {code CommandLineParams}
+     *                ranking algorithms
+     *                @see AppParams
+     *
      * @throws JATEException
+     * @see AppParams
      */
     App(Map<String, String> params) throws JATEException {
         if (params.containsKey(AppParams.CUTOFF_TOP_K.getParamKey())) {
@@ -166,22 +168,21 @@ public abstract class App {
 
         if (params.containsKey(AppParams.OUTPUT_FILE.getParamKey())) {
             String outFile = params.get(AppParams.OUTPUT_FILE.getParamKey());
-            StringBuilder msg =
-                    new StringBuilder("Output file is missing or its path is invalid (you can ignore this if you are running in the Plugin mode and do not require the list of terms to be exported to a file.) ");
-            msg.append("\nOutput will be written to a file: terms.txt");
+
+            String msg = "Output file is missing or its path is invalid (you can ignore this if you are running " +
+                    "in the Plugin mode and do not require the list of terms to be exported to a file.) \n" +
+                    "Output will be written to a default file 'terms.txt' instead.";
             if (outFile == null) {
-                log.warn(
-                        msg.toString());
-                outputFile="terms.txt";
-            }
-            else{
-                try{
+                log.warn(msg);
+                outputFile = DEFAULT_OUTPUT_FILE;
+            } else {
+                try {
                     PrintWriter p = new PrintWriter(outFile);
                     p.close();
-                    outputFile=outFile;
-                }catch (IOException ioe){
-                    log.warn(msg.toString());
-                    outputFile="terms.txt";
+                    outputFile = outFile;
+                } catch (IOException ioe) {
+                    log.warn(msg);
+                    outputFile = DEFAULT_OUTPUT_FILE;
                 }
             }
 
@@ -189,48 +190,48 @@ public abstract class App {
 
     }
 
+    /**
+     * @param initParams, map param accepting reference frequency file
+     * @throws JATEException
+     * @see AppParams#REFERENCE_FREQUENCY_FILE
+     */
     protected void initalizeRefFreqParam(Map<String, String> initParams) throws JATEException {
         if (initParams.containsKey(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey())) {
             String refFreqFilePath = initParams.get(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey());
 
             if (refFreqFilePath == null) {
-                StringBuilder msg = new StringBuilder("Reference corpus frequency file ");
-                msg.append(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey()).append(" is not set. A file path is expected.");
-                log.error(
-                        msg.toString());
-                throw new JATEException(
-                        msg.toString());
+                String msg = String.format("Reference corpus frequency file %s is not set. A file path is expected.",
+                        AppParams.REFERENCE_FREQUENCY_FILE.getParamKey());
+
+                log.error(msg);
+                throw new JATEException(msg);
             }
 
             File refFreqFile = new File(refFreqFilePath);
             if (!refFreqFile.exists()) {
-                StringBuilder msg = new StringBuilder("Reference corpus frequency file ");
-                msg.append(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey()).append(" does not exist. Please check your file:")
-                        .append(refFreqFilePath);
-                log.error(
-                        msg.toString());
-                throw new JATEException(
-                        msg.toString());
+                String msg = String.format("Excepted reference corpus frequency file %s does not exist in %s.",
+                        AppParams.REFERENCE_FREQUENCY_FILE.getParamKey(),
+                        refFreqFilePath);
+                log.error(msg);
+                throw new JATEException(msg);
             }
 
             this.referenceFrequencyFilePath = refFreqFilePath;
         } else {
-            StringBuilder msg = new StringBuilder("Reference corpus frequency file (-r) ");
-            msg.append(AppParams.REFERENCE_FREQUENCY_FILE.getParamKey()).append(" is not set. A file path is expected.");
-            log.error(
-                    msg.toString());
-            throw new JATEException(
-                    msg.toString());
+            String msg = String.format("Reference corpus frequency file (-r) %s is not set. A file path is expected.",
+                    AppParams.REFERENCE_FREQUENCY_FILE.getParamKey());
+            log.error(msg);
+            throw new JATEException(msg);
         }
     }
 
 
     /**
      * Rank and Filter terms candidates based on a given Solr index
-     *
+     * <p>
      * This method assume that documents are indexed in the solr container (solrHomePath)
      * and term candidates have already been extracted at index-time.
-     *
+     * <p>
      * jate properties provides necessary information needed by the ATE algorithm (e.g., text field, ngram info field,
      * term candiate field, cut-off threshold)
      *
@@ -244,17 +245,16 @@ public abstract class App {
 
     /**
      * Rank and Filter terms candidates based on a given Solr index
-     *
+     * <p>
      * This method assume that documents are indexed in the solr container (solrHomePath)
      * and term candidates have already been extracted at index-time.
-     *
+     * <p>
      * jate properties provides necessary information needed by the ATE algorithm (e.g., text field, ngram info field,
      * term candiate field, cut-off threshold)
      *
      * @param solrHomePath,     solr core home directory path
      * @param coreName,         solr core name from where term recognition is executed
      * @param jatePropertyFile, jate property file path
-     *
      * @return List<JATETerm>, the list of terms extracted
      * @throws IOException
      * @throws JATEException
@@ -277,7 +277,7 @@ public abstract class App {
                 if (solrServer != null) {
                     solrServer.close();
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 log.error("Unable to close solr index, error cause:");
                 log.error(ExceptionUtils.getFullStackTrace(e));
             }
@@ -287,15 +287,15 @@ public abstract class App {
 
     /**
      * Only effective under the Embedded mode.
-     *
+     * <p>
      * User can choose to output term offset information. If this is the case, this method will be
      * called upon every final term. Iterating through the solr index can be slow so this method can
      * take some time.
      *
-     * @param leafReader
-     * @param terms
-     * @param ngramInfoFieldname
-     * @param idFieldname
+     * @param leafReader, index reader
+     * @param terms, term list
+     * @param ngramInfoFieldname, indexed n-gram field, see 'jate_text_2_ngrams' field in example schema
+     * @param idFieldname, doc unique id field
      * @throws IOException
      */
     public void collectTermOffsets(List<JATETerm> terms, LeafReader leafReader, String ngramInfoFieldname,
@@ -450,7 +450,7 @@ public abstract class App {
         if (topPercentage != null & terms != null & terms.size() > 0) {
             //todo:jerry check why this line is throwing exception
             /*log.debug(String.format("filter [%s] term candidates by Top [%s]% (rounded) ...",
-					terms.size(),
+                    terms.size(),
 					topPercentage * 100));*/
             Integer topN = (int) Math.round(topPercentage * terms.size());
             if (topN > 0)
@@ -477,7 +477,7 @@ public abstract class App {
                 .append("\t\t-pf.mttf\t\tA number. Pre-filter minimum total term frequency. \n")
                 .append("\t\t-pf.mtcf\t\tA number. Pre-filter minimum context frequency of a term (used by co-occurrence based methods). \n")
 
-        .append("\t\t-o\t\tA file path to save output. \n");
+                .append("\t\t-o\t\tA file path to save output. \n");
         System.out.println(sb);
     }
 }

@@ -17,12 +17,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by zqz on 24/09/2015.
- */
 public class AppWeirdness extends App {
     private final Logger log = LoggerFactory.getLogger(AppWeirdness.class.getName());
 
+    /**
+     * @param args, command-line params accepting solr home path, solr core name,
+     *              jate properties file
+     *              <p>
+     *              more optional run-time parameters
+     * @see uk.ac.shef.dcs.jate.app.AppParams
+     * <p>
+     * Weirdness required parameter: reference frequency file
+     * @see AppParams#REFERENCE_FREQUENCY_FILE
+     */
     public static void main(String[] args) {
         if (args.length < 1) {
             printHelp();
@@ -46,6 +53,12 @@ public class AppWeirdness extends App {
 
     }
 
+    /**
+     * @param initParams, pre-filtering, post-filtering parameters and Weirdness specific parameter
+     * @throws JATEException
+     * @see AppParams
+     * @see AppParams#REFERENCE_FREQUENCY_FILE
+     */
     public AppWeirdness(Map<String, String> initParams) throws JATEException {
         super(initParams);
 
@@ -62,7 +75,6 @@ public class AppWeirdness extends App {
 
     public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {
         SolrIndexSearcher searcher = core.getSearcher().get();
-//        try {
 
         this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
         this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
@@ -87,14 +99,6 @@ public class AppWeirdness extends App {
         addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
                 properties.getSolrFieldNameID());
         return terms;
-//        } finally {
-//            try {
-//                searcher.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                log.error("Failed to close current SolrIndexSearcher!" + e.getCause().toString());
-//            }
-//        }
     }
 
     protected static void printHelp() {

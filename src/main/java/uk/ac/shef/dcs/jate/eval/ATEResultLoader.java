@@ -38,6 +38,7 @@ public class ATEResultLoader {
         return result;
     }
 
+    @Deprecated
     public static List<List<String>> loadJATE1(String jate1outputfile) throws IOException {
         List<String> lines = FileUtils.readLines(new File(jate1outputfile));
         List<List<String>> out = new ArrayList<>(lines.size());

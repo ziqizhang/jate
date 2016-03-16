@@ -6,7 +6,6 @@ import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.nlp.Lemmatiser;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -16,8 +15,8 @@ import java.util.*;
  */
 public class Scorer {
 
-    private static String digitsPattern = "\\d+";
-    private static String symbolsPattern = "\\p{Punct}";
+    private static String PATTERN_DIGITALS = "\\d+";
+    private static String PATTERN_SYMBOLS = "\\p{Punct}";
 
 
     public static void createReportACLRD(Lemmatiser lemmatiser, String ateOutputFolder, String gsFile, String outFile,
@@ -110,12 +109,12 @@ public class Scorer {
      * @param terms, extracted results
      * @param ignoreSymbols, remove symbols
      * @param ignoreDigits, remove digits
-     * @param minChar,
-     * @param maxChar
-     * @param minTokens
-     * @param maxTokens
-     * @param ranks
-     * @return
+     * @param minChar, minimum character length
+     * @param maxChar, maximum character length
+     * @param minTokens, minimum token size
+     * @param maxTokens, maximum token size
+     * @param ranks, list of rankinig for evaluation
+     * @return, list of precision@K
      */
     public static double[] computePrecisionAtRank(Lemmatiser lemmatiser, List<String> gs, List<String> terms,
                                                   boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
@@ -251,9 +250,9 @@ public class Scorer {
         List<String> result = new ArrayList<>();
         for (String term : terms) {
             if (ignoreDigits)
-                term = term.replaceAll(digitsPattern, " ").replaceAll("\\s+", " ");
+                term = term.replaceAll(PATTERN_DIGITALS, " ").replaceAll("\\s+", " ");
             if (ignoreSymbols)
-                term = term.replaceAll(symbolsPattern, " ").replaceAll("\\s+", " ");
+                term = term.replaceAll(PATTERN_SYMBOLS, " ").replaceAll("\\s+", " ");
 
             int start = 0, end = term.length();
             for (int i = 0; i < term.length(); i++) {

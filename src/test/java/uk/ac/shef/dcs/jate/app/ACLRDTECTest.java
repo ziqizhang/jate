@@ -202,17 +202,6 @@ public abstract class ACLRDTECTest {
 
         double recall = Scorer.recall(gsTerms, rankedTerms);
 
-        //>>>>>>
-        /*Set<String> copy = new HashSet<>(gsTerms);
-        copy.retainAll(new HashSet<>(rankedTerms));
-        Set<String> gsCopy = new HashSet<>(gsTerms);
-
-        gsCopy.removeAll(copy);
-        List<String> sorted = new ArrayList<>(gsCopy);
-        Collections.sort(sorted);
-        DebugHelper.writeList(sorted, "missed.txt");
-        System.exit(1);*/
-        //>>>>>>
         assert 0.75 == recall;
 
         LOG.info(String.format("=============%s ACL RD-TEC Benchmarking Results==================", algorithmName));

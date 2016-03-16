@@ -61,17 +61,8 @@ public class AppATEACLRDTECTest extends ACLRDTECTest {
                 appATETest.indexAndExtract(corpusDir);
                 long endTime = System.currentTimeMillis();
                 LOG.info(String.format("Indexing and Candidate Extraction took [%s] milliseconds", (endTime - startTime)));
-                /*try {
-                    server.getCoreContainer().getCore(solrCoreName).close();
-                    server.getCoreContainer().shutdown();
-                    server.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                System.exit(0);*/
             }
             LOG.info("complete indexing and candidate extraction.");
-//            System.exit(0);
 
             List<JATETerm> terms = null;
 

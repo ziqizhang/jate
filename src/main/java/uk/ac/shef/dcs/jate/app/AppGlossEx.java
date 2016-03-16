@@ -19,6 +19,14 @@ import java.util.Map;
 public class AppGlossEx extends App {
     private final Logger log = LoggerFactory.getLogger(AppGlossEx.class.getName());
 
+    /**
+     * @param args, command-line params accepting solr home path, solr core name,
+     *              jate properties file and more optional run-time parameters
+     * @see uk.ac.shef.dcs.jate.app.AppParams
+     * <p>
+     * and GlossEx specific parameter : reference frequency file
+     * @see AppParams#REFERENCE_FREQUENCY_FILE
+     */
     public static void main(String[] args) {
         if (args.length < 1) {
             printHelp();
@@ -43,9 +51,14 @@ public class AppGlossEx extends App {
         }
     }
 
+    /**
+     * @param initParams, intial map params accepting pre-filtering, post-filtering params and GlossEx specific parameter
+     * @throws JATEException
+     * @see AppParams
+     * @see AppParams#REFERENCE_FREQUENCY_FILE
+     */
     public AppGlossEx(Map<String, String> initParams) throws JATEException {
         super(initParams);
-        //TODO: made it to use default reference file if not set at run-time
         initalizeRefFreqParam(initParams);
     }
 

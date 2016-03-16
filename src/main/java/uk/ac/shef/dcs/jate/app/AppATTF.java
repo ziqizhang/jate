@@ -31,8 +31,9 @@ public class AppATTF extends App {
     static EmbeddedSolrServer server = null;
 
     /**
-     *
-     * @param args
+     * @param args, command-line params accepting solr home path, solr core name,
+     *              jate properties file and more optional run-time parameters
+     * @see uk.ac.shef.dcs.jate.app.AppParams
      */
     public static void main(String[] args) {
         if (args.length < 1) {
@@ -80,7 +81,7 @@ public class AppATTF extends App {
      */
     public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {
         SolrIndexSearcher searcher = core.getSearcher().get();
-//        try {
+
         this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, FrequencyTermBasedFBMaster.FEATURE_TYPE_TERM);
         this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 
@@ -100,19 +101,6 @@ public class AppATTF extends App {
                 properties.getSolrFieldNameID());
 
         return terms;
-//        } finally {
-//            try {
-//                searcher.close();
-//            } catch (IOException ioe) {
-//                LOG.error(ioe.toString());
-//                throw new JATEException("Failed to close Solr Index Searcher.");
-//            }
-//        }
     }
-
-//	public List<JATETerm> extract(SolrCore core, JATEProperties jateProperties) {
-//		SolrIndexSearcher searcher = core.getSearcher().get();
-//
-//	}
 
 }

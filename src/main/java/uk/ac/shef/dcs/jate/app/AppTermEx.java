@@ -18,6 +18,16 @@ import java.util.Map;
 public class AppTermEx extends App {
     private final Logger log = LoggerFactory.getLogger(AppTermEx.class.getName());
 
+    /**
+     * @param args, command-line params accepting solr home path, solr core name,
+     *              jate properties file
+     *              <p>
+     *              and more optional run-time parameters
+     * @see uk.ac.shef.dcs.jate.app.AppParams
+     * <p>
+     * TermEx required parameter: reference frequency file
+     * @see AppParams#REFERENCE_FREQUENCY_FILE
+     */
     public static void main(String[] args) {
         if (args.length < 1) {
             printHelp();
@@ -43,6 +53,12 @@ public class AppTermEx extends App {
 
     }
 
+    /**
+     * @param initParams, pre-filtering, post-filtering parameters, and TermEx specific parameter
+     * @throws JATEException
+     * @see AppParams
+     * @see AppParams#REFERENCE_FREQUENCY_FILE
+     */
     public AppTermEx(Map<String, String> initParams) throws JATEException {
         super(initParams);
         initalizeRefFreqParam(initParams);
@@ -62,7 +78,6 @@ public class AppTermEx extends App {
 
     public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {
         SolrIndexSearcher searcher = core.getSearcher().get();
-//        try {
 
         this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
         this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
@@ -94,14 +109,6 @@ public class AppTermEx extends App {
         addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
                 properties.getSolrFieldNameID());
         return terms;
-//        } finally {
-//            try {
-//                searcher.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                log.error("Failed to close current SolrIndexSearcher!" + e.getCause().toString());
-//            }
-//        }
     }
 
     protected static void printHelp() {

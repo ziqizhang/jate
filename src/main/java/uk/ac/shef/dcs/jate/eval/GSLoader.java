@@ -18,15 +18,20 @@ import static java.util.stream.Collectors.toList;
 public class GSLoader {
 
     /**
-     * @param file
+     * @param file, GENIA Goldstandard terms file
      * @return
      */
     public static List<String> loadGenia(String file) throws IOException {
         List<String> terms = FileUtils.readLines(new File(file));
         return terms;
-        //return loadGenia(new File(file), lowercase, normalize);
     }
 
+    /**
+     *
+     * @param file, ACL RD-TEC goldstandard term file (with invalid and valid terms)
+     * @return List<String>, list of goldstandard terms
+     * @throws IOException
+     */
     public static List<String> loadACLRD(String file) throws IOException {
         List<String> raw = FileUtils.readLines(new File(file));
         List<String> terms = new ArrayList<>(raw.size() - 1);

@@ -16,8 +16,19 @@ import java.util.*;
 
 public class AppChiSquare extends App {
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private double frequentTermFT = 0.3; //top 30% of the terms are considered to be 'frequent'
+    //top 30% of the terms are considered to be 'frequent'
+    private double frequentTermFT = 0.3;
 
+    /**
+     * @param args, command-line params accepting solr home path, solr core name,
+     *              jate properties file,
+     *              <p>
+     *              and more optional run-time parameters
+     * @see uk.ac.shef.dcs.jate.app.AppParams
+     * <p>
+     * Chisquare specific setting: frequent term cutoff percentage
+     * @see uk.ac.shef.dcs.jate.app.AppParams#CHISQUERE_FREQ_TERM_CUTOFF_PERCENTAGE
+     */
     public static void main(String[] args) {
         if (args.length < 1) {
             printHelp();
@@ -41,17 +52,21 @@ public class AppChiSquare extends App {
         }
     }
 
-    //TODO: should allow to initialse with default setting
+    /**
+     * @param initParams, initial parameters including pre-filtering and post-filtering parameters
+     *                    and chisquare specific parameter
+     * @throws JATEException
+     * @see uk.ac.shef.dcs.jate.app.AppParams
+     */
     public AppChiSquare(Map<String, String> initParams) throws JATEException {
         super(initParams);
         initializeFTParam(initParams);
     }
 
     /**
-     * TODO: provide more guidance and explanation about how to setup initial parameters
-     *
-     * @param initParams, TODO
+     * @param initParams, chisquare specific initial parameter
      * @throws JATEException
+     * @see uk.ac.shef.dcs.jate.app.AppParams#CHISQUERE_FREQ_TERM_CUTOFF_PERCENTAGE
      */
     private void initializeFTParam(Map<String, String> initParams) throws JATEException {
         //This param is Chi-Square only
@@ -81,7 +96,6 @@ public class AppChiSquare extends App {
 
     public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {
         SolrIndexSearcher searcher = core.getSearcher().get();
-//        try {
 
         FrequencyTermBasedFBMaster ftbb = new FrequencyTermBasedFBMaster(searcher, properties, 0);
         FrequencyTermBased ft = (FrequencyTermBased) ftbb.build();
@@ -103,7 +117,7 @@ public class AppChiSquare extends App {
 
         //feature expected probability for frequent terms
         ChiSquareFrequentTermsFBMaster cf = new ChiSquareFrequentTermsFBMaster(
-                ref_fcs.getMapCtx2TTF(), ref_fcs.getTerm2Ctx(),ft.getCorpusTotal(),properties);
+                ref_fcs.getMapCtx2TTF(), ref_fcs.getTerm2Ctx(), ft.getCorpusTotal(), properties);
         ChiSquareFrequentTerms cff = (ChiSquareFrequentTerms) cf.build();
 
         ChiSquare chi = new ChiSquare();
@@ -117,14 +131,6 @@ public class AppChiSquare extends App {
         addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
                 properties.getSolrFieldNameID());
         return terms;
-//        } finally {
-//            try {
-//                searcher.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                log.error("Failed to close current SolrIndexSearcher!" + e.getCause().toString());
-//            }
-//        }
     }
 
 }

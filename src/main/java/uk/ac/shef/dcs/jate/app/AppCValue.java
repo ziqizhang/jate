@@ -20,6 +20,11 @@ import java.util.Set;
 public class AppCValue extends App {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    /**
+     * @param args, command-line params accepting solr home path, solr core name,
+     *              jate properties file and more optional run-time parameters
+     * @see uk.ac.shef.dcs.jate.app.AppParams
+     */
     public static void main(String[] args) {
         if (args.length < 1) {
             printHelp();
@@ -43,6 +48,11 @@ public class AppCValue extends App {
         }
     }
 
+    /**
+     * @param initParams, initial parameters including pre-filtering and post-filtering parameters
+     * @throws JATEException
+     * @see uk.ac.shef.dcs.jate.app.AppParams
+     */
     public AppCValue(Map<String, String> initParams) throws JATEException {
         super(initParams);
     }
@@ -58,7 +68,6 @@ public class AppCValue extends App {
 
     public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {
         SolrIndexSearcher searcher = core.getSearcher().get();
-//        try {
 
         this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
         this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
@@ -68,7 +77,7 @@ public class AppCValue extends App {
                 new ArrayList<>(uniqueCandidateTerms));
         TermComponentIndex termComponentIndexFeature = (TermComponentIndex) termCompIndexFeatureBuilder.build();
 
-        ContainmentFBMaster cb = new ContainmentFBMaster(searcher, properties,termComponentIndexFeature,uniqueCandidateTerms);
+        ContainmentFBMaster cb = new ContainmentFBMaster(searcher, properties, termComponentIndexFeature, uniqueCandidateTerms);
         Containment cf = (Containment) cb.build();
 
         CValue cvalue = new CValue();
@@ -86,14 +95,6 @@ public class AppCValue extends App {
                 properties.getSolrFieldNameID());
         log.info("Complete CValue term extraction.");
         return terms;
-//        } finally {
-//            try {
-//                searcher.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                log.error("Failed to close current SolrIndexSearcher!" + e.getCause().toString());
-//            }
-//        }
     }
 
 }

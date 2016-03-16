@@ -20,6 +20,11 @@ import java.util.Map;
 public class AppTFIDF extends App {
     private final Logger log = LoggerFactory.getLogger(AppTFIDF.class.getName());
 
+    /**
+     * @param args, command-line params accepting solr home path, solr core name,
+     *              jate properties file and more optional run-time parameters
+     * @see uk.ac.shef.dcs.jate.app.AppParams
+     */
     public static void main(String[] args) {
         if (args.length < 1) {
             printHelp();
@@ -44,6 +49,11 @@ public class AppTFIDF extends App {
 
     }
 
+    /**
+     * @param initParams, pre-filtering, post-filtering parameters
+     * @throws JATEException
+     * @see AppParams
+     */
     public AppTFIDF(Map<String, String> initParams) throws JATEException {
         super(initParams);
     }
@@ -59,7 +69,6 @@ public class AppTFIDF extends App {
 
     public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {
         SolrIndexSearcher searcher = core.getSearcher().get();
-//		try {
 
         this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
         this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
@@ -77,14 +86,6 @@ public class AppTFIDF extends App {
         addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
                 properties.getSolrFieldNameID());
         return terms;
-//		} finally {
-//			try {
-//				searcher.close();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//				log.error("Failed to close current SolrIndexSearcher!" + e.getCause().toString());
-//			}
-//		}
     }
 
 }
