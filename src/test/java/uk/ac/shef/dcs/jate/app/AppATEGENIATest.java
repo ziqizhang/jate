@@ -84,7 +84,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         gsTerms = GSLoader.loadGenia(GENIA_CORPUS_CONCEPT_FILE.toString());
 
         if (gsTerms == null) {
-            throw new JATEException("GENIA CORPUS CONCEPT FILE CANNOT BE LOADED SUCCESSFULLY!");
+            throw new JATEException("GENIA CORPUS_DIR CONCEPT FILE CANNOT BE LOADED SUCCESSFULLY!");
         }
         initParams = new HashMap<>();
 

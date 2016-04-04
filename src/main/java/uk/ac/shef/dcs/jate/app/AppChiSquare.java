@@ -12,6 +12,7 @@ import uk.ac.shef.dcs.jate.feature.*;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class AppChiSquare extends App {
@@ -20,8 +21,7 @@ public class AppChiSquare extends App {
     private double frequentTermFT = 0.3;
 
     /**
-     * @param args, command-line params accepting solr home path, solr core name,
-     *              jate properties file,
+     * @param args, command-line params accepting solr home path, solr core name
      *              <p>
      *              and more optional run-time parameters
      * @see uk.ac.shef.dcs.jate.app.AppParams
@@ -34,17 +34,28 @@ public class AppChiSquare extends App {
             printHelp();
             System.exit(1);
         }
-        String solrHomePath = args[args.length - 3];
-        String solrCoreName = args[args.length - 2];
-        String jatePropertyFile = args[args.length - 1];
+
+        String solrHomePath = args[args.length - 2];
+        String solrCoreName = args[args.length - 1];
+
         Map<String, String> params = getParams(args);
+        String jatePropertyFile = getJATEProperties(params);
+        String corpusDir = getCorpusDir(params);
 
         List<JATETerm> terms;
         try {
             App app = new AppChiSquare(params);
+            if (isCorpusProvided(corpusDir)) {
+                app.index(Paths.get(corpusDir), Paths.get(solrHomePath), solrCoreName, jatePropertyFile);
+            }
+
             terms = app.extract(solrHomePath, solrCoreName, jatePropertyFile);
 
-            app.write(terms);
+            if (isExport(params)) {
+                app.write(terms);
+            }
+
+            System.exit(0);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JATEException e) {
@@ -88,7 +99,7 @@ public class AppChiSquare extends App {
     @Override
     public List<JATETerm> extract(SolrCore core, String jatePropertyFile)
             throws IOException, JATEException {
-        JATEProperties properties = new JATEProperties(jatePropertyFile);
+        JATEProperties properties = getJateProperties(jatePropertyFile);
 
         return extract(core, properties);
 

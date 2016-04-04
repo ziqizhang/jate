@@ -13,6 +13,7 @@ import uk.ac.shef.dcs.jate.feature.TTFReferenceFeatureFileBuilder;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +22,7 @@ public class AppWeirdness extends App {
     private final Logger log = LoggerFactory.getLogger(AppWeirdness.class.getName());
 
     /**
-     * @param args, command-line params accepting solr home path, solr core name,
-     *              jate properties file
+     * @param args, command-line params accepting solr home path, solr core name
      *              <p>
      *              more optional run-time parameters
      * @see uk.ac.shef.dcs.jate.app.AppParams
@@ -35,16 +35,27 @@ public class AppWeirdness extends App {
             printHelp();
             System.exit(1);
         }
-        String solrHomePath = args[args.length - 3];
-        String solrCoreName = args[args.length - 2];
-        String jatePropertyFile = args[args.length - 1];
+        String solrHomePath = args[args.length - 2];
+        String solrCoreName = args[args.length - 1];
+
         Map<String, String> params = getParams(args);
+        String jatePropertyFile = getJATEProperties(params);
+        String corpusDir = getCorpusDir(params);
 
         List<JATETerm> terms;
         try {
             App weirdness = new AppWeirdness(params);
+            if (isCorpusProvided(corpusDir)) {
+                weirdness.index(Paths.get(corpusDir), Paths.get(solrHomePath), solrCoreName, jatePropertyFile);
+            }
+
             terms = weirdness.extract(solrHomePath, solrCoreName, jatePropertyFile);
-            weirdness.write(terms);
+
+            if (isExport(params)) {
+                weirdness.write(terms);
+            }
+
+            System.exit(0);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JATEException e) {
@@ -68,7 +79,7 @@ public class AppWeirdness extends App {
     @Override
     public List<JATETerm> extract(SolrCore core, String jatePropertyFile)
             throws IOException, JATEException {
-        JATEProperties properties = new JATEProperties(jatePropertyFile);
+        JATEProperties properties = getJateProperties(jatePropertyFile);
 
         return extract(core, properties);
     }

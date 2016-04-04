@@ -9,7 +9,8 @@ public enum AppParams {
      * see also {@code uk.ac.shef.dcs.jate.solr.TermRecognitionRequestHandler}
      */
 
-
+    CORPUS_DIR("-corpusDir", "The corpus to be indexed, where term candidate will be extracted and ranked."),
+    JATE_PROPERTIES_FILE("-prop", "jate properties file path"),
     //used only in the embedded mode. tells the system whether you want to save offset information of extracted terms
     COLLECT_TERM_INFO("-c", "collect_offsets"),
     // cut off threshold to filter term candidates list by scores

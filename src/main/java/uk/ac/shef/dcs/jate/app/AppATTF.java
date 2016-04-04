@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +32,7 @@ public class AppATTF extends App {
     static EmbeddedSolrServer server = null;
 
     /**
-     * @param args, command-line params accepting solr home path, solr core name,
-     *              jate properties file and more optional run-time parameters
+     * @param args, command-line params accepting solr home path, solr core name and more optional run-time parameters
      * @see uk.ac.shef.dcs.jate.app.AppParams
      */
     public static void main(String[] args) {
@@ -40,17 +40,28 @@ public class AppATTF extends App {
             printHelp();
             System.exit(1);
         }
-        String solrHomePath = args[args.length - 3];
-        String solrCoreName = args[args.length - 2];
-        String jatePropertyFile = args[args.length - 1];
+
+        String solrHomePath = args[args.length - 2];
+        String solrCoreName = args[args.length - 1];
 
         Map<String, String> params = getParams(args);
+        String jatePropertyFile = getJATEProperties(params);
+        String corpusDir = getCorpusDir(params);
 
         List<JATETerm> terms;
         try {
             AppATTF app = new AppATTF(params);
+
+            if (isCorpusProvided(corpusDir)) {
+                app.index(Paths.get(corpusDir), Paths.get(solrHomePath), solrCoreName, jatePropertyFile);
+            }
+
             terms = app.extract(solrHomePath, solrCoreName, jatePropertyFile);
-            app.write(terms);
+
+            if (isExport(params)) {
+                app.write(terms);
+            }
+            System.exit(0);
         } catch (IOException e) {
             System.err.println("IO Exception when exporting terms!");
             e.printStackTrace();
@@ -66,7 +77,7 @@ public class AppATTF extends App {
     @Override
     public List<JATETerm> extract(SolrCore core, String jatePropertyFile)
             throws IOException, JATEException {
-        JATEProperties properties = new JATEProperties(jatePropertyFile);
+        JATEProperties properties = getJateProperties(jatePropertyFile);
 
         return extract(core, properties);
     }

@@ -101,7 +101,7 @@ public abstract class ACLRDTECTest {
         gsTerms = GSLoader.loadACLRD(allAnnCandidTerms.toString());
 
         if (gsTerms == null) {
-            throw new JATEException("ACLRDTEC CORPUS CONCEPT FILE CANNOT BE LOADED SUCCESSFULLY!");
+            throw new JATEException("ACLRDTEC CORPUS_DIR CONCEPT FILE CANNOT BE LOADED SUCCESSFULLY!");
         }
 
         jateProp = new JATEProperties();

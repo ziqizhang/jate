@@ -4,24 +4,25 @@ import com.google.gson.Gson;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.lucene.index.LeafReader;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
-import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.search.SolrIndexSearcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.shef.dcs.jate.JATEException;
+import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.algorithm.TermInfoCollector;
 import uk.ac.shef.dcs.jate.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.feature.FrequencyTermBasedFBMaster;
+import uk.ac.shef.dcs.jate.model.JATEDocument;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 import uk.ac.shef.dcs.jate.util.IOUtil;
+import uk.ac.shef.dcs.jate.util.JATEUtil;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
+import java.io.*;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -87,6 +88,20 @@ public abstract class App {
     public App() {
     }
 
+    protected static boolean isExport(Map<String, String> params) {
+        return params.containsKey(AppParams.OUTPUT_FILE.getParamKey());
+    }
+
+    /**
+     * if corpus provided, perform indexing first and then ranking & filtering
+     *
+     * @param corpusDir
+     * @return true if corpus is provided otherwise false
+     */
+    protected static boolean isCorpusProvided(String corpusDir) {
+        return corpusDir != null && !corpusDir.isEmpty();
+    }
+
     private int parseIntParam(String name, String value) throws JATEException {
         try {
             return Integer.parseInt(value);
@@ -115,9 +130,8 @@ public abstract class App {
      *
      * @param params, command line run-time parameters (paramKey, value) for term
      *                ranking algorithms
-     *                @see AppParams
-     *
      * @throws JATEException
+     * @see AppParams
      * @see AppParams
      */
     App(Map<String, String> params) throws JATEException {
@@ -236,7 +250,7 @@ public abstract class App {
      * term candiate field, cut-off threshold)
      *
      * @param core,             solr core
-     * @param jatePropertyFile, property file path
+     * @param jatePropertyFile, property file path, use the default one from classpath if not provided
      * @return List<JATETerm>, the list of terms extracted
      * @throws IOException
      * @throws JATEException
@@ -274,9 +288,25 @@ public abstract class App {
                 if (core != null) {
                     core.close();
                 }
+
                 if (solrServer != null) {
-                    solrServer.close();
+                    solrServer.commit();
+
+                    //workaround to avoid ERROR "CachingDirectoryFactory:150"
+                    solrServer.getCoreContainer().getAllCoreNames().forEach(currentCoreName -> {
+                        File lock = Paths.get(solrHomePath, currentCoreName, "data", "index", "write.lock").toFile();
+                        if (lock.exists()) {
+                            lock.delete();
+                        }
+                    });
                 }
+//                if (solrServer != null) {
+//                    solrServer.commit(true, true);
+//                    Thread.sleep(5000);
+//
+//                    solrServer.getCoreContainer().shutdown();
+//                    solrServer.close();
+//                }
             } catch (Exception e) {
                 log.error("Unable to close solr index, error cause:");
                 log.error(ExceptionUtils.getFullStackTrace(e));
@@ -286,16 +316,89 @@ public abstract class App {
     }
 
     /**
+     * Corpus indexing and candidate extraction
+     *
+     * @param corpusDir, corpus directory to be indexed, from where term candidate will be extracted
+     * @param solrHomePath, solr home path is the solr core container
+     * @param coreName, solr core name
+     * @param jatePropertyFile, JATE properties file
+     */
+    public void index(Path corpusDir, Path solrHomePath, String coreName, String jatePropertyFile)
+            throws JATEException {
+        log.info(String.format("Indexing corpus from [%s] and perform candidate extraction ...", corpusDir));
+
+        List<Path> files = JATEUtil.loadFiles(corpusDir);
+        log.info(" [" + files.size() + "] files are scanned and will be indexed and analysed.");
+
+        final EmbeddedSolrServer solrServer = new EmbeddedSolrServer(solrHomePath, coreName);
+        SolrCore core = null;
+        JATEProperties jateProp = getJateProperties(jatePropertyFile);
+
+        try {
+            files.stream().forEach(file -> {
+                try {
+                    indexJATEDocuments(file, solrServer, jateProp, false);
+                } catch (JATEException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            solrServer.commit();
+            log.info("all corpus are indexed with term candidates.");
+        } catch (SolrServerException | IOException e) {
+            throw new JATEException(String.format("Failed to index current corpus. Error:[%s]", e.toString()));
+        } finally {
+            try {
+//                if (core != null) {
+//                    core.close();
+//                }
+//                if (solrServer != null) {
+                solrServer.close();
+//                }
+            } catch (Exception e) {
+                log.error("Unable to close solr index, error cause:");
+                log.error(ExceptionUtils.getFullStackTrace(e));
+            }
+        }
+    }
+
+    protected void indexJATEDocuments(Path file, EmbeddedSolrServer solrServer, JATEProperties jateProp, boolean commit) throws JATEException {
+        if (file == null) {
+            return;
+        }
+
+        try {
+            JATEDocument jateDocument = JATEUtil.loadJATEDocument(file);
+
+            if (isNotEmpty(jateDocument))
+                JATEUtil.addNewDoc(solrServer, jateDocument.getId(),
+                        jateDocument.getId(), jateDocument.getContent(), jateProp, commit);
+        } catch (FileNotFoundException ffe) {
+            throw new JATEException(ffe.toString());
+        } catch (IOException ioe) {
+            throw new JATEException(String.format("failed to index [%s]", file.toString()) + ioe.toString());
+        } catch (SolrServerException sse) {
+            throw new JATEException(String.format("failed to index [%s] ", file.toString()) + sse.toString());
+        }
+    }
+
+    private static boolean isNotEmpty(JATEDocument jateDocument) {
+        return jateDocument != null &&
+                jateDocument.getContent() != null &&
+                jateDocument.getContent().trim().length() != 0;
+    }
+
+    /**
      * Only effective under the Embedded mode.
      * <p>
      * User can choose to output term offset information. If this is the case, this method will be
      * called upon every final term. Iterating through the solr index can be slow so this method can
      * take some time.
      *
-     * @param leafReader, index reader
-     * @param terms, term list
+     * @param leafReader,         index reader
+     * @param terms,              term list
      * @param ngramInfoFieldname, indexed n-gram field, see 'jate_text_2_ngrams' field in example schema
-     * @param idFieldname, doc unique id field
+     * @param idFieldname,        doc unique id field
      * @throws IOException
      */
     public void collectTermOffsets(List<JATETerm> terms, LeafReader leafReader, String ngramInfoFieldname,
@@ -345,7 +448,11 @@ public abstract class App {
             throw new JATEException("FrequencyTermBased is not initialised for TTF term filtering.");
         }
 
-        if (this.prefilterMinTTF != null & candidates != null & candidates.size() > 0) {
+        if (candidates == null || candidates.size() == 0) {
+            return;
+        }
+
+        if (this.prefilterMinTTF != null) {
             log.debug(String.format("Filter [%s] term candidates by total term frequency [%s] (exclusive)",
                     candidates.size(), this.prefilterMinTTF));
             Iterator<String> it = candidates.iterator();
@@ -360,7 +467,14 @@ public abstract class App {
 
     protected static Map<String, String> getParams(String[] args) {
         Map<String, String> params = new HashMap<>();
+        if (args.length < 3) {
+            return params;
+        }
         for (int i = 0; i < args.length; i++) {
+            if (i == args.length - 2 || i == args.length - 1) {
+                continue;
+            }
+
             if (i + 1 < args.length) {
                 String param = args[i];
                 String value = args[i + 1];
@@ -377,9 +491,11 @@ public abstract class App {
         if (outputFile == null) {
             throw new IOException("Output file is null");
         } else {
+            log.info(String.format("Exporting terms to [%s]", outputFile));
             Writer w = IOUtil.getUTF8Writer(outputFile);
             gson.toJson(terms, w);
             w.close();
+            log.info("complete.");
         }
     }
 
@@ -460,14 +576,40 @@ public abstract class App {
         return terms;
     }
 
+    protected static String getJATEProperties(Map<String, String> params) {
+        if (params.containsKey(AppParams.JATE_PROPERTIES_FILE.getParamKey())) {
+            return params.get(AppParams.JATE_PROPERTIES_FILE.getParamKey());
+        }
+        return null;
+    }
+
+    protected static String getCorpusDir(Map<String, String> params) {
+        if (params.containsKey(AppParams.CORPUS_DIR.getParamKey())) {
+            return params.get(AppParams.CORPUS_DIR.getParamKey());
+        }
+        return null;
+    }
+
+    protected JATEProperties getJateProperties(String jatePropertyFile) throws JATEException {
+        JATEProperties properties;
+        if (jatePropertyFile != null && !jatePropertyFile.isEmpty()) {
+            properties = new JATEProperties(jatePropertyFile);
+        } else {
+            properties = new JATEProperties();
+        }
+        return properties;
+    }
 
     protected static void printHelp() {
         StringBuilder sb = new StringBuilder("Usage:\n");
-        sb.append("java -cp '[CLASSPATH]' ").append(App.class.getName()).append(" [OPTIONS] ")
-                .append("[SOLR_HOME_PATH] [SOLR_CORE_NAME] [JATE_PROPERTY_FILE]").append("\nE.g.:\n");
-        sb.append("java -cp '/libs/*' -cf.k 20 /solr/server/solr jate jate.properties ...\n\n");
+        sb.append("java -cp '[CLASSPATH]' ").append(App.class.getName()).append(" ")
+                .append("[OPTIONS] [SOLR_HOME_PATH] [SOLR_CORE_NAME] ").append("\n\n");
+        sb.append("Example: java -cp '/libs/*' /corpus/ /solr/server/solr jate  -prop jate.properties -cf.k 20  ...\n\n");
         sb.append("[OPTIONS]:\n")
-                .append("\t\t-c\t\t'true' or 'false'. Whether to collect term information, e.g., offsets in documents. Default is false.\n")
+                .append("\t\t-corpusDir\t\t. The corpus to be indexed, from where term candidate will be extracted, ranked and weighted.")
+                .append("\t\t-prop\t\t. jate.properties file for the configuration of Solr schema.")
+                .append("\t\t-c\t\t'true' or 'false'. Whether to collect term information for exporting, e.g., offsets in documents. Default is false.\n")
+                .append("\t\t-r\t\t. Reference corpus frequency file path (-r) is required by AppGlossEx, AppTermEx and AppWeirdness.\n")
                 .append("\t\t-cf.t\t\tA number. Cutoff score threshold for selecting terms. If multiple -cf.* parameters are set the preference order will be cf.t, cf.k, cf.kp.")
                 .append("\n")
                 .append("\t\t-cf.k\t\tA number. Cutoff top ranked K terms to be selected. If multiple -cf.* parameters are set the preference order will be cf.t, cf.k, cf.kp.")

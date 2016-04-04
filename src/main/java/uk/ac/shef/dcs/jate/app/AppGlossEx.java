@@ -12,6 +12,7 @@ import uk.ac.shef.dcs.jate.feature.*;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +21,7 @@ public class AppGlossEx extends App {
     private final Logger log = LoggerFactory.getLogger(AppGlossEx.class.getName());
 
     /**
-     * @param args, command-line params accepting solr home path, solr core name,
-     *              jate properties file and more optional run-time parameters
+     * @param args, command-line params accepting solr home path, solr core name and more optional run-time parameters
      * @see uk.ac.shef.dcs.jate.app.AppParams
      * <p>
      * and GlossEx specific parameter : reference frequency file
@@ -32,18 +32,27 @@ public class AppGlossEx extends App {
             printHelp();
             System.exit(1);
         }
-        String solrHomePath = args[args.length - 3];
-        String solrCoreName = args[args.length - 2];
-        String jatePropertyFile = args[args.length - 1];
+        String solrHomePath = args[args.length - 2];
+        String solrCoreName = args[args.length - 1];
 
         Map<String, String> params = getParams(args);
+        String jatePropertyFile = getJATEProperties(params);
+        String corpusDir = getCorpusDir(params);
 
         List<JATETerm> terms;
         try {
             App app = new AppGlossEx(params);
+            if (isCorpusProvided(corpusDir)) {
+                app.index(Paths.get(corpusDir), Paths.get(solrHomePath), solrCoreName, jatePropertyFile);
+            }
+
             terms = app.extract(solrHomePath, solrCoreName, jatePropertyFile);
 
-            app.write(terms);
+            if (isExport(params)) {
+                app.write(terms);
+            }
+
+            System.exit(0);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JATEException e) {
@@ -67,7 +76,7 @@ public class AppGlossEx extends App {
     public List<JATETerm> extract(SolrCore core, String jatePropertyFile)
             throws IOException, JATEException {
         log.info("start GlossEx term extraction for whole index ...");
-        JATEProperties properties = new JATEProperties(jatePropertyFile);
+        JATEProperties properties = getJateProperties(jatePropertyFile);
 
         return extract(core, properties);
     }

@@ -5,6 +5,12 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.tika.exception.TikaException;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.sax.BodyContentHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import uk.ac.shef.dcs.jate.JATEException;
@@ -14,9 +20,7 @@ import uk.ac.shef.dcs.jate.model.JATEDocument;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -31,6 +35,8 @@ import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 
 public class JATEUtil {
+
+    private static final Logger LOG = LoggerFactory.getLogger(JATEUtil.class);
 
     public static boolean isInteger(String s) {
         return isInteger(s, 10);
@@ -68,6 +74,33 @@ public class JATEUtil {
     }
 
     /**
+     * load JATEDocument from any file.
+     *
+     * Raw text will be automatically extracted with Apache TIKA as document content
+     * and Doc id will be set by file name.
+     *
+     * @param file, any file supported in Tika
+     * @return JATEDocument, return null if file name is null
+     */
+    public static JATEDocument loadJATEDocument(Path file) throws JATEException {
+        if (file.getFileName() == null){
+            return null;
+        }
+
+        String docId = file.getFileName().toString();
+
+        JATEDocument jateDocument = new JATEDocument(docId);
+        jateDocument.setPath(file.toAbsolutePath().toString());
+        try {
+            jateDocument.setContent(parseToPlainText(new FileInputStream(file.toFile())));
+        } catch (FileNotFoundException e) {
+            throw new JATEException(String.format("File is not found from [%s]", file.toString()));
+        }
+
+        return jateDocument;
+    }
+
+    /**
      * load ACL RD-TEC documents from raw text corpus
      *
      * @param rawTxtFile
@@ -91,6 +124,12 @@ public class JATEUtil {
         return jateDocument;
     }
 
+    /**
+     *
+     * @param fileInputStream, ACL XML file
+     * @return JATEDocument
+     * @throws JATEException
+     */
     private static JATEDocument loadJATEDocFromXML(InputStream fileInputStream) throws JATEException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
 
@@ -268,6 +307,22 @@ public class JATEUtil {
             //LOG.error(String.format("Failed to access corpus path [%s]", corpusDir.toUri()));
             throw new JATEException(String.format("Failed to access corpus path [%s]", corpusDir.toUri()));
         }
+    }
+
+    public static String parseToPlainText(InputStream fileStream) {
+        BodyContentHandler handler = new BodyContentHandler();
+        AutoDetectParser parser = new AutoDetectParser();
+        Metadata metadata = new Metadata();
+        String rawContent = "";
+
+        try {
+            parser.parse(fileStream, handler, metadata);
+            rawContent = handler.toString();
+        } catch (IOException | SAXException | TikaException e) {
+            LOG.debug("Parsing Exception while extracting content from current file. "
+                    + e.toString());
+        }
+        return rawContent;
     }
 
     public static void addNewDoc(EmbeddedSolrServer server, String docId, String docTitle,
