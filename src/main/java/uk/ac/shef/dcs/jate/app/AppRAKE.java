@@ -10,12 +10,10 @@ import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.algorithm.RAKE;
 import uk.ac.shef.dcs.jate.feature.*;
 import uk.ac.shef.dcs.jate.model.JATETerm;
-import uk.ac.shef.dcs.jate.test.DebugHelper;
 
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 

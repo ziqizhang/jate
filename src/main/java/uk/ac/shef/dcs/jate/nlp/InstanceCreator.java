@@ -15,7 +15,8 @@ public class InstanceCreator {
             throws ClassNotFoundException, NoSuchMethodException,
             IllegalAccessException, InvocationTargetException, InstantiationException {
         if(className.equals(SentenceSplitterOpenNLP.class.getName())){
-            return (SentenceSplitter) Class.forName(className).getDeclaredConstructor(InputStream.class).newInstance(model);
+            return (SentenceSplitter) Class.forName(className).
+                    getDeclaredConstructor(InputStream.class).newInstance(model);
         }
         return null;
     }

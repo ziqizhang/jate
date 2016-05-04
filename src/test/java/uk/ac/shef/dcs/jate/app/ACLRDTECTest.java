@@ -17,7 +17,6 @@ import uk.ac.shef.dcs.jate.eval.Scorer;
 import uk.ac.shef.dcs.jate.model.JATEDocument;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 import uk.ac.shef.dcs.jate.nlp.Lemmatiser;
-import uk.ac.shef.dcs.jate.test.DebugHelper;
 import uk.ac.shef.dcs.jate.util.JATEUtil;
 
 import java.io.*;
