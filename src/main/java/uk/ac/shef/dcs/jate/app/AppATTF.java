@@ -70,6 +70,12 @@ public class AppATTF extends App {
         }
     }
 
+    /**
+     * initialise run-time parameters for current algorithm
+     * @param initParams, run-time parameters (e.g.,min term total freq, cutoff scoring threshold)  for current algorithm
+     *      @see uk.ac.shef.dcs.jate.app.AppParams
+     * @throws JATEException
+     */
     public AppATTF(Map<String, String> initParams) throws JATEException {
         super(initParams);
     }

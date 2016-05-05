@@ -1804,7 +1804,7 @@
        <processor class="solr.RunUpdateProcessorFactory" />
      </updateRequestProcessorChain>
     -->
-  
+
   <!-- Language identification
 
        This example update chain identifies the language of the incoming
@@ -1944,7 +1944,24 @@
       EditorialMarkerFactory will do exactly that:
      <transformer name="qecBooster" class="org.apache.solr.response.transform.EditorialMarkerFactory" />
     -->
-    
+
+    <!--
+    JATE2.0 Term recogniser request handler
+
+    https://github.com/ziqizhang/jate/wiki/Quick-start
+    -->
+    <!--
+    <requestHandler name="/termRecogniser" class="uk.ac.shef.dcs.jate.solr.TermRecognitionRequestHandler">
+      <lst name="defaults">
+         <str name="algorithm">CValue</str>
+         <bool name="extraction">true</bool>
+         <bool name="indexTerm">true</bool>
+         <bool name="boosting">true</bool>
+         <float name="-cf.t">-1</float>
+         <str name="-o"><YOUR_PATH>\industry_terms04052016.json</str>
+      </lst>
+    </requestHandler>
+    -->
 
   <!-- Legacy config for the admin interface -->
   <admin>

@@ -435,9 +435,14 @@
         <!-- Field to index text with candidate terms. Must be indexed, and termVectors set to true-->
         <field name="jate_cterms" type="jate_text_2_terms" indexed="true" stored="false" multiValued="false"
                termVectors="true"/>
-        <!-- Field to index and store words. You only need this if you use algorithms that require
-             word-level features, such as Weirdness, GlossEx, and TermEx
-             Must be indexed, termVectors and termOffsets set to true -->
+
+        <!-- Field to index and store filtered and weighted candidate terms.
+            Set omitNorms to false to enable index-time boosting for the field.
+            Note this will increase the use of memory.
+
+            see: https://wiki.apache.org/solr/SchemaXml
+        -->
+        <field name="jate_domain_terms" type="string" indexed="true" stored="true" omitNorms="true" required="false" multiValued="true"/>
 
         <!--######################## JATE End ########################## -->
 

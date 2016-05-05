@@ -20,16 +20,28 @@ import uk.ac.shef.dcs.jate.solr.TermRecognitionRequestHandler.Algorithm;
 public class CValueProcessor implements TermRecognitionProcessor {
 
 	private AppCValue cValueSolr = null;
-	
-	private void initialise(Map<String, String> params) throws JATEException {
+
+	@Override
+	public Boolean candidateExtraction(SolrCore core, String jatePropertyFile)
+			throws IOException, JATEException {
+		return null;
+	}
+
+	/**
+	 * initialise run-time parameters for current algorithm
+	 * @param params, run-time parameters (e.g.,min term total freq, cutoff scoring threshold)  for current algorithm
+	 *      @see uk.ac.shef.dcs.jate.app.AppParams
+	 * @throws JATEException
+	 */
+	public void initialise(Map<String, String> params) throws JATEException {
 		if (this.cValueSolr == null) {
 			this.cValueSolr = new AppCValue(params);
 		}
 	}
 	
 	@Override
-	public List<JATETerm> extract(SolrCore core, String jatePropertyFile, Map<String, String> params,
-			Algorithm algorithm) throws IOException, JATEException {
+	public List<JATETerm> rankingAndFiltering(SolrCore core, String jatePropertyFile, Map<String, String> params,
+											  Algorithm algorithm) throws IOException, JATEException {
 		if (Algorithm.C_VALUE.equals(algorithm)) {
 			initialise(params);
 			return this.cValueSolr.extract(core, jatePropertyFile);
@@ -37,4 +49,12 @@ public class CValueProcessor implements TermRecognitionProcessor {
 		return null;
 	}
 
+	@Override
+	public Boolean export(List<JATETerm> termsResults) throws IOException {
+		if (cValueSolr != null) {
+			cValueSolr.write(termsResults);
+			return true;
+		}
+		return null;
+	}
 }

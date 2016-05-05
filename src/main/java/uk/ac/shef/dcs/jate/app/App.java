@@ -526,17 +526,21 @@ public abstract class App {
      * @return List<JATETerm>, filtered terms
      */
     protected List<JATETerm> cutoffByTermScoreThreshold(List<JATETerm> terms, Double cutOffThreshold) {
-        if (cutOffThreshold != null & terms != null & terms.size() > 0) {
-            log.debug(String.format("cutoff [%s] term candidates by termhood/unithood based threshold [%s]",
-                    terms.size(), cutOffThreshold));
+        List<JATETerm> weightedTerms = new ArrayList<>();
+        weightedTerms.addAll(terms);
 
-            for (JATETerm jt : terms) {
-                if (jt.getScore() < cutOffThreshold)
-                    terms.remove(jt);
+        if (cutOffThreshold != null & weightedTerms.size() > 0) {
+            log.debug(String.format("cutoff [%s] term candidates by termhood/unithood based threshold [%s]",
+                    weightedTerms.size(), cutOffThreshold));
+
+            Iterator<JATETerm> iterTerms = weightedTerms.iterator();
+            while (iterTerms.hasNext()) {
+                if (iterTerms.next().getScore() < cutOffThreshold)
+                    iterTerms.remove();
             }
             log.debug(String.format("final filtered term candidate size [%s]", terms.size()));
         }
-        return terms;
+        return weightedTerms;
     }
 
     /**
@@ -558,16 +562,15 @@ public abstract class App {
     /**
      * Filter term candidate list by rounding top percentage of total term size
      *
-     * @param terms
-     * @param topPercentage
-     * @return
+     * @param terms, weighted term list
+     * @param topPercentage, top percentage of weighted terms to be retained
+     * @return List<JATETerm>, filtered top K percent terms
      */
     protected List<JATETerm> cutoffByTopKPercent(List<JATETerm> terms, Double topPercentage) {
         if (topPercentage != null & terms != null & terms.size() > 0) {
-            //todo:jerry check why this line is throwing exception
-            /*log.debug(String.format("filter [%s] term candidates by Top [%s]% (rounded) ...",
+            log.debug(String.format("filter [%s] term candidates by Top [%s] percent (rounded) ...",
                     terms.size(),
-					topPercentage * 100));*/
+					topPercentage * 100));
             Integer topN = (int) Math.round(topPercentage * terms.size());
             if (topN > 0)
                 terms = cutoffByTopK(terms, topN);
@@ -590,7 +593,13 @@ public abstract class App {
         return null;
     }
 
-    protected JATEProperties getJateProperties(String jatePropertyFile) throws JATEException {
+    /**
+     * load JATE property file, if not provided (i.e., null), the file will be loaded from the default one.
+     * @param jatePropertyFile, jate property file path where the file will be loaded
+     * @return JATEProperties object
+     * @throws JATEException
+     */
+    public static JATEProperties getJateProperties(String jatePropertyFile) throws JATEException {
         JATEProperties properties;
         if (jatePropertyFile != null && !jatePropertyFile.isEmpty()) {
             properties = new JATEProperties(jatePropertyFile);

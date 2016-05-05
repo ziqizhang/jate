@@ -115,15 +115,12 @@ public abstract class ACLRDTECTest {
      * @throws JATEException
      */
     public void indexAndExtract(Path corpusDir) throws JATEException {
-        //File dir = new File(corpusDir);
         List<Path> files = JATEUtil.loadFiles(corpusDir);
-        //Collections.sort(files);
 
         LOG.info("indexing and extracting candidates from "+files.size()+" files...");
         int count = 0;
         for (Path file : files) {
             try {
-                //System.out.println(file);
                 indexJATEDocuments(file, jateProp, false);
                 count++;
                 if (count % 100 == 0)
@@ -132,14 +129,6 @@ public abstract class ACLRDTECTest {
                 e.printStackTrace();
             }
         }
-
-//        files.parallelStream().forEach(file -> {
-//            try {
-//                indexJATEDocuments(file, jateProp, false);
-//            } catch (JATEException e) {
-//                e.printStackTrace();
-//            }
-//        });
 
         try {
             server.commit();

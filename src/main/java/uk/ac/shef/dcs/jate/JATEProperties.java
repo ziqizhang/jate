@@ -10,7 +10,9 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * Created by zqz on 17/09/2015.
+ * JATE Properties maps to "jate.properties" properties file
+ *
+ * Provide configuration of integration between JATE and Solr index engine
  */
 public class JATEProperties {
 
@@ -30,6 +32,9 @@ public class JATEProperties {
     // document metadata extracted from Tika where term will be extracted from
     // see also @code{uk.ac.shef.dcs.jate.io.TikaMultiFieldDocumentCreator}
     public static final String PROPERTY_SOLR_FIELD_MAP_DOC_PARTS = "solr_field_map_doc_parts";
+
+    // SOLR (string) field name where final filtered candidate terms will be indexed and stored to
+    public static final String PROPERTY_SOLR_FIELD_DOMAIN_TERMS = "solr_field_domain_terms";
 
     // Maximum of data units each thread (worker) of a SolrParallelIndexingWorker should commit to solr
     public static final String PROPERTY_INDEXER_MAX_UNITS_TO_COMMIT = "indexer_max_units_to_commit";
@@ -63,18 +68,6 @@ public class JATEProperties {
 
     }
 
-//    public static void main(String[] args) {
-//        final InputStream stream = JATEProperties.class.getClassLoader().getResourceAsStream("jate.properties");
-//        try {
-//            Properties prop = new Properties();
-//            prop.load(stream);
-//
-//            System.out.println(prop.getProperty("solrhome"));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     public JATEProperties(String propFile) throws JATEException {
         try {
             prop.load(new FileInputStream(propFile));
@@ -98,7 +91,7 @@ public class JATEProperties {
     public String getSolrFieldNameJATENGramInfo() throws JATEException {
         String ngramField = getString(PROPERTY_SOLR_FIELD_CONTENT_NGRAMS);
         if (ngramField == null)
-            throw new JATEException(String.format("'%s' not defined in jate.properties", PROPERTY_SOLR_FIELD_CONTENT_NGRAMS));
+            throw new JATEException(String.format("'%s' not specified in jate.properties", PROPERTY_SOLR_FIELD_CONTENT_NGRAMS));
         return ngramField;
     }
 
@@ -106,6 +99,22 @@ public class JATEProperties {
         prop.setProperty(PROPERTY_SOLR_FIELD_CONTENT_NGRAMS, solrFieldNameJATEGramInfo);
     }
 
+    public String getSolrFieldNameJATEDomainTerms() throws JATEException {
+       String domainTermsField = getString(PROPERTY_SOLR_FIELD_DOMAIN_TERMS);
+       if (domainTermsField == null)
+            throw new JATEException(String.format("'%s' not specified in jate.properties", PROPERTY_SOLR_FIELD_DOMAIN_TERMS));
+        return domainTermsField;
+    }
+
+    public void setSolrFieldNameJATEDomainTerms(String solrFieldNameJATEDomainTerms) {
+        prop.setProperty(PROPERTY_SOLR_FIELD_DOMAIN_TERMS, solrFieldNameJATEDomainTerms);
+    }
+
+    /**
+     * get solr field for candidate terms
+     * @return candidate term field specified
+     * @throws JATEException
+     */
     public String getSolrFieldNameJATECTerms() throws JATEException {
         String content2terms = getString(PROPERTY_SOLR_FIELD_CONTENT_TERMS);
         if (content2terms == null)
@@ -117,6 +126,11 @@ public class JATEProperties {
         prop.setProperty(PROPERTY_SOLR_FIELD_CONTENT_TERMS, solrFieldNameJATECTerms);
     }
 
+    /**
+     * get solr field specified for document metadata (usually extracted via Tika plugin)
+     *
+     * @return field name specified for document metadata
+     */
     public String getSolrFieldNameJATECTermsF() {
         String docparts2terms = getString(PROPERTY_SOLR_FIELD_MAP_DOC_PARTS);
         if (docparts2terms == null) {
