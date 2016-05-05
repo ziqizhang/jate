@@ -5,12 +5,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.LeafReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.Terms;
 import org.apache.solr.common.params.MapSolrParams;
@@ -38,22 +36,19 @@ import uk.ac.shef.dcs.jate.util.SolrUtil;
  * Scans solr indexed and TR aware content field and perform terminology
  * recognition (ranking + filtering + indexing) for whole index.
  * <p>
- * Current version requires term candidates are preprocessed in index-time. TR
- * AWARE SOLR FIELDS MUST ALSO BE CONFIGURED AND INDEXED FOR TERN RANKING
- * ALGORITHMS.
+ * Term candidates are extracted and stored in index-time,
+ * which can be triggered by document indexing (e.g., by HTTP POST TOOL)
+ * or setting 'extraction' to true (as an option) in this request handler.
  * <p>
- * TODO: An API document needs to be prepared to specify how to define automatic
- * term candidate extraction in index-time.
- * <p>
- * TODO: future version may need to support term candidate extraction as an
- * option
+ * TR-AWARE SOLR FIELDS MUST ALSO BE CONFIGURED AND INDEXED FOR TERN RANKING ALGORITHMS
+ * (SEE EXAMPLES SETTING OF schema.xml IN $JATE_HOME/testdata/solr-testbed).
  * <p>
  * Example configuration in solrconfig.xml
  * <p>
  * 1. configure JATE library (jar file) to solr classpath
  * <p>
  * <lib path=
- * "${solr.install.dir:../../..}/contrib/jate/lib/jate-2.0Alpha-SNAPSHOT-jar-with-dependencies.jar"/>
+ * "${solr.install.dir:../../..}/contrib/jate/lib/jate-2.0-*-with-dependencies.jar"/>
  * <p>
  * 2. configure request handler for term recognition and indexing
  * <p>
@@ -63,9 +58,11 @@ import uk.ac.shef.dcs.jate.util.SolrUtil;
  * <lst name="defaults">
  * <str name="algorithm">CValue</str>
  * <bool name="extraction">false</bool>
- * <str name="-prop">../resource/jate.properties</str>
- * <int name="-cf.t">0</int>
- * <str name="-o">industry_terms.json</str>
+ * <bool name="indexTerm">true</bool>
+ * <bool name="boosting">false</bool>
+ * <str name="-prop"><YOUR_PATH>/resource/jate.properties</str>
+ * <float name="-cf.t">0</float>
+ * <str name="-o"><YOUR_PATH>/industry_terms.json</str>
  * </lst>
  * </requestHandler>
  * }
@@ -113,18 +110,8 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
      * <p>
      * <pre>
      *  {@code
-     *  <field name="industryTerm" type="industry_term_type" indexed="true"
-     *  		stored="true" multiValued="true" omitNorms="true" termVectors="true"/>
-     *
-     *  <fieldType name="industry_term_type" class="solr.TextField" positionIncrementGap="100">
-     * 		<analyzer>
-     * 			<tokenizer class="solr.KeywordTokenizerFactory"/>
-     * 			<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="(\-)" replacement=" " />
-     * 			<filter class="solr.LowerCaseFilterFactory"/>
-     * 			<filter class="solr.ASCIIFoldingFilterFactory"/>
-     * 			<filter class="solr.EnglishMinimalStemFilterFactory"/>
-     * 		 </analyzer>
-     * 	</fieldType>
+     *      <field name="jate_domain_terms" type="string" indexed="true"
+     *          stored="true" required="false" omitNorms="false" multiValued="true"/>
      *  }
      * </pre>
      */
@@ -239,7 +226,7 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
         final SolrIndexSearcher searcher = req.getSearcher();
 
         if (isExtraction) {
-            log.info("start candidate extraction (i.e., re-index) ...");
+            log.info("start candidate extraction (i.e., re-index of whole corpus) ...");
             generalTRProcessor.candidateExtraction(searcher.getCore(), jatePropertyFile);
             log.info("complete candidate terms indexing.");
         }
@@ -410,15 +397,11 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
 
     private List<Pair<String, Double>> getSelectedWeightedCandidates(List<JATETerm> filteredTerms, List<String> candidateTerms) {
         List<Pair<String, Double>> filteredCandidateTerms = new ArrayList<>();
-        new HashMap<String, Double>().put("", 1.0);
         candidateTerms.parallelStream().forEach(candidateTerm -> {
             filteredTerms.parallelStream().forEach(filteredTerm -> {
                 if (filteredTerm.getString().equalsIgnoreCase(candidateTerm)) {
-//                    Map<String, Double> selectedTerm = new HashMap<String, Double>();
                     Pair<String, Double> selectedTerm =
                             new Pair<String, Double>(filteredTerm.getString(), filteredTerm.getScore());
-
-//                    selectedTerm.put(filteredTerm.getString(), filteredTerm.getScore());
                     filteredCandidateTerms.add(selectedTerm);
                 }
             });
