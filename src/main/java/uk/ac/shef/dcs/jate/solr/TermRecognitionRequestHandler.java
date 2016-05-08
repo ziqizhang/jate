@@ -385,6 +385,10 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
                                             IndexSchema indexSchema, Document doc,
                                             List<Pair<String, Double>> filteredCandidateTerms) {
         for (Pair<String, Double> filteredTerm : filteredCandidateTerms) {
+            if (filteredTerm == null) {
+                continue;
+            }
+
             if (isBoosted) {
                 doc.add(indexSchema.getField(domainTermsFieldName).createField(filteredTerm.getKey(),
                         filteredTerm.getValue().floatValue()));
@@ -399,7 +403,9 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
         List<Pair<String, Double>> filteredCandidateTerms = new ArrayList<>();
         candidateTerms.parallelStream().forEach(candidateTerm -> {
             filteredTerms.parallelStream().forEach(filteredTerm -> {
-                if (filteredTerm.getString().equalsIgnoreCase(candidateTerm)) {
+                if (filteredTerm != null && candidateTerm != null
+                        && filteredTerm.getString() != null &&
+                        filteredTerm.getString().equalsIgnoreCase(candidateTerm)) {
                     Pair<String, Double> selectedTerm =
                             new Pair<String, Double>(filteredTerm.getString(), filteredTerm.getScore());
                     filteredCandidateTerms.add(selectedTerm);
