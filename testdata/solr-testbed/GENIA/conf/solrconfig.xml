@@ -1956,7 +1956,7 @@
          <str name="algorithm">CValue</str>
          <bool name="extraction">true</bool>
          <bool name="indexTerm">true</bool>
-         <bool name="boosting">true</bool>
+         <bool name="boosting">false</bool>
          <float name="-cf.t">-1</float>
          <str name="-o"><YOUR_PATH>\industry_terms04052016.json</str>
       </lst>

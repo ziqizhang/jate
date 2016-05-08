@@ -374,7 +374,7 @@
 		<field name="path" type="string" indexed="true" stored="true" required="false" multiValued="false" />		
 		<!-- catchall field, containing all other searchable text fields (implemented
         via copyField further on in this schema  -->
-		<field name="text" type="text_general" indexed="true" stored="false" multiValued="true"/>				
+		<field name="text" type="text_general" indexed="true" stored="true" multiValued="true"/>				
 	    <!-- The entire document text from which candidate terms are to be extracted.
 			Text will be processed by JATE to extract candidate terms. A vector is created. 
 			NOTE: This field is not indexed by default, since it is also copied to "text"
