@@ -22,7 +22,7 @@ We always welcome contributions to help make JATE better. Please open an issue a
 
 Bug fixes, improvements, and new features are welcomed. Before embarking on making significant changes, please open an issue and ask first so that you do not risk duplicating efforts or spending time working on something that may be out of scope.
 
-1. [Fork the project], clone your fork, and add the upstream to your remote:
+###### 1. [Fork the project], clone your fork, and add the upstream to your remote:
 
 ```
 $ git clone git@github.com:<your-username>/jate.git
@@ -30,7 +30,7 @@ $ cd azkaban
 $ git remote add upstream https://github.com/ziqizhang/jate
 ```
 
-2. If you need to pull new changes committed upstream:
+###### 2. If you need to pull new changes committed upstream:
 
 ```
 $ git checkout master
@@ -38,25 +38,25 @@ $ git fetch upstream
 $ git merge upstream/master
 ```
 
-3. Create a feature branch for your fix or new feature:
+###### 3. Create a feature branch for your fix or new feature:
 
 ```
 $ git checkout -b <feature-branch-name>
 ```
 
-4. Please try to commit your changes in logical chunks and reference the issue number in your commit messages:
+###### 4. Please try to commit your changes in logical chunks and reference the issue number in your commit messages:
 
 ```
 $ git commit -m "Issue #<issue-number> - <commit-message>"
 ```
 
-5. Push your feature branch to your fork.
+###### 5. Push your feature branch to your fork.
 
 ```
 $ git push origin <feature-branch-name>
 ```
 
-6. Open a Pull Request against the upstream master branch. Please give your pull request a clear title and description and note which issue(s) your pull request fixes.
+###### 6. Open a Pull Request against the upstream master branch. Please give your pull request a clear title and description and note which issue(s) your pull request fixes.
 
 **Important**: By submitting a patch, you agree to allow the project owners to license your work under the LGPLv3 license.
 
