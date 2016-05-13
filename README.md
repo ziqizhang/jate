@@ -16,17 +16,15 @@ JATE2 is at an early stage of development. Its mailling list is available on [Go
 
 For bug report, please [create an issue](https://github.com/ziqizhang/jate/issues). 
 
-We always welcome contributions to help make JATE better. Please open an issue and ask first so that you do not risk duplicating efforts or spending time working on something that may be out of scope.
-
 ### Pull requests
 
-Bug fixes, improvements, and new features are welcomed. Before embarking on making significant changes, please open an issue and ask first so that you do not risk duplicating efforts or spending time working on something that may be out of scope.
+We always welcome contributions to help make JATE better. Bug fixes, improvements, and new features are welcomed. Before embarking on making significant changes, please open an issue and ask first so that you do not risk duplicating efforts or spending time working on something that may be out of scope.
 
 ###### 1. [Fork the project], clone your fork, and add the upstream to your remote:
 
 ```
 $ git clone git@github.com:<your-username>/jate.git
-$ cd azkaban
+$ cd jate
 $ git remote add upstream https://github.com/ziqizhang/jate
 ```
 
