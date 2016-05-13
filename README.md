@@ -11,7 +11,51 @@ Zhang, Z., Gao, J., Ciravegna, F. 2016. JATE 2.0: Java Automatic Term Extraction
 **If you are after the old JATE 1.11 previously hosted on Google Code Project, you can download it from [here]. However the old version is no longer supported. To cite the old version, please use instead:** Zhang, Z., Iria, J., Brewster, C., and Ciravegna, F. 2008. A Comparative Evaluation of Term Recognition Algorithms. In Proceedings of The 6th Language Resources and Evaluation Conference, May 2008, Marrakech, Morocco. 
 
 ### Contact
-JATE2 is at an early stage of development. Its mailing list is available on [Google Groups] (https://groups.google.com/d/forum/jate2). If you have any **questions about using JATE**, please read the Wiki and/or [create an issue](https://github.com/ziqizhang/jate/issues). For anything else, you can find how to contact the team at:
+JATE2 is at an early stage of development. Its mailling list is available on [Google Groups] (https://groups.google.com/d/forum/jate2). If you have any **questions about using JATE**, please read the Wiki and the mailling list first. Please do not use the issue tracker for personal support requests nor feature requests. Support requests and development issues should be discussed in the mailling list.
+
+For bug report, please [create an issue](https://github.com/ziqizhang/jate/issues). 
+
+We always welcome contributions to help make JATE better. Please open an issue and ask first so that you do not risk duplicating efforts or spending time working on something that may be out of scope.
+
+### Pull requests
+
+Bug fixes, improvements, and new features are welcomed. Before embarking on making significant changes, please open an issue and ask first so that you do not risk duplicating efforts or spending time working on something that may be out of scope.
+
+1. [Fork the project], clone your fork, and add the upstream to your remote:
+
+```
+$ git clone git@github.com:<your-username>/jate.git
+$ cd azkaban
+$ git remote add upstream https://github.com/ziqizhang/jate
+```
+
+2. If you need to pull new changes committed upstream:
+
+```
+$ git checkout master
+$ git fetch upstream
+$ git merge upstream/master
+```
+
+3. Create a feature branch for your fix or new feature:
+
+```
+$ git checkout -b <feature-branch-name>
+```
+
+4. Please try to commit your changes in logical chunks and reference the issue number in your commit messages:
+
+```
+$ git commit -m "Issue #<issue-number> - <commit-message>"
+```
+
+5. Push your feature branch to your fork.
+
+```
+$ git push origin <feature-branch-name>
+```
+
+For anything else, you can also find how to contact the team at:
 
  - [Jie GAO](http://staffwww.dcs.shef.ac.uk/people/J.Gao/)
  - [Ziqi ZHANG](http://staffwww.dcs.shef.ac.uk/people/Z.Zhang/)
@@ -26,4 +70,5 @@ JATE2 is at an early stage of development. Its mailing list is available on [Goo
    [here]: <http://staffwww.dcs.shef.ac.uk/people/Z.Zhang/resources/jate_1.11.tar.gz>
    [JATE1.0 wiki]: <https://code.google.com/archive/p/jatetoolkit/wikis/JATEIntro.wiki>
    [wiki on the JATE website]: <https://github.com/ziqizhang/jate/wiki>
+   [Fork the project]: <https://help.github.com/articles/fork-a-repo/>
   
