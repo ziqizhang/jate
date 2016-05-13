@@ -10,7 +10,8 @@ Zhang, Z., Gao, J., Ciravegna, F. 2016. JATE 2.0: Java Automatic Term Extraction
 
 **If you are after the old JATE 1.11 previously hosted on Google Code Project, you can download it from [here]. However the old version is no longer supported. To cite the old version, please use instead:** Zhang, Z., Iria, J., Brewster, C., and Ciravegna, F. 2008. A Comparative Evaluation of Term Recognition Algorithms. In Proceedings of The 6th Language Resources and Evaluation Conference, May 2008, Marrakech, Morocco. 
 
-### Contact
+### Support and Issues
+
 JATE2 is at an early stage of development. Its mailling list is available on [Google Groups] (https://groups.google.com/d/forum/jate2). If you have any **questions about using JATE**, please read the Wiki and the mailling list first. Please do not use the issue tracker for personal support requests nor feature requests. Support requests and development issues should be discussed in the mailling list.
 
 For bug report, please [create an issue](https://github.com/ziqizhang/jate/issues). 
@@ -54,6 +55,12 @@ $ git commit -m "Issue #<issue-number> - <commit-message>"
 ```
 $ git push origin <feature-branch-name>
 ```
+
+6. Open a Pull Request against the upstream master branch. Please give your pull request a clear title and description and note which issue(s) your pull request fixes.
+
+**Important**: By submitting a patch, you agree to allow the project owners to license your work under the LGPLv3 license.
+
+### Contact
 
 For anything else, you can also find how to contact the team at:
 
