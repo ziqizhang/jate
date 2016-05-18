@@ -21,7 +21,7 @@ public class AppChiSquare extends App {
     private double frequentTermFT = 0.3;
 
     /**
-     * @param args, command-line params accepting solr home path, solr core name
+     * @param args  command-line params accepting solr home path, solr core name
      *              <p>
      *              and more optional run-time parameters
      * @see uk.ac.shef.dcs.jate.app.AppParams
@@ -29,7 +29,7 @@ public class AppChiSquare extends App {
      * Chisquare specific setting: frequent term cutoff percentage
      * @see uk.ac.shef.dcs.jate.app.AppParams#CHISQUERE_FREQ_TERM_CUTOFF_PERCENTAGE
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws JATEException {
         if (args.length < 1) {
             printHelp();
             System.exit(1);
@@ -54,17 +54,15 @@ public class AppChiSquare extends App {
             if (isExport(params)) {
                 app.write(terms);
             }
-
-            System.exit(0);
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (JATEException e) {
-            e.printStackTrace();
+        } finally {
+            System.exit(0);
         }
     }
 
     /**
-     * @param initParams, initial parameters including pre-filtering and post-filtering parameters
+     * @param initParams  initial parameters including pre-filtering and post-filtering parameters
      *                    and chisquare specific parameter
      * @throws JATEException
      * @see uk.ac.shef.dcs.jate.app.AppParams
@@ -75,7 +73,7 @@ public class AppChiSquare extends App {
     }
 
     /**
-     * @param initParams, chisquare specific initial parameter
+     * @param initParams  chisquare specific initial parameter
      * @throws JATEException
      * @see uk.ac.shef.dcs.jate.app.AppParams#CHISQUERE_FREQ_TERM_CUTOFF_PERCENTAGE
      */

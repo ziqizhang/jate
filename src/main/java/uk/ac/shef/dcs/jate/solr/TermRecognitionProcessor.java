@@ -19,7 +19,7 @@ public interface TermRecognitionProcessor {
 
     /**
      * initialise current ATE algorithm
-     * @param params, params, run-time parameters (e.g.,min term total freq, cutoff scoring threshold)  for current algorithm
+     * @param params  params, run-time parameters (e.g.,min term total freq, cutoff scoring threshold)  for current algorithm
      *      @see uk.ac.shef.dcs.jate.app.AppParams
      */
     void initialise(Map<String, String> params) throws JATEException;
@@ -29,12 +29,12 @@ public interface TermRecognitionProcessor {
     /**
      * ranking and filtering candidate terms
      *
-     * @param core,             solr core
-     * @param jatePropertyFile, jate property file path, if not provided (i.e., null), the file will be automatically
+     * @param core              solr core
+     * @param jatePropertyFile  jate property file path, if not provided (i.e., null), the file will be automatically
      *                          loaded from the default one
-     * @param params,           run-time parameters for different TR algorithms, see {@code uk.ac.shef.dcs.jate.app.App.CommandLineParams} for details}
-     * @param algorithm,        TR algorithm
-     * @return List<JATETerm>, a list of terms extracted from current solr core
+     * @param params            run-time parameters for different TR algorithms, see {@code uk.ac.shef.dcs.jate.app.App.CommandLineParams} for details}
+     * @param algorithm         TR algorithm
+     * @return List<JATETerm>   a list of terms extracted from current solr core
      * @throws IOException
      * @throws JATEException
      * @see uk.ac.shef.dcs.jate.app.App#getJateProperties(String)
@@ -45,7 +45,7 @@ public interface TermRecognitionProcessor {
     /**
      * export final terms
      *
-     * @param termsResults, term results
+     * @param termsResults  term results
      */
     Boolean export(List<JATETerm> termsResults) throws IOException;
 }

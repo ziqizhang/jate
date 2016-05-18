@@ -205,7 +205,7 @@ public abstract class App {
     }
 
     /**
-     * @param initParams, map param accepting reference frequency file
+     * @param initParams  map param accepting reference frequency file
      * @throws JATEException
      * @see AppParams#REFERENCE_FREQUENCY_FILE
      */
@@ -249,9 +249,9 @@ public abstract class App {
      * jate properties provides necessary information needed by the ATE algorithm (e.g., text field, ngram info field,
      * term candiate field, cut-off threshold)
      *
-     * @param core,             solr core
-     * @param jatePropertyFile, property file path, use the default one from classpath if not provided
-     * @return List<JATETerm>, the list of terms extracted
+     * @param core           solr core
+     * @param jatePropertyFile  property file path, use the default one from classpath if not provided
+     * @return List<JATETerm>  the list of terms extracted
      * @throws IOException
      * @throws JATEException
      */
@@ -266,10 +266,10 @@ public abstract class App {
      * jate properties provides necessary information needed by the ATE algorithm (e.g., text field, ngram info field,
      * term candiate field, cut-off threshold)
      *
-     * @param solrHomePath,     solr core home directory path
-     * @param coreName,         solr core name from where term recognition is executed
-     * @param jatePropertyFile, jate property file path
-     * @return List<JATETerm>, the list of terms extracted
+     * @param solrHomePath     solr core home directory path
+     * @param coreName         solr core name from where term recognition is executed
+     * @param jatePropertyFile jate property file path
+     * @return List<JATETerm> the list of terms extracted
      * @throws IOException
      * @throws JATEException
      */
@@ -318,10 +318,10 @@ public abstract class App {
     /**
      * Corpus indexing and candidate extraction
      *
-     * @param corpusDir, corpus directory to be indexed, from where term candidate will be extracted
-     * @param solrHomePath, solr home path is the solr core container
-     * @param coreName, solr core name
-     * @param jatePropertyFile, JATE properties file
+     * @param corpusDir  corpus directory to be indexed, from where term candidate will be extracted
+     * @param solrHomePath   solr home path is the solr core container
+     * @param coreName   solr core name
+     * @param jatePropertyFile   JATE properties file
      */
     public void index(Path corpusDir, Path solrHomePath, String coreName, String jatePropertyFile)
             throws JATEException {
@@ -395,10 +395,10 @@ public abstract class App {
      * called upon every final term. Iterating through the solr index can be slow so this method can
      * take some time.
      *
-     * @param leafReader,         index reader
-     * @param terms,              term list
-     * @param ngramInfoFieldname, indexed n-gram field, see 'jate_text_2_ngrams' field in example schema
-     * @param idFieldname,        doc unique id field
+     * @param leafReader         index reader
+     * @param terms              term list
+     * @param ngramInfoFieldname indexed n-gram field, see 'jate_text_2_ngrams' field in example schema
+     * @param idFieldname        doc unique id field
      * @throws IOException
      */
     public void collectTermOffsets(List<JATETerm> terms, LeafReader leafReader, String ngramInfoFieldname,
@@ -419,10 +419,10 @@ public abstract class App {
     /**
      * Add additional (indexed) term info into term list
      *
-     * @param terms,              filtered term candidates
-     * @param searcher,           solr index searcher
-     * @param content2NgramField, solr content to ngram TR aware field
-     * @param idField,            solr unique id
+     * @param terms              filtered term candidates
+     * @param searcher           solr index searcher
+     * @param content2NgramField solr content to ngram TR aware field
+     * @param idField            solr unique id
      * @throws JATEException
      */
     public void addAdditionalTermInfo(List<JATETerm> terms, SolrIndexSearcher searcher, String content2NgramField,
@@ -440,7 +440,7 @@ public abstract class App {
      * Term candidate filtering by total (whole index/corpus) term frequency
      * (exclusive)
      *
-     * @param candidates, term candidates
+     * @param candidates  term candidates
      * @throws JATEException
      */
     protected void filterByTTF(List<String> candidates) throws JATEException {
@@ -502,7 +502,7 @@ public abstract class App {
     /**
      * filter term candidates by cut-off threshold, top K or K% where applicable
      *
-     * @param terms
+     * @param terms  candidate terms to be filtered
      * @return List<JATETerm>, filtered terms
      */
     protected List<JATETerm> cutoff(List<JATETerm> terms) {
@@ -521,9 +521,9 @@ public abstract class App {
      * Filter term candidate list by termhood/unithood based threshold
      * (inclusive)
      *
-     * @param terms,           a list of term candidates with term weight
-     * @param cutOffThreshold, term score measured by ATR algorithms
-     * @return List<JATETerm>, filtered terms
+     * @param terms            a list of term candidates with term weight
+     * @param cutOffThreshold  term score measured by ATR algorithms
+     * @return List<JATETerm>  filtered terms
      */
     protected List<JATETerm> cutoffByTermScoreThreshold(List<JATETerm> terms, Double cutOffThreshold) {
         List<JATETerm> weightedTerms = new ArrayList<>();
@@ -546,9 +546,9 @@ public abstract class App {
     /**
      * Filter term candidate list by top N (inclusive) terms
      *
-     * @param terms, terms ranked by term weight
-     * @param topK,  top N term number
-     * @return List<JATETerm>, filtered terms
+     * @param terms  terms ranked by term weight
+     * @param topK   top N term number
+     * @return List<JATETerm>  filtered terms
      */
     protected List<JATETerm> cutoffByTopK(List<JATETerm> terms, Integer topK) {
         if (topK != null & terms != null & terms.size() > 0 & topK < terms.size()) {
@@ -562,9 +562,9 @@ public abstract class App {
     /**
      * Filter term candidate list by rounding top percentage of total term size
      *
-     * @param terms, weighted term list
-     * @param topPercentage, top percentage of weighted terms to be retained
-     * @return List<JATETerm>, filtered top K percent terms
+     * @param terms  weighted term list
+     * @param topPercentage  top percentage of weighted terms to be retained
+     * @return List<JATETerm>  filtered top K percent terms
      */
     protected List<JATETerm> cutoffByTopKPercent(List<JATETerm> terms, Double topPercentage) {
         if (topPercentage != null & terms != null & terms.size() > 0) {
@@ -595,7 +595,7 @@ public abstract class App {
 
     /**
      * load JATE property file, if not provided (i.e., null), the file will be loaded from the default one.
-     * @param jatePropertyFile, jate property file path where the file will be loaded
+     * @param jatePropertyFile  jate property file path where the file will be loaded
      * @return JATEProperties object
      * @throws JATEException
      */

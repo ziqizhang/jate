@@ -23,7 +23,7 @@ public class ChiSquareProcessor implements TermRecognitionProcessor {
 
 	/**
 	 * initialise run-time parameters for current algorithm
-	 * @param params, run-time parameters (e.g.,min term total freq, cutoff scoring threshold)  for current algorithm
+	 * @param params  run-time parameters (e.g.,min term total freq, cutoff scoring threshold)  for current algorithm
 	 *      @see uk.ac.shef.dcs.jate.app.AppParams
 	 * @throws JATEException
 	 */

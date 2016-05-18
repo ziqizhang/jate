@@ -110,8 +110,8 @@ public class Cooccurrence extends AbstractFeature {
      * It is possible to have an invalid query term, usually created because of cross-sentence-boundary n-gram,
      * or phrases matched by POS patterns. In these cases, an empty map is returned
      *
-     * @param term
-     * @return
+     * @param term term string
+     * @return Map the map of term index and co-ocurrence
      */
     public Map<Integer, Integer> getCoocurrence(String term){
         int termIdx= lookupTerm(term);

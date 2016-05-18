@@ -55,8 +55,8 @@ public class FrequencyTermBased extends AbstractFeature {
      * Get the normalised frequency of a term in the corpus, which is the number of occurrences of that term as a fraction
      * of the total number of occurrences of all terms in the corpus.
      *
-     * @param term
-     * @return
+     * @param term term string
+     * @return double  total term frequency
      */
     public double getTTFNorm(String term) {
         return (double) getTTF(term) / ((double) getCorpusTotal() + 1);
@@ -65,8 +65,8 @@ public class FrequencyTermBased extends AbstractFeature {
     /**
      * increment the number of occurrences of term by i
      *
-     * @param term
-     * @param i
+     * @param term  term string
+     * @param i  frequency count
      */
     protected void increment(String term, int i) {
         Integer freq = term2TTF.get(term);

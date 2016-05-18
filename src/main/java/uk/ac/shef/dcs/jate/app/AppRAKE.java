@@ -22,7 +22,7 @@ public class AppRAKE extends App {
 
     /**
      *
-     * @param args, command-line params accepting solr home path, solr core name and more optional run-time parameters
+     * @param args  command-line params accepting solr home path, solr core name and more optional run-time parameters
      *              @see uk.ac.shef.dcs.jate.app.AppParams
      */
     public static void main(String[] args) {
@@ -61,7 +61,7 @@ public class AppRAKE extends App {
 
     /**
      * initialise run-time parameters for current algorithm
-     * @param initParams, run-time parameters (e.g.,min term total freq, cutoff scoring threshold)  for current algorithm
+     * @param initParams  run-time parameters (e.g.,min term total freq, cutoff scoring threshold)  for current algorithm
      *      @see uk.ac.shef.dcs.jate.app.AppParams
      * @throws JATEException
      */

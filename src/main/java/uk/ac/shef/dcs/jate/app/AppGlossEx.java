@@ -21,7 +21,7 @@ public class AppGlossEx extends App {
     private final Logger log = LoggerFactory.getLogger(AppGlossEx.class.getName());
 
     /**
-     * @param args, command-line params accepting solr home path, solr core name and more optional run-time parameters
+     * @param args  command-line params accepting solr home path, solr core name and more optional run-time parameters
      * @see uk.ac.shef.dcs.jate.app.AppParams
      * <p>
      * and GlossEx specific parameter : reference frequency file
@@ -61,7 +61,7 @@ public class AppGlossEx extends App {
     }
 
     /**
-     * @param initParams, intial map params accepting pre-filtering, post-filtering params and GlossEx specific parameter
+     * @param initParams  intial map params accepting pre-filtering, post-filtering params and GlossEx specific parameter
      * @throws JATEException
      * @see AppParams
      * @see AppParams#REFERENCE_FREQUENCY_FILE

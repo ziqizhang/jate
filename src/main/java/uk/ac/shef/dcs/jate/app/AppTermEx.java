@@ -20,7 +20,7 @@ public class AppTermEx extends App {
     private final Logger log = LoggerFactory.getLogger(AppTermEx.class.getName());
 
     /**
-     * @param args, command-line params accepting solr home path, solr core name
+     * @param args  command-line params accepting solr home path, solr core name
      *              <p>
      *              and more optional run-time parameters
      * @see uk.ac.shef.dcs.jate.app.AppParams
@@ -63,7 +63,7 @@ public class AppTermEx extends App {
     }
 
     /**
-     * @param initParams, pre-filtering, post-filtering parameters, and TermEx specific parameter
+     * @param initParams  pre-filtering, post-filtering parameters, and TermEx specific parameter
      * @throws JATEException
      * @see AppParams
      * @see AppParams#REFERENCE_FREQUENCY_FILE

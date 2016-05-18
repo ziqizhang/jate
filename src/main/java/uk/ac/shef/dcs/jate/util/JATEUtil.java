@@ -57,8 +57,8 @@ public class JATEUtil {
     /**
      * statistics of files and subdirectories
      *
-     * @param corpusDir, corpus directory path
-     * @return Map<Integer, Long>, {1|2: number} 1 stands for directory, 2
+     * @param corpusDir  corpus directory path
+     * @return Map  {1|2: number} 1 stands for directory, 2
      */
     public static Map<Integer, Long> fileStatitics(Path corpusDir) throws IOException {
         Map<Integer, Long> stats = Files.walk(corpusDir)
@@ -79,8 +79,8 @@ public class JATEUtil {
      * Raw text will be automatically extracted with Apache TIKA as document content
      * and Doc id will be set by file name.
      *
-     * @param file, any file supported in Tika
-     * @return JATEDocument, return null if file name is null
+     * @param file  any file format that is supported in Tika
+     * @return JATEDocument  return null if file name is null
      */
     public static JATEDocument loadJATEDocument(Path file) throws JATEException {
         if (file.getFileName() == null){
@@ -103,8 +103,8 @@ public class JATEUtil {
     /**
      * load ACL RD-TEC documents from raw text corpus
      *
-     * @param rawTxtFile
-     * @return
+     * @param rawTxtFile raw text file
+     * @return JATEDocument
      */
     public static JATEDocument loadACLRDTECDocumentFromRaw(File rawTxtFile) {
         JATEDocument jateDocument = new JATEDocument(rawTxtFile.toURI());
@@ -126,8 +126,8 @@ public class JATEUtil {
 
     /**
      *
-     * @param fileInputStream, ACL XML file
-     * @return JATEDocument
+     * @param fileInputStream  ACL XML file
+     * @return JATEDocument JATE Document Object
      * @throws JATEException
      */
     private static JATEDocument loadJATEDocFromXML(InputStream fileInputStream) throws JATEException {
@@ -255,8 +255,8 @@ public class JATEUtil {
      * two regex pattern matching rules to extract broken words in ACL RD-TEC corpus caused by pdf converter
      * e.g., "P r e v i o u s" for "previous"
      *
-     * @param paragraphs, text
-     * @return List<String>,a list of matched "broken word" text
+     * @param paragraphs  text
+     * @return List<String>  a list of matched "broken word" text
      */
     public static List<String> extractBrokenWords(String paragraphs) {
         List<String> brokenWords = new ArrayList<>();
@@ -277,9 +277,9 @@ public class JATEUtil {
     /**
      * clean text for fixing broken words
      *
-     * @param paragraph,  text
-     * @param brokenWord, matched broken word
-     * @return String, cleaned text
+     * @param paragraph   text
+     * @param brokenWord  matched broken word
+     * @return String  cleaned text
      */
     public static String fixBrokenWords(String paragraph, String brokenWord) {
         return paragraph.replaceAll(brokenWord, brokenWord.replaceAll(" ", "").concat(" "));
@@ -288,7 +288,7 @@ public class JATEUtil {
     /**
      * load files from corpus directory recursively
      *
-     * @param corpusDir, corpus directory
+     * @param corpusDir  corpus directory
      * @return List<Path>
      * @throws JATEException
      */

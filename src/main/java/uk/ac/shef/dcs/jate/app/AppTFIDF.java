@@ -22,7 +22,7 @@ public class AppTFIDF extends App {
     private final Logger log = LoggerFactory.getLogger(AppTFIDF.class.getName());
 
     /**
-     * @param args, command-line params accepting solr home path, solr core name and more optional run-time parameters
+     * @param args  command-line params accepting solr home path, solr core name and more optional run-time parameters
      * @see uk.ac.shef.dcs.jate.app.AppParams
      */
     public static void main(String[] args) {
@@ -60,7 +60,7 @@ public class AppTFIDF extends App {
     }
 
     /**
-     * @param initParams, pre-filtering, post-filtering parameters
+     * @param initParams  pre-filtering, post-filtering parameters
      * @throws JATEException
      * @see AppParams
      */

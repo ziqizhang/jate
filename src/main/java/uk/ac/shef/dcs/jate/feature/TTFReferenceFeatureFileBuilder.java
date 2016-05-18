@@ -42,7 +42,7 @@ public class TTFReferenceFeatureFileBuilder extends AbstractFeatureBuilder {
 	 * statistics and creates and instance of FeatureRefCorpusTermFrequency from
 	 * the file specified in the constructor
 	 *
-	 * @return
+	 * @return uk.ac.shef.dcs.jate.feature.FrequencyTermBased
 	 * @throws uk.ac.shef.dcs.jate.JATEException
 	 */
 	public FrequencyTermBased build() throws JATEException {

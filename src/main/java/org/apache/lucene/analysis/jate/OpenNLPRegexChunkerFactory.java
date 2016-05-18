@@ -28,7 +28,8 @@ public class OpenNLPRegexChunkerFactory extends MWEFilterFactory {
     /**
      * Initialize this factory via a set of key-value pairs.
      *
-     * @param args, arguments for the filter, see example of jate_text_2_terms field type in JATE 2.0 solr schema.xml
+     * @param args  arguments for the filter,
+     *                 see example of jate_text_2_terms field type in JATE 2.0 solr schema.xml
      */
     public OpenNLPRegexChunkerFactory(Map<String, String> args) {
         super(args);

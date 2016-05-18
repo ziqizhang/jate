@@ -193,10 +193,10 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
     }
 
     /**
-     * @param start
-     * @param end    THIS IS EXCLUSIVE
-     * @param tokens
-     * @return
+     * @param start   start offset
+     * @param end     THIS IS EXCLUSIVE
+     * @param tokens  tokens
+     * @return int[]
      */
     protected int[] clean(int start, int end, String[] tokens) {
         int newStart = start, newEnd = end;

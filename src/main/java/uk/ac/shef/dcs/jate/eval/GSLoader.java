@@ -18,8 +18,8 @@ import static java.util.stream.Collectors.toList;
 public class GSLoader {
 
     /**
-     * @param file, GENIA Goldstandard terms file
-     * @return
+     * @param file  GENIA Goldstandard terms file
+     * @return List<String>  a list of gs terms
      */
     public static List<String> loadGenia(String file) throws IOException {
         List<String> terms = FileUtils.readLines(new File(file));
@@ -28,8 +28,8 @@ public class GSLoader {
 
     /**
      *
-     * @param file, ACL RD-TEC goldstandard term file (with invalid and valid terms)
-     * @return List<String>, list of goldstandard terms
+     * @param file  ACL RD-TEC goldstandard term file (with invalid and valid terms)
+     * @return List<String>  list of goldstandard terms
      * @throws IOException
      */
     public static List<String> loadACLRD(String file) throws IOException {

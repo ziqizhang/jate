@@ -92,13 +92,8 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
      * Solr field where content ngram info indexed and stored by means of
      * {@code solr.ShingleFilterFactory}
      * <p>
-     * Recommended setting for this field in solr schema.xml:
+     * See example cores in /testbed/ for Recommended setting for this field in solr schema.xml:
      * <p>
-     * <pre>
-     *    {@code
-     *
-     * 	}
-     * </pre>
      */
     public static final String FIELD_CONTENT_NGRAM = "solr_field_content_ngrams";
 
@@ -121,7 +116,7 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
     /**
      * Term ranking (unithood/termhood) algorithm.
      *
-     * @see {@code uk.ac.shef.dcs.jate.solr.TermRecognitionRequestHandler} for
+     * @see uk.ac.shef.dcs.jate.solr.TermRecognitionRequestHandler for
      * all the supported ATR algorithms
      */
     public static final String TERM_RANKING_ALGORITHM = "algorithm";
@@ -163,8 +158,7 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
      * <p>
      * Min frequency of a term appearing in different context
      *
-     * @see {@code uk.ac.shef.dcs.jate.app.AppChiSquare}
-     * @see {@code uk.ac.shef.dcs.jate.app.AppNCValue}
+     * @see uk.ac.shef.dcs.jate.app.AppChiSquare
      */
     public static final String PREFILTER_MIN_TERM_CONTEXT_FREQUENCY = AppParams.
             PREFILTER_MIN_TERM_TOTAL_FREQUENCY.getParamKey();
@@ -179,7 +173,7 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
      * Top N (inclusive) threshold for choose top N ranked term candidates
      * <p>
      * This threshold is an alternative to the default
-     * {@code TermRecognitionRequestHandler.CUT_OFF_THRESHOLD}
+     * @see uk.ac.shef.dcs.jate.solr.TermRecognitionRequestHandler#CUTOFF_THRESHOLD
      */
     public static final String CUTOFF_TOP_K = AppParams.CUTOFF_TOP_K.getParamKey();
 
@@ -187,15 +181,15 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
      * Top percentage of total ranked term candidates.
      * <p>
      * This threshold is an alternative to the default
-     * {@code TermRecognitionRequestHandler.CUT_OFF_THRESHOLD}
+     * @see uk.ac.shef.dcs.jate.solr.TermRecognitionRequestHandler#CUTOFF_THRESHOLD
      */
     public static final String CUTOFF_TOP_K_PERCENT = AppParams.CUTOFF_TOP_K_PERCENT.getParamKey();
 
     /**
      * Unigram frequency distribution file required by few termhood calculation
      *
-     * @see {@code uk.ac.shef.dcs.jate.app.AppTermEx}
-     * @see {@code uk.ac.shef.dcs.jate.app.AppGlossEx}
+     * @see uk.ac.shef.dcs.jate.app.AppTermEx
+     * @see uk.ac.shef.dcs.jate.app.AppGlossEx
      */
     public static final String REFERENCE_FREQUENCY_FILE = AppParams.REFERENCE_FREQUENCY_FILE.getParamKey();
 
@@ -324,10 +318,10 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
     /**
      * Index weighted & filtered final terms back into Solr
      *
-     * @param filteredTerms,  filtered JATE terms
-     * @param jateProperties, jate properties for integration config between jate2.0 and solr instance
-     * @param indexSearcher,  solr index searcher
-     * @param isBoosted,      true or false to indivate whether term will be boosted with ATE score
+     * @param filteredTerms   filtered JATE terms
+     * @param jateProperties  jate properties for integration config between jate2.0 and solr instance
+     * @param indexSearcher   solr index searcher
+     * @param isBoosted       true or false to indivate whether term will be boosted with ATE score
      * @throws JATEException
      */
     public void indexTerms(List<JATETerm> filteredTerms, JATEProperties jateProperties,

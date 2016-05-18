@@ -22,7 +22,7 @@ public class AppWeirdness extends App {
     private final Logger log = LoggerFactory.getLogger(AppWeirdness.class.getName());
 
     /**
-     * @param args, command-line params accepting solr home path, solr core name
+     * @param args  command-line params accepting solr home path, solr core name
      *              <p>
      *              more optional run-time parameters
      * @see uk.ac.shef.dcs.jate.app.AppParams
@@ -65,7 +65,7 @@ public class AppWeirdness extends App {
     }
 
     /**
-     * @param initParams, pre-filtering, post-filtering parameters and Weirdness specific parameter
+     * @param initParams  pre-filtering, post-filtering parameters and Weirdness specific parameter
      * @throws JATEException
      * @see AppParams
      * @see AppParams#REFERENCE_FREQUENCY_FILE

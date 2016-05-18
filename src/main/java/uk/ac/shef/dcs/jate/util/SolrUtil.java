@@ -22,9 +22,9 @@ public class SolrUtil {
 
     /**
      * Get indexed term vectors
-     * @param fieldname, field where term vectors will be retrieved
-     * @param solrIndexSearcher, solr index searcher
-     * @return Terms, term vectors
+     * @param fieldname  field where term vectors will be retrieved
+     * @param solrIndexSearcher  solr index searcher
+     * @return Terms  term vectors
      * @throws JATEException
      */
     public static Terms getTermVector(String fieldname, SolrIndexSearcher solrIndexSearcher) throws JATEException {
@@ -56,7 +56,7 @@ public class SolrUtil {
     /**
      * Get indexed (normalised) term strings
      *
-     * @param indexedTermsVector, term vectors indexed
+     * @param indexedTermsVector  term vectors indexed
      * @return List<String> utf-8 string of term
      * @throws IOException
      */

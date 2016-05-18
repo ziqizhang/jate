@@ -2,7 +2,6 @@ package uk.ac.shef.dcs.jate.app;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
-import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.search.SolrIndexSearcher;
 
@@ -12,14 +11,9 @@ import uk.ac.shef.dcs.jate.algorithm.ATTF;
 import uk.ac.shef.dcs.jate.algorithm.Algorithm;
 import uk.ac.shef.dcs.jate.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.feature.FrequencyTermBasedFBMaster;
-import uk.ac.shef.dcs.jate.model.JATEDocument;
 import uk.ac.shef.dcs.jate.model.JATETerm;
-import uk.ac.shef.dcs.jate.util.JATEUtil;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +26,7 @@ public class AppATTF extends App {
     static EmbeddedSolrServer server = null;
 
     /**
-     * @param args, command-line params accepting solr home path, solr core name and more optional run-time parameters
+     * @param args  command-line params accepting solr home path, solr core name and more optional run-time parameters
      * @see uk.ac.shef.dcs.jate.app.AppParams
      */
     public static void main(String[] args) {
@@ -72,7 +66,7 @@ public class AppATTF extends App {
 
     /**
      * initialise run-time parameters for current algorithm
-     * @param initParams, run-time parameters (e.g.,min term total freq, cutoff scoring threshold)  for current algorithm
+     * @param initParams  run-time parameters (e.g.,min term total freq, cutoff scoring threshold) for current algorithm
      *      @see uk.ac.shef.dcs.jate.app.AppParams
      * @throws JATEException
      */
@@ -91,9 +85,9 @@ public class AppATTF extends App {
     /**
      * ranking and filtering
      *
-     * @param core,       solr core
-     * @param properties, jate properties file
-     * @return List<JATETerm>
+     * @param core        solr core
+     * @param properties  jate properties file
+     * @return List<JATETerm> a list of JATETerm
      * @throws JATEException
      */
     public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {

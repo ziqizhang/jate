@@ -22,7 +22,7 @@ public class AppCValue extends App {
     private static final Logger LOG = LoggerFactory.getLogger(AppCValue.class);
 
     /**
-     * @param args, command-line params accepting solr home path, solr core name and more optional run-time parameters
+     * @param args  command-line params accepting solr home path, solr core name and more optional run-time parameters
      * @see uk.ac.shef.dcs.jate.app.AppParams
      */
     public static void main(String[] args) {
@@ -58,7 +58,7 @@ public class AppCValue extends App {
     }
 
     /**
-     * @param initParams, initial parameters including pre-filtering and post-filtering parameters
+     * @param initParams  initial parameters including pre-filtering and post-filtering parameters
      * @throws JATEException
      * @see uk.ac.shef.dcs.jate.app.AppParams
      */

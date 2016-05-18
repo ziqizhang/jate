@@ -105,16 +105,16 @@ public class Scorer {
 
     /**
      * compute pre-configured top Ks precision with normalisation for both gold standard spans and ranked terms
-     * @param gs, gold standards
-     * @param terms, extracted results
-     * @param ignoreSymbols, remove symbols
-     * @param ignoreDigits, remove digits
-     * @param minChar, minimum character length
-     * @param maxChar, maximum character length
-     * @param minTokens, minimum token size
-     * @param maxTokens, maximum token size
-     * @param ranks, list of rankinig for evaluation
-     * @return, list of precision@K
+     * @param gs  gold standards
+     * @param terms  extracted results
+     * @param ignoreSymbols  remove symbols
+     * @param ignoreDigits  remove digits
+     * @param minChar  minimum character length
+     * @param maxChar  maximum character length
+     * @param minTokens  minimum token size
+     * @param maxTokens  maximum token size
+     * @param ranks  list of rankinig for evaluation
+     * @return double[]  list of precision@K
      */
     public static double[] computePrecisionAtRank(Lemmatiser lemmatiser, List<String> gs, List<String> terms,
                                                   boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
@@ -187,9 +187,9 @@ public class Scorer {
 
     /**
      * calculate
-     * @param gsTerms the gold standard spans
-     * @param topKTerms the predicted/extracted and ranked spans, top K results can be selected for scoring
-     * @return double , precision score
+     * @param gsTerms  the gold standard spans
+     * @param topKTerms  the predicted/extracted and ranked spans, top K results can be selected for scoring
+     * @return double  precision score
      */
     public static double precision(List<String> gsTerms, List<String> topKTerms) {
         /*Set<String> correct = new HashSet<>(gsTerms);
@@ -236,14 +236,14 @@ public class Scorer {
      * this methods enable to calculate the agreement of two term set on a strict or lenient basis
      *
      *
-     * @param terms, term list to be pruned
-     * @param ignoreSymbols, remove symbols
-     * @param ignoreDigits, remove digits
-     * @param minChar, minimum characters allowed
-     * @param maxChar, maximum characters allowed
-     * @param minTokens, minimum tokens allowed
-     * @param maxTokens, maximum tokens allowed
-     * @return List, list of normalised term set
+     * @param terms  term list to be pruned
+     * @param ignoreSymbols  remove symbols
+     * @param ignoreDigits  remove digits
+     * @param minChar  minimum characters allowed
+     * @param maxChar  maximum characters allowed
+     * @param minTokens  minimum tokens allowed
+     * @param maxTokens  maximum tokens allowed
+     * @return List<String> list of normalised term set
      */
     public static List<String> prune(List<String> terms, boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
                                      int minChar, int maxChar, int minTokens, int maxTokens) {

@@ -24,7 +24,7 @@ public class AppRIDF extends App {
     /**
      * initialise RIDF by pre-filtering and post-filtering parameters
      *
-     * @param initParams accepted pre-filtering and post-filtering parameters
+     * @param initParams  accepted pre-filtering and post-filtering parameters
      * @throws JATEException
      * @see AppParams
      */
@@ -33,7 +33,7 @@ public class AppRIDF extends App {
     }
 
     /**
-     * @param args, command-line params accepting solr home path, solr core name and more optional run-time parameters
+     * @param args  command-line params accepting solr home path, solr core name and more optional run-time parameters
      * @see uk.ac.shef.dcs.jate.app.AppParams
      */
     public static void main(String[] args) {

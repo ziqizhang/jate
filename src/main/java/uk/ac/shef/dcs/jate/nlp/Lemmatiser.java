@@ -5,9 +5,6 @@ import dragon.nlp.tool.lemmatiser.EngLemmatiser;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by - on 26/02/2016.
- */
 public class Lemmatiser {
 
     private final EngLemmatiser lemmatiser;
@@ -36,8 +33,8 @@ public class Lemmatiser {
     }
     /**
      * Lemmatise a phrase or word. If a phrase, only lemmatise the most RHS word.
-     * @param value
-     * @return
+     * @param value  phrase/word string
+     * @return String  normalised phrase
      */
     public String normalize(String value, String pos) {
         Integer tag = tagLookUp.get(pos);
