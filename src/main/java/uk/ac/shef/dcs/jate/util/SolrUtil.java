@@ -46,6 +46,9 @@ public class SolrUtil {
         for (String sourceField : copyFields.keySet()) {
             List<CopyField> copyFieldList = copyFields.get(sourceField);
             for (CopyField copyField : copyFieldList) {
+                // remove previous one if exist
+                doc.removeField(copyField.getDestination().getName());
+
                 IndexableField jateField = copyField.getDestination().
                         createField(doc.get(copyField.getSource().getName()), boost);
                 doc.add(jateField);
@@ -77,8 +80,7 @@ public class SolrUtil {
     public static Terms getTermVector(int docId, String fieldname, SolrIndexSearcher solrIndexSearcher) throws JATEException {
         try {
             Terms vector = solrIndexSearcher.getLeafReader().getTermVector(docId, fieldname);
-            if (vector == null)
-                throw new JATEException("Cannot find expected field: " + fieldname+". This could be caused by empty document content. If so, empty documents should be removed from indexing.");
+
             return vector;
         } catch (IOException ioe) {
             StringBuilder sb = new StringBuilder(String.format("Cannot find expected field: %s. Error stacktrack:\n", fieldname));

@@ -1,27 +1,35 @@
 package uk.ac.shef.dcs.jate.solr;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.LongField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.Terms;
+import org.apache.solr.common.SolrException;
 import org.apache.solr.common.params.MapSolrParams;
 import org.apache.solr.common.params.SolrParams;
+import org.apache.solr.common.util.ContentStream;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.common.util.Pair;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.handler.RequestHandlerBase;
+import org.apache.solr.handler.UpdateRequestHandler;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.schema.CopyField;
 import org.apache.solr.schema.IndexSchema;
 import org.apache.solr.search.SolrIndexSearcher;
+import org.apache.solr.update.CommitUpdateCommand;
+import org.apache.solr.util.RTimer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -238,9 +246,11 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
         if (isIndexTerms) {
             log.info("start to index filtered candidate terms ...");
             indexTerms(termList, properties, searcher, isBoosted, isExtraction);
+            //trigger 'optimise' to build new index
+            searcher.getCore().getUpdateHandler().commit(new CommitUpdateCommand(req, true));
             log.info("complete the indexing of candidate terms.");
-        }
 
+        }
     }
 
     private boolean isExport(String outFilePath) {
@@ -321,7 +331,7 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
      * @param filteredTerms   filtered JATE terms
      * @param jateProperties  jate properties for integration config between jate2.0 and solr instance
      * @param indexSearcher   solr index searcher
-     * @param isBoosted       true or false to indivate whether term will be boosted with ATE score
+     * @param isBoosted       true or false to indicate whether term will be boosted with ATE score
      * @throws JATEException
      */
     public void indexTerms(List<JATETerm> filteredTerms, JATEProperties jateProperties,
@@ -338,8 +348,10 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
 
         SolrCore core = indexSearcher.getCore();
         IndexSchema indexSchema = core.getLatestSchema();
+        IndexWriter writerIn = null;
         try {
-            IndexWriter writerIn = core.getSolrCoreState().getIndexWriter(core).get();
+            writerIn = core.getSolrCoreState().getIndexWriter(core).get();
+
             Map<String, List<CopyField>> copyFields = indexSchema.getCopyFieldsMap();
 
             for (int docID = 0; docID < numDocs; docID++) {
@@ -352,21 +364,33 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
 
                     Terms indexedCandidateTermsVectors = SolrUtil.getTermVector(docID,
                             candidateTermFieldName, indexSearcher);
+                    if (indexedCandidateTermsVectors == null) {
+                        continue;
+                    }
                     List<String> candidateTerms = SolrUtil.getNormalisedTerms(indexedCandidateTermsVectors);
 
                     List<Pair<String, Double>> filteredCandidateTerms = getSelectedWeightedCandidates(filteredTerms,
                             candidateTerms);
 
                     iterateAddDomainTermFields(isBoosted, domainTermsFieldName, indexSchema, doc, filteredCandidateTerms);
+                    log.debug(String.format("document [%s] version before debugging: %s", doc.get("id"),
+                            doc.get("_version_")));
+                    // workaround: doc version is not automatically indexed after the document is updated in this way
+                    String currentVersionNo = doc.get("_version_");
+                    doc.removeField("_version_");
+                    doc.add(indexSchema.getField("_version_").createField(versionIncrement(currentVersionNo),
+                            DEFAULT_BOOST_VALUE));
 
                     writerIn.updateDocument(new Term("id", doc.get("id")), doc);
-
                 } catch (IOException e) {
                     throw new JATEException(
                             String.format("Failed to retrieve current document (docId: [%s]) due to " +
                                     "an unexpected I/O exception: %s", docID, e.toString()));
                 }
             }
+
+            writerIn.forceMerge(1, false);
+            writerIn.commit();
         } catch (IOException ioe) {
             throw new JATEException(String.format("Failed to index filtered domain terms due to I/O exception when " +
                     "loading solr index writer: %s", ioe.toString()));
@@ -375,9 +399,20 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
                 domainTermsFieldName));
     }
 
+    private String versionIncrement(String currentVersionNo) {
+        String versionNo = currentVersionNo;
+        if (NumberUtils.isNumber(currentVersionNo)) {
+            versionNo = String.valueOf(Long.parseLong(currentVersionNo)+1);
+        }
+        return versionNo;
+    }
+
     private void iterateAddDomainTermFields(boolean isBoosted, String domainTermsFieldName,
                                             IndexSchema indexSchema, Document doc,
                                             List<Pair<String, Double>> filteredCandidateTerms) {
+        // remove previous fields if exists
+        doc.removeFields(domainTermsFieldName);
+
         for (Pair<String, Double> filteredTerm : filteredCandidateTerms) {
             if (filteredTerm == null) {
                 continue;
@@ -432,8 +467,11 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
 
     private Algorithm getAlgorithm(String algName) throws JATEException {
         if (StringUtils.isEmpty(algName)) {
-            throw new JATEException("ATE algorithm is not specified. " +
-                    "Please check API documentation for all the supported ATR algorithms.");
+//            throw new JATEException("ATE algorithm is not specified. " +
+//                    "Please check API documentation for all the supported ATR algorithms.");
+            throw new SolrException(SolrException.ErrorCode.BAD_REQUEST,
+                    "ATE algorithm is not specified. " +
+                            "Please check API documentation for all the supported ATR algorithms.");
         }
 
         if (algName.equalsIgnoreCase(Algorithm.C_VALUE.getAlgorithmName())) {
@@ -477,9 +515,13 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
                     Algorithm.WEIRDNESS.getAlgorithmName()));
             return Algorithm.WEIRDNESS;
         } else {
-            throw new JATEException(String.format(
-                    "Current algorithm [%s] is not supported. Please check API documentation for all the supported ATR algorithms.",
+            throw new SolrException(SolrException.ErrorCode.BAD_REQUEST,
+                    String.format("Current algorithm [%s] is not supported. Please check API documentation for all " +
+                            "the supported ATR algorithms.",
                     algName));
+//            throw new JATEException(String.format(
+//                    "Current algorithm [%s] is not supported. Please check API documentation for all the supported ATR algorithms.",
+//                    algName));
         }
     }
 }
