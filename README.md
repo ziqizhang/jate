@@ -67,9 +67,9 @@ For anything else, you can also find how to contact the team at:
 
 ### Changes Overview
 
-#### JATE2.0 vAlpha - 04 April 2016
+ -  JATE2.0 Alpha version - 04 April 2016
 
-#### JATE2.0 vBeta - 20 May 2016
+ -  JATE2.0 Beta version - 20 May 2016
 
 
 
