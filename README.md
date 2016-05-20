@@ -66,7 +66,10 @@ For anything else, you can also find how to contact the team at:
  - [Ziqi ZHANG](http://staffwww.dcs.shef.ac.uk/people/Z.Zhang/)
 
 ### Changes Overview
-[To update]
+
+#### JATE2.0 vAlpha - 04 April 2016
+
+#### JATE2.0 vBeta - 20 May 2016
 
 
 
