@@ -273,7 +273,7 @@
                         removeTrailingSymbolicTokens="true"
                         stripAnySymbolChars="false"
                         stripLeadingSymbolChars="true" stripTrailingSymbolChars="true"
-                        stopWords="stopwords.txt" stopWordsIgnoreCase="true"
+                        stopWords="smart-stop-list.txt" stopWordsIgnoreCase="true"
                         outputUnigrams="true" outputUnigramsIfNoShingles="false" tokenSeparator=" "/>
                 <filter class="solr.LowerCaseFilterFactory"/>
                 <!--<filter class="solr.EnglishMinimalStemFilterFactory"/>-->
@@ -284,7 +284,7 @@
                 <filter class="org.apache.lucene.analysis.jate.EnglishLemmatisationFilterFactory"
                     lemmaResourceDir="lemmatiser"/>
                 <!-- standard Solr stop words filter -->
-                <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"
+                <filter class="solr.StopFilterFactory" ignoreCase="true" words="smart-stop-list.txt"
                         enablePositionIncrements="true"/>
             </analyzer>
         </fieldType>
