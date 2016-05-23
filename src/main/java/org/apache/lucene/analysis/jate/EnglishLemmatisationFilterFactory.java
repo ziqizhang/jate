@@ -35,7 +35,10 @@ public class EnglishLemmatisationFilterFactory extends TokenFilterFactory implem
     public void inform(ResourceLoader loader) throws IOException {
         if (lemmatiserResourceDir != null ) {
             try {
-                lemmatiser = new EngLemmatiser(((SolrResourceLoader) loader).getConfigDir()+lemmatiserResourceDir,
+                String path=((SolrResourceLoader) loader).getConfigDir();
+                if(!path.endsWith(File.separator))
+                        path=path+File.separator;
+                lemmatiser = new EngLemmatiser(path+lemmatiserResourceDir,
                         false, false);
             } catch (Exception e) {
                 StringBuilder sb = new StringBuilder("Initiating ");
