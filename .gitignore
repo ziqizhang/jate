@@ -13,6 +13,7 @@ example/*
 src/test/resource/eval/ACL_RD-TEC/corpus/full/xml/*
 testdata/solr-testbed/ACLRDTEC/data/*
 testdata/solr-testbed/GENIA/data/*
+testdata/solr-testbed/jateCore/data/*
 /target/
 .DS_Store
 debug/*
