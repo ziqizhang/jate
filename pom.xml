@@ -5,7 +5,7 @@
 
     <groupId>uk.ac.shef.dcs</groupId>
     <artifactId>jate</artifactId>
-    <version>2.0-beta</version>
+    <version>2.0-beta.1</version>
     <packaging>jar</packaging>
     <name>Java Automatic Term Extraction Toolkit (JATE)</name>
     <description>JATE is a toolkit for developing and experimenting Automatic Term Extractions/Recognition algorithms in
@@ -216,7 +216,7 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.2</version>
+                <version>1.6.3</version>
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>ossrh</serverId>
@@ -254,13 +254,14 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- working with PGP Signatures: http://central.sonatype.org/pages/working-with-pgp-signatures.html -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>${maven-gpg-plugin.version}</version>
-                <!-- TODO: JIE: skip for now -->
+                <!-- set to skip the check -->
                 <configuration>
-                    <skip>true</skip>
+                    <skip>false</skip>
                 </configuration>
                 <executions>
                     <execution>
