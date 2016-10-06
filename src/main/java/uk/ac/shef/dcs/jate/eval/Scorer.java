@@ -134,6 +134,40 @@ public class Scorer {
         return scores;
     }
 
+    /**
+     *
+     * @param lemmatiser, for lemmatisation
+     * @param gsTerms, reference term list
+     * @param terms, tagged/predicted terms
+     * @param ignoreSymbols, ignore symbols,
+     * @param ignoreDigits, ignore digits
+     * @param lowercase, lower case
+     * @param minChar, min char for pruning
+     * @param maxChar, max char for pruning
+     * @param minTokens, min tokens for pruning
+     * @param maxTokens, max tokens for pruning
+     * @return FMeasure, final measurement
+     */
+    public static FMeasure computeFMeasureWithNormalisation(Lemmatiser lemmatiser, List<String> gsTerms, List<String> terms,
+                                                        boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
+                                                        int minChar, int maxChar, int minTokens, int maxTokens) {
+        gsTerms = prune(gsTerms, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
+        gsTerms= normalize(gsTerms, lemmatiser);
+        terms = prune(terms, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
+        terms = normalize(terms, lemmatiser);
+
+        Set<String> finalGSTermSet = new HashSet<>();
+        Set<String> finalTagTermSet = new HashSet<>();
+
+        finalGSTermSet.addAll(gsTerms);
+        finalTagTermSet.addAll(terms);
+
+        FMeasure fMeasure = new FMeasure();
+        fMeasure.updateScores(finalGSTermSet.toArray(), finalTagTermSet.toArray());
+        return fMeasure;
+    }
+
+
 //    /**
 //     * compute Top K precision with strict or lenient benchmarking
 //     *
@@ -201,6 +235,8 @@ public class Scorer {
 
         return FMeasure.precision(gsTerms.toArray(),topKTerms.toArray());
     }
+
+
 
     public static double recall(List<String> gsTerms, List<String> termResults) {
         /*double recall = FMeasure.recall(gsTerms.toArray(), termResults.toArray());
