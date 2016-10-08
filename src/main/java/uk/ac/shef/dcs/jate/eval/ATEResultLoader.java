@@ -18,16 +18,26 @@ public class ATEResultLoader {
 
     public static List<String> load(String jsonFile) throws FileNotFoundException, UnsupportedEncodingException {
         Gson gson = new Gson();
-        List<JATETerm> terms=gson.fromJson(new BufferedReader(
-                new InputStreamReader(
-                        new FileInputStream(jsonFile), StandardCharsets.UTF_8)), new TypeToken<List<JATETerm>>(){}.getType());
-
-        List<String> result = new ArrayList<>();
-        for(JATETerm o: terms){
-            result.add(o.getString());
+        FileInputStream jsonFileStream = new FileInputStream(jsonFile);
+        try {
+	        List<JATETerm> terms=gson.fromJson(new BufferedReader(
+	                new InputStreamReader(jsonFileStream , StandardCharsets.UTF_8)), 
+	        		new TypeToken<List<JATETerm>>(){}.getType());
+	
+	        List<String> result = new ArrayList<>();
+	        for(JATETerm o: terms){
+	            result.add(o.getString());
+	        } 
+	        return result;
+        } finally {
+        	if (jsonFileStream != null) {
+        		try {
+					jsonFileStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+        	}
         }
-
-        return result;
     }
 
     public static List<String> load(List<JATETerm> jateTerms) {

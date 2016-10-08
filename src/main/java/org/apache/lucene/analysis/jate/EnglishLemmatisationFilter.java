@@ -9,8 +9,6 @@ import org.apache.lucene.util.BytesRef;
 import uk.ac.shef.dcs.jate.nlp.Lemmatiser;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by - on 19/02/2016.

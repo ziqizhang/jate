@@ -69,10 +69,20 @@ public class JATEProperties {
     }
 
     public JATEProperties(String propFile) throws JATEException {
+    	FileInputStream propertyFileStream = null;
         try {
-            prop.load(new FileInputStream(propFile));
+        	propertyFileStream = new FileInputStream(propFile);
+            prop.load(propertyFileStream);
         } catch (IOException e) {
             throw new JATEException(String.format("Specified properties file not found! [%s]", propFile));
+        } finally {
+        	if (propertyFileStream != null) {
+        		try {
+					propertyFileStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+        	}
         }
     }
 

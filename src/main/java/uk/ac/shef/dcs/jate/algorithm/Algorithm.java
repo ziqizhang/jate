@@ -16,7 +16,7 @@ public abstract class Algorithm {
 
     public abstract List<JATETerm> execute(Collection<String> candidates) throws JATEException;
 
-    protected void validateFeature(AbstractFeature feature, Class type) throws JATEException {
+    protected void validateFeature(AbstractFeature feature, Class<? extends AbstractFeature> type) throws JATEException {
         if (feature == null || !(feature.getClass().equals(type))) {
             StringBuilder sb = new StringBuilder();
             sb.append("requires feature type:").append(type).append(",")

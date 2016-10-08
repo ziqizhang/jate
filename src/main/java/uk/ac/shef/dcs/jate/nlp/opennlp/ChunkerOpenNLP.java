@@ -5,7 +5,6 @@ import opennlp.tools.chunker.ChunkerME;
 import opennlp.tools.chunker.ChunkerModel;
 import uk.ac.shef.dcs.jate.nlp.Chunker;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 

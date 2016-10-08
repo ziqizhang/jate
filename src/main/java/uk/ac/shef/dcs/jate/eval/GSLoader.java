@@ -1,16 +1,10 @@
 package uk.ac.shef.dcs.jate.eval;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.lucene.analysis.en.EnglishMinimalStemmer;
-import uk.ac.shef.dcs.jate.JATEException;
 
 import java.io.*;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * load gs from file

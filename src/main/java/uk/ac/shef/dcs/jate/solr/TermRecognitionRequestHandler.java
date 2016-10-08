@@ -1,7 +1,6 @@
 package uk.ac.shef.dcs.jate.solr;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,26 +9,22 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.LongField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.Terms;
 import org.apache.solr.common.SolrException;
 import org.apache.solr.common.params.MapSolrParams;
 import org.apache.solr.common.params.SolrParams;
-import org.apache.solr.common.util.ContentStream;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.common.util.Pair;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.handler.RequestHandlerBase;
-import org.apache.solr.handler.UpdateRequestHandler;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.schema.CopyField;
 import org.apache.solr.schema.IndexSchema;
 import org.apache.solr.search.SolrIndexSearcher;
 import org.apache.solr.update.CommitUpdateCommand;
-import org.apache.solr.util.RTimer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -226,30 +221,33 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
         JATEProperties properties = App.getJateProperties(jatePropertyFile);
 
         final SolrIndexSearcher searcher = req.getSearcher();
-
-        if (isExtraction) {
-            log.info("start candidate extraction (i.e., re-index of whole corpus) ...");
-            generalTRProcessor.candidateExtraction(searcher.getCore(), jatePropertyFile);
-            log.info("complete candidate terms indexing.");
-        }
-
-        Map<String, String> trRunTimeParams = initialiseTRRunTimeParams(req);
-        List<JATETerm> termList = generalTRProcessor.rankingAndFiltering(searcher.getCore(), jatePropertyFile, trRunTimeParams,
-                algorithm);
-
-        log.info(String.format("complete term recognition extraction! Finalized Term size [%s]", termList.size()));
-
-        if (isExport(outFilePath)) {
-            generalTRProcessor.export(termList);
-        }
-
-        if (isIndexTerms) {
-            log.info("start to index filtered candidate terms ...");
-            indexTerms(termList, properties, searcher, isBoosted, isExtraction);
-            //trigger 'optimise' to build new index
-            searcher.getCore().getUpdateHandler().commit(new CommitUpdateCommand(req, true));
-            log.info("complete the indexing of candidate terms.");
-
+        try {
+	        if (isExtraction) {
+	            log.info("start candidate extraction (i.e., re-index of whole corpus) ...");
+	            generalTRProcessor.candidateExtraction(searcher.getCore(), jatePropertyFile);
+	            log.info("complete candidate terms indexing.");
+	        }
+	
+	        Map<String, String> trRunTimeParams = initialiseTRRunTimeParams(req);
+	        List<JATETerm> termList = generalTRProcessor.rankingAndFiltering(searcher.getCore(), jatePropertyFile, trRunTimeParams,
+	                algorithm);
+	
+	        log.info(String.format("complete term recognition extraction! Finalized Term size [%s]", termList.size()));
+	
+	        if (isExport(outFilePath)) {
+	            generalTRProcessor.export(termList);
+	        }
+	
+	        if (isIndexTerms) {
+	            log.info("start to index filtered candidate terms ...");
+	            indexTerms(termList, properties, searcher, isBoosted, isExtraction);
+	            //trigger 'optimise' to build new index
+	            searcher.getCore().getUpdateHandler().commit(new CommitUpdateCommand(req, true));
+	            log.info("complete the indexing of candidate terms.");
+	
+	        }
+        } finally {
+        	searcher.close();
         }
     }
 
@@ -347,6 +345,7 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
         }
 
         SolrCore core = indexSearcher.getCore();
+       
         IndexSchema indexSchema = core.getLatestSchema();
         IndexWriter writerIn = null;
         try {
@@ -386,7 +385,7 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
                     throw new JATEException(
                             String.format("Failed to retrieve current document (docId: [%s]) due to " +
                                     "an unexpected I/O exception: %s", docID, e.toString()));
-                }
+                } 
             }
 
             writerIn.forceMerge(1, false);
@@ -394,6 +393,17 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
         } catch (IOException ioe) {
             throw new JATEException(String.format("Failed to index filtered domain terms due to I/O exception when " +
                     "loading solr index writer: %s", ioe.toString()));
+        } finally {
+        	if (writerIn != null) {
+        		try {
+					writerIn.close();
+				} catch (IOException e) {
+					log.error(e.toString());
+				}
+        	}
+        	if (core != null) {
+        		core.close();
+        	}
         }
         log.info(String.format("finalised terms have been indexed into [%s] field for all documents",
                 domainTermsFieldName));

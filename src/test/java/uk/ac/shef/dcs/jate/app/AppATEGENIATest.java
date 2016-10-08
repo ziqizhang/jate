@@ -99,9 +99,9 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         Metadata metadata = new Metadata();
 
         List<JATEDocument> corpus = new ArrayList<>();
-
+        ZipFile geniaCorpus = null;
         try {
-            ZipFile geniaCorpus = new ZipFile(GENIA_CORPUS_ZIPPED_FILE.toFile());
+        	geniaCorpus = new ZipFile(GENIA_CORPUS_ZIPPED_FILE.toFile());
             Enumeration<? extends ZipEntry> entries = geniaCorpus.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
@@ -122,10 +122,20 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
                     e.printStackTrace();
                 } catch (TikaException e) {
                     e.printStackTrace();
+                } finally {
+                	stream.close();
                 }
             }
         } catch (IOException e) {
             throw new JATEException(String.format("GENIA Corpus not found from %s", GENIA_CORPUS_ZIPPED_FILE));
+        } finally {
+        	if (geniaCorpus != null) {
+        		try {
+					geniaCorpus.close();
+				} catch (IOException e) {
+					LOG.error(e.toString());
+				}
+        	}
         }
 
         return corpus;

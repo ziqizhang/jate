@@ -16,30 +16,28 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 public class Indexing {
-    public static void main(String[] args) throws IOException, JATEException, SolrServerException {
-        Logger logger = Logger.getLogger(Indexing.class.getName());
-        JATEProperties prop = new JATEProperties(args[0]);
-        boolean deletePrevious = Boolean.valueOf(args[2]);
-        SolrClient solrClient =
-                new EmbeddedSolrServer(Paths.get(args[3]),
-                        args[4]);
-        if (deletePrevious) {
-            logger.info("DELETING PREVIOUS INDEX");
-            solrClient.deleteByQuery("*:*");
-            solrClient.commit();
-        }
-        logger.info("INDEXING BEGINS");
-        IndexingHandler m = new IndexingHandler();
-        List<String> files = new ArrayList<>();
-        for (File f : new File(args[1]).listFiles())
-            files.add(f.toString());
+	public static void main(String[] args) throws IOException, JATEException, SolrServerException {
+		Logger logger = Logger.getLogger(Indexing.class.getName());
+		JATEProperties prop = new JATEProperties(args[0]);
+		boolean deletePrevious = Boolean.valueOf(args[2]);
+		SolrClient solrClient = new EmbeddedSolrServer(Paths.get(args[3]), args[4]);
+		try {
+			if (deletePrevious) {
+				logger.info("DELETING PREVIOUS INDEX");
+				solrClient.deleteByQuery("*:*");
+				solrClient.commit();
+			}
+			logger.info("INDEXING BEGINS");
+			IndexingHandler m = new IndexingHandler();
+			List<String> files = new ArrayList<>();
+			for (File f : new File(args[1]).listFiles())
+				files.add(f.toString());
 
-
-        m.index(files,
-                prop.getIndexerMaxUnitsToCommit(),
-                new TikaSimpleDocumentCreator(), solrClient,
-                prop);
-        logger.info("INDEXING COMPLETE");
-        System.exit(0);
-    }
+			m.index(files, prop.getIndexerMaxUnitsToCommit(), new TikaSimpleDocumentCreator(), solrClient, prop);
+			logger.info("INDEXING COMPLETE");
+			System.exit(0);
+		} finally {
+			solrClient.close();
+		}
+	}
 }

@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 
 public class TTFReferenceFeatureFileBuilder extends AbstractFeatureBuilder {
 
-	private static final Logger LOG = Logger.getLogger(TTFReferenceFeatureFileBuilder.class.getName());
+	protected final Logger LOG = Logger.getLogger(TTFReferenceFeatureFileBuilder.class.getName());
 
 	private final String _refStatsPath;
 

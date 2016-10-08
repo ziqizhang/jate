@@ -4,7 +4,6 @@ import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTaggerME;
 import uk.ac.shef.dcs.jate.nlp.POSTagger;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 

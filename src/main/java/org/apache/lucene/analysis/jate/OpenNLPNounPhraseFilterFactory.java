@@ -4,7 +4,6 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.util.ResourceLoader;
 import uk.ac.shef.dcs.jate.nlp.Chunker;
 import uk.ac.shef.dcs.jate.nlp.InstanceCreator;
-import uk.ac.shef.dcs.jate.nlp.POSTagger;
 import uk.ac.shef.dcs.jate.nlp.opennlp.ChunkerOpenNLP;
 
 import java.io.IOException;

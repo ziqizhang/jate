@@ -1,6 +1,6 @@
 package uk.ac.shef.dcs.jate.nlp.opennlp;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 import uk.ac.shef.dcs.jate.nlp.SentenceSplitter;
 

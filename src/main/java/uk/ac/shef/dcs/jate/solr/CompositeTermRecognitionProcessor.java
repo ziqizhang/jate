@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
 import org.apache.solr.core.SolrCore;
 
@@ -33,20 +31,28 @@ public class CompositeTermRecognitionProcessor implements TermRecognitionProcess
     public Boolean candidateExtraction(SolrCore core, String jatePropertyFile)
             throws IOException, JATEException {
         SolrIndexSearcher indexSearcher = core.getSearcher().get();
-
-        IndexWriter writerIn = core.getSolrCoreState().getIndexWriter(core).get();
-        Map<String,List<CopyField>> copyFields = core.getLatestSchema().getCopyFieldsMap();
-
-        for (int i=0; i<indexSearcher.maxDoc(); i++) {
-            Document doc = indexSearcher.doc(i);
-
-            SolrUtil.copyFields(copyFields, DEFAULT_BOOST_VALUE, doc);
-
-            writerIn.updateDocument(new Term("id",doc.get("id")), doc);
+        IndexWriter writerIn = null;
+        try {
+        	writerIn = core.getSolrCoreState().getIndexWriter(core).get();
+	        Map<String,List<CopyField>> copyFields = core.getLatestSchema().getCopyFieldsMap();
+	
+	        for (int i=0; i<indexSearcher.maxDoc(); i++) {
+	            Document doc = indexSearcher.doc(i);
+	
+	            SolrUtil.copyFields(copyFields, DEFAULT_BOOST_VALUE, doc);
+	
+	            writerIn.updateDocument(new Term("id",doc.get("id")), doc);
+	        }
+	        writerIn.commit();
+	
+	        return true;
+        } finally {
+        	indexSearcher.close();
+        	if (writerIn != null) {
+        		writerIn.close();
+        	}
+        	
         }
-        writerIn.commit();
-
-        return true;
     }
 
 

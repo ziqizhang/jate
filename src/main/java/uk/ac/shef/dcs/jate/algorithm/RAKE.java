@@ -3,7 +3,6 @@ package uk.ac.shef.dcs.jate.algorithm;
 import org.apache.log4j.Logger;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.feature.AbstractFeature;
-import uk.ac.shef.dcs.jate.feature.Cooccurrence;
 import uk.ac.shef.dcs.jate.feature.FrequencyTermBased;
 import uk.ac.shef.dcs.jate.feature.TermComponentIndex;
 import uk.ac.shef.dcs.jate.model.JATETerm;

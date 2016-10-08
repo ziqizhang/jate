@@ -1,14 +1,9 @@
 package org.apache.lucene.analysis.jate;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.util.ResourceLoader;
-import uk.ac.shef.dcs.jate.nlp.InstanceCreator;
-import uk.ac.shef.dcs.jate.nlp.POSTagger;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;

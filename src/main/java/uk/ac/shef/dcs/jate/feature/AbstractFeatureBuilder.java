@@ -1,7 +1,5 @@
 package uk.ac.shef.dcs.jate.feature;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.lucene.index.PostingsEnum;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.util.BytesRef;
@@ -11,7 +9,6 @@ import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.util.SolrUtil;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.*;
 
 /**

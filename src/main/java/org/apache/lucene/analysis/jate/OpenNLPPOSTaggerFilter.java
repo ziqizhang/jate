@@ -16,7 +16,7 @@ import java.util.List;
 
 
 public final class OpenNLPPOSTaggerFilter extends TokenFilter {
-    private static Logger LOG = Logger.getLogger(OpenNLPPOSTaggerFilter.class.getSimpleName());
+    protected static Logger LOG = Logger.getLogger(OpenNLPPOSTaggerFilter.class.getSimpleName());
 
     private POSTagger tagger;
     private int tokenIdx = 0;

@@ -283,15 +283,24 @@ public abstract class App {
             solrServer = new EmbeddedSolrServer(Paths.get(solrHomePath), coreName);
             core = solrServer.getCoreContainer().getCore(coreName);
             result = extract(core, jatePropertyFile);
+            
+//            core.close();
+//            solrServer.close();
+            
+            return result;
         } finally {
-            try {
+//            try {
                 if (core != null) {
                     core.close();
                 }
 
                 if (solrServer != null) {
-                    solrServer.commit();
-
+                    try {
+						solrServer.commit();
+					} catch (SolrServerException e) {
+						log.error(e.toString());
+					}
+                    solrServer.close();
                     //workaround to avoid ERROR "CachingDirectoryFactory:150"
                     solrServer.getCoreContainer().getAllCoreNames().forEach(currentCoreName -> {
                         File lock = Paths.get(solrHomePath, currentCoreName, "data", "index", "write.lock").toFile();
@@ -307,12 +316,11 @@ public abstract class App {
 //                    solrServer.getCoreContainer().shutdown();
 //                    solrServer.close();
 //                }
-            } catch (Exception e) {
-                log.error("Unable to close solr index, error cause:");
-                log.error(ExceptionUtils.getFullStackTrace(e));
-            }
-        }
-        return result;
+//            } catch (Exception e) {
+//                log.error("Unable to close solr index, error cause:");
+//                log.error(ExceptionUtils.getFullStackTrace(e));
+//            }
+        }        
     }
 
     /**
@@ -331,7 +339,7 @@ public abstract class App {
         log.info(" [" + files.size() + "] files are scanned and will be indexed and analysed.");
 
         final EmbeddedSolrServer solrServer = new EmbeddedSolrServer(solrHomePath, coreName);
-        SolrCore core = null;
+        
         JATEProperties jateProp = getJateProperties(jatePropertyFile);
 
         try {

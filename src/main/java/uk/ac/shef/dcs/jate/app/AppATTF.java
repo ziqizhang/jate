@@ -92,26 +92,33 @@ public class AppATTF extends App {
      */
     public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {
         SolrIndexSearcher searcher = core.getSearcher().get();
-
-        this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, FrequencyTermBasedFBMaster.FEATURE_TYPE_TERM);
-        this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
-
-        Algorithm attf = new ATTF();
-        attf.registerFeature(FrequencyTermBased.class.getName(), freqFeature);
-
-        List<String> candidates = new ArrayList<>(freqFeature.getMapTerm2TTF().keySet());
-
-        filterByTTF(candidates);
-
-        List<JATETerm> terms = attf.execute(candidates);
-
-        terms = cutoff(terms);
-        LOG.info("Complete ATTF term extraction.");
-
-        addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
-                properties.getSolrFieldNameID());
-
-        return terms;
+        try {
+	        this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, FrequencyTermBasedFBMaster.FEATURE_TYPE_TERM);
+	        this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
+	
+	        Algorithm attf = new ATTF();
+	        attf.registerFeature(FrequencyTermBased.class.getName(), freqFeature);
+	
+	        List<String> candidates = new ArrayList<>(freqFeature.getMapTerm2TTF().keySet());
+	
+	        filterByTTF(candidates);
+	
+	        List<JATETerm> terms = attf.execute(candidates);
+	
+	        terms = cutoff(terms);
+	        LOG.info("Complete ATTF term extraction.");
+	
+	        addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
+	                properties.getSolrFieldNameID());
+	
+	        return terms;
+        } finally {
+        	try {
+				searcher.close();
+			} catch (IOException e) {
+				LOG.error(e.toString());
+			}
+        }
     }
 
 }

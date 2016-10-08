@@ -91,13 +91,23 @@ public class JATEUtil {
 
         JATEDocument jateDocument = new JATEDocument(docId);
         jateDocument.setPath(file.toAbsolutePath().toString());
+        FileInputStream fileStream = null;
         try {
-            jateDocument.setContent(parseToPlainText(new FileInputStream(file.toFile())));
+        	fileStream = new FileInputStream(file.toFile());
+            jateDocument.setContent(parseToPlainText(fileStream));
+
+            return jateDocument;
         } catch (FileNotFoundException e) {
             throw new JATEException(String.format("File is not found from [%s]", file.toString()));
+        } finally {
+        	if (fileStream != null) {
+        		try {
+					fileStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+        	}
         }
-
-        return jateDocument;
     }
 
     /**

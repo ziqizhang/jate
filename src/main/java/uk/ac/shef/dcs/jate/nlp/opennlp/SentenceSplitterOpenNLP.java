@@ -25,7 +25,12 @@ public class SentenceSplitterOpenNLP implements SentenceSplitter {
 
     public SentenceSplitterOpenNLP(String modelFile) throws IOException {
         LOG.info("Initializing OpenNLP sentence splitter...");
-        sentenceDetector = new SentenceDetectorME(new SentenceModel(new FileInputStream(modelFile)));
+        FileInputStream modelFileStream = new FileInputStream(modelFile);
+        try {
+        	sentenceDetector = new SentenceDetectorME(new SentenceModel(modelFileStream));
+        } finally {
+        	modelFileStream.close();
+        }
     }
 
     public SentenceSplitterOpenNLP(File modelFile) throws IOException {

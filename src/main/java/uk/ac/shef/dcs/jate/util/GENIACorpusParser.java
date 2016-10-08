@@ -19,25 +19,27 @@ public class GENIACorpusParser {
     public static void parse(String xmlFile, String outFolder) throws ParserConfigurationException, IOException, SAXException {
         //Get the DOM Builder Factory
         DocumentBuilder docBuilder =DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        FileInputStream xmlFileStream = new FileInputStream(new File(xmlFile));
+        try {
+			Document document = docBuilder.parse(xmlFileStream);
 
-        Document document =
-                docBuilder.parse(
-                new FileInputStream(new File(xmlFile)));
+			NodeList nodeList = document.getDocumentElement().getElementsByTagName("article");
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Element doc = (Element) nodeList.item(i);
+				NodeList docId = doc.getElementsByTagName("bibliomisc");
+				String id = docId.item(0).getFirstChild().getNodeValue();
+				id = i + "_" + id.replaceAll("[^0-9a-zA-Z]", "_");
+				PrintWriter p = new PrintWriter(outFolder + File.separator + id + ".txt");
+				NodeList sentences = doc.getElementsByTagName("sentence");
+				for (int j = 0; j < sentences.getLength(); j++) {
+					Node sent = sentences.item(j);
 
-        NodeList nodeList = document.getDocumentElement().getElementsByTagName("article");
-        for(int i=0; i<nodeList.getLength(); i++){
-            Element doc = (Element)nodeList.item(i);
-            NodeList docId=doc.getElementsByTagName("bibliomisc");
-            String id = docId.item(0).getFirstChild().getNodeValue();
-            id = i+"_"+id.replaceAll("[^0-9a-zA-Z]","_");
-            PrintWriter p = new PrintWriter(outFolder+File.separator+id+".txt");
-            NodeList sentences=doc.getElementsByTagName("sentence");
-            for(int j=0; j<sentences.getLength(); j++){
-                Node sent = sentences.item(j);
-
-                p.println(sent.getTextContent());
-            }
-            p.close();
+					p.println(sent.getTextContent());
+				}
+				p.close();
+			}
+        } finally {
+        	xmlFileStream.close();
         }
 
     }
@@ -46,36 +48,44 @@ public class GENIACorpusParser {
         //Get the DOM Builder Factory
         DocumentBuilder docBuilder =DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
-        Document document =
-                docBuilder.parse(
-                        new FileInputStream(new File(xmlFile)));
-
-        int total=0;
-        NodeList nodeList = document.getDocumentElement().getElementsByTagName("cons");
-        for(int i=0; i<nodeList.getLength(); i++){
-            Node con = nodeList.item(i);
-            String context = con.getTextContent().replaceAll("[^a-zA-Z0-9]"," ").trim();
-            total+=context.split("\\s+").length;
+        FileInputStream xmlFileStream = new FileInputStream(new File(xmlFile));
+        try {
+	        Document document = docBuilder.parse(xmlFileStream);
+	
+	        int total=0;
+	        NodeList nodeList = document.getDocumentElement().getElementsByTagName("cons");
+	        for(int i=0; i<nodeList.getLength(); i++){
+	            Node con = nodeList.item(i);
+	            String context = con.getTextContent().replaceAll("[^a-zA-Z0-9]"," ").trim();
+	            total+=context.split("\\s+").length;
+	        }
+	        return total;
+        } finally {
+        	if (xmlFileStream != null) {
+        		xmlFileStream.close();
+        	}
         }
-        return total;
     }
 
     public static int countWords(String xmlFile) throws ParserConfigurationException, IOException, SAXException {
         //Get the DOM Builder Factory
         DocumentBuilder docBuilder =DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
-        Document document =
-                docBuilder.parse(
-                        new FileInputStream(new File(xmlFile)));
-
-        int total=0;
-        NodeList nodeList = document.getDocumentElement().getElementsByTagName("sentence");
-        for(int i=0; i<nodeList.getLength(); i++){
-                Node sent = nodeList.item(i);
-            String sentext = sent.getTextContent().replaceAll("[^a-zA-Z0-9]"," ").trim();
-            total+=sentext.split("\\s+").length;
+        FileInputStream fileStream = new FileInputStream(new File(xmlFile));
+        try {
+	        Document document = docBuilder.parse(fileStream);
+	
+	        int total=0;
+	        NodeList nodeList = document.getDocumentElement().getElementsByTagName("sentence");
+	        for(int i=0; i<nodeList.getLength(); i++){
+	                Node sent = nodeList.item(i);
+	            String sentext = sent.getTextContent().replaceAll("[^a-zA-Z0-9]"," ").trim();
+	            total+=sentext.split("\\s+").length;
+	        }
+	        return total;
+        } finally {
+        	fileStream.close();
         }
-        return total;
     }
 
     public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException {

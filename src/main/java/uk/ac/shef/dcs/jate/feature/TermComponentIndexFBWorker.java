@@ -8,8 +8,9 @@ import java.util.List;
  * Created by - on 25/02/2016.
  */
 public class TermComponentIndexFBWorker extends JATERecursiveTaskWorker<String, Integer> {
-
-    private TermComponentIndex ctciFeature;
+	private static final long serialVersionUID = -2181124313058459305L;
+	
+	private TermComponentIndex ctciFeature;
     public TermComponentIndexFBWorker(List<String> tasks, int maxTasksPerWorker,
                                       TermComponentIndex ctciFeature) {
         super(tasks, maxTasksPerWorker);

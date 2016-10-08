@@ -247,7 +247,7 @@
                 <version>${maven-gpg-plugin.version}</version>
                 <!-- set to skip the check -->
                 <configuration>
-                    <skip>false</skip>
+                    <skip>true</skip>
                 </configuration>
                 <executions>
                     <execution>

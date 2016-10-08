@@ -144,9 +144,10 @@ public abstract class ACLRDTECTest {
         if (file == null || file.toString().contains(".DS_Store")) {
             return;
         }
-
+        FileInputStream fileStream = null; 
         try {
-            JATEDocument jateDocument = JATEUtil.loadACLRDTECDocument(new FileInputStream(file.toFile()));
+        	fileStream = new FileInputStream(file.toFile());
+            JATEDocument jateDocument = JATEUtil.loadACLRDTECDocument(fileStream);
 
             if(jateDocument.getContent().trim().length()!=0)
                 JATEUtil.addNewDoc(server, jateDocument.getId(), jateDocument.getId(), jateDocument.getContent(), jateProp, commit);
@@ -156,6 +157,13 @@ public abstract class ACLRDTECTest {
             throw new JATEException(String.format("failed to index [%s]", file.toString()) + ioe.toString());
         } catch (SolrServerException sse) {
             throw new JATEException(String.format("failed to index [%s] ", file.toString()) + sse.toString());
+        } finally {
+        	try {
+        		if (fileStream!=null)
+        			fileStream.close();
+			} catch (IOException e) {
+				LOG.error(e.toString());
+			}
         }
     }
 
@@ -224,13 +232,12 @@ public abstract class ACLRDTECTest {
      */
     protected static List<JATEDocument> loadCorpus() throws JATEException {
         List<JATEDocument> jateDocuments = new ArrayList<>();
-
+        ZipFile aclCorpus = null;
+        ZipInputStream zipIn = null;
         try {
-            ZipFile aclCorpus = null;
-
             aclCorpus = new ZipFile(ACL_RD_TEC_CORPUS_ZIPPED_FILE.toFile());
 
-            ZipInputStream zipIn = new ZipInputStream(new FileInputStream(ACL_RD_TEC_CORPUS_ZIPPED_FILE.toFile()));
+            zipIn = new ZipInputStream(new FileInputStream(ACL_RD_TEC_CORPUS_ZIPPED_FILE.toFile()));
             ZipEntry entry = zipIn.getNextEntry();
 
             // iterates over entries in the zip file
@@ -250,6 +257,20 @@ public abstract class ACLRDTECTest {
             }
         } catch (IOException e) {
             throw new JATEException(ACL_RD_TEC_CORPUS_ZIPPED_FILE.toString() + " not found!");
+        } finally {
+        	if (zipIn != null){
+				try {
+					zipIn.close();
+				} catch (IOException e) {
+					LOG.error(e.toString());
+				}
+			}
+        	try {
+        		if (aclCorpus != null)
+        			aclCorpus.close();
+			} catch (IOException e) {
+				LOG.error(e.toString());
+			}
         }
 
         LOG.info("number of jate Documents:" + jateDocuments.size());

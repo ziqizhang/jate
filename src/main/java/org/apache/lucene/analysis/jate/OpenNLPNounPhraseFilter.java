@@ -2,12 +2,8 @@ package org.apache.lucene.analysis.jate;
 
 import opennlp.tools.util.Span;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 
-import org.apache.lucene.util.AttributeSource;
 import uk.ac.shef.dcs.jate.nlp.Chunker;
-import uk.ac.shef.dcs.jate.nlp.POSTagger;
 
 import java.io.IOException;
 import java.util.*;
@@ -81,7 +77,8 @@ public final class OpenNLPNounPhraseFilter extends OpenNLPMWEFilter {
         }
 
         if (chunkStart != -1 && chunkEnds.contains(tokenIdx)) {  //already found a new chunk and now we found its end
-            boolean added=addMWE(tokenIdx);
+            addMWE(tokenIdx);
+            
             //do not increment token index here because end span is exclusive
             //tokenIdx++;
             return true;
