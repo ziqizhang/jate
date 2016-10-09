@@ -9,11 +9,11 @@ import java.util.*;
 class ChiSquareWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> {
 	
 	private static final long serialVersionUID = -5293190120654351590L;
-	protected FrequencyCtxBased termFeatureCtxBased;
-    protected Cooccurrence fCoocurr;
-    protected ChiSquareFrequentTerms fChiSquareFTExpProb;
+    private final FrequencyCtxBased termFeatureCtxBased;
+    private final Cooccurrence fCoocurr;
+    private final ChiSquareFrequentTerms fChiSquareFTExpProb;
 
-    public ChiSquareWorker(List<String> terms, int maxTasksPerWorker,
+    ChiSquareWorker(List<String> terms, int maxTasksPerWorker,
                            FrequencyCtxBased termFeatureCtxBased,
                            Cooccurrence fCoocurr,
                            ChiSquareFrequentTerms fChiSquareFTExpProb) {

@@ -290,16 +290,16 @@ public abstract class App {
             return result;
         } finally {
 //            try {
-                if (core != null) {
-                    core.close();
-                }
-
                 if (solrServer != null) {
-                    try {
-						solrServer.commit();
-					} catch (SolrServerException e) {
-						log.error(e.toString());
-					}
+//                    try {
+//						solrServer.commit();
+//					} catch (SolrServerException e) {
+//						log.error(e.toString());
+//					}
+
+                    if (core != null) {
+                        core.close();
+                    }
                     solrServer.close();
                     //workaround to avoid ERROR "CachingDirectoryFactory:150"
                     solrServer.getCoreContainer().getAllCoreNames().forEach(currentCoreName -> {
@@ -469,7 +469,7 @@ public abstract class App {
                 if (this.freqFeature.getTTF(t) < prefilterMinTTF)
                     it.remove();
             }
-            log.debug(String.format("filtered term candidate size: [%s]", candidates));
+            log.debug(String.format("filtered term candidate size: [%s]", candidates.size()));
         }
     }
 

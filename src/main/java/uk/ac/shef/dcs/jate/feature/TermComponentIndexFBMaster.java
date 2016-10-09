@@ -25,8 +25,7 @@ public class TermComponentIndexFBMaster extends AbstractFeatureBuilder {
         int cores = properties.getMaxCPUCores();
         cores = cores == 0 ? 1 : cores;
         int maxPerThread = candidates.size() / cores;
-        if (maxPerThread == 0)
-            maxPerThread = 50;
+        maxPerThread = getMaxPerThread(maxPerThread);
 
         LOG.info("Beginning building features (TermComponentIndex). Total terms=" + candidates.size() + ", cpu cores=" +
                 cores + ", max per core=" + maxPerThread);
@@ -39,5 +38,14 @@ public class TermComponentIndexFBMaster extends AbstractFeatureBuilder {
         LOG.info(sb.toString());
 
         return feature;
+    }
+
+    private int getMaxPerThread(int maxPerThread) {
+        if (maxPerThread < MIN_SEQUENTIAL_THRESHOLD) {
+            maxPerThread = MIN_SEQUENTIAL_THRESHOLD;
+        } else if (maxPerThread > MAX_SEQUENTIAL_THRESHOLD) {
+            maxPerThread = MAX_SEQUENTIAL_THRESHOLD;
+        }
+        return maxPerThread;
     }
 }

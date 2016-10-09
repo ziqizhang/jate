@@ -20,6 +20,19 @@ public abstract class AbstractFeatureBuilder {
 
     protected JATEProperties properties;
 
+    /**
+     * setting SEQUENTIAL_THRESHOLD (or MAX_TASKS_PER_WORKER) to a good-in-practice value is a trade-off.
+     * The documentation for the ForkJoin framework suggests creating parallel subtasks until
+     * the number of basic computation steps is somewhere over 100 and less than 10,000.
+     *
+     * The exact number is not crucial provided you avoid extremes.
+     *
+     * @see <a href="http://homes.cs.washington.edu/~djg/teachingMaterials/grossmanSPAC_forkJoinFramework.html"/>
+     * @see <a href="http://stackoverflow.com/questions/19925820/fork-join-collecting-results/19926423#19926423"/>
+     */
+    protected final static int MIN_SEQUENTIAL_THRESHOLD = 100;
+    protected final static int MAX_SEQUENTIAL_THRESHOLD = 10000;
+
     public AbstractFeatureBuilder(SolrIndexSearcher solrIndexSearcher, JATEProperties properties){
         this.solrIndexSearcher=solrIndexSearcher;
         this.properties=properties;

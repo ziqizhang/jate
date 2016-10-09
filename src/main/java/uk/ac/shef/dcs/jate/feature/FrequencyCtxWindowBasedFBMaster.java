@@ -118,8 +118,7 @@ public class FrequencyCtxWindowBasedFBMaster extends AbstractFeatureBuilder {
             int cores = properties.getMaxCPUCores();
             cores = cores == 0 ? 1 : cores;
             int maxPerThread = allDocs.size() / cores;
-            if (maxPerThread == 0)
-                maxPerThread = 50;
+            maxPerThread = getMaxPerThread(maxPerThread);
 
             FrequencyCtxWindowBasedFBWorker worker = new
                     FrequencyCtxWindowBasedFBWorker(feature, properties, allDocs, allCandidates,
@@ -143,5 +142,14 @@ public class FrequencyCtxWindowBasedFBMaster extends AbstractFeatureBuilder {
             throw new JATEException(sb.toString());
         }
         return feature;
+    }
+
+    private int getMaxPerThread(int maxPerThread) {
+        if (maxPerThread < MIN_SEQUENTIAL_THRESHOLD) {
+            maxPerThread = MIN_SEQUENTIAL_THRESHOLD;
+        } else if(maxPerThread > MAX_SEQUENTIAL_THRESHOLD) {
+            maxPerThread = MAX_SEQUENTIAL_THRESHOLD;
+        }
+        return maxPerThread;
     }
 }

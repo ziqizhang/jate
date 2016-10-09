@@ -48,6 +48,7 @@ public class ChiSquare extends Algorithm {
                 termFeatureCtxBased, fFeatureCoocurr, refTermExpProb
                 );
         List<JATETerm> result = forkJoinPool.invoke(worker);
+        LOG.info("Complete chisquare calculation.");
         Collections.sort(result);
         LOG.info("Complete");
         return result;

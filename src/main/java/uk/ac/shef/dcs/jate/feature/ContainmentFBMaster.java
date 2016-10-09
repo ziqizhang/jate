@@ -32,9 +32,7 @@ public class ContainmentFBMaster extends AbstractFeatureBuilder {
         //start workers
         int cores = properties.getMaxCPUCores();
         cores = cores == 0 ? 1 : cores;
-        int maxPerThread = uniqueCandidateTerms.size() / cores;
-        if (maxPerThread == 0)
-            maxPerThread = 50;
+        int maxPerThread = getMaxPerThread(cores);
 
         StringBuilder sb = new StringBuilder("Building features using cpu cores=");
         sb.append(cores).append(", total terms=").append(uniqueCandidateTerms.size()).append(", max per worker=")
@@ -51,5 +49,15 @@ public class ContainmentFBMaster extends AbstractFeatureBuilder {
         LOG.info(sb.toString());
 
         return feature;
+    }
+
+    private int getMaxPerThread(int cores) {
+        int maxPerThread = uniqueCandidateTerms.size() / cores;
+        if (maxPerThread < MIN_SEQUENTIAL_THRESHOLD) {
+            maxPerThread = MIN_SEQUENTIAL_THRESHOLD;
+        } else if (maxPerThread > MAX_SEQUENTIAL_THRESHOLD) {
+            maxPerThread = MAX_SEQUENTIAL_THRESHOLD;
+        }
+        return maxPerThread;
     }
 }

@@ -42,11 +42,22 @@ import org.apache.log4j.Logger;
  */
 public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
     private static final Logger LOG = Logger.getLogger(CooccurrenceFBMaster.class.getName());
-    protected FrequencyCtxBased frequencyCtxBased; //frequency-in-context of target terms
-    protected FrequencyCtxBased ref_frequencyCtxBased; //frequency-in-context of ref terms, i.e. which co-occur with target terms
-    protected FrequencyTermBased frequencyTermBased; //frequency info of target terms
-    protected int minTTF;
-    protected int minTCF;
+    private FrequencyCtxBased frequencyCtxBased; //frequency-in-context of target terms
+    private FrequencyCtxBased ref_frequencyCtxBased; //frequency-in-context of ref terms, i.e. which co-occur with target terms
+    private FrequencyTermBased frequencyTermBased; //frequency info of target terms
+    private int minTTF;
+    private int minTCF;
+    /**
+     * setting MAX_TASKS_PER_WORKER (or SEQUENTIAL_THRESHOLD) to a good-in-practice value is a trade-off.
+     * The documentation for the ForkJoin framework suggests creating parallel subtasks until
+     * the number of basic computation steps is somewhere over 100 and less than 10,000.
+     *
+     * The exact number is not crucial provided you avoid extremes.
+     *
+     * @see <a href="http://homes.cs.washington.edu/~djg/teachingMaterials/grossmanSPAC_forkJoinFramework.html"/>
+     * @see <a href="http://stackoverflow.com/questions/19925820/fork-join-collecting-results/19926423#19926423"/>
+     */
+    private final static int MAX_TASKS_PER_WORKER = 10000;
 
 
     public CooccurrenceFBMaster(SolrIndexSearcher solrIndexSearcher, JATEProperties properties,
@@ -85,7 +96,8 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
 
         LOG.info("Filtering candidates with min.ttf=" + minTTF + " min.tcf=" + minTCF);
         Set<String> termsPassingPrefilter = new HashSet<>();
-        for (ContextWindow ctx : contextWindows) {//now go thru the selected context windows, select target terms that satisfy selection thresholds
+        for (ContextWindow ctx : contextWindows) {
+            //now go thru the selected context windows, select target terms that satisfy selection thresholds
             Map<String, Integer> termsInContext = frequencyCtxBased.getTFIC(ctx);
             if (minTTF == 0 && minTCF == 0)
                 termsPassingPrefilter.addAll(termsInContext.keySet());
@@ -106,7 +118,7 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
         CooccurrenceFBWorker worker = new
                 CooccurrenceFBWorker(feature, contextWindows,
                 frequencyTermBased, minTTF, frequencyCtxBased, ref_frequencyCtxBased,
-                minTCF, Integer.MAX_VALUE);
+                minTCF, MAX_TASKS_PER_WORKER);
 
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
         int total = forkJoinPool.invoke(worker);
@@ -121,12 +133,15 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
         Map<String, ContextOverlap> overlaps = frequencyCtxBased.getCtxOverlapZones();
         if (overlaps.size() > 0) {
             LOG.info("Correcting double counted co-occurrences in context overlapping zones, total zones=" + overlaps.size());
+            Map<String, Integer> freq = new HashMap<>();
+            Map<String, Integer> ref_freq = new HashMap<>();
+
             for (Map.Entry<String, ContextOverlap> en : overlaps.entrySet()) {
                 String key = en.getKey();
                 ContextOverlap co = en.getValue();
 
                 //a map of unique target terms found in this overlap zone and their frequencies
-                Map<String, Integer> freq = new HashMap<>();
+                freq.clear();
                 for (String t : co.getTerms()) {
                     Integer f = freq.get(t);
                     f = f == null ? 0 : f;
@@ -140,7 +155,7 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
                 //get the corresponding context overlap object created for the reference terms
                 ContextOverlap ref_co = ref_frequencyCtxBased.getCtxOverlapZones().get(key);
                 //a map of unique reference terms and their frequency within the overlap zone for ref terms
-                Map<String, Integer> ref_freq = new HashMap<>();
+                ref_freq.clear();
                 if (ref_co != null) {
                     for (String t : ref_co.getTerms()) {
                         Integer f = ref_freq.get(t);

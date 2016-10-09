@@ -35,9 +35,8 @@ public class ChiSquareFrequentTermsFBMaster extends AbstractFeatureBuilder {
 
         int cores = properties.getMaxCPUCores();
         cores = cores == 0 ? 1 : cores;
-        int maxPerThread = allFrequentTerms.size() / cores;
-        if (maxPerThread == 0)
-            maxPerThread = 50;
+
+        int maxPerThread = getMaxPerThread(cores);
 
         LOG.info("Beginning building features (ChiSquare frequent terms). Total terms=" + allFrequentTerms.size() + ", cpu cores=" +
                 cores + ", max per core=" + maxPerThread);
@@ -49,7 +48,16 @@ public class ChiSquareFrequentTermsFBMaster extends AbstractFeatureBuilder {
         StringBuilder sb = new StringBuilder("Complete building features. Total processed terms = " + total);
         LOG.info(sb.toString());
 
-
         return feature;
+    }
+
+    private int getMaxPerThread(int cores) {
+        int maxPerThread = allFrequentTerms.size() / cores;
+        if (maxPerThread < MIN_SEQUENTIAL_THRESHOLD) {
+            maxPerThread = MIN_SEQUENTIAL_THRESHOLD;
+        } else if(maxPerThread > MAX_SEQUENTIAL_THRESHOLD) {
+            maxPerThread = MAX_SEQUENTIAL_THRESHOLD;
+        }
+        return maxPerThread;
     }
 }

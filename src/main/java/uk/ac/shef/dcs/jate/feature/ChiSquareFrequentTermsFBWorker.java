@@ -6,18 +6,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created by - on 22/02/2016.
- */
+
 class ChiSquareFrequentTermsFBWorker extends JATERecursiveTaskWorker<String, Integer> {
+
+    private static final long serialVersionUID = -1208424489000405973L;
 
     private final Map<ContextWindow, Integer> ctx2TTF;
     private final Map<String, Set<ContextWindow>> term2Ctx;
-    private ChiSquareFrequentTerms feature;
+    private final ChiSquareFrequentTerms feature;
     private final int ttfInCorpus;
-    private static final long serialVersionUID = -1208424489000405973L;
 
-    public ChiSquareFrequentTermsFBWorker(List<String> tasks, int maxTasksPerWorker,
+    ChiSquareFrequentTermsFBWorker(List<String> tasks, int maxTasksPerWorker,
                                           Map<ContextWindow, Integer> ctx2TTF,
                                           Map<String, Set<ContextWindow>> term2Ctx,
                                           ChiSquareFrequentTerms feature,

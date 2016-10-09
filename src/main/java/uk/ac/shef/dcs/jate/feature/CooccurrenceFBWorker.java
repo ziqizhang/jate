@@ -15,12 +15,12 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<ContextWindow,
 	
 	private static final long serialVersionUID = 2618520228983802927L;
 	private static final Logger LOG = Logger.getLogger(CooccurrenceFBWorker.class.getName());
-    protected FrequencyCtxBased frequencyCtxBased;
-    protected FrequencyTermBased frequencyTermBased;
-    protected FrequencyCtxBased ref_frequencyCtxBased;
-    protected int minTTF;
-    protected int minTCF;
-    protected Cooccurrence feature;
+    private final FrequencyCtxBased frequencyCtxBased;
+    private final FrequencyTermBased frequencyTermBased;
+    private final FrequencyCtxBased ref_frequencyCtxBased;
+    private final int minTTF;
+    private final int minTCF;
+    protected final Cooccurrence feature;
 
     public CooccurrenceFBWorker(Cooccurrence feature, List<ContextWindow> contextWindowIds,
                                 FrequencyTermBased frequencyTermBased,
@@ -64,7 +64,10 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<ContextWindow,
         int total=0;
 
         int totalTermsInContext=0, totalRefTermsInContext=0;
+        List<String> termsInContext = new ArrayList<>();
+
         for (ContextWindow ctx : contextWindows) {
+            termsInContext.clear();
             //get the reference terms appearing in this ctx object and their frequency
             Map<String, Integer> refTerm2TFIC=ref_frequencyCtxBased.getTFIC(ctx);
             /*if(refTerm2TFIC.size()==0) //it is possible because ref-term may not appear in this context
@@ -75,21 +78,21 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<ContextWindow,
             //NOTE!!!: it is possible that there are no target terms in this context, due to target term filtering
             //         As a result, the actual indexed reference terms in this co-occurrence feature may not be identical
             //         to ref_frequencyCtxBased.getMapTerm2CtxId().
-            List<String> terms = new ArrayList<>(term2TFIC.keySet());
-            totalTermsInContext+=terms.size();
+            termsInContext.addAll(term2TFIC.keySet());
+
+            totalTermsInContext+=termsInContext.size();
             totalRefTermsInContext+=refTerm2TFIC.size();
-            for(int i=0; i<terms.size(); i++){
-                String targetTerm = terms.get(i);
+            for (String targetTerm : termsInContext) {
                 if ((minTTF > 0 && frequencyTermBased.getTTF(targetTerm) < minTTF)
-                        || (minTCF>0&& frequencyCtxBased.getContexts(targetTerm).size() < minTCF))
+                        || (minTCF > 0 && frequencyCtxBased.getContexts(targetTerm).size() < minTCF))
                     continue;
 
                 int targetFIC = term2TFIC.get(targetTerm); //frequency of term in this context
                 int targetIdx = feature.lookupAndIndexTerm(targetTerm);
 
                 //now go through each reference term to be considered and check cooccurrence:
-                for(Map.Entry<String, Integer> en : refTerm2TFIC.entrySet()){
-                    String refTerm=en.getKey();
+                for (Map.Entry<String, Integer> en : refTerm2TFIC.entrySet()) {
+                    String refTerm = en.getKey();
                     if (refTerm.equals(targetTerm))
                         continue;
 
@@ -104,12 +107,13 @@ public class CooccurrenceFBWorker extends JATERecursiveTaskWorker<ContextWindow,
 
             //debug
             if(total%100000==0){
-                LOG.debug(total + "/" + contextWindows.size() + " (t=" + totalTermsInContext + " x reft=" + totalRefTermsInContext+")");
+                LOG.info(total + "/" + contextWindows.size() + " (t=" + totalTermsInContext + " x reft=" + totalRefTermsInContext+")");
                 totalTermsInContext=0;
                 totalRefTermsInContext=0;
             }
         }
 
+        LOG.info("complete calculation for one worker: total:" + total);
         return total;
     }
 }

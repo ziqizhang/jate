@@ -7,9 +7,6 @@ import uk.ac.shef.dcs.jate.JATEProperties;
 
 import java.util.*;
 
-/**
- * Created by - on 08/10/2015.
- */
 public class FrequencyCtxBasedCopier extends AbstractFeatureBuilder {
 
     private static final Logger LOG = Logger.getLogger(FrequencyCtxBasedCopier.class.getName());

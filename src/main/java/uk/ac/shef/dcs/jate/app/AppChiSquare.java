@@ -4,7 +4,6 @@ import org.apache.solr.core.SolrCore;
 import org.apache.solr.search.SolrIndexSearcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.algorithm.ChiSquare;
@@ -13,7 +12,8 @@ import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 public class AppChiSquare extends App {
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -21,9 +21,9 @@ public class AppChiSquare extends App {
     private double frequentTermFT = 0.3;
 
     /**
-     * @param args  command-line params accepting solr home path, solr core name
-     *              <p>
-     *              and more optional run-time parameters
+     * @param args command-line params accepting solr home path, solr core name
+     *             <p>
+     *             and more optional run-time parameters
      * @see uk.ac.shef.dcs.jate.app.AppParams
      * <p>
      * Chisquare specific setting: frequent term cutoff percentage
@@ -62,8 +62,8 @@ public class AppChiSquare extends App {
     }
 
     /**
-     * @param initParams  initial parameters including pre-filtering and post-filtering parameters
-     *                    and chisquare specific parameter
+     * @param initParams initial parameters including pre-filtering and post-filtering parameters
+     *                   and chisquare specific parameter
      * @throws JATEException
      * @see uk.ac.shef.dcs.jate.app.AppParams
      */
@@ -73,7 +73,7 @@ public class AppChiSquare extends App {
     }
 
     /**
-     * @param initParams  chisquare specific initial parameter
+     * @param initParams chisquare specific initial parameter
      * @throws JATEException
      * @see uk.ac.shef.dcs.jate.app.AppParams#CHISQUERE_FREQ_TERM_CUTOFF_PERCENTAGE
      */
@@ -104,48 +104,54 @@ public class AppChiSquare extends App {
     }
 
     public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {
+        log.info("extract terms from core ... ");
         SolrIndexSearcher searcher = core.getSearcher().get();
         try {
-        FrequencyTermBasedFBMaster ftbb = new FrequencyTermBasedFBMaster(searcher, properties, 0);
-        FrequencyTermBased ft = (FrequencyTermBased) ftbb.build();
+            FrequencyTermBasedFBMaster ftbb = new FrequencyTermBasedFBMaster(searcher, properties, 0);
+            FrequencyTermBased ft = (FrequencyTermBased) ftbb.build();
 
-        //sentence is a context
-        FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties, 0);
-        FrequencyCtxBased fcs = (FrequencyCtxBased) fcsbb.build();
-        FrequencyCtxBased ref_fcs = (FrequencyCtxBased)
-                (new FrequencyCtxBasedCopier(searcher, properties, fcs, ft, frequentTermFT).build());
-        //window is a context
+            //sentence is a context
+            FrequencyCtxSentenceBasedFBMaster fcsbb = new FrequencyCtxSentenceBasedFBMaster(searcher, properties, 0);
+            FrequencyCtxBased fcs = (FrequencyCtxBased) fcsbb.build();
+            FrequencyCtxBased ref_fcs = (FrequencyCtxBased)
+                    (new FrequencyCtxBasedCopier(searcher, properties, fcs, ft, frequentTermFT).build());
+            //window is a context
             /*FrequencyCtxWindowBasedFBMaster fcsbb = new FrequencyCtxWindowBasedFBMaster(searcher, properties, null, 5, 0);
             FrequencyCtxBased fcsb = (FrequencyCtxBased) fcsbb.build();
             FrequencyCtxBased ref_fcsb = (FrequencyCtxBased)
                     (new FrequencyCtxWindowBasedFBMaster(searcher, properties, fcsb.getMapCtx2TTF().keySet(), 5, 0).build());*/
 
-        CooccurrenceFBMaster cob = new CooccurrenceFBMaster(searcher, properties, ft,
-                this.prefilterMinTTF, fcs, ref_fcs, this.prefilterMinTCF);
-        Cooccurrence co = (Cooccurrence) cob.build();
+            CooccurrenceFBMaster cob = new CooccurrenceFBMaster(searcher, properties, ft,
+                    this.prefilterMinTTF, fcs, ref_fcs, this.prefilterMinTCF);
+            Cooccurrence co = (Cooccurrence) cob.build();
 
-        //feature expected probability for frequent terms
-        ChiSquareFrequentTermsFBMaster cf = new ChiSquareFrequentTermsFBMaster(
-                ref_fcs.getMapCtx2TTF(), ref_fcs.getTerm2Ctx(), ft.getCorpusTotal(), properties);
-        ChiSquareFrequentTerms cff = (ChiSquareFrequentTerms) cf.build();
+            //feature expected probability for frequent terms
+            ChiSquareFrequentTermsFBMaster cf = new ChiSquareFrequentTermsFBMaster(
+                    ref_fcs.getMapCtx2TTF(), ref_fcs.getTerm2Ctx(), ft.getCorpusTotal(), properties);
+            ChiSquareFrequentTerms cff = (ChiSquareFrequentTerms) cf.build();
 
-        ChiSquare chi = new ChiSquare();
-        chi.registerFeature(FrequencyCtxBased.class.getName() + ChiSquare.SUFFIX_TERM, fcs);
-        chi.registerFeature(Cooccurrence.class.getName(), co);
-        chi.registerFeature(ChiSquareFrequentTerms.class.getName(), cff);
+            ChiSquare chi = new ChiSquare();
+            chi.registerFeature(FrequencyCtxBased.class.getName() + ChiSquare.SUFFIX_TERM, fcs);
+            chi.registerFeature(Cooccurrence.class.getName(), co);
+            chi.registerFeature(ChiSquareFrequentTerms.class.getName(), cff);
 
-        List<JATETerm> terms = chi.execute(co.getTerms());
-        terms = cutoff(terms);
+            log.info("start to run chisquare ...");
+            List<JATETerm> terms = chi.execute(co.getTerms());
+            log.info("complete chisquare statistics for all terms.");
 
-        addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
-                properties.getSolrFieldNameID());
-        return terms;
+            log.info("post-filtering terms ...");
+            terms = cutoff(terms);
+            log.info("complete postfiltering of terms.");
+
+            addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
+                    properties.getSolrFieldNameID());
+            return terms;
         } finally {
-        	try {
-				searcher.close();
-			} catch (IOException e) {
-				log.error(e.toString());
-			}
+            try {
+                searcher.close();
+            } catch (IOException e) {
+                log.error(e.toString());
+            }
         }
     }
 

@@ -43,8 +43,7 @@ public class FrequencyCtxDocBasedFBMaster extends AbstractFeatureBuilder {
             int cores = properties.getMaxCPUCores();
             cores = cores == 0 ? 1 : cores;
             int maxPerThread = allLuceneTerms.size() / cores;
-            if(maxPerThread==0)
-                maxPerThread=50;
+            maxPerThread = getMaxPerThread(maxPerThread);
 
             LOG.info("Beginning building features. Total terms=" + allLuceneTerms.size() + ", cpu cores=" +
                     cores + ", max per core=" + maxPerThread);
@@ -64,5 +63,14 @@ public class FrequencyCtxDocBasedFBMaster extends AbstractFeatureBuilder {
             LOG.error(sb.toString());
         }
         return feature;
+    }
+
+    private int getMaxPerThread(int maxPerThread) {
+        if(maxPerThread < MIN_SEQUENTIAL_THRESHOLD) {
+            maxPerThread = MIN_SEQUENTIAL_THRESHOLD;
+        } else if (maxPerThread > MAX_SEQUENTIAL_THRESHOLD) {
+            maxPerThread = MAX_SEQUENTIAL_THRESHOLD;
+        }
+        return maxPerThread;
     }
 }

@@ -46,8 +46,7 @@ public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
             int cores = properties.getMaxCPUCores();
             cores = (cores == 0) ? DEFAULT_CPU_CORES : cores;
             int maxPerThread = all.size() / cores;
-            if (maxPerThread == 0)
-                maxPerThread = 50;
+            maxPerThread = getMaxPerThread(maxPerThread);
 
             StringBuilder sb = new StringBuilder("Building features using cpu cores=");
             sb.append(cores).append(", total=").append(all.size()).append(", max per worker=")
@@ -71,5 +70,14 @@ public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
             throw new JATEException(sb.toString());
         }
         return feature;
+    }
+
+    private int getMaxPerThread(int maxPerThread) {
+        if (maxPerThread < MIN_SEQUENTIAL_THRESHOLD) {
+            maxPerThread = MIN_SEQUENTIAL_THRESHOLD;
+        } else if (maxPerThread > MAX_SEQUENTIAL_THRESHOLD) {
+            maxPerThread = MAX_SEQUENTIAL_THRESHOLD;
+        }
+        return maxPerThread;
     }
 }
