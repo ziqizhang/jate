@@ -85,9 +85,7 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
         //start workers
         int cores = properties.getMaxCPUCores();
         cores = cores == 0 ? 1 : cores;
-        int maxPerThread = contextWindows.size() / cores;
-        if (maxPerThread == 0)
-            maxPerThread = 50;
+        int maxPerThread = getMaxPerThread(contextWindows, cores);
 
         StringBuilder sb = new StringBuilder("Building features using cpu cores=");
         sb.append(cores).append(", total ctx where reference terms appear =").append(contextWindows.size()).append(", max per worker=")
@@ -118,7 +116,7 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
         CooccurrenceFBWorker worker = new
                 CooccurrenceFBWorker(feature, contextWindows,
                 frequencyTermBased, minTTF, frequencyCtxBased, ref_frequencyCtxBased,
-                minTCF, MAX_TASKS_PER_WORKER);
+                minTCF, maxPerThread);
 
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
         int total = forkJoinPool.invoke(worker);
@@ -194,5 +192,15 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
         LOG.info(sb.toString());
 
         return feature;
+    }
+
+    private int getMaxPerThread(List<ContextWindow> contextWindows, int cores) {
+        int maxPerThread = contextWindows.size() / cores;
+        if (maxPerThread < MIN_SEQUENTIAL_THRESHOLD) {
+            maxPerThread = MIN_SEQUENTIAL_THRESHOLD;
+        } else if (maxPerThread > MAX_SEQUENTIAL_THRESHOLD){
+            maxPerThread = MAX_SEQUENTIAL_THRESHOLD;
+        }
+        return maxPerThread;
     }
 }
