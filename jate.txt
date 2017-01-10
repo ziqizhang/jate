@@ -1,0 +1,737 @@
+0      2017-01-10 12:26:58,969 INFO  jate.nlp.opennlp.SentenceSplitterOpenNLP  - Initializing OpenNLP sentence splitter...
+2017-01-10 12:26:58 INFO  SentenceSplitterOpenNLP:37 - Initializing OpenNLP sentence splitter...
+37927  2017-01-10 12:27:36,896 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 500 documents indexed.
+2017-01-10 12:27:36 INFO  AppATEGENIATest:152 - 500 documents indexed.
+57553  2017-01-10 12:27:56,522 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1000 documents indexed.
+2017-01-10 12:27:56 INFO  AppATEGENIATest:152 - 1000 documents indexed.
+77660  2017-01-10 12:28:16,629 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1500 documents indexed.
+2017-01-10 12:28:16 INFO  AppATEGENIATest:152 - 1500 documents indexed.
+98063  2017-01-10 12:28:37,032 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 2000 documents indexed.
+2017-01-10 12:28:37 INFO  AppATEGENIATest:152 - 2000 documents indexed.
+98063  2017-01-10 12:28:37,032 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - Indexing and candidate extraction took [87005] milliseconds
+2017-01-10 12:28:37 INFO  AppATEGENIATest:166 - Indexing and candidate extraction took [87005] milliseconds
+99213  2017-01-10 12:28:38,182 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+2017-01-10 12:28:38 INFO  AppATEGENIATest:93 - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+99283  2017-01-10 12:28:38,252 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Building features using cpu cores=8, total=38850, max per worker=4856
+2017-01-10 12:28:38 INFO  FrequencyTermBasedFBMaster:55 - Building features using cpu cores=8, total=38850, max per worker=4856
+100407 2017-01-10 12:28:39,376 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Complete building features. Total=38850 success=38850
+2017-01-10 12:28:39 INFO  FrequencyTermBasedFBMaster:64 - Complete building features. Total=38850 success=38850
+100421 2017-01-10 12:28:39,390 INFO  .jate.feature.TermComponentIndexFBMaster  - Beginning building features (TermComponentIndex). Total terms=38850, cpu cores=8, max per core=4856
+2017-01-10 12:28:39 INFO  TermComponentIndexFBMaster:31 - Beginning building features (TermComponentIndex). Total terms=38850, cpu cores=8, max per core=4856
+100523 2017-01-10 12:28:39,492 INFO  .jate.feature.TermComponentIndexFBMaster  - Complete building features. Total processed terms = 38850
+2017-01-10 12:28:39 INFO  TermComponentIndexFBMaster:39 - Complete building features. Total processed terms = 38850
+100524 2017-01-10 12:28:39,493 INFO  hef.dcs.jate.feature.ContainmentFBMaster  - Building features using cpu cores=8, total terms=38850, max per worker=4856
+2017-01-10 12:28:39 INFO  ContainmentFBMaster:42 - Building features using cpu cores=8, total terms=38850, max per worker=4856
+100547 2017-01-10 12:28:39,516 INFO  hef.dcs.jate.feature.ContainmentFBWorker  - Total terms to process=4856
+2017-01-10 12:28:39 INFO  ContainmentFBWorker:49 - Total terms to process=4856
+100572 2017-01-10 12:28:39,541 INFO  hef.dcs.jate.feature.ContainmentFBWorker  - Total terms to process=4856
+100573 2017-01-10 12:28:39,542 INFO  hef.dcs.jate.feature.ContainmentFBWorker  - Total terms to process=4856
+2017-01-10 12:28:39 INFO  ContainmentFBWorker:49 - Total terms to process=4856
+2017-01-10 12:28:39 INFO  ContainmentFBWorker:49 - Total terms to process=4856
+100573 2017-01-10 12:28:39,542 INFO  hef.dcs.jate.feature.ContainmentFBWorker  - Total terms to process=4856
+2017-01-10 12:28:39 INFO  ContainmentFBWorker:49 - Total terms to process=4856
+100632 2017-01-10 12:28:39,601 INFO  hef.dcs.jate.feature.ContainmentFBWorker  - Total terms to process=4856
+2017-01-10 12:28:39 INFO  ContainmentFBWorker:49 - Total terms to process=4856
+100688 2017-01-10 12:28:39,657 INFO  hef.dcs.jate.feature.ContainmentFBWorker  - Total terms to process=4856
+2017-01-10 12:28:39 INFO  ContainmentFBWorker:49 - Total terms to process=4856
+109478 2017-01-10 12:28:48,447 INFO  hef.dcs.jate.feature.ContainmentFBWorker  - Total terms to process=2428
+2017-01-10 12:28:48 INFO  ContainmentFBWorker:49 - Total terms to process=2428
+110625 2017-01-10 12:28:49,594 INFO  hef.dcs.jate.feature.ContainmentFBWorker  - Total terms to process=2428
+2017-01-10 12:28:49 INFO  ContainmentFBWorker:49 - Total terms to process=2428
+110980 2017-01-10 12:28:49,949 INFO  hef.dcs.jate.feature.ContainmentFBWorker  - Total terms to process=2429
+2017-01-10 12:28:49 INFO  ContainmentFBWorker:49 - Total terms to process=2429
+111074 2017-01-10 12:28:50,043 INFO  hef.dcs.jate.feature.ContainmentFBWorker  - Total terms to process=2429
+2017-01-10 12:28:50 INFO  ContainmentFBWorker:49 - Total terms to process=2429
+114061 2017-01-10 12:28:53,030 INFO  hef.dcs.jate.feature.ContainmentFBMaster  - Complete building features. Total=38850 success=38850
+2017-01-10 12:28:53 INFO  ContainmentFBMaster:51 - Complete building features. Total=38850 success=38850
+114136 2017-01-10 12:28:53,105 INFO      uk.ac.shef.dcs.jate.algorithm.CValue  - Beginning computing CValue, cores=4, total terms=10582, max terms per worker thread=2645
+2017-01-10 12:28:53 INFO  CValue:39 - Beginning computing CValue, cores=4, total terms=10582, max terms per worker thread=2645
+114167 2017-01-10 12:28:53,136 INFO      uk.ac.shef.dcs.jate.algorithm.CValue  - Complete
+2017-01-10 12:28:53 INFO  CValue:46 - Complete
+114172 2017-01-10 12:28:53,141 INFO         uk.ac.shef.dcs.jate.app.AppCValue  - Complete CValue term extraction.
+2017-01-10 12:28:53 INFO  AppCValue:112 - Complete CValue term extraction.
+114173 2017-01-10 12:28:53,142 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - appCValue ranking took [14957] milliseconds
+2017-01-10 12:28:53 INFO  AppATEGENIATest:279 - appCValue ranking took [14957] milliseconds
+125560 2017-01-10 12:29:04,529 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - =============CVALUE GENIA Benchmarking Results==================
+2017-01-10 12:29:04 INFO  AppATEGENIATest:292 - =============CVALUE GENIA Benchmarking Results==================
+125574 2017-01-10 12:29:04,543 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 50 Precision:0.94
+2017-01-10 12:29:04 INFO  AppATEGENIATest:359 -   top 50 Precision:0.94
+125575 2017-01-10 12:29:04,544 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 100 Precision:0.91
+2017-01-10 12:29:04 INFO  AppATEGENIATest:360 -   top 100 Precision:0.91
+125577 2017-01-10 12:29:04,546 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 300 Precision:0.9
+2017-01-10 12:29:04 INFO  AppATEGENIATest:361 -   top 300 Precision:0.9
+125577 2017-01-10 12:29:04,546 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 500 Precision:0.86
+2017-01-10 12:29:04 INFO  AppATEGENIATest:362 -   top 500 Precision:0.86
+125577 2017-01-10 12:29:04,546 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 800 Precision:0.84
+2017-01-10 12:29:04 INFO  AppATEGENIATest:363 -   top 800 Precision:0.84
+125578 2017-01-10 12:29:04,547 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 1000 Precision:0.82
+2017-01-10 12:29:04 INFO  AppATEGENIATest:364 -   top 1000 Precision:0.82
+125578 2017-01-10 12:29:04,547 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 1500 Precision:0.79
+2017-01-10 12:29:04 INFO  AppATEGENIATest:365 -   top 1500 Precision:0.79
+125578 2017-01-10 12:29:04,547 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 2000 Precision:0.77
+2017-01-10 12:29:04 INFO  AppATEGENIATest:366 -   top 2000 Precision:0.77
+125579 2017-01-10 12:29:04,548 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 3000 Precision:0.74
+2017-01-10 12:29:04 INFO  AppATEGENIATest:367 -   top 3000 Precision:0.74
+125579 2017-01-10 12:29:04,548 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 4000 Precision:0.71
+2017-01-10 12:29:04 INFO  AppATEGENIATest:368 -   top 4000 Precision:0.71
+125579 2017-01-10 12:29:04,548 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 5000 Precision:0.65
+2017-01-10 12:29:04 INFO  AppATEGENIATest:369 -   top 5000 Precision:0.65
+125580 2017-01-10 12:29:04,549 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 6000 Precision:0.64
+2017-01-10 12:29:04 INFO  AppATEGENIATest:370 -   top 6000 Precision:0.64
+125580 2017-01-10 12:29:04,549 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 7000 Precision:0.65
+2017-01-10 12:29:04 INFO  AppATEGENIATest:371 -   top 7000 Precision:0.65
+125581 2017-01-10 12:29:04,550 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 8000 Precision:0.65
+2017-01-10 12:29:04 INFO  AppATEGENIATest:372 -   top 8000 Precision:0.65
+125583 2017-01-10 12:29:04,552 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 9000 Precision:0.64
+2017-01-10 12:29:04 INFO  AppATEGENIATest:373 -   top 9000 Precision:0.64
+125583 2017-01-10 12:29:04,552 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 10000 Precision:0.63
+2017-01-10 12:29:04 INFO  AppATEGENIATest:374 -   top 10000 Precision:0.63
+125583 2017-01-10 12:29:04,552 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   overall recall:0.1
+2017-01-10 12:29:04 INFO  AppATEGENIATest:375 -   overall recall:0.1
+125584 2017-01-10 12:29:04,553 INFO  c.shef.dcs.jate.app.BaseEmbeddedSolrTest  - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+2017-01-10 12:29:04 INFO  BaseEmbeddedSolrTest:106 - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+2017-01-10 12:29:08 ERROR SolrCore:1300 - REFCOUNT ERROR: unreferenced org.apache.solr.core.SolrCore@655a17ab (GENIA) has a reference count of 1
+152005 2017-01-10 12:29:30,974 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 500 documents indexed.
+2017-01-10 12:29:30 INFO  AppATEGENIATest:152 - 500 documents indexed.
+169880 2017-01-10 12:29:48,849 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1000 documents indexed.
+2017-01-10 12:29:48 INFO  AppATEGENIATest:152 - 1000 documents indexed.
+189279 2017-01-10 12:30:08,248 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1500 documents indexed.
+2017-01-10 12:30:08 INFO  AppATEGENIATest:152 - 1500 documents indexed.
+209507 2017-01-10 12:30:28,476 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 2000 documents indexed.
+2017-01-10 12:30:28 INFO  AppATEGENIATest:152 - 2000 documents indexed.
+209507 2017-01-10 12:30:28,476 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - Indexing and candidate extraction took [77019] milliseconds
+2017-01-10 12:30:28 INFO  AppATEGENIATest:166 - Indexing and candidate extraction took [77019] milliseconds
+210422 2017-01-10 12:30:29,391 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+2017-01-10 12:30:29 INFO  AppATEGENIATest:93 - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+210454 2017-01-10 12:30:29,423 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Building features using cpu cores=8, total=38850, max per worker=4856
+2017-01-10 12:30:29 INFO  FrequencyTermBasedFBMaster:55 - Building features using cpu cores=8, total=38850, max per worker=4856
+210972 2017-01-10 12:30:29,941 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Complete building features. Total=38850 success=38850
+2017-01-10 12:30:29 INFO  FrequencyTermBasedFBMaster:64 - Complete building features. Total=38850 success=38850
+211015 2017-01-10 12:30:29,984 INFO  eature.FrequencyCtxSentenceBasedFBMaster  - Building features using cpu cores=8, total docs=2000, max per worker=250
+2017-01-10 12:30:29 INFO  FrequencyCtxSentenceBasedFBMaster:56 - Building features using cpu cores=8, total docs=2000, max per worker=250
+211020 2017-01-10 12:30:29,989 INFO  eature.FrequencyCtxSentenceBasedFBWorker  - Total docs to process=250
+2017-01-10 12:30:29 INFO  FrequencyCtxSentenceBasedFBWorker:61 - Total docs to process=250
+211025 2017-01-10 12:30:29,994 INFO  eature.FrequencyCtxSentenceBasedFBWorker  - Total docs to process=250
+211036 2017-01-10 12:30:30,005 INFO  eature.FrequencyCtxSentenceBasedFBWorker  - Total docs to process=250
+2017-01-10 12:30:29 INFO  FrequencyCtxSentenceBasedFBWorker:61 - Total docs to process=250
+211036 2017-01-10 12:30:30,005 INFO  eature.FrequencyCtxSentenceBasedFBWorker  - Total docs to process=250
+211024 2017-01-10 12:30:29,993 INFO  eature.FrequencyCtxSentenceBasedFBWorker  - Total docs to process=250
+2017-01-10 12:30:30 INFO  FrequencyCtxSentenceBasedFBWorker:61 - Total docs to process=250
+2017-01-10 12:30:30 INFO  FrequencyCtxSentenceBasedFBWorker:61 - Total docs to process=250
+211020 2017-01-10 12:30:29,989 INFO  eature.FrequencyCtxSentenceBasedFBWorker  - Total docs to process=250
+2017-01-10 12:30:29 INFO  FrequencyCtxSentenceBasedFBWorker:61 - Total docs to process=250
+2017-01-10 12:30:29 INFO  FrequencyCtxSentenceBasedFBWorker:61 - Total docs to process=250
+211650 2017-01-10 12:30:30,619 INFO  eature.FrequencyCtxSentenceBasedFBWorker  - Total docs to process=250
+2017-01-10 12:30:30 INFO  FrequencyCtxSentenceBasedFBWorker:61 - Total docs to process=250
+211669 2017-01-10 12:30:30,638 INFO  eature.FrequencyCtxSentenceBasedFBWorker  - Total docs to process=250
+2017-01-10 12:30:30 INFO  FrequencyCtxSentenceBasedFBWorker:61 - Total docs to process=250
+211836 2017-01-10 12:30:30,805 INFO  eature.FrequencyCtxSentenceBasedFBMaster  - Complete building features. Total sentence ctx=18275, from total processed docs=2000
+2017-01-10 12:30:30 INFO  FrequencyCtxSentenceBasedFBMaster:61 - Complete building features. Total sentence ctx=18275, from total processed docs=2000
+211848 2017-01-10 12:30:30,817 INFO  dcs.jate.feature.FrequencyCtxBasedCopier  - Copying features using 1 core, filtering 38850 terms.
+2017-01-10 12:30:30 INFO  FrequencyCtxBasedCopier:37 - Copying features using 1 core, filtering 38850 terms.
+211857 2017-01-10 12:30:30,826 INFO  dcs.jate.feature.FrequencyCtxBasedCopier  - Complete filtering, copying for 4206 terms.
+2017-01-10 12:30:30 INFO  FrequencyCtxBasedCopier:52 - Complete filtering, copying for 4206 terms.
+212053 2017-01-10 12:30:31,022 INFO  dcs.jate.feature.FrequencyCtxBasedCopier  - Complete copying features.
+2017-01-10 12:30:31 INFO  FrequencyCtxBasedCopier:70 - Complete copying features.
+212080 2017-01-10 12:30:31,049 INFO  ef.dcs.jate.feature.CooccurrenceFBMaster  - Building features using cpu cores=8, total ctx where reference terms appear =18275, max per worker=2284
+2017-01-10 12:30:31 INFO  CooccurrenceFBMaster:84 - Building features using cpu cores=8, total ctx where reference terms appear =18275, max per worker=2284
+212080 2017-01-10 12:30:31,049 INFO  ef.dcs.jate.feature.CooccurrenceFBMaster  - Filtering candidates with min.ttf=2 min.tcf=2
+2017-01-10 12:30:31 INFO  CooccurrenceFBMaster:86 - Filtering candidates with min.ttf=2 min.tcf=2
+212182 2017-01-10 12:30:31,151 INFO  ef.dcs.jate.feature.CooccurrenceFBMaster  - Beginning building features. Total terms=10430, total contexts=18275
+2017-01-10 12:30:31 INFO  CooccurrenceFBMaster:104 - Beginning building features. Total terms=10430, total contexts=18275
+212183 2017-01-10 12:30:31,152 INFO  ef.dcs.jate.feature.CooccurrenceFBWorker  - Total ctx to process=18275, total ref terms=4206
+2017-01-10 12:30:31 INFO  CooccurrenceFBWorker:62 - Total ctx to process=18275, total ref terms=4206
+212526 2017-01-10 12:30:31,495 INFO  ef.dcs.jate.feature.CooccurrenceFBMaster  - Complete building features, total contexts processed=18275; total indexed candidate terms=10429; total indexed reference terms=4204
+2017-01-10 12:30:31 INFO  CooccurrenceFBMaster:179 - Complete building features, total contexts processed=18275; total indexed candidate terms=10429; total indexed reference terms=4204
+212530 2017-01-10 12:30:31,499 INFO  e.feature.ChiSquareFrequentTermsFBMaster  - Beginning building features (ChiSquare frequent terms). Total terms=4206, cpu cores=8, max per core=525
+2017-01-10 12:30:31 INFO  ChiSquareFrequentTermsFBMaster:42 - Beginning building features (ChiSquare frequent terms). Total terms=4206, cpu cores=8, max per core=525
+212548 2017-01-10 12:30:31,517 INFO  e.feature.ChiSquareFrequentTermsFBMaster  - Complete building features. Total processed terms = 4206
+2017-01-10 12:30:31 INFO  ChiSquareFrequentTermsFBMaster:50 - Complete building features. Total processed terms = 4206
+212549 2017-01-10 12:30:31,518 INFO   uk.ac.shef.dcs.jate.algorithm.ChiSquare  - Beginning computing ChiSquare, cores=4, total terms=10430, max terms per worker thread=2607
+2017-01-10 12:30:31 INFO  ChiSquare:44 - Beginning computing ChiSquare, cores=4, total terms=10430, max terms per worker thread=2607
+212678 2017-01-10 12:30:31,647 INFO   uk.ac.shef.dcs.jate.algorithm.ChiSquare  - Complete
+2017-01-10 12:30:31 INFO  ChiSquare:52 - Complete
+212679 2017-01-10 12:30:31,648 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - appChiSquare ranking took [2254] milliseconds
+2017-01-10 12:30:31 INFO  AppATEGENIATest:238 - appChiSquare ranking took [2254] milliseconds
+225825 2017-01-10 12:30:44,794 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - =============CHISQUARE GENIA Benchmarking Results==================
+2017-01-10 12:30:44 INFO  AppATEGENIATest:250 - =============CHISQUARE GENIA Benchmarking Results==================
+225838 2017-01-10 12:30:44,807 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 50 Precision:0.96
+2017-01-10 12:30:44 INFO  AppATEGENIATest:359 -   top 50 Precision:0.96
+225838 2017-01-10 12:30:44,807 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 100 Precision:0.89
+2017-01-10 12:30:44 INFO  AppATEGENIATest:360 -   top 100 Precision:0.89
+225838 2017-01-10 12:30:44,807 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 300 Precision:0.84
+2017-01-10 12:30:44 INFO  AppATEGENIATest:361 -   top 300 Precision:0.84
+225838 2017-01-10 12:30:44,807 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 500 Precision:0.8
+2017-01-10 12:30:44 INFO  AppATEGENIATest:362 -   top 500 Precision:0.8
+225839 2017-01-10 12:30:44,808 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 800 Precision:0.79
+2017-01-10 12:30:44 INFO  AppATEGENIATest:363 -   top 800 Precision:0.79
+225839 2017-01-10 12:30:44,808 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 1000 Precision:0.78
+2017-01-10 12:30:44 INFO  AppATEGENIATest:364 -   top 1000 Precision:0.78
+225839 2017-01-10 12:30:44,808 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 1500 Precision:0.76
+2017-01-10 12:30:44 INFO  AppATEGENIATest:365 -   top 1500 Precision:0.76
+225839 2017-01-10 12:30:44,808 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 2000 Precision:0.75
+2017-01-10 12:30:44 INFO  AppATEGENIATest:366 -   top 2000 Precision:0.75
+225840 2017-01-10 12:30:44,809 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 3000 Precision:0.73
+2017-01-10 12:30:44 INFO  AppATEGENIATest:367 -   top 3000 Precision:0.73
+225840 2017-01-10 12:30:44,809 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 4000 Precision:0.71
+2017-01-10 12:30:44 INFO  AppATEGENIATest:368 -   top 4000 Precision:0.71
+225841 2017-01-10 12:30:44,810 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 5000 Precision:0.69
+2017-01-10 12:30:44 INFO  AppATEGENIATest:369 -   top 5000 Precision:0.69
+225841 2017-01-10 12:30:44,810 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 6000 Precision:0.67
+2017-01-10 12:30:44 INFO  AppATEGENIATest:370 -   top 6000 Precision:0.67
+225841 2017-01-10 12:30:44,810 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 7000 Precision:0.66
+2017-01-10 12:30:44 INFO  AppATEGENIATest:371 -   top 7000 Precision:0.66
+225841 2017-01-10 12:30:44,810 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 8000 Precision:0.65
+2017-01-10 12:30:44 INFO  AppATEGENIATest:372 -   top 8000 Precision:0.65
+225841 2017-01-10 12:30:44,810 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 9000 Precision:0.64
+2017-01-10 12:30:44 INFO  AppATEGENIATest:373 -   top 9000 Precision:0.64
+225842 2017-01-10 12:30:44,811 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 10000 Precision:0.63
+2017-01-10 12:30:44 INFO  AppATEGENIATest:374 -   top 10000 Precision:0.63
+225842 2017-01-10 12:30:44,811 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   overall recall:0.1
+2017-01-10 12:30:44 INFO  AppATEGENIATest:375 -   overall recall:0.1
+225842 2017-01-10 12:30:44,811 INFO  c.shef.dcs.jate.app.BaseEmbeddedSolrTest  - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+2017-01-10 12:30:44 INFO  BaseEmbeddedSolrTest:106 - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+249538 2017-01-10 12:31:08,507 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 500 documents indexed.
+2017-01-10 12:31:08 INFO  AppATEGENIATest:152 - 500 documents indexed.
+2017-01-10 12:31:24 ERROR SolrCore:1300 - REFCOUNT ERROR: unreferenced org.apache.solr.core.SolrCore@7d7a8f0e (GENIA) has a reference count of 1
+268124 2017-01-10 12:31:27,093 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1000 documents indexed.
+2017-01-10 12:31:27 INFO  AppATEGENIATest:152 - 1000 documents indexed.
+286491 2017-01-10 12:31:45,460 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1500 documents indexed.
+2017-01-10 12:31:45 INFO  AppATEGENIATest:152 - 1500 documents indexed.
+305583 2017-01-10 12:32:04,552 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 2000 documents indexed.
+2017-01-10 12:32:04 INFO  AppATEGENIATest:152 - 2000 documents indexed.
+305584 2017-01-10 12:32:04,553 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - Indexing and candidate extraction took [75088] milliseconds
+2017-01-10 12:32:04 INFO  AppATEGENIATest:166 - Indexing and candidate extraction took [75088] milliseconds
+306798 2017-01-10 12:32:05,767 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+2017-01-10 12:32:05 INFO  AppATEGENIATest:93 - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+306836 2017-01-10 12:32:05,805 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Building features using cpu cores=8, total=38850, max per worker=4856
+2017-01-10 12:32:05 INFO  FrequencyTermBasedFBMaster:55 - Building features using cpu cores=8, total=38850, max per worker=4856
+307195 2017-01-10 12:32:06,164 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Complete building features. Total=38850 success=38850
+2017-01-10 12:32:06 INFO  FrequencyTermBasedFBMaster:64 - Complete building features. Total=38850 success=38850
+307345 2017-01-10 12:32:06,314 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Building features using cpu cores=8, total=18630, max per worker=2328
+2017-01-10 12:32:06 INFO  FrequencyTermBasedFBMaster:55 - Building features using cpu cores=8, total=18630, max per worker=2328
+307565 2017-01-10 12:32:06,534 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Complete building features. Total=18630 success=18630
+2017-01-10 12:32:06 INFO  FrequencyTermBasedFBMaster:64 - Complete building features. Total=18630 success=18630
+308208 2017-01-10 12:32:07,177 INFO  ate.feature.FrequencyCtxDocBasedFBMaster  - Beginning building features. Total terms=38850, cpu cores=8, max per core=4856
+2017-01-10 12:32:07 INFO  FrequencyCtxDocBasedFBMaster:49 - Beginning building features. Total terms=38850, cpu cores=8, max per core=4856
+308859 2017-01-10 12:32:07,828 INFO  ate.feature.FrequencyCtxDocBasedFBMaster  - Complete building features. Total processed terms = 38850/38850
+2017-01-10 12:32:07 INFO  FrequencyCtxDocBasedFBMaster:59 - Complete building features. Total processed terms = 38850/38850
+309022 2017-01-10 12:32:07,991 INFO      uk.ac.shef.dcs.jate.algorithm.TermEx  - Beginning computing TermEx values,, total terms=10582
+2017-01-10 12:32:07 INFO  TermEx:76 - Beginning computing TermEx values,, total terms=10582
+309119 2017-01-10 12:32:08,088 INFO      uk.ac.shef.dcs.jate.algorithm.TermEx  - Complete
+2017-01-10 12:32:08 INFO  TermEx:143 - Complete
+309120 2017-01-10 12:32:08,089 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - appTermEx ranking took [2317] milliseconds
+2017-01-10 12:32:08 INFO  AppATEGENIATest:471 - appTermEx ranking took [2317] milliseconds
+319092 2017-01-10 12:32:18,061 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - =============TERMEX GENIA Benchmarking Results==================
+2017-01-10 12:32:18 INFO  AppATEGENIATest:502 - =============TERMEX GENIA Benchmarking Results==================
+319093 2017-01-10 12:32:18,062 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 50 Precision:0.9
+2017-01-10 12:32:18 INFO  AppATEGENIATest:359 -   top 50 Precision:0.9
+319093 2017-01-10 12:32:18,062 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 100 Precision:0.93
+2017-01-10 12:32:18 INFO  AppATEGENIATest:360 -   top 100 Precision:0.93
+319093 2017-01-10 12:32:18,062 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 300 Precision:0.9
+2017-01-10 12:32:18 INFO  AppATEGENIATest:361 -   top 300 Precision:0.9
+319093 2017-01-10 12:32:18,062 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 500 Precision:0.88
+2017-01-10 12:32:18 INFO  AppATEGENIATest:362 -   top 500 Precision:0.88
+319093 2017-01-10 12:32:18,062 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 800 Precision:0.85
+2017-01-10 12:32:18 INFO  AppATEGENIATest:363 -   top 800 Precision:0.85
+319094 2017-01-10 12:32:18,063 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 1000 Precision:0.86
+2017-01-10 12:32:18 INFO  AppATEGENIATest:364 -   top 1000 Precision:0.86
+319094 2017-01-10 12:32:18,063 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 1500 Precision:0.87
+2017-01-10 12:32:18 INFO  AppATEGENIATest:365 -   top 1500 Precision:0.87
+319094 2017-01-10 12:32:18,063 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 2000 Precision:0.86
+2017-01-10 12:32:18 INFO  AppATEGENIATest:366 -   top 2000 Precision:0.86
+319094 2017-01-10 12:32:18,063 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 3000 Precision:0.84
+2017-01-10 12:32:18 INFO  AppATEGENIATest:367 -   top 3000 Precision:0.84
+319094 2017-01-10 12:32:18,063 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 4000 Precision:0.84
+2017-01-10 12:32:18 INFO  AppATEGENIATest:368 -   top 4000 Precision:0.84
+319094 2017-01-10 12:32:18,063 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 5000 Precision:0.83
+2017-01-10 12:32:18 INFO  AppATEGENIATest:369 -   top 5000 Precision:0.83
+319094 2017-01-10 12:32:18,063 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 6000 Precision:0.81
+2017-01-10 12:32:18 INFO  AppATEGENIATest:370 -   top 6000 Precision:0.81
+319095 2017-01-10 12:32:18,064 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 7000 Precision:0.79
+2017-01-10 12:32:18 INFO  AppATEGENIATest:371 -   top 7000 Precision:0.79
+319095 2017-01-10 12:32:18,064 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 8000 Precision:0.77
+2017-01-10 12:32:18 INFO  AppATEGENIATest:372 -   top 8000 Precision:0.77
+319095 2017-01-10 12:32:18,064 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 9000 Precision:0.72
+2017-01-10 12:32:18 INFO  AppATEGENIATest:373 -   top 9000 Precision:0.72
+319095 2017-01-10 12:32:18,064 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 10000 Precision:0.65
+2017-01-10 12:32:18 INFO  AppATEGENIATest:374 -   top 10000 Precision:0.65
+319095 2017-01-10 12:32:18,064 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   overall recall:0.1
+2017-01-10 12:32:18 INFO  AppATEGENIATest:375 -   overall recall:0.1
+319096 2017-01-10 12:32:18,065 INFO  c.shef.dcs.jate.app.BaseEmbeddedSolrTest  - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+2017-01-10 12:32:18 INFO  BaseEmbeddedSolrTest:106 - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+342534 2017-01-10 12:32:41,503 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 500 documents indexed.
+2017-01-10 12:32:41 INFO  AppATEGENIATest:152 - 500 documents indexed.
+359872 2017-01-10 12:32:58,841 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1000 documents indexed.
+2017-01-10 12:32:58 INFO  AppATEGENIATest:152 - 1000 documents indexed.
+377951 2017-01-10 12:33:16,920 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1500 documents indexed.
+2017-01-10 12:33:16 INFO  AppATEGENIATest:152 - 1500 documents indexed.
+396569 2017-01-10 12:33:35,538 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 2000 documents indexed.
+2017-01-10 12:33:35 INFO  AppATEGENIATest:152 - 2000 documents indexed.
+396570 2017-01-10 12:33:35,539 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - Indexing and candidate extraction took [72894] milliseconds
+2017-01-10 12:33:35 INFO  AppATEGENIATest:166 - Indexing and candidate extraction took [72894] milliseconds
+397813 2017-01-10 12:33:36,782 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+2017-01-10 12:33:36 INFO  AppATEGENIATest:93 - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+397854 2017-01-10 12:33:36,823 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Building features using cpu cores=8, total=38850, max per worker=4856
+2017-01-10 12:33:36 INFO  FrequencyTermBasedFBMaster:55 - Building features using cpu cores=8, total=38850, max per worker=4856
+398175 2017-01-10 12:33:37,144 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Complete building features. Total=38850 success=38850
+2017-01-10 12:33:37 INFO  FrequencyTermBasedFBMaster:64 - Complete building features. Total=38850 success=38850
+398241 2017-01-10 12:33:37,210 INFO         uk.ac.shef.dcs.jate.algorithm.TTF  - Beginning computing TTF values,, total terms=10582
+2017-01-10 12:33:37 INFO  TTF:25 - Beginning computing TTF values,, total terms=10582
+398246 2017-01-10 12:33:37,215 INFO         uk.ac.shef.dcs.jate.algorithm.TTF  - Complete
+2017-01-10 12:33:37 INFO  TTF:32 - Complete
+398246 2017-01-10 12:33:37,215 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - appTTF ranking took [430] milliseconds
+2017-01-10 12:33:37 INFO  AppATEGENIATest:552 - appTTF ranking took [430] milliseconds
+398246 2017-01-10 12:33:37,215 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - termList.size():10582
+2017-01-10 12:33:37 INFO  AppATEGENIATest:557 - termList.size():10582
+408508 2017-01-10 12:33:47,477 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - =============TTF GENIA Benchmarking Results==================
+2017-01-10 12:33:47 INFO  AppATEGENIATest:584 - =============TTF GENIA Benchmarking Results==================
+408509 2017-01-10 12:33:47,478 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 50 Precision:0.96
+2017-01-10 12:33:47 INFO  AppATEGENIATest:359 -   top 50 Precision:0.96
+408509 2017-01-10 12:33:47,478 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 100 Precision:0.88
+2017-01-10 12:33:47 INFO  AppATEGENIATest:360 -   top 100 Precision:0.88
+408509 2017-01-10 12:33:47,478 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 300 Precision:0.84
+2017-01-10 12:33:47 INFO  AppATEGENIATest:361 -   top 300 Precision:0.84
+408509 2017-01-10 12:33:47,478 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 500 Precision:0.82
+2017-01-10 12:33:47 INFO  AppATEGENIATest:362 -   top 500 Precision:0.82
+408509 2017-01-10 12:33:47,478 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 800 Precision:0.82
+2017-01-10 12:33:47 INFO  AppATEGENIATest:363 -   top 800 Precision:0.82
+408510 2017-01-10 12:33:47,479 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 1000 Precision:0.82
+2017-01-10 12:33:47 INFO  AppATEGENIATest:364 -   top 1000 Precision:0.82
+408510 2017-01-10 12:33:47,479 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 1500 Precision:0.8
+2017-01-10 12:33:47 INFO  AppATEGENIATest:365 -   top 1500 Precision:0.8
+408510 2017-01-10 12:33:47,479 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 2000 Precision:0.79
+2017-01-10 12:33:47 INFO  AppATEGENIATest:366 -   top 2000 Precision:0.79
+408510 2017-01-10 12:33:47,479 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 3000 Precision:0.77
+2017-01-10 12:33:47 INFO  AppATEGENIATest:367 -   top 3000 Precision:0.77
+408510 2017-01-10 12:33:47,479 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 4000 Precision:0.74
+2017-01-10 12:33:47 INFO  AppATEGENIATest:368 -   top 4000 Precision:0.74
+408510 2017-01-10 12:33:47,479 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 5000 Precision:0.72
+2017-01-10 12:33:47 INFO  AppATEGENIATest:369 -   top 5000 Precision:0.72
+408511 2017-01-10 12:33:47,480 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 6000 Precision:0.7
+2017-01-10 12:33:47 INFO  AppATEGENIATest:370 -   top 6000 Precision:0.7
+408511 2017-01-10 12:33:47,480 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 7000 Precision:0.68
+2017-01-10 12:33:47 INFO  AppATEGENIATest:371 -   top 7000 Precision:0.68
+408511 2017-01-10 12:33:47,480 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 8000 Precision:0.66
+2017-01-10 12:33:47 INFO  AppATEGENIATest:372 -   top 8000 Precision:0.66
+408511 2017-01-10 12:33:47,480 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 9000 Precision:0.65
+2017-01-10 12:33:47 INFO  AppATEGENIATest:373 -   top 9000 Precision:0.65
+408511 2017-01-10 12:33:47,480 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 10000 Precision:0.63
+2017-01-10 12:33:47 INFO  AppATEGENIATest:374 -   top 10000 Precision:0.63
+408511 2017-01-10 12:33:47,480 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   overall recall:0.1
+2017-01-10 12:33:47 INFO  AppATEGENIATest:375 -   overall recall:0.1
+408512 2017-01-10 12:33:47,481 INFO  c.shef.dcs.jate.app.BaseEmbeddedSolrTest  - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+2017-01-10 12:33:47 INFO  BaseEmbeddedSolrTest:106 - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+2017-01-10 12:33:52 ERROR SolrCore:1300 - REFCOUNT ERROR: unreferenced org.apache.solr.core.SolrCore@f8d2f1c (GENIA) has a reference count of 1
+2017-01-10 12:33:52 ERROR SolrCore:1300 - REFCOUNT ERROR: unreferenced org.apache.solr.core.SolrCore@70ae9f57 (GENIA) has a reference count of 1
+432927 2017-01-10 12:34:11,896 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 500 documents indexed.
+2017-01-10 12:34:11 INFO  AppATEGENIATest:152 - 500 documents indexed.
+449537 2017-01-10 12:34:28,506 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1000 documents indexed.
+2017-01-10 12:34:28 INFO  AppATEGENIATest:152 - 1000 documents indexed.
+468513 2017-01-10 12:34:47,482 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1500 documents indexed.
+2017-01-10 12:34:47 INFO  AppATEGENIATest:152 - 1500 documents indexed.
+487433 2017-01-10 12:35:06,402 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 2000 documents indexed.
+2017-01-10 12:35:06 INFO  AppATEGENIATest:152 - 2000 documents indexed.
+487433 2017-01-10 12:35:06,402 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - Indexing and candidate extraction took [72473] milliseconds
+2017-01-10 12:35:06 INFO  AppATEGENIATest:166 - Indexing and candidate extraction took [72473] milliseconds
+488526 2017-01-10 12:35:07,495 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+2017-01-10 12:35:07 INFO  AppATEGENIATest:93 - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+488562 2017-01-10 12:35:07,531 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Building features using cpu cores=8, total=38850, max per worker=4856
+2017-01-10 12:35:07 INFO  FrequencyTermBasedFBMaster:55 - Building features using cpu cores=8, total=38850, max per worker=4856
+488859 2017-01-10 12:35:07,828 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Complete building features. Total=38850 success=38850
+2017-01-10 12:35:07 INFO  FrequencyTermBasedFBMaster:64 - Complete building features. Total=38850 success=38850
+488999 2017-01-10 12:35:07,968 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Building features using cpu cores=8, total=18630, max per worker=2328
+2017-01-10 12:35:07 INFO  FrequencyTermBasedFBMaster:55 - Building features using cpu cores=8, total=18630, max per worker=2328
+489133 2017-01-10 12:35:08,102 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Complete building features. Total=18630 success=18630
+2017-01-10 12:35:08 INFO  FrequencyTermBasedFBMaster:64 - Complete building features. Total=18630 success=18630
+489819 2017-01-10 12:35:08,788 INFO     uk.ac.shef.dcs.jate.algorithm.GlossEx  - Calculating GlossEx for 10582 candidate terms.
+2017-01-10 12:35:08 INFO  GlossEx:60 - Calculating GlossEx for 10582 candidate terms.
+489841 2017-01-10 12:35:08,810 INFO     uk.ac.shef.dcs.jate.algorithm.GlossEx  - Complete
+2017-01-10 12:35:08 INFO  GlossEx:92 - Complete
+489841 2017-01-10 12:35:08,810 INFO        uk.ac.shef.dcs.jate.app.AppGlossEx  - complete GlossEx term extraction.
+2017-01-10 12:35:08 INFO  AppGlossEx:113 - complete GlossEx term extraction.
+489842 2017-01-10 12:35:08,811 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - appGlossEx ranking took [1314] milliseconds
+2017-01-10 12:35:08 INFO  AppATEGENIATest:323 - appGlossEx ranking took [1314] milliseconds
+489842 2017-01-10 12:35:08,811 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - termList.size():10582
+2017-01-10 12:35:08 INFO  AppATEGENIATest:325 - termList.size():10582
+499798 2017-01-10 12:35:18,767 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - =============GLOSSEX GENIA Benchmarking Results==================
+2017-01-10 12:35:18 INFO  AppATEGENIATest:333 - =============GLOSSEX GENIA Benchmarking Results==================
+499806 2017-01-10 12:35:18,775 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 50 Precision:0.94
+2017-01-10 12:35:18 INFO  AppATEGENIATest:359 -   top 50 Precision:0.94
+499806 2017-01-10 12:35:18,775 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 100 Precision:0.84
+2017-01-10 12:35:18 INFO  AppATEGENIATest:360 -   top 100 Precision:0.84
+499806 2017-01-10 12:35:18,775 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 300 Precision:0.78
+2017-01-10 12:35:18 INFO  AppATEGENIATest:361 -   top 300 Precision:0.78
+499806 2017-01-10 12:35:18,775 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 500 Precision:0.71
+2017-01-10 12:35:18 INFO  AppATEGENIATest:362 -   top 500 Precision:0.71
+499806 2017-01-10 12:35:18,775 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 800 Precision:0.7
+2017-01-10 12:35:18 INFO  AppATEGENIATest:363 -   top 800 Precision:0.7
+499806 2017-01-10 12:35:18,775 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 1000 Precision:0.68
+2017-01-10 12:35:18 INFO  AppATEGENIATest:364 -   top 1000 Precision:0.68
+499806 2017-01-10 12:35:18,775 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 1500 Precision:0.67
+2017-01-10 12:35:18 INFO  AppATEGENIATest:365 -   top 1500 Precision:0.67
+499807 2017-01-10 12:35:18,776 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 2000 Precision:0.68
+2017-01-10 12:35:18 INFO  AppATEGENIATest:366 -   top 2000 Precision:0.68
+499807 2017-01-10 12:35:18,776 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 3000 Precision:0.7
+2017-01-10 12:35:18 INFO  AppATEGENIATest:367 -   top 3000 Precision:0.7
+499807 2017-01-10 12:35:18,776 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 4000 Precision:0.7
+2017-01-10 12:35:18 INFO  AppATEGENIATest:368 -   top 4000 Precision:0.7
+499807 2017-01-10 12:35:18,776 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 5000 Precision:0.7
+2017-01-10 12:35:18 INFO  AppATEGENIATest:369 -   top 5000 Precision:0.7
+499807 2017-01-10 12:35:18,776 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 6000 Precision:0.7
+2017-01-10 12:35:18 INFO  AppATEGENIATest:370 -   top 6000 Precision:0.7
+499807 2017-01-10 12:35:18,776 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 7000 Precision:0.69
+2017-01-10 12:35:18 INFO  AppATEGENIATest:371 -   top 7000 Precision:0.69
+499807 2017-01-10 12:35:18,776 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 8000 Precision:0.68
+2017-01-10 12:35:18 INFO  AppATEGENIATest:372 -   top 8000 Precision:0.68
+499807 2017-01-10 12:35:18,776 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 9000 Precision:0.67
+2017-01-10 12:35:18 INFO  AppATEGENIATest:373 -   top 9000 Precision:0.67
+499808 2017-01-10 12:35:18,777 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 10000 Precision:0.65
+2017-01-10 12:35:18 INFO  AppATEGENIATest:374 -   top 10000 Precision:0.65
+499808 2017-01-10 12:35:18,777 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   overall recall:0.1
+2017-01-10 12:35:18 INFO  AppATEGENIATest:375 -   overall recall:0.1
+499808 2017-01-10 12:35:18,777 INFO  c.shef.dcs.jate.app.BaseEmbeddedSolrTest  - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+2017-01-10 12:35:18 INFO  BaseEmbeddedSolrTest:106 - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+522668 2017-01-10 12:35:41,637 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 500 documents indexed.
+2017-01-10 12:35:41 INFO  AppATEGENIATest:152 - 500 documents indexed.
+539498 2017-01-10 12:35:58,467 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1000 documents indexed.
+2017-01-10 12:35:58 INFO  AppATEGENIATest:152 - 1000 documents indexed.
+557630 2017-01-10 12:36:16,599 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1500 documents indexed.
+2017-01-10 12:36:16 INFO  AppATEGENIATest:152 - 1500 documents indexed.
+576136 2017-01-10 12:36:35,105 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 2000 documents indexed.
+2017-01-10 12:36:35 INFO  AppATEGENIATest:152 - 2000 documents indexed.
+576136 2017-01-10 12:36:35,105 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - Indexing and candidate extraction took [71913] milliseconds
+2017-01-10 12:36:35 INFO  AppATEGENIATest:166 - Indexing and candidate extraction took [71913] milliseconds
+577211 2017-01-10 12:36:36,180 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+2017-01-10 12:36:36 INFO  AppATEGENIATest:93 - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+577241 2017-01-10 12:36:36,210 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Building features using cpu cores=8, total=38850, max per worker=4856
+2017-01-10 12:36:36 INFO  FrequencyTermBasedFBMaster:55 - Building features using cpu cores=8, total=38850, max per worker=4856
+577638 2017-01-10 12:36:36,607 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Complete building features. Total=38850 success=38850
+2017-01-10 12:36:36 INFO  FrequencyTermBasedFBMaster:64 - Complete building features. Total=38850 success=38850
+577772 2017-01-10 12:36:36,741 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Building features using cpu cores=8, total=18630, max per worker=2328
+2017-01-10 12:36:36 INFO  FrequencyTermBasedFBMaster:55 - Building features using cpu cores=8, total=18630, max per worker=2328
+577928 2017-01-10 12:36:36,897 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Complete building features. Total=18630 success=18630
+2017-01-10 12:36:36 INFO  FrequencyTermBasedFBMaster:64 - Complete building features. Total=18630 success=18630
+578491 2017-01-10 12:36:37,460 INFO   uk.ac.shef.dcs.jate.algorithm.Weirdness  - Beginning computing Weirdness values,, total terms=10582
+2017-01-10 12:36:37 INFO  Weirdness:43 - Beginning computing Weirdness values,, total terms=10582
+578579 2017-01-10 12:36:37,548 INFO   uk.ac.shef.dcs.jate.algorithm.Weirdness  - Complete
+2017-01-10 12:36:37 INFO  Weirdness:77 - Complete
+578579 2017-01-10 12:36:37,548 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - appTTF ranking took [1367] milliseconds
+2017-01-10 12:36:37 INFO  AppATEGENIATest:596 - appTTF ranking took [1367] milliseconds
+578580 2017-01-10 12:36:37,549 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - termList.size():10582
+2017-01-10 12:36:37 INFO  AppATEGENIATest:601 - termList.size():10582
+587532 2017-01-10 12:36:46,501 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - =============WEIRDNESS GENIA Benchmarking Results==================
+2017-01-10 12:36:46 INFO  AppATEGENIATest:628 - =============WEIRDNESS GENIA Benchmarking Results==================
+587532 2017-01-10 12:36:46,501 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 50 Precision:0.88
+2017-01-10 12:36:46 INFO  AppATEGENIATest:359 -   top 50 Precision:0.88
+587532 2017-01-10 12:36:46,501 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 100 Precision:0.91
+2017-01-10 12:36:46 INFO  AppATEGENIATest:360 -   top 100 Precision:0.91
+587532 2017-01-10 12:36:46,501 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 300 Precision:0.91
+2017-01-10 12:36:46 INFO  AppATEGENIATest:361 -   top 300 Precision:0.91
+587533 2017-01-10 12:36:46,502 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 500 Precision:0.89
+2017-01-10 12:36:46 INFO  AppATEGENIATest:362 -   top 500 Precision:0.89
+587533 2017-01-10 12:36:46,502 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 800 Precision:0.89
+2017-01-10 12:36:46 INFO  AppATEGENIATest:363 -   top 800 Precision:0.89
+587533 2017-01-10 12:36:46,502 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 1000 Precision:0.89
+2017-01-10 12:36:46 INFO  AppATEGENIATest:364 -   top 1000 Precision:0.89
+587533 2017-01-10 12:36:46,502 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 1500 Precision:0.86
+2017-01-10 12:36:46 INFO  AppATEGENIATest:365 -   top 1500 Precision:0.86
+587533 2017-01-10 12:36:46,502 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 2000 Precision:0.85
+2017-01-10 12:36:46 INFO  AppATEGENIATest:366 -   top 2000 Precision:0.85
+587533 2017-01-10 12:36:46,502 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 3000 Precision:0.81
+2017-01-10 12:36:46 INFO  AppATEGENIATest:367 -   top 3000 Precision:0.81
+587533 2017-01-10 12:36:46,502 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 4000 Precision:0.78
+2017-01-10 12:36:46 INFO  AppATEGENIATest:368 -   top 4000 Precision:0.78
+587533 2017-01-10 12:36:46,502 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 5000 Precision:0.76
+2017-01-10 12:36:46 INFO  AppATEGENIATest:369 -   top 5000 Precision:0.76
+587534 2017-01-10 12:36:46,503 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 6000 Precision:0.73
+2017-01-10 12:36:46 INFO  AppATEGENIATest:370 -   top 6000 Precision:0.73
+587534 2017-01-10 12:36:46,503 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 7000 Precision:0.72
+2017-01-10 12:36:46 INFO  AppATEGENIATest:371 -   top 7000 Precision:0.72
+587534 2017-01-10 12:36:46,503 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 8000 Precision:0.69
+2017-01-10 12:36:46 INFO  AppATEGENIATest:372 -   top 8000 Precision:0.69
+587534 2017-01-10 12:36:46,503 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 9000 Precision:0.67
+2017-01-10 12:36:46 INFO  AppATEGENIATest:373 -   top 9000 Precision:0.67
+587534 2017-01-10 12:36:46,503 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 10000 Precision:0.64
+2017-01-10 12:36:46 INFO  AppATEGENIATest:374 -   top 10000 Precision:0.64
+587534 2017-01-10 12:36:46,503 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   overall recall:0.1
+2017-01-10 12:36:46 INFO  AppATEGENIATest:375 -   overall recall:0.1
+587534 2017-01-10 12:36:46,503 INFO  c.shef.dcs.jate.app.BaseEmbeddedSolrTest  - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+2017-01-10 12:36:46 INFO  BaseEmbeddedSolrTest:106 - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+2017-01-10 12:36:50 ERROR SolrCore:1300 - REFCOUNT ERROR: unreferenced org.apache.solr.core.SolrCore@61ee3f71 (GENIA) has a reference count of 1
+2017-01-10 12:36:50 ERROR SolrCore:1300 - REFCOUNT ERROR: unreferenced org.apache.solr.core.SolrCore@395f9789 (GENIA) has a reference count of 1
+613325 2017-01-10 12:37:12,294 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 500 documents indexed.
+2017-01-10 12:37:12 INFO  AppATEGENIATest:152 - 500 documents indexed.
+630400 2017-01-10 12:37:29,369 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1000 documents indexed.
+2017-01-10 12:37:29 INFO  AppATEGENIATest:152 - 1000 documents indexed.
+648715 2017-01-10 12:37:47,684 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1500 documents indexed.
+2017-01-10 12:37:47 INFO  AppATEGENIATest:152 - 1500 documents indexed.
+667996 2017-01-10 12:38:06,965 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 2000 documents indexed.
+2017-01-10 12:38:06 INFO  AppATEGENIATest:152 - 2000 documents indexed.
+667997 2017-01-10 12:38:06,966 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - Indexing and candidate extraction took [73251] milliseconds
+2017-01-10 12:38:06 INFO  AppATEGENIATest:166 - Indexing and candidate extraction took [73251] milliseconds
+669174 2017-01-10 12:38:08,143 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+2017-01-10 12:38:08 INFO  AppATEGENIATest:93 - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+669199 2017-01-10 12:38:08,168 INFO  c.shef.dcs.jate.app.BaseEmbeddedSolrTest  - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+2017-01-10 12:38:08 INFO  BaseEmbeddedSolrTest:106 - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+694017 2017-01-10 12:38:32,986 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 500 documents indexed.
+2017-01-10 12:38:32 INFO  AppATEGENIATest:152 - 500 documents indexed.
+711555 2017-01-10 12:38:50,524 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1000 documents indexed.
+2017-01-10 12:38:50 INFO  AppATEGENIATest:152 - 1000 documents indexed.
+730033 2017-01-10 12:39:09,002 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1500 documents indexed.
+2017-01-10 12:39:09 INFO  AppATEGENIATest:152 - 1500 documents indexed.
+749129 2017-01-10 12:39:28,098 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 2000 documents indexed.
+2017-01-10 12:39:28 INFO  AppATEGENIATest:152 - 2000 documents indexed.
+749130 2017-01-10 12:39:28,099 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - Indexing and candidate extraction took [74746] milliseconds
+2017-01-10 12:39:28 INFO  AppATEGENIATest:166 - Indexing and candidate extraction took [74746] milliseconds
+750389 2017-01-10 12:39:29,358 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+2017-01-10 12:39:29 INFO  AppATEGENIATest:93 - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+750418 2017-01-10 12:39:29,387 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Building features using cpu cores=8, total=38850, max per worker=4856
+2017-01-10 12:39:29 INFO  FrequencyTermBasedFBMaster:55 - Building features using cpu cores=8, total=38850, max per worker=4856
+750744 2017-01-10 12:39:29,713 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Complete building features. Total=38850 success=38850
+2017-01-10 12:39:29 INFO  FrequencyTermBasedFBMaster:64 - Complete building features. Total=38850 success=38850
+750807 2017-01-10 12:39:29,776 INFO        uk.ac.shef.dcs.jate.algorithm.ATTF  - Calculating ATTF for 10582 candidate terms.
+2017-01-10 12:39:29 INFO  ATTF:19 - Calculating ATTF for 10582 candidate terms.
+750813 2017-01-10 12:39:29,782 INFO        uk.ac.shef.dcs.jate.algorithm.ATTF  - Complete calculating ATTF
+2017-01-10 12:39:29 INFO  ATTF:38 - Complete calculating ATTF
+750813 2017-01-10 12:39:29,782 INFO           uk.ac.shef.dcs.jate.app.AppATTF  - Complete ATTF term extraction.
+2017-01-10 12:39:29 INFO  AppATTF:109 - Complete ATTF term extraction.
+750814 2017-01-10 12:39:29,783 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - appATTF ranking took [424] milliseconds
+2017-01-10 12:39:29 INFO  AppATEGENIATest:193 - appATTF ranking took [424] milliseconds
+761581 2017-01-10 12:39:40,550 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - =============ATTF GENIA Benchmarking Results==================
+2017-01-10 12:39:40 INFO  AppATEGENIATest:206 - =============ATTF GENIA Benchmarking Results==================
+761588 2017-01-10 12:39:40,557 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 50 Precision:0.84
+2017-01-10 12:39:40 INFO  AppATEGENIATest:359 -   top 50 Precision:0.84
+761588 2017-01-10 12:39:40,557 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 100 Precision:0.85
+2017-01-10 12:39:40 INFO  AppATEGENIATest:360 -   top 100 Precision:0.85
+761588 2017-01-10 12:39:40,557 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 300 Precision:0.77
+2017-01-10 12:39:40 INFO  AppATEGENIATest:361 -   top 300 Precision:0.77
+761588 2017-01-10 12:39:40,557 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 500 Precision:0.78
+2017-01-10 12:39:40 INFO  AppATEGENIATest:362 -   top 500 Precision:0.78
+761588 2017-01-10 12:39:40,557 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 800 Precision:0.77
+2017-01-10 12:39:40 INFO  AppATEGENIATest:363 -   top 800 Precision:0.77
+761588 2017-01-10 12:39:40,557 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 1000 Precision:0.77
+2017-01-10 12:39:40 INFO  AppATEGENIATest:364 -   top 1000 Precision:0.77
+761588 2017-01-10 12:39:40,557 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 1500 Precision:0.76
+2017-01-10 12:39:40 INFO  AppATEGENIATest:365 -   top 1500 Precision:0.76
+761588 2017-01-10 12:39:40,557 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 2000 Precision:0.72
+2017-01-10 12:39:40 INFO  AppATEGENIATest:366 -   top 2000 Precision:0.72
+761589 2017-01-10 12:39:40,558 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 3000 Precision:0.69
+2017-01-10 12:39:40 INFO  AppATEGENIATest:367 -   top 3000 Precision:0.69
+761589 2017-01-10 12:39:40,558 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 4000 Precision:0.7
+2017-01-10 12:39:40 INFO  AppATEGENIATest:368 -   top 4000 Precision:0.7
+761589 2017-01-10 12:39:40,558 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 5000 Precision:0.7
+2017-01-10 12:39:40 INFO  AppATEGENIATest:369 -   top 5000 Precision:0.7
+761589 2017-01-10 12:39:40,558 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 6000 Precision:0.71
+2017-01-10 12:39:40 INFO  AppATEGENIATest:370 -   top 6000 Precision:0.71
+761589 2017-01-10 12:39:40,558 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 7000 Precision:0.69
+2017-01-10 12:39:40 INFO  AppATEGENIATest:371 -   top 7000 Precision:0.69
+761589 2017-01-10 12:39:40,558 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 8000 Precision:0.66
+2017-01-10 12:39:40 INFO  AppATEGENIATest:372 -   top 8000 Precision:0.66
+761589 2017-01-10 12:39:40,558 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 9000 Precision:0.65
+2017-01-10 12:39:40 INFO  AppATEGENIATest:373 -   top 9000 Precision:0.65
+761589 2017-01-10 12:39:40,558 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 10000 Precision:0.63
+2017-01-10 12:39:40 INFO  AppATEGENIATest:374 -   top 10000 Precision:0.63
+761589 2017-01-10 12:39:40,558 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   overall recall:0.1
+2017-01-10 12:39:40 INFO  AppATEGENIATest:375 -   overall recall:0.1
+761589 2017-01-10 12:39:40,558 INFO  c.shef.dcs.jate.app.BaseEmbeddedSolrTest  - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+2017-01-10 12:39:40 INFO  BaseEmbeddedSolrTest:106 - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+2017-01-10 12:39:44 ERROR SolrCore:1300 - REFCOUNT ERROR: unreferenced org.apache.solr.core.SolrCore@41863874 (GENIA) has a reference count of 1
+787713 2017-01-10 12:40:06,682 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 500 documents indexed.
+2017-01-10 12:40:06 INFO  AppATEGENIATest:152 - 500 documents indexed.
+805296 2017-01-10 12:40:24,265 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1000 documents indexed.
+2017-01-10 12:40:24 INFO  AppATEGENIATest:152 - 1000 documents indexed.
+824446 2017-01-10 12:40:43,415 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1500 documents indexed.
+2017-01-10 12:40:43 INFO  AppATEGENIATest:152 - 1500 documents indexed.
+843677 2017-01-10 12:41:02,646 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 2000 documents indexed.
+2017-01-10 12:41:02 INFO  AppATEGENIATest:152 - 2000 documents indexed.
+843677 2017-01-10 12:41:02,646 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - Indexing and candidate extraction took [75311] milliseconds
+2017-01-10 12:41:02 INFO  AppATEGENIATest:166 - Indexing and candidate extraction took [75311] milliseconds
+845297 2017-01-10 12:41:04,266 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+2017-01-10 12:41:04 INFO  AppATEGENIATest:93 - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+845326 2017-01-10 12:41:04,295 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Building features using cpu cores=8, total=38850, max per worker=4856
+2017-01-10 12:41:04 INFO  FrequencyTermBasedFBMaster:55 - Building features using cpu cores=8, total=38850, max per worker=4856
+845815 2017-01-10 12:41:04,784 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Complete building features. Total=38850 success=38850
+2017-01-10 12:41:04 INFO  FrequencyTermBasedFBMaster:64 - Complete building features. Total=38850 success=38850
+845960 2017-01-10 12:41:04,929 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Building features using cpu cores=8, total=18630, max per worker=2328
+2017-01-10 12:41:04 INFO  FrequencyTermBasedFBMaster:55 - Building features using cpu cores=8, total=18630, max per worker=2328
+846098 2017-01-10 12:41:05,067 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Complete building features. Total=18630 success=18630
+2017-01-10 12:41:05 INFO  FrequencyTermBasedFBMaster:64 - Complete building features. Total=18630 success=18630
+846100 2017-01-10 12:41:05,069 INFO  .jate.feature.TermComponentIndexFBMaster  - Beginning building features (TermComponentIndex). Total terms=38850, cpu cores=8, max per core=4856
+2017-01-10 12:41:05 INFO  TermComponentIndexFBMaster:31 - Beginning building features (TermComponentIndex). Total terms=38850, cpu cores=8, max per core=4856
+846175 2017-01-10 12:41:05,144 INFO  .jate.feature.TermComponentIndexFBMaster  - Complete building features. Total processed terms = 38850
+2017-01-10 12:41:05 INFO  TermComponentIndexFBMaster:39 - Complete building features. Total processed terms = 38850
+846243 2017-01-10 12:41:05,212 INFO        uk.ac.shef.dcs.jate.algorithm.RAKE  - Beginning computing RAKE values, cores=4 total terms=10582, max terms per worker thread=2645
+2017-01-10 12:41:05 INFO  RAKE:49 - Beginning computing RAKE values, cores=4 total terms=10582, max terms per worker thread=2645
+847315 2017-01-10 12:41:06,284 INFO  uk.ac.shef.dcs.jate.algorithm.RAKEWorker  - done =2000/10582
+2017-01-10 12:41:06 INFO  RAKEWorker:101 - done =2000/10582
+848182 2017-01-10 12:41:07,151 INFO  uk.ac.shef.dcs.jate.algorithm.RAKEWorker  - done =4000/10582
+2017-01-10 12:41:07 INFO  RAKEWorker:101 - done =4000/10582
+849045 2017-01-10 12:41:08,014 INFO  uk.ac.shef.dcs.jate.algorithm.RAKEWorker  - done =6000/10582
+2017-01-10 12:41:08 INFO  RAKEWorker:101 - done =6000/10582
+849948 2017-01-10 12:41:08,917 INFO  uk.ac.shef.dcs.jate.algorithm.RAKEWorker  - done =8000/10582
+2017-01-10 12:41:08 INFO  RAKEWorker:101 - done =8000/10582
+850769 2017-01-10 12:41:09,738 INFO  uk.ac.shef.dcs.jate.algorithm.RAKEWorker  - done =10000/10582
+2017-01-10 12:41:09 INFO  RAKEWorker:101 - done =10000/10582
+850988 2017-01-10 12:41:09,957 INFO        uk.ac.shef.dcs.jate.algorithm.RAKE  - Complete
+2017-01-10 12:41:09 INFO  RAKE:57 - Complete
+850989 2017-01-10 12:41:09,958 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - appRAKE ranking took [5690] milliseconds
+2017-01-10 12:41:09 INFO  AppATEGENIATest:384 - appRAKE ranking took [5690] milliseconds
+861730 2017-01-10 12:41:20,699 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - =============RAKE GENIA Benchmarking Results==================
+2017-01-10 12:41:20 INFO  AppATEGENIATest:398 - =============RAKE GENIA Benchmarking Results==================
+861737 2017-01-10 12:41:20,706 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 50 Precision:0.82
+2017-01-10 12:41:20 INFO  AppATEGENIATest:359 -   top 50 Precision:0.82
+861737 2017-01-10 12:41:20,706 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 100 Precision:0.81
+2017-01-10 12:41:20 INFO  AppATEGENIATest:360 -   top 100 Precision:0.81
+861737 2017-01-10 12:41:20,706 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 300 Precision:0.72
+2017-01-10 12:41:20 INFO  AppATEGENIATest:361 -   top 300 Precision:0.72
+861737 2017-01-10 12:41:20,706 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 500 Precision:0.67
+2017-01-10 12:41:20 INFO  AppATEGENIATest:362 -   top 500 Precision:0.67
+861737 2017-01-10 12:41:20,706 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 800 Precision:0.71
+2017-01-10 12:41:20 INFO  AppATEGENIATest:363 -   top 800 Precision:0.71
+861737 2017-01-10 12:41:20,706 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 1000 Precision:0.7
+2017-01-10 12:41:20 INFO  AppATEGENIATest:364 -   top 1000 Precision:0.7
+861737 2017-01-10 12:41:20,706 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 1500 Precision:0.69
+2017-01-10 12:41:20 INFO  AppATEGENIATest:365 -   top 1500 Precision:0.69
+861737 2017-01-10 12:41:20,706 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 2000 Precision:0.68
+2017-01-10 12:41:20 INFO  AppATEGENIATest:366 -   top 2000 Precision:0.68
+861738 2017-01-10 12:41:20,707 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 3000 Precision:0.66
+2017-01-10 12:41:20 INFO  AppATEGENIATest:367 -   top 3000 Precision:0.66
+861738 2017-01-10 12:41:20,707 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 4000 Precision:0.67
+2017-01-10 12:41:20 INFO  AppATEGENIATest:368 -   top 4000 Precision:0.67
+861738 2017-01-10 12:41:20,707 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 5000 Precision:0.68
+2017-01-10 12:41:20 INFO  AppATEGENIATest:369 -   top 5000 Precision:0.68
+861738 2017-01-10 12:41:20,707 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 6000 Precision:0.68
+2017-01-10 12:41:20 INFO  AppATEGENIATest:370 -   top 6000 Precision:0.68
+861738 2017-01-10 12:41:20,707 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 7000 Precision:0.67
+2017-01-10 12:41:20 INFO  AppATEGENIATest:371 -   top 7000 Precision:0.67
+861738 2017-01-10 12:41:20,707 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 8000 Precision:0.67
+2017-01-10 12:41:20 INFO  AppATEGENIATest:372 -   top 8000 Precision:0.67
+861738 2017-01-10 12:41:20,707 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 9000 Precision:0.66
+2017-01-10 12:41:20 INFO  AppATEGENIATest:373 -   top 9000 Precision:0.66
+861738 2017-01-10 12:41:20,707 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 10000 Precision:0.64
+2017-01-10 12:41:20 INFO  AppATEGENIATest:374 -   top 10000 Precision:0.64
+861738 2017-01-10 12:41:20,707 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   overall recall:0.1
+2017-01-10 12:41:20 INFO  AppATEGENIATest:375 -   overall recall:0.1
+861738 2017-01-10 12:41:20,707 INFO  c.shef.dcs.jate.app.BaseEmbeddedSolrTest  - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+2017-01-10 12:41:20 INFO  BaseEmbeddedSolrTest:106 - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+886264 2017-01-10 12:41:45,233 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 500 documents indexed.
+2017-01-10 12:41:45 INFO  AppATEGENIATest:152 - 500 documents indexed.
+904705 2017-01-10 12:42:03,674 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1000 documents indexed.
+2017-01-10 12:42:03 INFO  AppATEGENIATest:152 - 1000 documents indexed.
+924205 2017-01-10 12:42:23,174 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1500 documents indexed.
+2017-01-10 12:42:23 INFO  AppATEGENIATest:152 - 1500 documents indexed.
+943097 2017-01-10 12:42:42,066 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 2000 documents indexed.
+2017-01-10 12:42:42 INFO  AppATEGENIATest:152 - 2000 documents indexed.
+943097 2017-01-10 12:42:42,066 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - Indexing and candidate extraction took [76838] milliseconds
+2017-01-10 12:42:42 INFO  AppATEGENIATest:166 - Indexing and candidate extraction took [76838] milliseconds
+944005 2017-01-10 12:42:42,974 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+2017-01-10 12:42:42 INFO  AppATEGENIATest:93 - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+944036 2017-01-10 12:42:43,005 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Building features using cpu cores=8, total=38850, max per worker=4856
+2017-01-10 12:42:43 INFO  FrequencyTermBasedFBMaster:55 - Building features using cpu cores=8, total=38850, max per worker=4856
+944374 2017-01-10 12:42:43,343 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Complete building features. Total=38850 success=38850
+2017-01-10 12:42:43 INFO  FrequencyTermBasedFBMaster:64 - Complete building features. Total=38850 success=38850
+944439 2017-01-10 12:42:43,408 INFO        uk.ac.shef.dcs.jate.algorithm.RIDF  - Beginning computing RIDF values,, total terms=10582
+2017-01-10 12:42:43 INFO  RIDF:28 - Beginning computing RIDF values,, total terms=10582
+944446 2017-01-10 12:42:43,415 INFO        uk.ac.shef.dcs.jate.algorithm.RIDF  - Complete
+2017-01-10 12:42:43 INFO  RIDF:54 - Complete
+944447 2017-01-10 12:42:43,416 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - appRIDF ranking took [437] milliseconds
+2017-01-10 12:42:43 INFO  AppATEGENIATest:427 - appRIDF ranking took [437] milliseconds
+953996 2017-01-10 12:42:52,965 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - =============RIDF GENIA Benchmarking Results==================
+2017-01-10 12:42:52 INFO  AppATEGENIATest:458 - =============RIDF GENIA Benchmarking Results==================
+953996 2017-01-10 12:42:52,965 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 50 Precision:0.92
+2017-01-10 12:42:52 INFO  AppATEGENIATest:359 -   top 50 Precision:0.92
+953996 2017-01-10 12:42:52,965 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 100 Precision:0.91
+2017-01-10 12:42:52 INFO  AppATEGENIATest:360 -   top 100 Precision:0.91
+953996 2017-01-10 12:42:52,965 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 300 Precision:0.88
+2017-01-10 12:42:52 INFO  AppATEGENIATest:361 -   top 300 Precision:0.88
+953997 2017-01-10 12:42:52,966 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 500 Precision:0.87
+2017-01-10 12:42:52 INFO  AppATEGENIATest:362 -   top 500 Precision:0.87
+953997 2017-01-10 12:42:52,966 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 800 Precision:0.83
+2017-01-10 12:42:52 INFO  AppATEGENIATest:363 -   top 800 Precision:0.83
+953997 2017-01-10 12:42:52,966 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 1000 Precision:0.83
+2017-01-10 12:42:52 INFO  AppATEGENIATest:364 -   top 1000 Precision:0.83
+953997 2017-01-10 12:42:52,966 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 1500 Precision:0.83
+2017-01-10 12:42:52 INFO  AppATEGENIATest:365 -   top 1500 Precision:0.83
+953997 2017-01-10 12:42:52,966 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 2000 Precision:0.82
+2017-01-10 12:42:52 INFO  AppATEGENIATest:366 -   top 2000 Precision:0.82
+953997 2017-01-10 12:42:52,966 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 3000 Precision:0.8
+2017-01-10 12:42:52 INFO  AppATEGENIATest:367 -   top 3000 Precision:0.8
+953997 2017-01-10 12:42:52,966 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 4000 Precision:0.75
+2017-01-10 12:42:52 INFO  AppATEGENIATest:368 -   top 4000 Precision:0.75
+953998 2017-01-10 12:42:52,967 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 5000 Precision:0.72
+2017-01-10 12:42:52 INFO  AppATEGENIATest:369 -   top 5000 Precision:0.72
+953998 2017-01-10 12:42:52,967 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 6000 Precision:0.71
+2017-01-10 12:42:52 INFO  AppATEGENIATest:370 -   top 6000 Precision:0.71
+953998 2017-01-10 12:42:52,967 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 7000 Precision:0.7
+2017-01-10 12:42:52 INFO  AppATEGENIATest:371 -   top 7000 Precision:0.7
+953998 2017-01-10 12:42:52,967 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 8000 Precision:0.68
+2017-01-10 12:42:52 INFO  AppATEGENIATest:372 -   top 8000 Precision:0.68
+953998 2017-01-10 12:42:52,967 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 9000 Precision:0.65
+2017-01-10 12:42:52 INFO  AppATEGENIATest:373 -   top 9000 Precision:0.65
+953998 2017-01-10 12:42:52,967 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 10000 Precision:0.64
+2017-01-10 12:42:52 INFO  AppATEGENIATest:374 -   top 10000 Precision:0.64
+953998 2017-01-10 12:42:52,967 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   overall recall:0.1
+2017-01-10 12:42:52 INFO  AppATEGENIATest:375 -   overall recall:0.1
+953998 2017-01-10 12:42:52,967 INFO  c.shef.dcs.jate.app.BaseEmbeddedSolrTest  - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+2017-01-10 12:42:52 INFO  BaseEmbeddedSolrTest:106 - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+976717 2017-01-10 12:43:15,686 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 500 documents indexed.
+2017-01-10 12:43:15 INFO  AppATEGENIATest:152 - 500 documents indexed.
+993572 2017-01-10 12:43:32,541 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1000 documents indexed.
+2017-01-10 12:43:32 INFO  AppATEGENIATest:152 - 1000 documents indexed.
+1012693 2017-01-10 12:43:51,662 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 1500 documents indexed.
+2017-01-10 12:43:51 INFO  AppATEGENIATest:152 - 1500 documents indexed.
+1032097 2017-01-10 12:44:11,066 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - 2000 documents indexed.
+2017-01-10 12:44:11 INFO  AppATEGENIATest:152 - 2000 documents indexed.
+1032097 2017-01-10 12:44:11,066 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - Indexing and candidate extraction took [73773] milliseconds
+2017-01-10 12:44:11 INFO  AppATEGENIATest:166 - Indexing and candidate extraction took [73773] milliseconds
+1033290 2017-01-10 12:44:12,259 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+2017-01-10 12:44:12 INFO  AppATEGENIATest:93 - <<TEST BEGINS WITH pre-filter.minimum total term frequency=2>>
+1033343 2017-01-10 12:44:12,312 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Building features using cpu cores=8, total=38850, max per worker=4856
+2017-01-10 12:44:12 INFO  FrequencyTermBasedFBMaster:55 - Building features using cpu cores=8, total=38850, max per worker=4856
+1033691 2017-01-10 12:44:12,660 INFO  .jate.feature.FrequencyTermBasedFBMaster  - Complete building features. Total=38850 success=38850
+2017-01-10 12:44:12 INFO  FrequencyTermBasedFBMaster:64 - Complete building features. Total=38850 success=38850
+1033754 2017-01-10 12:44:12,723 INFO       uk.ac.shef.dcs.jate.algorithm.TFIDF  - Beginning computing TermEx values,, total terms=10582
+2017-01-10 12:44:12 INFO  TFIDF:27 - Beginning computing TermEx values,, total terms=10582
+1033762 2017-01-10 12:44:12,731 INFO       uk.ac.shef.dcs.jate.algorithm.TFIDF  - Complete
+2017-01-10 12:44:12 INFO  TFIDF:38 - Complete
+1033762 2017-01-10 12:44:12,731 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - appTFIDF ranking took [468] milliseconds
+2017-01-10 12:44:12 INFO  AppATEGENIATest:514 - appTFIDF ranking took [468] milliseconds
+1045019 2017-01-10 12:44:23,988 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  - =============TFIDF GENIA Benchmarking Results==================
+2017-01-10 12:44:23 INFO  AppATEGENIATest:541 - =============TFIDF GENIA Benchmarking Results==================
+1045020 2017-01-10 12:44:23,989 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 50 Precision:0.96
+2017-01-10 12:44:23 INFO  AppATEGENIATest:359 -   top 50 Precision:0.96
+1045020 2017-01-10 12:44:23,989 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 100 Precision:0.89
+2017-01-10 12:44:23 INFO  AppATEGENIATest:360 -   top 100 Precision:0.89
+1045020 2017-01-10 12:44:23,989 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 300 Precision:0.85
+2017-01-10 12:44:23 INFO  AppATEGENIATest:361 -   top 300 Precision:0.85
+1045020 2017-01-10 12:44:23,989 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 500 Precision:0.83
+2017-01-10 12:44:23 INFO  AppATEGENIATest:362 -   top 500 Precision:0.83
+1045020 2017-01-10 12:44:23,989 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 800 Precision:0.83
+2017-01-10 12:44:23 INFO  AppATEGENIATest:363 -   top 800 Precision:0.83
+1045020 2017-01-10 12:44:23,989 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 1000 Precision:0.83
+2017-01-10 12:44:23 INFO  AppATEGENIATest:364 -   top 1000 Precision:0.83
+1045020 2017-01-10 12:44:23,989 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 1500 Precision:0.81
+2017-01-10 12:44:23 INFO  AppATEGENIATest:365 -   top 1500 Precision:0.81
+1045020 2017-01-10 12:44:23,989 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 2000 Precision:0.8
+2017-01-10 12:44:23 INFO  AppATEGENIATest:366 -   top 2000 Precision:0.8
+1045021 2017-01-10 12:44:23,990 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 3000 Precision:0.77
+2017-01-10 12:44:23 INFO  AppATEGENIATest:367 -   top 3000 Precision:0.77
+1045021 2017-01-10 12:44:23,990 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 4000 Precision:0.75
+2017-01-10 12:44:23 INFO  AppATEGENIATest:368 -   top 4000 Precision:0.75
+1045021 2017-01-10 12:44:23,990 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 5000 Precision:0.73
+2017-01-10 12:44:23 INFO  AppATEGENIATest:369 -   top 5000 Precision:0.73
+1045021 2017-01-10 12:44:23,990 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 6000 Precision:0.71
+2017-01-10 12:44:23 INFO  AppATEGENIATest:370 -   top 6000 Precision:0.71
+1045021 2017-01-10 12:44:23,990 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 7000 Precision:0.69
+2017-01-10 12:44:23 INFO  AppATEGENIATest:371 -   top 7000 Precision:0.69
+1045021 2017-01-10 12:44:23,990 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 8000 Precision:0.68
+2017-01-10 12:44:23 INFO  AppATEGENIATest:372 -   top 8000 Precision:0.68
+1045021 2017-01-10 12:44:23,990 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 9000 Precision:0.65
+2017-01-10 12:44:23 INFO  AppATEGENIATest:373 -   top 9000 Precision:0.65
+1045021 2017-01-10 12:44:23,990 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   top 10000 Precision:0.64
+2017-01-10 12:44:23 INFO  AppATEGENIATest:374 -   top 10000 Precision:0.64
+1045021 2017-01-10 12:44:23,990 INFO   uk.ac.shef.dcs.jate.app.AppATEGENIATest  -   overall recall:0.1
+2017-01-10 12:44:23 INFO  AppATEGENIATest:375 -   overall recall:0.1
+1045021 2017-01-10 12:44:23,990 INFO  c.shef.dcs.jate.app.BaseEmbeddedSolrTest  - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
+2017-01-10 12:44:23 INFO  BaseEmbeddedSolrTest:106 - shutting down core in :/home/zqz/Work/jate/testdata/solr-testbed/
