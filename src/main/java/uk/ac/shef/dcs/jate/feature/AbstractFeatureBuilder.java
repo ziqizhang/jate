@@ -43,7 +43,7 @@ public abstract class AbstractFeatureBuilder {
                 allWords.add(termStr);
         }
         if(allWords.size()==0)
-            throw new JATEException("Features are required on 'Words', however there are no single-token lexical units in the "+
+            throw new JATEException("TokenMetaData are required on 'Words', however there are no single-token lexical units in the "+
             properties.getSolrFieldNameJATENGramInfo()+" field. Check to see if your analyzer pipeline outputs uni-grams");
         return allWords;
     }

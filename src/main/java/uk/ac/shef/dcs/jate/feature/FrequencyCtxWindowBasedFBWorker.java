@@ -54,7 +54,7 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
      * @param allCandidates
      * @param solrIndexSearcher
      * @param contextLookup     set of contexts in which we should count term frequencies. key:docid+","+sentenceid;
-     *                          value: Context objects found in that doc and sentence pair. If the contexts
+     *                          value: TokenMetaData objects found in that doc and sentence pair. If the contexts
      *                          should be generated, used null or an empty map
      * @param window
      * @param maxTasksPerWorker
@@ -105,7 +105,7 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
 
     /**
      * Use existing context windows to count term/word frequency within contexts.
-     * Context overlap zones are generated for adjacent context windows.
+     * TokenMetaData overlap zones are generated for adjacent context windows.
      *
      * @param docIds
      * @return
@@ -369,7 +369,7 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
                     BytesRef payload = postingsEnum.getPayload();
                     SentenceContext sentenceContextInfo = null;
                     if (payload != null) {
-                        sentenceContextInfo = new SentenceContext(payload.utf8ToString());
+                        sentenceContextInfo = new SentenceContext(payload);
                     }
                     if (sentenceContextInfo == null)
                         result.add(new MWEInSentence(tString, start, end, 0, 0, 0));

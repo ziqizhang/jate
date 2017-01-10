@@ -453,7 +453,7 @@
        Use the following format to specify a custom IndexReaderFactory,
        which allows for alternate IndexReader implementations.
 
-       ** Experimental Feature **
+       ** Experimental TokenMetaData **
 
        Please note - Using a custom IndexReaderFactory may prevent
        certain other features from working. The API to
@@ -462,7 +462,7 @@
        resolved.
 
 
-       ** Features that may not work with custom IndexReaderFactory **
+       ** TokenMetaData that may not work with custom IndexReaderFactory **
 
        The ReplicationHandler assumes a disk-resident index. Using a
        custom IndexReader implementation may cause incompatibility

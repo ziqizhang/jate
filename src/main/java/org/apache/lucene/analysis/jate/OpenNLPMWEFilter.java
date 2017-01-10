@@ -106,7 +106,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
     private SentenceContext parseSentenceContextPayload(PayloadAttribute attribute) {
         BytesRef bfTokenSentCtx = attribute != null ? attribute.getPayload() : null;
         SentenceContext tokenSentCtx = bfTokenSentCtx == null ? null : new SentenceContext(
-                bfTokenSentCtx.utf8ToString()
+                bfTokenSentCtx
         );
         return tokenSentCtx;
     }
@@ -114,10 +114,11 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
     private void addSentenceContextPayload(SentenceContext firstTokenSentCtx,
                                            SentenceContext lastTokenSentCtx) {
         if (firstTokenSentCtx != null && lastTokenSentCtx != null) {
-            addSentenceContext(sentenceContext, firstTokenSentCtx.getFirstTokenIdx(),
+            TokenMetaData metadata=addSentenceContext(new TokenMetaData(), firstTokenSentCtx.getFirstTokenIdx(),
                     lastTokenSentCtx.getLastTokenIdx(),
                     firstTokenSentCtx.getPosTag(),
                     lastTokenSentCtx.getSentenceId());
+            addPayloadAttribute(sentenceContext, metadata);
         }
     }
 
@@ -280,7 +281,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
             wordList.add(word);
             PayloadAttribute posAtt = input.getAttribute(PayloadAttribute.class);
             if (posAtt != null) {
-                posList.add(new SentenceContext(posAtt.getPayload().utf8ToString()).getPosTag());
+                posList.add(new SentenceContext(posAtt.getPayload()).getPosTag());
             }
             AttributeSource attrs = input.cloneAttributes();
             tokenAttrs.add(attrs);
