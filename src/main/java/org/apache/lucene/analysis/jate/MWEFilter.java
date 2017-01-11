@@ -64,9 +64,9 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
     /**
      * if true, leading non alpha numeric chars are removed
      */
-    public static final boolean DEFAULT_STRIP_LEADING_SYMBOL_CHARS=false;
-    public static final boolean DEFAULT_STRIP_TRAILING_SYMBOL_CHARS=false;
-    public static final boolean DEFAULT_STRIP_ANY_SYMBOL_CHARS=false;
+    public static final boolean DEFAULT_STRIP_LEADING_SYMBOL_CHARS = false;
+    public static final boolean DEFAULT_STRIP_TRAILING_SYMBOL_CHARS = false;
+    public static final boolean DEFAULT_STRIP_ANY_SYMBOL_CHARS = false;
 
     /**
      * maximum tokens in a MWE (number of tokens)
@@ -130,9 +130,9 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
         this.removeTrailingStopwords = removeTrailingStopwords;
         this.removeLeadingSymbolicTokens = removeLeadingSymbolicTokens;
         this.removeTrailingSymbolicTokens = removeTrailingSymbolicTokens;
-        this.stripAllSymbolChars=stripAllSymbolChars;
-        this.stripLeadingSymbolChars=stripLeadingSymbolChars;
-        this.stripTrailingSymbolChars=stripTrailingSymbolChars;
+        this.stripAllSymbolChars = stripAllSymbolChars;
+        this.stripLeadingSymbolChars = stripLeadingSymbolChars;
+        this.stripTrailingSymbolChars = stripTrailingSymbolChars;
 
         this.stopWords = stopWords;
         this.stopWordsIgnoreCase = stopWordsIgnoreCase;
@@ -147,19 +147,22 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
         return ctx;
     }
 
-    public void addPayloadAttribute(PayloadAttribute attribute, TokenMetaData ctx) {
-        try {
-            byte[] data=SerializationUtil.serialize(ctx);
-            attribute.setPayload(new BytesRef(data));
-        }catch (IOException e){
-            log.error("SEVERE: adding payload failed due to exception:\n"+ ExceptionUtils.getFullStackTrace(e));
+    protected TokenMetaData inheritOtherMetadata(TokenMetaData ctx, TokenMetaData inheritFrom) {
+        for (Map.Entry<TokenMetaDataType, String> e : inheritFrom.metadata.entrySet()) {
+            if (!ctx.metadata.containsKey(e.getKey()))
+                ctx.addMetaData(e.getKey(), e.getValue());
         }
-
+        return ctx;
     }
 
-    protected String stripSymbolChars(String in){
+    public void addPayloadAttribute(PayloadAttribute attribute, TokenMetaData ctx) {
+        byte[] data = TokenMetaData.serialize(ctx);
+        attribute.setPayload(new BytesRef(data));
+    }
+
+    protected String stripSymbolChars(String in) {
         return PunctuationRemover.
-                stripPunctuations(in,stripAllSymbolChars, stripLeadingSymbolChars, stripTrailingSymbolChars);
+                stripPunctuations(in, stripAllSymbolChars, stripLeadingSymbolChars, stripTrailingSymbolChars);
     }
 
 }

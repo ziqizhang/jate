@@ -1,5 +1,7 @@
 package org.apache.lucene.analysis.jate;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.*;
 import org.apache.lucene.util.AttributeSource;
@@ -16,6 +18,7 @@ import java.util.Set;
  * <br>-records sentence context of a shingle (see SentenceContext)
  */
 public final class ComplexShingleFilter extends MWEFilter implements SentenceContextAware {
+    private static Logger log = Logger.getLogger(ComplexShingleFilter.class.getName());
     /**
      * filler token for when positionIncrement is more than 1
      */
@@ -222,14 +225,16 @@ public final class ComplexShingleFilter extends MWEFilter implements SentenceCon
 
                 if (outputThisShingle) {
                     inputWindow.getFirst().attSource.copyTo(this);
-                    BytesRef brFirstTokenSentCtx = sentenceContextAtt != null ? sentenceContextAtt.getPayload() : null;
-                    SentenceContext firstTokenSentCtx = brFirstTokenSentCtx == null ? null : new SentenceContext(
-                            brFirstTokenSentCtx
+                    BytesRef brFirstTokenMetadata = sentenceContextAtt.getPayload();
+                    TokenMetaData firstTokenMetadata =
+                            TokenMetaData.deserialize(brFirstTokenMetadata.bytes);
+                    SentenceContext firstTokenSentCtx = new SentenceContext(
+                            firstTokenMetadata
                     );
-                    BytesRef brLastTokenSentCtx = nextToken.sentenceContext != null ?
-                            nextToken.sentenceContext.getPayload() : null;
-                    SentenceContext lastTokenSentCtx = brLastTokenSentCtx == null ? null :
-                            new SentenceContext(brLastTokenSentCtx);
+                    BytesRef brLastTokenmetadata =
+                            nextToken.sentenceContext.getPayload();
+                    TokenMetaData lastTokenMetadata = TokenMetaData.deserialize(brLastTokenmetadata.bytes);
+                    SentenceContext lastTokenSentCtx = new SentenceContext(lastTokenMetadata);
 
 
                     if (!crossBoundary(firstTokenSentCtx, lastTokenSentCtx)) {
@@ -247,17 +252,19 @@ public final class ComplexShingleFilter extends MWEFilter implements SentenceCon
                         tokenAvailable = true;
 
                         if (firstTokenSentCtx != null && lastTokenSentCtx != null) {
-                            TokenMetaData metaData=addSentenceContext(new TokenMetaData(),
+                            TokenMetaData metaData = addSentenceContext(new TokenMetaData(),
                                     firstTokenSentCtx.getFirstTokenIdx(),
                                     lastTokenSentCtx.getLastTokenIdx(),
                                     firstTokenSentCtx.getPosTag(),
                                     lastTokenSentCtx.getSentenceId());
-                            addPayloadAttribute(sentenceContext,metaData);
+                            metaData = inheritOtherMetadata(metaData, firstTokenMetadata);
+                            addPayloadAttribute(sentenceContext, metaData);
                         }
-                       // System.out.println("==="+gramBuilder.toString()+","+sentenceContextAtt.getPayload().utf8ToString());
+                        // System.out.println("==="+gramBuilder.toString()+","+sentenceContextAtt.getPayload().utf8ToString());
                     } else {
                         outputThisShingle = false;
                     }
+
                 }
                 if (!outputThisShingle) {
                     clearAttributes();
@@ -274,7 +281,7 @@ public final class ComplexShingleFilter extends MWEFilter implements SentenceCon
 
     private boolean crossBoundary(SentenceContext firstTokenSentCtx, SentenceContext lastTokenSentCtx) {
         if (firstTokenSentCtx != null && lastTokenSentCtx != null) {
-            return firstTokenSentCtx.getSentenceId()!=lastTokenSentCtx.getSentenceId();
+            return firstTokenSentCtx.getSentenceId() != lastTokenSentCtx.getSentenceId();
         }
         return false;
     }

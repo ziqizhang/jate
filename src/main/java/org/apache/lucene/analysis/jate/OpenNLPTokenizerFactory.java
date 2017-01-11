@@ -13,12 +13,15 @@ import org.apache.lucene.util.AttributeFactory;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.Exchanger;
 
 public class OpenNLPTokenizerFactory extends TokenizerFactory implements ResourceLoaderAware {
     private SentenceDetector sentenceOp = null;
     private String sentenceModelFile = null;
     private opennlp.tools.tokenize.Tokenizer tokenizerOp = null;
     private String tokenizerModelFile = null;
+    private String parChunkingClass=null;
+    private ParagraphChunker paragraphChunker;
 
     /**
      * Creates a new StandardTokenizerFactory
@@ -27,11 +30,17 @@ public class OpenNLPTokenizerFactory extends TokenizerFactory implements Resourc
         super(args);
         sentenceModelFile = args.get("sentenceModel");
         tokenizerModelFile = args.get("tokenizerModel");
+        parChunkingClass=args.get("paragraphChunker-class");
     }
 
     @Override
     public Tokenizer create(AttributeFactory factory) {
-        OpenNLPTokenizer tokenizer = new OpenNLPTokenizer(factory, sentenceOp, tokenizerOp);
+        OpenNLPTokenizer tokenizer;
+
+        if(paragraphChunker!=null)
+            tokenizer= new OpenNLPTokenizer(factory, sentenceOp, tokenizerOp);
+        else
+            tokenizer=new OpenNLPTokenizer(factory, sentenceOp, tokenizerOp, paragraphChunker);
         return tokenizer;
     }
 
@@ -47,6 +56,16 @@ public class OpenNLPTokenizerFactory extends TokenizerFactory implements Resourc
         tokenizerOp = new TokenizerME(new TokenizerModel(
                 loader.openResource(tokenizerModelFile)
         ));
+
+        if(parChunkingClass!=null) {
+            try {
+                Class c = Class.forName(parChunkingClass);
+                Object o = c.newInstance();
+                paragraphChunker = (ParagraphChunker) o;
+            }catch (Exception e){
+                throw new IOException(e);
+            }
+        }
 
     }
 }

@@ -21,15 +21,9 @@ public class SentenceContext {
     private int firstTokenIdx;
     private int lastTokenIdx;
     private String posTag;
-    private static Logger log = Logger.getLogger(SentenceContext.class.getName());
 
-    public SentenceContext(BytesRef metadataObject) {
-        try {
-            init(metadataObject);
-        } catch (Exception e) {
-            log.error("SEVERE: cannot parse attached payload data due to exception:\n"+
-                    ExceptionUtils.getFullStackTrace(e));
-        }
+    public SentenceContext(TokenMetaData metaData) {
+        init(metaData);
     }
 
     public int getSentenceId() {
@@ -47,14 +41,13 @@ public class SentenceContext {
     }
 
 
-    private void init(BytesRef metadataObject) throws IOException, ClassNotFoundException {
-        TokenMetaData metadata =(TokenMetaData)SerializationUtil.deserialize(metadataObject.bytes);
+    private void init(TokenMetaData metadata) {
         sentenceId = Integer.valueOf(metadata.getMetaData(TokenMetaDataType.SOURCE_SENTENCE_ID_IN_DOC));
-        firstTokenIdx=Integer.valueOf(metadata.getMetaData(TokenMetaDataType.FIRST_COMPOSING_TOKEN_ID_IN_DOC));
-        lastTokenIdx=Integer.valueOf(metadata.getMetaData(TokenMetaDataType.LAST_COMPOSING_TOKEN_ID_IN_DOC));
-        posTag=metadata.getMetaData(TokenMetaDataType.TOKEN_POS);
+        firstTokenIdx = Integer.valueOf(metadata.getMetaData(TokenMetaDataType.FIRST_COMPOSING_TOKEN_ID_IN_DOC));
+        lastTokenIdx = Integer.valueOf(metadata.getMetaData(TokenMetaDataType.LAST_COMPOSING_TOKEN_ID_IN_DOC));
+        posTag = metadata.getMetaData(TokenMetaDataType.TOKEN_POS);
+        //totalSentsInDoc=Integer.valueOf(metadata.getMetaData(TokenMetaDataType.SENTENCES_IN_DOC));
     }
-
 
     public String getPosTag() {
         return posTag;

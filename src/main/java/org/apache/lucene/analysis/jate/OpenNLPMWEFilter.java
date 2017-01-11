@@ -59,8 +59,11 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
         AttributeSource start = tokenAttrs.get(chunkStart);
         AttributeSource end = tokenAttrs.get(chunkEnd - 1);
 
-        SentenceContext firstTokenSentCtx = parseSentenceContextPayload(start.getAttribute(PayloadAttribute.class));
-        SentenceContext lastTokenSentCtx = parseSentenceContextPayload(end.getAttribute(PayloadAttribute.class));
+        TokenMetaData firstTokenMetadata = parseTokenMetadataPayload(start.getAttribute(PayloadAttribute.class));
+        TokenMetaData lastTokenMetadata = parseTokenMetadataPayload(end.getAttribute(PayloadAttribute.class));
+
+        SentenceContext firstTokenSentCtx = parseSentenceContextPayload(firstTokenMetadata);
+        SentenceContext lastTokenSentCtx = parseSentenceContextPayload(lastTokenMetadata);
 
         boolean added = false;
         if (!crossBoundary(firstTokenSentCtx, lastTokenSentCtx)) {
@@ -86,7 +89,14 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
                 offsetAtt.setOffset(start.getAttribute(OffsetAttribute.class).startOffset(),
                         end.getAttribute(OffsetAttribute.class).endOffset());
                 typeAtt.setType(chunkTypes.get(chunkStart));
-                addSentenceContextPayload(firstTokenSentCtx, lastTokenSentCtx);
+                TokenMetaData metadata=addSentenceContext(new TokenMetaData(),
+                        firstTokenSentCtx.getFirstTokenIdx(),
+                        lastTokenSentCtx.getLastTokenIdx(),
+                        firstTokenSentCtx.getPosTag(),
+                        lastTokenSentCtx.getSentenceId());
+                metadata=inheritOtherMetadata(metadata, firstTokenMetadata);
+                addPayloadAttribute(sentenceContext, metadata);
+
                 added = true;
             }
             //System.out.println(phrase.toString().trim()+","+sentenceContextAtt.getPayload().utf8ToString());
@@ -103,23 +113,19 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
         return added;
     }
 
-    private SentenceContext parseSentenceContextPayload(PayloadAttribute attribute) {
-        BytesRef bfTokenSentCtx = attribute != null ? attribute.getPayload() : null;
-        SentenceContext tokenSentCtx = bfTokenSentCtx == null ? null : new SentenceContext(
-                bfTokenSentCtx
-        );
-        return tokenSentCtx;
+    private TokenMetaData parseTokenMetadataPayload(PayloadAttribute attribute) {
+        BytesRef bfTokenMetadata = attribute != null ? attribute.getPayload() : null;
+        if(bfTokenMetadata!=null) {
+            TokenMetaData meta = TokenMetaData.deserialize(bfTokenMetadata.bytes);
+            return meta;
+        }
+        return null;
     }
 
-    private void addSentenceContextPayload(SentenceContext firstTokenSentCtx,
-                                           SentenceContext lastTokenSentCtx) {
-        if (firstTokenSentCtx != null && lastTokenSentCtx != null) {
-            TokenMetaData metadata=addSentenceContext(new TokenMetaData(), firstTokenSentCtx.getFirstTokenIdx(),
-                    lastTokenSentCtx.getLastTokenIdx(),
-                    firstTokenSentCtx.getPosTag(),
-                    lastTokenSentCtx.getSentenceId());
-            addPayloadAttribute(sentenceContext, metadata);
-        }
+    private SentenceContext parseSentenceContextPayload(TokenMetaData metaData) {
+        return new SentenceContext(
+                metaData
+        );
     }
 
     private boolean crossBoundary(SentenceContext firstTokenSentCtx,
@@ -281,7 +287,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
             wordList.add(word);
             PayloadAttribute posAtt = input.getAttribute(PayloadAttribute.class);
             if (posAtt != null) {
-                posList.add(new SentenceContext(posAtt.getPayload()).getPosTag());
+                posList.add(new SentenceContext(TokenMetaData.deserialize(posAtt.getPayload().bytes)).getPosTag());
             }
             AttributeSource attrs = input.cloneAttributes();
             tokenAttrs.add(attrs);

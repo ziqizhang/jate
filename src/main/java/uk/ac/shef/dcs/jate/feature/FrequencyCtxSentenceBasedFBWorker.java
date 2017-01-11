@@ -2,6 +2,7 @@ package uk.ac.shef.dcs.jate.feature;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.lucene.analysis.jate.SentenceContext;
+import org.apache.lucene.analysis.jate.TokenMetaData;
 import org.apache.lucene.index.PostingsEnum;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
@@ -128,7 +129,7 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
                     BytesRef payload=postingsEnum.getPayload();
                     int sentenceId=-1;
                     if(payload!=null){
-                        sentenceId=new SentenceContext(payload.utf8ToString()).getSentenceId();
+                        sentenceId=new SentenceContext(TokenMetaData.deserialize(payload.bytes)).getSentenceId();
                     }
                     result.add(new MWESentenceContext(tString,sentenceId, start, end));
                 }
