@@ -1,6 +1,5 @@
 package org.apache.lucene.analysis.jate;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.*;
@@ -226,14 +225,14 @@ public final class ComplexShingleFilter extends MWEFilter implements SentenceCon
                 if (outputThisShingle) {
                     inputWindow.getFirst().attSource.copyTo(this);
                     BytesRef brFirstTokenMetadata = sentenceContextAtt.getPayload();
-                    TokenMetaData firstTokenMetadata =
-                            TokenMetaData.deserialize(brFirstTokenMetadata.bytes);
+                    MWEMetadata firstTokenMetadata =
+                            MWEMetadata.deserialize(brFirstTokenMetadata.bytes);
                     SentenceContext firstTokenSentCtx = new SentenceContext(
                             firstTokenMetadata
                     );
                     BytesRef brLastTokenmetadata =
                             nextToken.sentenceContext.getPayload();
-                    TokenMetaData lastTokenMetadata = TokenMetaData.deserialize(brLastTokenmetadata.bytes);
+                    MWEMetadata lastTokenMetadata = MWEMetadata.deserialize(brLastTokenmetadata.bytes);
                     SentenceContext lastTokenSentCtx = new SentenceContext(lastTokenMetadata);
 
 
@@ -252,7 +251,7 @@ public final class ComplexShingleFilter extends MWEFilter implements SentenceCon
                         tokenAvailable = true;
 
                         if (firstTokenSentCtx != null && lastTokenSentCtx != null) {
-                            TokenMetaData metaData = addSentenceContext(new TokenMetaData(),
+                            MWEMetadata metaData = addSentenceContext(new MWEMetadata(),
                                     firstTokenSentCtx.getFirstTokenIdx(),
                                     lastTokenSentCtx.getLastTokenIdx(),
                                     firstTokenSentCtx.getPosTag(),

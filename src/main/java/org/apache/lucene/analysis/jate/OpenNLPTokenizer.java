@@ -26,7 +26,6 @@ import opennlp.tools.sentdetect.SentenceDetector;
 import opennlp.tools.util.Span;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
@@ -153,14 +152,15 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
             } else
                 offsetAtt.setOffset(start, finalOffset);
 
-            TokenMetaData ctx = addSentenceContext(new TokenMetaData(), indexWord, indexWord,
+            MWEMetadata ctx = addSentenceContext(new MWEMetadata(), indexWord, indexWord,
                     null, indexSentence);
             if (paragraphOp != null) {
                 Paragraph sourcePar = sentsInParagraph.get(sentence.getStart());
-                addParagraphContext(ctx,
+                addOtherMetadata(ctx,
                         sourcePar.indexInDoc,
                         paragraphHasSents.get(sourcePar),
-                        paragraphHasSents.size());
+                        paragraphHasSents.size(),
+                        sentences.length);
             }
             addPayloadAttribute(tokenMetadataAtt, ctx);
             //System.out.println(tokenMetadataAtt.getPayload().utf8ToString()+","+new String(buffer,0, termAtt.length()));
@@ -286,25 +286,27 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
         restartAtBeginning();
     }
 
-    public TokenMetaData addSentenceContext(TokenMetaData ctx, int firstTokenIndex, int lastTokenIndex,
-                                            String posTag, int sentenceIndex) {
-        ctx.addMetaData(TokenMetaDataType.FIRST_COMPOSING_TOKEN_ID_IN_DOC, String.valueOf(firstTokenIndex));
-        ctx.addMetaData(TokenMetaDataType.LAST_COMPOSING_TOKEN_ID_IN_DOC, String.valueOf(lastTokenIndex));
-        ctx.addMetaData(TokenMetaDataType.TOKEN_POS, posTag);
-        ctx.addMetaData(TokenMetaDataType.SOURCE_SENTENCE_ID_IN_DOC, String.valueOf(sentenceIndex));
+    public MWEMetadata addSentenceContext(MWEMetadata ctx, int firstTokenIndex, int lastTokenIndex,
+                                          String posTag, int sentenceIndex) {
+        ctx.addMetaData(MWEMetadataType.FIRST_COMPOSING_TOKEN_ID_IN_DOC, String.valueOf(firstTokenIndex));
+        ctx.addMetaData(MWEMetadataType.LAST_COMPOSING_TOKEN_ID_IN_DOC, String.valueOf(lastTokenIndex));
+        ctx.addMetaData(MWEMetadataType.POS, posTag);
+        ctx.addMetaData(MWEMetadataType.SOURCE_SENTENCE_ID_IN_DOC, String.valueOf(sentenceIndex));
         return ctx;
     }
 
-    protected void addParagraphContext(TokenMetaData ctx, int paragraphId,
-                                       int totalSentencesInParagraph,
-                                       int totalParagraphsInDoc) {
-        ctx.addMetaData(TokenMetaDataType.SOURCE_PARAGRAPH_ID_IN_DOC, String.valueOf(paragraphId));
-        ctx.addMetaData(TokenMetaDataType.PARAGRAPHS_IN_DOC, String.valueOf(totalParagraphsInDoc));
-        ctx.addMetaData(TokenMetaDataType.SENTENCES_IN_PARAGRAPH, String.valueOf(totalSentencesInParagraph));
+    protected void addOtherMetadata(MWEMetadata ctx, int paragraphId,
+                                    int totalSentencesInParagraph,
+                                    int totalParagraphsInDoc,
+                                    int totalSentencesInDoc) {
+        ctx.addMetaData(MWEMetadataType.SOURCE_PARAGRAPH_ID_IN_DOC, String.valueOf(paragraphId));
+        ctx.addMetaData(MWEMetadataType.PARAGRAPHS_IN_DOC, String.valueOf(totalParagraphsInDoc));
+        ctx.addMetaData(MWEMetadataType.SENTENCES_IN_PARAGRAPH, String.valueOf(totalSentencesInParagraph));
+        ctx.addMetaData(MWEMetadataType.SENTENCES_IN_DOC, String.valueOf(totalParagraphsInDoc));
     }
 
-    public void addPayloadAttribute(PayloadAttribute attribute, TokenMetaData ctx) {
-        byte[] data = TokenMetaData.serialize(ctx);
+    public void addPayloadAttribute(PayloadAttribute attribute, MWEMetadata ctx) {
+        byte[] data = MWEMetadata.serialize(ctx);
         attribute.setPayload(new BytesRef(data));
     }
 }

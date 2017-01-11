@@ -1,12 +1,6 @@
 package org.apache.lucene.analysis.jate;
 
 
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.log4j.Logger;
-import org.apache.lucene.util.BytesRef;
-
-import java.io.IOException;
-
 /**
  * Represents the context where a candidate term appears in a sentence. The following information is
  * recorded:
@@ -22,7 +16,7 @@ public class SentenceContext {
     private int lastTokenIdx;
     private String posTag;
 
-    public SentenceContext(TokenMetaData metaData) {
+    public SentenceContext(MWEMetadata metaData) {
         init(metaData);
     }
 
@@ -41,12 +35,12 @@ public class SentenceContext {
     }
 
 
-    private void init(TokenMetaData metadata) {
-        sentenceId = Integer.valueOf(metadata.getMetaData(TokenMetaDataType.SOURCE_SENTENCE_ID_IN_DOC));
-        firstTokenIdx = Integer.valueOf(metadata.getMetaData(TokenMetaDataType.FIRST_COMPOSING_TOKEN_ID_IN_DOC));
-        lastTokenIdx = Integer.valueOf(metadata.getMetaData(TokenMetaDataType.LAST_COMPOSING_TOKEN_ID_IN_DOC));
-        posTag = metadata.getMetaData(TokenMetaDataType.TOKEN_POS);
-        //totalSentsInDoc=Integer.valueOf(metadata.getMetaData(TokenMetaDataType.SENTENCES_IN_DOC));
+    private void init(MWEMetadata metadata) {
+        sentenceId = Integer.valueOf(metadata.getMetaData(MWEMetadataType.SOURCE_SENTENCE_ID_IN_DOC));
+        firstTokenIdx = Integer.valueOf(metadata.getMetaData(MWEMetadataType.FIRST_COMPOSING_TOKEN_ID_IN_DOC));
+        lastTokenIdx = Integer.valueOf(metadata.getMetaData(MWEMetadataType.LAST_COMPOSING_TOKEN_ID_IN_DOC));
+        posTag = metadata.getMetaData(MWEMetadataType.POS);
+        //totalSentsInDoc=Integer.valueOf(metadata.getMetaData(MWEMetadataType.SENTENCES_IN_DOC));
     }
 
     public String getPosTag() {

@@ -27,7 +27,7 @@ public interface SentenceContextAware {
      * @param posTag PoS of the lexical unit (only valid for single token)
      * @param sentenceIndex the index (id) of the sentence
      */
-    TokenMetaData addSentenceContext(TokenMetaData ctx, int firstTokenIndex, int lastTokenIndex,
-                                     String posTag, int sentenceIndex);
+    MWEMetadata addSentenceContext(MWEMetadata ctx, int firstTokenIndex, int lastTokenIndex,
+                                   String posTag, int sentenceIndex);
 
 }

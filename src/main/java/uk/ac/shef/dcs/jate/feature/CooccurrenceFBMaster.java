@@ -65,7 +65,7 @@ public class CooccurrenceFBMaster extends AbstractFeatureBuilder {
 
     @Override
     public AbstractFeature build() throws JATEException {
-        //TokenMetaData windows where target candidate terms appear. It is possible that many reference terms
+        //MWEMetadata windows where target candidate terms appear. It is possible that many reference terms
         //do not appear in these context windows, because reference terms are not identical set to target terms
         List<ContextWindow> contextWindows = new ArrayList<>(frequencyCtxBased.getMapCtx2TTF().keySet());
         //List<ContextWindow> contextWindows = new ArrayList<>(ref_frequencyCtxBased.getMapCtx2TTF().keySet());

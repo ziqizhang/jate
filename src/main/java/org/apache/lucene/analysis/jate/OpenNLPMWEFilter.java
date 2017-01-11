@@ -59,8 +59,8 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
         AttributeSource start = tokenAttrs.get(chunkStart);
         AttributeSource end = tokenAttrs.get(chunkEnd - 1);
 
-        TokenMetaData firstTokenMetadata = parseTokenMetadataPayload(start.getAttribute(PayloadAttribute.class));
-        TokenMetaData lastTokenMetadata = parseTokenMetadataPayload(end.getAttribute(PayloadAttribute.class));
+        MWEMetadata firstTokenMetadata = parseTokenMetadataPayload(start.getAttribute(PayloadAttribute.class));
+        MWEMetadata lastTokenMetadata = parseTokenMetadataPayload(end.getAttribute(PayloadAttribute.class));
 
         SentenceContext firstTokenSentCtx = parseSentenceContextPayload(firstTokenMetadata);
         SentenceContext lastTokenSentCtx = parseSentenceContextPayload(lastTokenMetadata);
@@ -89,7 +89,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
                 offsetAtt.setOffset(start.getAttribute(OffsetAttribute.class).startOffset(),
                         end.getAttribute(OffsetAttribute.class).endOffset());
                 typeAtt.setType(chunkTypes.get(chunkStart));
-                TokenMetaData metadata=addSentenceContext(new TokenMetaData(),
+                MWEMetadata metadata=addSentenceContext(new MWEMetadata(),
                         firstTokenSentCtx.getFirstTokenIdx(),
                         lastTokenSentCtx.getLastTokenIdx(),
                         firstTokenSentCtx.getPosTag(),
@@ -113,16 +113,16 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
         return added;
     }
 
-    private TokenMetaData parseTokenMetadataPayload(PayloadAttribute attribute) {
+    private MWEMetadata parseTokenMetadataPayload(PayloadAttribute attribute) {
         BytesRef bfTokenMetadata = attribute != null ? attribute.getPayload() : null;
         if(bfTokenMetadata!=null) {
-            TokenMetaData meta = TokenMetaData.deserialize(bfTokenMetadata.bytes);
+            MWEMetadata meta = MWEMetadata.deserialize(bfTokenMetadata.bytes);
             return meta;
         }
         return null;
     }
 
-    private SentenceContext parseSentenceContextPayload(TokenMetaData metaData) {
+    private SentenceContext parseSentenceContextPayload(MWEMetadata metaData) {
         return new SentenceContext(
                 metaData
         );
@@ -287,7 +287,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
             wordList.add(word);
             PayloadAttribute posAtt = input.getAttribute(PayloadAttribute.class);
             if (posAtt != null) {
-                posList.add(new SentenceContext(TokenMetaData.deserialize(posAtt.getPayload().bytes)).getPosTag());
+                posList.add(new SentenceContext(MWEMetadata.deserialize(posAtt.getPayload().bytes)).getPosTag());
             }
             AttributeSource attrs = input.cloneAttributes();
             tokenAttrs.add(attrs);

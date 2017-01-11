@@ -67,7 +67,6 @@ class ContainmentFBWorker extends JATERecursiveTaskWorker<String, int[]> {
             pStr.append(Pattern.quote(termString)).append("(?!\\w)");
             Pattern pattern = Pattern.compile(pStr.toString());
 
-
             for (String pterm : compareCandidates) {
                 if (pattern.matcher(pterm).find()) {  //ref term contains term
                     feature.add(termString, pterm);

@@ -1,14 +1,11 @@
 package org.apache.lucene.analysis.jate;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.PayloadAttribute;
 import org.apache.lucene.util.BytesRef;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Set;
 
@@ -138,25 +135,25 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
         this.stopWordsIgnoreCase = stopWordsIgnoreCase;
     }
 
-    public TokenMetaData addSentenceContext(TokenMetaData ctx, int firstTokenIndex, int lastTokenIndex,
-                                            String posTag, int sentenceIndex) {
-        ctx.addMetaData(TokenMetaDataType.FIRST_COMPOSING_TOKEN_ID_IN_DOC, String.valueOf(firstTokenIndex));
-        ctx.addMetaData(TokenMetaDataType.LAST_COMPOSING_TOKEN_ID_IN_DOC, String.valueOf(lastTokenIndex));
-        ctx.addMetaData(TokenMetaDataType.TOKEN_POS, posTag);
-        ctx.addMetaData(TokenMetaDataType.SOURCE_SENTENCE_ID_IN_DOC, String.valueOf(sentenceIndex));
+    public MWEMetadata addSentenceContext(MWEMetadata ctx, int firstTokenIndex, int lastTokenIndex,
+                                          String posTag, int sentenceIndex) {
+        ctx.addMetaData(MWEMetadataType.FIRST_COMPOSING_TOKEN_ID_IN_DOC, String.valueOf(firstTokenIndex));
+        ctx.addMetaData(MWEMetadataType.LAST_COMPOSING_TOKEN_ID_IN_DOC, String.valueOf(lastTokenIndex));
+        ctx.addMetaData(MWEMetadataType.POS, posTag);
+        ctx.addMetaData(MWEMetadataType.SOURCE_SENTENCE_ID_IN_DOC, String.valueOf(sentenceIndex));
         return ctx;
     }
 
-    protected TokenMetaData inheritOtherMetadata(TokenMetaData ctx, TokenMetaData inheritFrom) {
-        for (Map.Entry<TokenMetaDataType, String> e : inheritFrom.metadata.entrySet()) {
+    protected MWEMetadata inheritOtherMetadata(MWEMetadata ctx, MWEMetadata inheritFrom) {
+        for (Map.Entry<MWEMetadataType, String> e : inheritFrom.metadata.entrySet()) {
             if (!ctx.metadata.containsKey(e.getKey()))
                 ctx.addMetaData(e.getKey(), e.getValue());
         }
         return ctx;
     }
 
-    public void addPayloadAttribute(PayloadAttribute attribute, TokenMetaData ctx) {
-        byte[] data = TokenMetaData.serialize(ctx);
+    public void addPayloadAttribute(PayloadAttribute attribute, MWEMetadata ctx) {
+        byte[] data = MWEMetadata.serialize(ctx);
         attribute.setPayload(new BytesRef(data));
     }
 
