@@ -5,9 +5,7 @@ import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.core.CoreContainer;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
-import uk.ac.shef.dcs.jate.feature.AbstractFeature;
-import uk.ac.shef.dcs.jate.feature.PositionFeatureMaster;
-import uk.ac.shef.dcs.jate.feature.WordShapeFBMaster;
+import uk.ac.shef.dcs.jate.feature.*;
 import uk.ac.shef.dcs.jate.indexing.IndexingHandler;
 import uk.ac.shef.dcs.jate.io.TikaSimpleDocumentCreator;
 
@@ -36,10 +34,10 @@ public class RegressionFeatureGenerator {
         PositionFeatureMaster positionFeatureMaster =
                 new PositionFeatureMaster(server.getCoreContainer().getCore("genia").getSearcher().get(),
                         prop,0);
-        AbstractFeature wordshapeFeature=wordShapeFBMaster.build();
+        WordShapeFeature wordshapeFeature= (WordShapeFeature)wordShapeFBMaster.build();
 
-        AbstractFeature positionFeature=positionFeatureMaster.build();
+        PositionFeature positionFeature= (PositionFeature)positionFeatureMaster.build();
 
-        
+
     }
 }
