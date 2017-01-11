@@ -15,7 +15,7 @@ import java.util.Map;
  * distance can be absolute, or relative (in which case it is the ordinal number of the sent/par
  * divided by the total sentences/pararagraphs
  */
-public class PositionFeature {
+public class PositionFeature extends AbstractFeature{
     private Map<String, Integer> foundInDocTitles = new HashMap<>();
     //distances between the source paragraphs and the title paragraph
     private Map<String, List<Double>> parDistsFromTitle = new HashMap<>();
