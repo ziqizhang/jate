@@ -11,6 +11,7 @@ import java.util.Map;
  *
  */
 public class MWEMetadata implements Serializable {
+    private static final long serialVersionUID = -9117653988678036089L;
     private static final Logger log = Logger.getLogger(MWEMetadata.class.getName());
     Map<MWEMetadataType, String> metadata = new HashMap<>();
 

@@ -29,13 +29,14 @@ public class RegressionFeatureGenerator {
         File[] files= new File("/home/zqz/Work/data/jate_data/genia_gs/text/files_standard").listFiles();
         List<String> tasks = new ArrayList<>();
         JATEProperties prop = new JATEProperties();
-        for(File f: files) {
+        /*for(File f: files) {
             tasks.add(f.toString());
         }
         IndexingHandler indexer = new IndexingHandler();
         indexer.index(tasks, 100,
                 new TikaSimpleDocumentCreator(), server, prop);
-        System.exit(0);
+        server.close();
+        System.exit(0);*/
         //server.commit();
 
         WordShapeFBMaster wordShapeFBMaster =

@@ -96,7 +96,7 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
     protected Set<String> stopWords;
     protected boolean stopWordsIgnoreCase;
 
-    protected final PayloadAttribute sentenceContext = addAttribute(PayloadAttribute.class);
+    protected final PayloadAttribute metadataAttr = addAttribute(PayloadAttribute.class);
 
     /**
      * Construct a token stream filtering the given input.

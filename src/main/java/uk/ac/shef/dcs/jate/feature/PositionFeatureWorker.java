@@ -87,9 +87,7 @@ public class PositionFeatureWorker extends JATERecursiveTaskWorker<String, int[]
                     }
                 }
                 totalSuccess++;
-
             }
-
         } catch (IOException ioe) {
             String error = String.format("Unable to read ngram information field:. \\n Exception: %s",
                     ExceptionUtils.getFullStackTrace(ioe));

@@ -98,7 +98,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
                         firstTokenSentCtx.getPosTag(),
                         lastTokenSentCtx.getSentenceId());
                 metadata=inheritOtherMetadata(metadata, firstTokenMetadata);
-                addPayloadAttribute(sentenceContext, metadata);
+                addPayloadAttribute(metadataAttr, metadata);
 
                 added = true;
             }

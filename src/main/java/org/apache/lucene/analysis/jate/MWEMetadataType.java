@@ -1,9 +1,11 @@
 package org.apache.lucene.analysis.jate;
 
+import java.io.Serializable;
+
 /**
  *
  */
-public enum MWEMetadataType {
+public enum MWEMetadataType implements Serializable{
 
     SOURCE_PARAGRAPH_ID_IN_DOC("paragraph-id-in-doc"),
     PARAGRAPHS_IN_DOC("paragraphs-in-doc"),
@@ -24,6 +26,7 @@ public enum MWEMetadataType {
     HAS_ACRONYM_TOKEN("has_acronym_token"), //the NBC corp, the X26 flight
     HAS_NUMERIC_TOKEN("has_numeric_token"); //the 28 lane,
 
+    private static final long serialVersionUID = -9172128488887341289L;
     private String prop;
 
     private MWEMetadataType(String prop){

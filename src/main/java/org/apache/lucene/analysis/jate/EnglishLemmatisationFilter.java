@@ -16,7 +16,6 @@ import java.io.IOException;
 public final class EnglishLemmatisationFilter extends TokenFilter {
     private final Lemmatiser lemmatiser;
     private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
-    private final PayloadAttribute exitingPayload = addAttribute(PayloadAttribute.class);
 
     public EnglishLemmatisationFilter(EngLemmatiser dragontoolLemmatiser, TokenStream input) {
         super(input);
@@ -33,6 +32,8 @@ public final class EnglishLemmatisationFilter extends TokenFilter {
                 //tok = normalize(tok, pos);
                 tok=lemmatiser.normalize(tok, "NN");
             }
+            if(tok.toLowerCase().contains("1,25-dihydroxy vitamin"))
+                System.out.println();
 
             termAtt.setEmpty().append(tok);
             return true;

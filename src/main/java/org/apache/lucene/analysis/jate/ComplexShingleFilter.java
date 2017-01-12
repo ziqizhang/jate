@@ -257,7 +257,7 @@ public final class ComplexShingleFilter extends MWEFilter implements SentenceCon
                                     firstTokenSentCtx.getPosTag(),
                                     lastTokenSentCtx.getSentenceId());
                             metaData = inheritOtherMetadata(metaData, firstTokenMetadata);
-                            addPayloadAttribute(sentenceContext, metaData);
+                            addPayloadAttribute(metadataAttr, metaData);
                         }
                         // System.out.println("==="+gramBuilder.toString()+","+sentenceContextAtt.getPayload().utf8ToString());
                     } else {
