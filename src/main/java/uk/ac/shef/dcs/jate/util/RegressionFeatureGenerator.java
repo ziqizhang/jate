@@ -26,19 +26,21 @@ public class RegressionFeatureGenerator {
         testBedContainer.load();
         server = new EmbeddedSolrServer(testBedContainer, "GENIA");
 
-        File[] files= new File("/home/zqz/Work/data/jate_data/genia_gs/text/files_debug").listFiles();
+        File[] files= new File("/home/zqz/Work/data/jate_data/genia_gs/text/files_standard").listFiles();
         List<String> tasks = new ArrayList<>();
         JATEProperties prop = new JATEProperties();
         for(File f: files) {
             tasks.add(f.toString());
         }
+
+        //############### this block is for building a testing index #########
         /*IndexingHandler indexer = new IndexingHandler();
         indexer.index(tasks, 100,
                 new TikaSimpleDocumentCreator(), server, prop);
         server.close();
         System.exit(0);*/
-        //server.commit();
 
+        //############## the following is the code for fetching features from the built index ######
         WordShapeFBMaster wordShapeFBMaster =
                 new WordShapeFBMaster(server.getCoreContainer().getCore("GENIA").getSearcher().get(),
                         prop,0,null);
@@ -46,9 +48,10 @@ public class RegressionFeatureGenerator {
                 new PositionFeatureMaster(server.getCoreContainer().getCore("GENIA").getSearcher().get(),
                         prop,0);
         WordShapeFeature wordshapeFeature= (WordShapeFeature)wordShapeFBMaster.build();
-
         PositionFeature positionFeature= (PositionFeature)positionFeatureMaster.build();
+        
 
+        System.exit(0);
 
     }
 }

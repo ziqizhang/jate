@@ -39,7 +39,7 @@ class WordShapeTagger {
         return symbol.matcher(input).find();
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         WordShapeTagger test = new WordShapeTagger();
         String input = "CD28 surface receptor";
         System.out.println(test.hasNumber(input));
@@ -47,6 +47,6 @@ class WordShapeTagger {
         System.out.println(test.hasUppercase(input));
         System.out.println(test.hasDigit(input));
         System.out.println(test.hasSymbol(input));
-    }
+    }*/
 
 }

@@ -88,11 +88,11 @@ public class PositionFeatureWorker extends JATERecursiveTaskWorker<Integer, int[
                             MWEMetadata metadata = MWEMetadata.deserialize(payload.utf8ToString());
                             populateFeature(metadata, tString, feature);
 
-                            if (totalOccurrence > 1 && tString.equals("1,25-dihydroxy vitamin")) {
+                            /*if (totalOccurrence > 1 && tString.equals("1,25-dihydroxy vitamin")) {
                                 System.out.println("pos=" + pos + ", " +
                                         postingsEnum.startOffset() + "-" + postingsEnum.endOffset()
                                         + ", " + metadata.getMetaData(MWEMetadataType.SOURCE_SENTENCE_ID_IN_DOC));
-                            }
+                            }*/
                         }
                         //postingsEnum.nextDoc();
                     }

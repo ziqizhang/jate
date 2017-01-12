@@ -35,15 +35,6 @@ public final class EnglishLemmatisationFilter extends TokenFilter {
                 //tok = normalize(tok, pos);
                 tok = lemmatiser.normalize(tok, "NN");
             }
-            if (tok.toLowerCase().equals("1,25-dihydroxy vitamin")) {
-                System.out.println("term offsets:"
-                        + " "+offsetAtt.startOffset() + "-" + offsetAtt.endOffset());
-                MWEMetadata metadata = MWEMetadata.deserialize(mweMetadata.getPayload().utf8ToString());
-                /*System.out.println("property=" + metadata.getMetaData(MWEMetadataType.SOURCE_SENTENCE_ID_IN_DOC)
-                        + ", payload="+mweMetadata.getPayload());*/
-                byte[] data=mweMetadata.getPayload().bytes;
-                System.out.println(data.length);
-            }
 
             termAtt.setEmpty().append(tok);
             return true;
