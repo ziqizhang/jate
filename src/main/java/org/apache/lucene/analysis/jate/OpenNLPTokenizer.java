@@ -219,6 +219,8 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
 
     //split paragraphs and also create containment relation with sentences
     void detectParagraphs(String txtStr) {
+        sentsInParagraph.clear();
+        paragraphHasSents.clear();
         List<Paragraph>
                 paragraphs = paragraphOp.chunk(txtStr);
 
@@ -300,8 +302,8 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
                                     int totalParagraphsInDoc,
                                     int totalSentencesInDoc) {
         ctx.addMetaData(MWEMetadataType.SOURCE_PARAGRAPH_ID_IN_DOC, String.valueOf(paragraphId));
-        ctx.addMetaData(MWEMetadataType.PARAGRAPHS_IN_DOC, String.valueOf(totalParagraphsInDoc));
         ctx.addMetaData(MWEMetadataType.SENTENCES_IN_PARAGRAPH, String.valueOf(totalSentencesInParagraph));
+        ctx.addMetaData(MWEMetadataType.PARAGRAPHS_IN_DOC, String.valueOf(totalParagraphsInDoc));
         ctx.addMetaData(MWEMetadataType.SENTENCES_IN_DOC, String.valueOf(totalSentencesInDoc));
     }
 

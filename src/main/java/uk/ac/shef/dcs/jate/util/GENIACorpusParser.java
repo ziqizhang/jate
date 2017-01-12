@@ -31,11 +31,16 @@ public class GENIACorpusParser {
 				id = i + "_" + id.replaceAll("[^0-9a-zA-Z]", "_");
 				PrintWriter p = new PrintWriter(outFolder + File.separator + id + ".txt");
 				NodeList sentences = doc.getElementsByTagName("sentence");
+
 				for (int j = 0; j < sentences.getLength(); j++) {
 					Node sent = sentences.item(j);
 
-					p.println(sent.getTextContent());
+					if(j==0)
+						p.println(sent.getTextContent());
+					else
+						p.print(sent.getTextContent()+" ");
 				}
+				p.println();
 				p.close();
 			}
         } finally {

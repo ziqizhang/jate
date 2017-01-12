@@ -28,6 +28,8 @@ class ParagraphChunkerRawText implements ParagraphChunker {
             index++;
             paragraphs.add(p);
             start=m.end();
+            /*if(index>1000)
+                System.out.println();*/
         }
         if(start< inputText.length()){
             Paragraph p =new Paragraph(start, inputText.length(), index);

@@ -35,7 +35,8 @@ public class PositionFeatureMaster extends AbstractFeatureBuilder {
         PositionFeature feature = new PositionFeature();
 
         try {
-            Terms ngramInfo = SolrUtil.getTermVector(properties.getSolrFieldNameJATENGramInfo(), solrIndexSearcher);
+            Terms ngramInfo =
+                    SolrUtil.getTermVector(properties.getSolrFieldNameJATECTerms(), solrIndexSearcher);
             Set<String> all;
             if (termOrWord == FEATURE_TYPE_TERM)
                 all = getUniqueTerms();
