@@ -85,6 +85,9 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
             }
 
             if (passCharLengthCheck) {
+                if(normalized.toLowerCase().contains("1,25-dihydroxy vitamin"))
+                    System.out.println();
+
                 termAtt.setEmpty().append(normalized);
                 offsetAtt.setOffset(start.getAttribute(OffsetAttribute.class).startOffset(),
                         end.getAttribute(OffsetAttribute.class).endOffset());
@@ -291,6 +294,11 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
             }
             AttributeSource attrs = input.cloneAttributes();
             tokenAttrs.add(attrs);
+
+            if(offsetAtt.startOffset()==0&&offsetAtt.endOffset()==14 &&word.toLowerCase().contains("-dihydroxy"))
+                System.out.println();
+            if(offsetAtt.startOffset()==146&&offsetAtt.endOffset()==160&&word.toLowerCase().contains("-dihydroxy"))
+                System.out.println();
         }
         if (wordList.size() != posList.size()) {
             StringBuilder sb = new StringBuilder(this.getClass().getName());

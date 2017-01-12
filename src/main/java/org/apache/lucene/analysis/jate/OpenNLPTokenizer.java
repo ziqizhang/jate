@@ -52,6 +52,7 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
     //
     private Map<Integer, Paragraph> sentsInParagraph = new HashMap<>(); //the key is the startoffset of a sentence
     private Map<Paragraph, Integer> paragraphHasSents = new HashMap<>(); //key is the paragraph, value is the number of sentences in that paragraph
+    private Map<Integer, Integer> sentIdsInParagraph = new HashMap<>(); //key is the setnecen startoffset, value is the sentence's id in its source paragraph
 
     private Span[] sentences = null;
     private Span[][] words = null;
@@ -156,14 +157,23 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
                     null, indexSentence);
             if (paragraphOp != null) {
                 Paragraph sourcePar = sentsInParagraph.get(sentence.getStart());
+                int sentenceIdInParagraph= sentIdsInParagraph.get(sentences[indexSentence].getStart());
                 addOtherMetadata(ctx,
                         sourcePar.indexInDoc,
                         paragraphHasSents.get(sourcePar),
                         paragraphHasSents.size(),
+                        sentenceIdInParagraph,
                         sentences.length);
             }
             addPayloadAttribute(tokenMetadataAtt, ctx);
             //System.out.println(tokenMetadataAtt.getPayload().utf8ToString()+","+new String(buffer,0, termAtt.length()));
+
+            String txtStr = new String(fullText);
+            String wordStr =txtStr.substring(offsetAtt.startOffset(),offsetAtt.endOffset());
+            if(offsetAtt.startOffset()==0&&offsetAtt.endOffset()==14 &&wordStr.toLowerCase().contains("-dihydroxy"))
+                System.out.println();
+            if(offsetAtt.startOffset()==146&&offsetAtt.endOffset()==160&&wordStr.toLowerCase().contains("-dihydroxy"))
+                System.out.println();
 
             indexWord++;
 
@@ -221,12 +231,14 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
     void detectParagraphs(String txtStr) {
         sentsInParagraph.clear();
         paragraphHasSents.clear();
+        sentIdsInParagraph.clear();
         List<Paragraph>
                 paragraphs = paragraphOp.chunk(txtStr);
 
         if (paragraphs != null) {
-            int cursor = 0;
-            Paragraph par = paragraphs.get(cursor);
+            int parCursor = 0;
+            Paragraph par = paragraphs.get(parCursor);
+            int sentenceIdInPar=0;
             for (Span sent : sentences) {
                 if (sent.getStart() >= par.startOffset && sent.getStart() <= par.endOffset) {
                     sentsInParagraph.put(sent.getStart(), par);
@@ -234,16 +246,21 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
                     if (c == null) c = 0;
                     c++;
                     paragraphHasSents.put(par, c);
+                    sentIdsInParagraph.put(sent.getStart(), sentenceIdInPar);
+                    sentenceIdInPar++;
                 } else {
-                    for (int i = cursor + 1; i < paragraphs.size(); i++) {
+                    for (int i = parCursor + 1; i < paragraphs.size(); i++) {
                         par = paragraphs.get(i);
+                        sentenceIdInPar=0;
                         if (sent.getStart() >= par.startOffset && sent.getStart() <= par.endOffset) {
                             sentsInParagraph.put(sent.getStart(), par);
                             Integer c = paragraphHasSents.get(par);
                             if (c == null) c = 0;
                             c++;
                             paragraphHasSents.put(par, c);
-                            cursor = i;
+                            parCursor = i;
+                            sentIdsInParagraph.put(sent.getStart(), sentenceIdInPar);
+                            sentenceIdInPar++;
                             break;
                         }
                     }
@@ -290,8 +307,8 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
 
     public MWEMetadata addSentenceContext(MWEMetadata ctx, int firstTokenIndex, int lastTokenIndex,
                                           String posTag, int sentenceIndex) {
-        ctx.addMetaData(MWEMetadataType.FIRST_COMPOSING_TOKEN_ID_IN_DOC, String.valueOf(firstTokenIndex));
-        ctx.addMetaData(MWEMetadataType.LAST_COMPOSING_TOKEN_ID_IN_DOC, String.valueOf(lastTokenIndex));
+        ctx.addMetaData(MWEMetadataType.FIRST_COMPOSING_TOKEN_ID_IN_SENT, String.valueOf(firstTokenIndex));
+        ctx.addMetaData(MWEMetadataType.LAST_COMPOSING_TOKEN_ID_IN_SENT, String.valueOf(lastTokenIndex));
         ctx.addMetaData(MWEMetadataType.POS, posTag);
         ctx.addMetaData(MWEMetadataType.SOURCE_SENTENCE_ID_IN_DOC, String.valueOf(sentenceIndex));
         return ctx;
@@ -300,10 +317,12 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
     protected void addOtherMetadata(MWEMetadata ctx, int paragraphId,
                                     int totalSentencesInParagraph,
                                     int totalParagraphsInDoc,
+                                    int sentenceIdInParagraph,
                                     int totalSentencesInDoc) {
         ctx.addMetaData(MWEMetadataType.SOURCE_PARAGRAPH_ID_IN_DOC, String.valueOf(paragraphId));
         ctx.addMetaData(MWEMetadataType.SENTENCES_IN_PARAGRAPH, String.valueOf(totalSentencesInParagraph));
         ctx.addMetaData(MWEMetadataType.PARAGRAPHS_IN_DOC, String.valueOf(totalParagraphsInDoc));
+        ctx.addMetaData(MWEMetadataType.SOURCE_SENTENCE_ID_IN_PARAGRAPH, String.valueOf(sentenceIdInParagraph));
         ctx.addMetaData(MWEMetadataType.SENTENCES_IN_DOC, String.valueOf(totalSentencesInDoc));
     }
 

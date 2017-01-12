@@ -137,8 +137,8 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
 
     public MWEMetadata addSentenceContext(MWEMetadata ctx, int firstTokenIndex, int lastTokenIndex,
                                           String posTag, int sentenceIndex) {
-        ctx.addMetaData(MWEMetadataType.FIRST_COMPOSING_TOKEN_ID_IN_DOC, String.valueOf(firstTokenIndex));
-        ctx.addMetaData(MWEMetadataType.LAST_COMPOSING_TOKEN_ID_IN_DOC, String.valueOf(lastTokenIndex));
+        ctx.addMetaData(MWEMetadataType.FIRST_COMPOSING_TOKEN_ID_IN_SENT, String.valueOf(firstTokenIndex));
+        ctx.addMetaData(MWEMetadataType.LAST_COMPOSING_TOKEN_ID_IN_SENT, String.valueOf(lastTokenIndex));
         ctx.addMetaData(MWEMetadataType.POS, posTag);
         ctx.addMetaData(MWEMetadataType.SOURCE_SENTENCE_ID_IN_DOC, String.valueOf(sentenceIndex));
         return ctx;

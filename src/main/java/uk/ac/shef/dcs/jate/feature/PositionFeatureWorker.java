@@ -26,22 +26,22 @@ public class PositionFeatureWorker extends JATERecursiveTaskWorker<String, int[]
     private JATEProperties properties;
     private SolrIndexSearcher solrIndexSearcher;
     private PositionFeature feature;
-    private Terms ngramInfo;
+    private Terms ctermInfo;
 
     PositionFeatureWorker(JATEProperties properties, List<String> luceneTerms, SolrIndexSearcher solrIndexSearcher,
                           PositionFeature feature, int maxTasksPerWorker,
-                      Terms ngramInfo) {
+                      Terms ctermInfo) {
         super(luceneTerms, maxTasksPerWorker);
         this.properties = properties;
         this.feature = feature;
         this.solrIndexSearcher = solrIndexSearcher;
-        this.ngramInfo = ngramInfo;
+        this.ctermInfo = ctermInfo;
     }
 
     @Override
     protected JATERecursiveTaskWorker<String, int[]> createInstance(List<String> termSplit) {
         return new PositionFeatureWorker(properties, termSplit, solrIndexSearcher, feature, maxTasksPerThread,
-                ngramInfo);
+                ctermInfo);
     }
 
     @Override
@@ -58,39 +58,38 @@ public class PositionFeatureWorker extends JATERecursiveTaskWorker<String, int[]
     @Override
     protected int[] computeSingleWorker(List<String> terms) {
         int totalSuccess = 0;
-        TermsEnum ngramInfoIterator;
+        TermsEnum ctermEnum;
         try {
-            ngramInfoIterator = ngramInfo.iterator();
-
-            for (String term : terms) {
-                try {
-                    if (ngramInfoIterator.seekExact(new BytesRef(term.getBytes("UTF-8")))) {
-                        PostingsEnum postingsEnum = ngramInfoIterator.postings(null, PostingsEnum.ALL);
-                        while ( postingsEnum.nextDoc() != PostingsEnum.NO_MORE_DOCS) {
-                            //tf in document
-                            int totalOccurrence = postingsEnum.freq();
-                            for (int i = 0; i < totalOccurrence; i++) {
-                                postingsEnum.nextPosition();
-                                BytesRef bytes = postingsEnum.getPayload();
-                                MWEMetadata metadata = MWEMetadata.deserialize(bytes.bytes);
-                                populateFeature(metadata, term, feature);
-                            }
-                        }
-                        totalSuccess++;
-                    } else {
-                        String warning = String.format("'%s'  is a candidate term, but not indexed in the n-gram " +
-                                "information field. It's score may be mis-computed. You may have used different text " +
-                                "analysis process (e.g., different tokenizers, different analysis order, limited " +
-                                "n-gram range) for the text-2-candidate-term and text-2-ngram fields.) ", term);
-                        LOG.warn(warning);
-                    }
-
-                } catch (IOException ioe) {
-                    String error = String.format("Unable to build feature for candidate: '%s'. \\n Exception: %s",
-                            term, ExceptionUtils.getFullStackTrace(ioe));
-                    LOG.error(error.toString());
+            ctermEnum = this.ctermInfo.iterator();
+            BytesRef luceneTerm = ctermEnum.next();
+            while(luceneTerm!=null){
+                if (luceneTerm.length == 0) {
+                    luceneTerm = ctermEnum.next();
+                    continue;
                 }
+                String tString = luceneTerm.utf8ToString();
+                if(!terms.contains(tString)) {
+                    luceneTerm=ctermEnum.next();
+                    continue;
+                }
+                PostingsEnum postingsEnum = ctermEnum.postings(null, PostingsEnum.ALL);
+                while ( postingsEnum.nextDoc() != PostingsEnum.NO_MORE_DOCS) {
+                    //tf in document
+                    int totalOccurrence = postingsEnum.freq();
+                    if(totalOccurrence>1)
+                        System.out.println();
+
+                    for (int i = 0; i < totalOccurrence; i++) {
+                        int pos=postingsEnum.nextPosition();
+                        BytesRef bytes = postingsEnum.getPayload();
+                        MWEMetadata metadata = MWEMetadata.deserialize(bytes.bytes);
+                        populateFeature(metadata, tString, feature);
+                    }
+                }
+                totalSuccess++;
+
             }
+
         } catch (IOException ioe) {
             String error = String.format("Unable to read ngram information field:. \\n Exception: %s",
                     ExceptionUtils.getFullStackTrace(ioe));

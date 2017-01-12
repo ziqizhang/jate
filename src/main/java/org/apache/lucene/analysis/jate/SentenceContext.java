@@ -37,8 +37,8 @@ public class SentenceContext {
 
     private void init(MWEMetadata metadata) {
         sentenceId = Integer.valueOf(metadata.getMetaData(MWEMetadataType.SOURCE_SENTENCE_ID_IN_DOC));
-        firstTokenIdx = Integer.valueOf(metadata.getMetaData(MWEMetadataType.FIRST_COMPOSING_TOKEN_ID_IN_DOC));
-        lastTokenIdx = Integer.valueOf(metadata.getMetaData(MWEMetadataType.LAST_COMPOSING_TOKEN_ID_IN_DOC));
+        firstTokenIdx = Integer.valueOf(metadata.getMetaData(MWEMetadataType.FIRST_COMPOSING_TOKEN_ID_IN_SENT));
+        lastTokenIdx = Integer.valueOf(metadata.getMetaData(MWEMetadataType.LAST_COMPOSING_TOKEN_ID_IN_SENT));
         posTag = metadata.getMetaData(MWEMetadataType.POS);
         //totalSentsInDoc=Integer.valueOf(metadata.getMetaData(MWEMetadataType.SENTENCES_IN_DOC));
     }

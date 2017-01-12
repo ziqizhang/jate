@@ -17,8 +17,6 @@ public final class MWEFeatureFilter extends TokenFilter {
     private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
     private final PayloadAttribute exitingPayload = addAttribute(PayloadAttribute.class);
 
-    private String paragraphId=null, sentenceId=null;
-    private int sentIdInParagraph=0;
     private WordShapeTagger wordShapeTagger = new WordShapeTagger();
 
     public MWEFeatureFilter(TokenStream input) {
@@ -41,25 +39,7 @@ public final class MWEFeatureFilter extends TokenFilter {
                 features.addMetaData(e.getKey(), e.getValue());
             }
 
-            //step 2, add 'sentence id in paragraph'
-            String paragraphId=metadata.getMetaData(MWEMetadataType.SOURCE_PARAGRAPH_ID_IN_DOC);
-            String sentenceId=metadata.getMetaData(MWEMetadataType.SOURCE_SENTENCE_ID_IN_DOC);
-            if(this.paragraphId==null)
-                this.paragraphId=paragraphId;
-            if(this.sentenceId==null)
-                this.sentenceId=sentenceId;
-            if(this.paragraphId.equals(paragraphId) && !this.sentenceId.equals(sentenceId)){
-                sentIdInParagraph++;
-                this.sentenceId=sentenceId;
-            }
-            if(!this.paragraphId.equals(paragraphId)){
-                this.paragraphId=paragraphId;
-                this.sentenceId=sentenceId;
-                sentIdInParagraph=0;
-            }
-            features.addMetaData(MWEMetadataType.SOURCE_SENTENCE_ID_IN_PARAGRAPH, String.valueOf(sentIdInParagraph));
-
-            //step 3, add orthographic features
+            //step 2, add orthographic features
             boolean hasNumber=wordShapeTagger.hasNumber(tok);
             boolean hasAcronym= wordShapeTagger.hasAcronym(tok);
             boolean hasUppercase=wordShapeTagger.hasUppercase(tok);

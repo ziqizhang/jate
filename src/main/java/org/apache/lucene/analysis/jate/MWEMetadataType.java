@@ -14,8 +14,8 @@ public enum MWEMetadataType {
     SENTENCES_IN_PARAGRAPH("sentences-in-paragraph"),
     //sentences. The first paragraph in a document is considered the doc title
 
-    FIRST_COMPOSING_TOKEN_ID_IN_DOC("first-token-index"),
-    LAST_COMPOSING_TOKEN_ID_IN_DOC("last-token-index"),
+    FIRST_COMPOSING_TOKEN_ID_IN_SENT("first-token-index"),
+    LAST_COMPOSING_TOKEN_ID_IN_SENT("last-token-index"),
     POS("pos"),
 
     HAS_UPPERCASE("has_uppercase"),

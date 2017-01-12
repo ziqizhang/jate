@@ -35,7 +35,7 @@ public class PositionFeatureMaster extends AbstractFeatureBuilder {
         PositionFeature feature = new PositionFeature();
 
         try {
-            Terms ngramInfo =
+            Terms ctermInfo =
                     SolrUtil.getTermVector(properties.getSolrFieldNameJATECTerms(), solrIndexSearcher);
             Set<String> all;
             if (termOrWord == FEATURE_TYPE_TERM)
@@ -58,7 +58,7 @@ public class PositionFeatureMaster extends AbstractFeatureBuilder {
             PositionFeatureWorker worker = new
                     PositionFeatureWorker(properties, allCandidates,
                     solrIndexSearcher, feature, maxPerThread,
-                    ngramInfo);
+                    ctermInfo);
             ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
             int[] total = forkJoinPool.invoke(worker);
             sb = new StringBuilder("Complete building features. Total=");
