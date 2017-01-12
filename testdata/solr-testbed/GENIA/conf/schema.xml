@@ -212,7 +212,8 @@
 			    	-->
 				<tokenizer class="org.apache.lucene.analysis.jate.OpenNLPTokenizerFactory"
 							sentenceModel="en-sent.bin"
-							tokenizerModel="en-token.bin"/>
+							tokenizerModel="en-token.bin"
+							paragraphChunker-class="org.apache.lucene.analysis.jate.ParagraphChunkerRawText"/>
 				<!-- Asciifolding that converts alphabetic, numeric, and symbolic Unicode characters to ASCII characters-->
 				<filter class="solr.ASCIIFoldingFilterFactory"/>
 				<!-- A PoS tagger based on OpenNLP 
@@ -262,6 +263,7 @@
 					-lemmaResourceDir: must be a folder placed in the same folder as this schema, containing the resource
 						files required by the Dragon Tool Kit English lemmatiser
 					-->		
+				<!--filter class="org.apache.lucene.analysis.jate.MWEFeatureFilterFactory"/-->					
 				<filter class="org.apache.lucene.analysis.jate.EnglishLemmatisationFilterFactory"
 					lemmaResourceDir="lemmatiser"/>
 				<!-- standard Solr stop words filter -->
@@ -293,7 +295,8 @@
 			    	-->
 				<tokenizer class="org.apache.lucene.analysis.jate.OpenNLPTokenizerFactory"
 							sentenceModel="en-sent.bin"
-							tokenizerModel="en-token.bin"/>
+							tokenizerModel="en-token.bin"
+							paragraphChunker-class="org.apache.lucene.analysis.jate.ParagraphChunkerRawText"/>
 				<!-- Asciifolding that converts alphabetic, numeric, and symbolic Unicode characters to ASCII characters-->
 				<filter class="solr.ASCIIFoldingFilterFactory"/>
 				<!-- A PoS tagger based on OpenNLP 
@@ -346,12 +349,13 @@
 							stripAnySymbolChars="false"
 							stripLeadingSymbolChars="true" stripTrailingSymbolChars="true"
 							stopWords="stopwords.txt" stopWordsIgnoreCase="true"/-->
-				<filter class="solr.LowerCaseFilterFactory" />					
 				<!--filter class="solr.EnglishMinimalStemFilterFactory"/-->				
 				<!-- An English lemmatiser 
 					-lemmaResourceDir: must be a folder placed in the same folder as this schema, containing the resource
 						files required by the Dragon Tool Kit English lemmatiser
 					-->		
+				<filter class="org.apache.lucene.analysis.jate.MWEFeatureFilterFactory"/>	
+				<filter class="solr.LowerCaseFilterFactory" />					
 				<filter class="org.apache.lucene.analysis.jate.EnglishLemmatisationFilterFactory"
 					lemmaResourceDir="lemmatiser"/>
 				<!-- standard Solr stop words filter -->

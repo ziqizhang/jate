@@ -226,7 +226,7 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
             int cursor = 0;
             Paragraph par = paragraphs.get(cursor);
             for (Span sent : sentences) {
-                if (sent.getStart() >= par.startOffset && sent.getEnd() < par.endOffset) {
+                if (sent.getStart() >= par.startOffset && sent.getStart() <= par.endOffset) {
                     sentsInParagraph.put(sent.getStart(), par);
                     Integer c = paragraphHasSents.get(par);
                     if (c == null) c = 0;
@@ -235,7 +235,7 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
                 } else {
                     for (int i = cursor + 1; i < paragraphs.size(); i++) {
                         par = paragraphs.get(i);
-                        if (sent.getStart() >= par.startOffset && sent.getEnd() < par.endOffset) {
+                        if (sent.getStart() >= par.startOffset && sent.getStart() <= par.endOffset) {
                             sentsInParagraph.put(sent.getStart(), par);
                             Integer c = paragraphHasSents.get(par);
                             if (c == null) c = 0;
@@ -302,7 +302,7 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
         ctx.addMetaData(MWEMetadataType.SOURCE_PARAGRAPH_ID_IN_DOC, String.valueOf(paragraphId));
         ctx.addMetaData(MWEMetadataType.PARAGRAPHS_IN_DOC, String.valueOf(totalParagraphsInDoc));
         ctx.addMetaData(MWEMetadataType.SENTENCES_IN_PARAGRAPH, String.valueOf(totalSentencesInParagraph));
-        ctx.addMetaData(MWEMetadataType.SENTENCES_IN_DOC, String.valueOf(totalParagraphsInDoc));
+        ctx.addMetaData(MWEMetadataType.SENTENCES_IN_DOC, String.valueOf(totalSentencesInDoc));
     }
 
     public void addPayloadAttribute(PayloadAttribute attribute, MWEMetadata ctx) {

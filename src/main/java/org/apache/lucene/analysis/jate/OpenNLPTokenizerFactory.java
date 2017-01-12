@@ -37,7 +37,7 @@ public class OpenNLPTokenizerFactory extends TokenizerFactory implements Resourc
     public Tokenizer create(AttributeFactory factory) {
         OpenNLPTokenizer tokenizer;
 
-        if(paragraphChunker!=null)
+        if(paragraphChunker==null)
             tokenizer= new OpenNLPTokenizer(factory, sentenceOp, tokenizerOp);
         else
             tokenizer=new OpenNLPTokenizer(factory, sentenceOp, tokenizerOp, paragraphChunker);

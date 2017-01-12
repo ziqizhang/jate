@@ -67,8 +67,10 @@ public final class OpenNLPPOSTaggerFilter extends TokenFilter {
             }
         }
         as.copyTo(this);
-        String string = exitingPayload.getPayload() == null ? "p=" : exitingPayload.getPayload().utf8ToString() + ",p=";
-        exitingPayload.setPayload(new BytesRef((string + posTags[tokenIdx]).getBytes("UTF-8")));
+        MWEMetadata metadata = exitingPayload.getPayload() == null ? new MWEMetadata() :
+                MWEMetadata.deserialize(exitingPayload.getPayload().bytes);
+        metadata.addMetaData(MWEMetadataType.POS, posTags[tokenIdx]);
+        exitingPayload.setPayload(new BytesRef(MWEMetadata.serialize(metadata)));
         tokenIdx++;
         return true;
     }

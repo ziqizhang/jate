@@ -13,7 +13,7 @@ import java.util.Map;
  * create features for a MWE to be used by supervised learning. Features are attached as payload
  *
  */
-public class MWEFeatureFilter extends TokenFilter {
+public final class MWEFeatureFilter extends TokenFilter {
     private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
     private final PayloadAttribute exitingPayload = addAttribute(PayloadAttribute.class);
 
@@ -31,6 +31,8 @@ public class MWEFeatureFilter extends TokenFilter {
         if (input.incrementToken()) {
             String tok = new String(termAtt.buffer(),0, termAtt.length());
             BytesRef payload = exitingPayload.getPayload();
+            if(payload==null)
+                return true;
             MWEMetadata metadata = MWEMetadata.deserialize(payload.bytes);
             MWEMetadata features = new MWEMetadata();
 
@@ -46,7 +48,6 @@ public class MWEFeatureFilter extends TokenFilter {
                 this.paragraphId=paragraphId;
             if(this.sentenceId==null)
                 this.sentenceId=sentenceId;
-
             if(this.paragraphId.equals(paragraphId) && !this.sentenceId.equals(sentenceId)){
                 sentIdInParagraph++;
                 this.sentenceId=sentenceId;

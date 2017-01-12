@@ -11,7 +11,7 @@ class WordShapeTagger {
     private static final Pattern number = Pattern.compile("\\b[0-9\\.,/]+\\b");
     private static final Pattern uppercase = Pattern.compile("[A-Z]");
     private static final Pattern digit = Pattern.compile("[0-9]");
-    private static final Pattern symbol = Pattern.compile("\\W");
+    private static final Pattern symbol = Pattern.compile("\\p{Punct}");
 
     public boolean hasNumber(String input){
         return number.matcher(input).find();
@@ -39,14 +39,14 @@ class WordShapeTagger {
         return symbol.matcher(input).find();
     }
 
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         WordShapeTagger test = new WordShapeTagger();
-        String input = "*ER";
+        String input = "CD28 surface receptor";
         System.out.println(test.hasNumber(input));
         System.out.println(test.hasAcronym(input));
         System.out.println(test.hasUppercase(input));
         System.out.println(test.hasDigit(input));
         System.out.println(test.hasSymbol(input));
-    }*/
+    }
 
 }
