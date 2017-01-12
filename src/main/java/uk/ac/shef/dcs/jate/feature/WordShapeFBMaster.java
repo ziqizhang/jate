@@ -36,8 +36,8 @@ public class WordShapeFBMaster extends AbstractFeatureBuilder{
         WordShapeFeature feature = new WordShapeFeature();
 
         try {
-            Terms ctermInfo = SolrUtil.
-                    getTermVector(properties.getSolrFieldNameJATECTerms(), solrIndexSearcher);
+            Terms ngramInfo = SolrUtil.
+                    getTermVector(properties.getSolrFieldNameJATENGramInfo(), solrIndexSearcher);
             Set<String> all;
             if (termOrWord == FEATURE_TYPE_TERM)
                 all = getUniqueTerms();
@@ -57,7 +57,7 @@ public class WordShapeFBMaster extends AbstractFeatureBuilder{
             WordShapeFBWorker worker = new
                     WordShapeFBWorker(properties, new ArrayList<>(all),
                     solrIndexSearcher, feature, maxPerThread,
-                    ctermInfo, gazetteer);
+                    ngramInfo, gazetteer);
             ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
             int[] total = forkJoinPool.invoke(worker);
             sb = new StringBuilder("Complete building features. Total=");

@@ -10,6 +10,8 @@ import uk.ac.shef.dcs.jate.util.SolrUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 
@@ -35,8 +37,10 @@ public class PositionFeatureMaster extends AbstractFeatureBuilder {
         PositionFeature feature = new PositionFeature();
 
         try {
-            Terms ctermInfo =
-                    SolrUtil.getTermVector(properties.getSolrFieldNameJATECTerms(), solrIndexSearcher);
+            List<Integer> allDocs = new ArrayList<>();
+            for (int i = 0; i < solrIndexSearcher.maxDoc(); i++) {
+                allDocs.add(i);
+            }
             Set<String> all;
             if (termOrWord == FEATURE_TYPE_TERM)
                 all = getUniqueTerms();
@@ -53,12 +57,10 @@ public class PositionFeatureMaster extends AbstractFeatureBuilder {
             sb.append(cores).append(", total=").append(all.size()).append(", max per worker=")
                     .append(maxPerThread);
             LOG.info(sb.toString());
-            ArrayList<String> allCandidates = new ArrayList<>();
-            allCandidates.addAll(all);
             PositionFeatureWorker worker = new
-                    PositionFeatureWorker(properties, allCandidates,
-                    solrIndexSearcher, feature, maxPerThread,
-                    ctermInfo);
+                    PositionFeatureWorker(properties, allDocs,all,
+                    solrIndexSearcher, feature, maxPerThread
+                    );
             ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
             int[] total = forkJoinPool.invoke(worker);
             sb = new StringBuilder("Complete building features. Total=");

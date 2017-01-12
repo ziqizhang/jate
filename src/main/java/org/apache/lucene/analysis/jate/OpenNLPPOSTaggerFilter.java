@@ -68,7 +68,7 @@ public final class OpenNLPPOSTaggerFilter extends TokenFilter {
         }
         as.copyTo(this);
         MWEMetadata metadata = exitingPayload.getPayload() == null ? new MWEMetadata() :
-                MWEMetadata.deserialize(exitingPayload.getPayload().bytes);
+                MWEMetadata.deserialize(exitingPayload.getPayload().utf8ToString());
         metadata.addMetaData(MWEMetadataType.POS, posTags[tokenIdx]);
         exitingPayload.setPayload(new BytesRef(MWEMetadata.serialize(metadata)));
         tokenIdx++;

@@ -116,7 +116,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
     private MWEMetadata parseTokenMetadataPayload(PayloadAttribute attribute) {
         BytesRef bfTokenMetadata = attribute != null ? attribute.getPayload() : null;
         if(bfTokenMetadata!=null) {
-            MWEMetadata meta = MWEMetadata.deserialize(bfTokenMetadata.bytes);
+            MWEMetadata meta = MWEMetadata.deserialize(bfTokenMetadata.utf8ToString());
             return meta;
         }
         return null;
@@ -287,7 +287,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
             wordList.add(word);
             PayloadAttribute posAtt = input.getAttribute(PayloadAttribute.class);
             if (posAtt != null) {
-                posList.add(new SentenceContext(MWEMetadata.deserialize(posAtt.getPayload().bytes)).getPosTag());
+                posList.add(new SentenceContext(MWEMetadata.deserialize(posAtt.getPayload().utf8ToString())).getPosTag());
             }
             AttributeSource attrs = input.cloneAttributes();
             tokenAttrs.add(attrs);

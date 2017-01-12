@@ -370,7 +370,7 @@ class FrequencyCtxWindowBasedFBWorker extends JATERecursiveTaskWorker<Integer, I
                     BytesRef payload = postingsEnum.getPayload();
                     SentenceContext sentenceContextInfo = null;
                     if (payload != null) {
-                        sentenceContextInfo = new SentenceContext(MWEMetadata.deserialize(payload.bytes));
+                        sentenceContextInfo = new SentenceContext(MWEMetadata.deserialize(payload.utf8ToString()));
                     }
                     if (sentenceContextInfo == null)
                         result.add(new MWEInSentence(tString, start, end, 0, 0, 0));

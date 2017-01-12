@@ -26,25 +26,25 @@ class WordShapeFBWorker extends JATERecursiveTaskWorker<String, int[]> {
     private JATEProperties properties;
     private SolrIndexSearcher solrIndexSearcher;
     private WordShapeFeature feature;
-    private Terms ctermInfo;
+    private Terms ngramInfo;
     private Set<String> gazetteer;
 
     WordShapeFBWorker(JATEProperties properties, List<String> luceneTerms, SolrIndexSearcher solrIndexSearcher,
                       WordShapeFeature feature, int maxTasksPerWorker,
-                      Terms ctermInfo,
+                      Terms ngramInfo,
                       Set<String> gazetteer) {
         super(luceneTerms, maxTasksPerWorker);
         this.properties = properties;
         this.feature = feature;
         this.solrIndexSearcher = solrIndexSearcher;
-        this.ctermInfo = ctermInfo;
+        this.ngramInfo = ngramInfo;
         this.gazetteer=gazetteer;
     }
 
     @Override
     protected JATERecursiveTaskWorker<String, int[]> createInstance(List<String> termSplit) {
         return new WordShapeFBWorker(properties, termSplit, solrIndexSearcher, feature, maxTasksPerThread,
-                ctermInfo, gazetteer);
+                ngramInfo, gazetteer);
     }
 
     @Override
@@ -61,20 +61,20 @@ class WordShapeFBWorker extends JATERecursiveTaskWorker<String, int[]> {
     @Override
     protected int[] computeSingleWorker(List<String> terms) {
         int totalSuccess = 0;
-        TermsEnum ctermInfo;
+        TermsEnum ngramInfoEnum;
         try {
-            ctermInfo = this.ctermInfo.iterator();
+            ngramInfoEnum = this.ngramInfo.iterator();
 
             for (String term : terms) {
                 try {
-                    if (ctermInfo.seekExact(new BytesRef(term.getBytes("UTF-8")))) {
-                        PostingsEnum docEnum = ctermInfo.postings(null, PostingsEnum.ALL);
+                    if (ngramInfoEnum.seekExact(new BytesRef(term.getBytes("UTF-8")))) {
+                        PostingsEnum docEnum = ngramInfoEnum.postings(null, PostingsEnum.ALL);
                         int doc = 0;
                         if ((doc = docEnum.nextDoc()) != PostingsEnum.NO_MORE_DOCS) {
                             //tf in document
                             docEnum.nextPosition();
                             BytesRef bytes=docEnum.getPayload();
-                            MWEMetadata metadata = MWEMetadata.deserialize(bytes.bytes);
+                            MWEMetadata metadata = MWEMetadata.deserialize(bytes.utf8ToString());
 
                             applyGazetteer(gazetteer, term);
 

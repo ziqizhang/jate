@@ -153,7 +153,7 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
     }
 
     public void addPayloadAttribute(PayloadAttribute attribute, MWEMetadata ctx) {
-        byte[] data = MWEMetadata.serialize(ctx);
+        String data = MWEMetadata.serialize(ctx);
         attribute.setPayload(new BytesRef(data));
     }
 

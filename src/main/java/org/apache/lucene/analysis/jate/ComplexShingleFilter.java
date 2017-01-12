@@ -226,13 +226,13 @@ public final class ComplexShingleFilter extends MWEFilter implements SentenceCon
                     inputWindow.getFirst().attSource.copyTo(this);
                     BytesRef brFirstTokenMetadata = mweMetadata.getPayload();
                     MWEMetadata firstTokenMetadata =
-                            MWEMetadata.deserialize(brFirstTokenMetadata.bytes);
+                            MWEMetadata.deserialize(brFirstTokenMetadata.utf8ToString());
                     SentenceContext firstTokenSentCtx = new SentenceContext(
                             firstTokenMetadata
                     );
                     BytesRef brLastTokenmetadata =
                             nextToken.sentenceContext.getPayload();
-                    MWEMetadata lastTokenMetadata = MWEMetadata.deserialize(brLastTokenmetadata.bytes);
+                    MWEMetadata lastTokenMetadata = MWEMetadata.deserialize(brLastTokenmetadata.utf8ToString());
                     SentenceContext lastTokenSentCtx = new SentenceContext(lastTokenMetadata);
 
                     if (!crossBoundary(firstTokenSentCtx, lastTokenSentCtx)) {

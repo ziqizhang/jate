@@ -32,11 +32,11 @@ public class RegressionFeatureGenerator {
         for(File f: files) {
             tasks.add(f.toString());
         }
-        IndexingHandler indexer = new IndexingHandler();
+        /*IndexingHandler indexer = new IndexingHandler();
         indexer.index(tasks, 100,
                 new TikaSimpleDocumentCreator(), server, prop);
         server.close();
-        System.exit(0);
+        System.exit(0);*/
         //server.commit();
 
         WordShapeFBMaster wordShapeFBMaster =

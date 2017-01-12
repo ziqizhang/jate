@@ -320,7 +320,7 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
     }
 
     public void addPayloadAttribute(PayloadAttribute attribute, MWEMetadata ctx) {
-        byte[] data = MWEMetadata.serialize(ctx);
+        String data = MWEMetadata.serialize(ctx);
         attribute.setPayload(new BytesRef(data));
     }
 }

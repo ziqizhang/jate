@@ -31,7 +31,7 @@ public final class MWEFeatureFilter extends TokenFilter {
             BytesRef payload = exitingPayload.getPayload();
             if(payload==null)
                 return true;
-            MWEMetadata metadata = MWEMetadata.deserialize(payload.bytes);
+            MWEMetadata metadata = MWEMetadata.deserialize(payload.utf8ToString());
             MWEMetadata features = new MWEMetadata();
 
             //step 1, copy over existing meta data

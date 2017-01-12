@@ -9,45 +9,49 @@ import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.util.BytesRef;
 import org.apache.solr.search.SolrIndexSearcher;
+import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.JATERecursiveTaskWorker;
+import uk.ac.shef.dcs.jate.util.SolrUtil;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 /**
  *
  */
-public class PositionFeatureWorker extends JATERecursiveTaskWorker<String, int[]> {
+public class PositionFeatureWorker extends JATERecursiveTaskWorker<Integer, int[]> {
 
     private static final long serialVersionUID = -5304728799852736303L;
     private static final Logger LOG = Logger.getLogger(PositionFeatureWorker.class.getName());
     private JATEProperties properties;
     private SolrIndexSearcher solrIndexSearcher;
     private PositionFeature feature;
-    private Terms ctermInfo;
+    private Set<String> allCandidates;
 
-    PositionFeatureWorker(JATEProperties properties, List<String> luceneTerms, SolrIndexSearcher solrIndexSearcher,
-                          PositionFeature feature, int maxTasksPerWorker,
-                      Terms ctermInfo) {
-        super(luceneTerms, maxTasksPerWorker);
+    PositionFeatureWorker(JATEProperties properties, List<Integer> docIds, Set<String> allCandidates,
+                          SolrIndexSearcher solrIndexSearcher,
+                          PositionFeature feature, int maxTasksPerWorker
+    ) {
+        super(docIds, maxTasksPerWorker);
         this.properties = properties;
         this.feature = feature;
         this.solrIndexSearcher = solrIndexSearcher;
-        this.ctermInfo = ctermInfo;
+        this.allCandidates = allCandidates;
     }
 
     @Override
-    protected JATERecursiveTaskWorker<String, int[]> createInstance(List<String> termSplit) {
-        return new PositionFeatureWorker(properties, termSplit, solrIndexSearcher, feature, maxTasksPerThread,
-                ctermInfo);
+    protected JATERecursiveTaskWorker<Integer, int[]> createInstance(List<Integer> docIds) {
+        return new PositionFeatureWorker(properties, docIds, allCandidates, solrIndexSearcher, feature, maxTasksPerThread
+        );
     }
 
     @Override
-    protected int[] mergeResult(List<JATERecursiveTaskWorker<String, int[]>> jateRecursiveTaskWorkers) {
+    protected int[] mergeResult(List<JATERecursiveTaskWorker<Integer, int[]>> jateRecursiveTaskWorkers) {
         int totalSuccess = 0, total = 0;
-        for (JATERecursiveTaskWorker<String, int[]> worker : jateRecursiveTaskWorkers) {
+        for (JATERecursiveTaskWorker<Integer, int[]> worker : jateRecursiveTaskWorkers) {
             int[] rs = worker.join();
             totalSuccess += rs[0];
             total += rs[1];
@@ -56,45 +60,60 @@ public class PositionFeatureWorker extends JATERecursiveTaskWorker<String, int[]
     }
 
     @Override
-    protected int[] computeSingleWorker(List<String> terms) {
-        int totalSuccess = 0;
-        TermsEnum ctermEnum;
-        try {
-            ctermEnum = this.ctermInfo.iterator();
-            BytesRef luceneTerm = ctermEnum.next();
-            while(luceneTerm!=null){
-                if (luceneTerm.length == 0) {
-                    luceneTerm = ctermEnum.next();
-                    continue;
-                }
-                String tString = luceneTerm.utf8ToString();
-                if(!terms.contains(tString)) {
-                    luceneTerm=ctermEnum.next();
-                    continue;
-                }
-                PostingsEnum postingsEnum = ctermEnum.postings(null, PostingsEnum.ALL);
-                while ( postingsEnum.nextDoc() != PostingsEnum.NO_MORE_DOCS) {
-                    //tf in document
-                    int totalOccurrence = postingsEnum.freq();
-                    if(totalOccurrence>1)
-                        System.out.println();
-
-                    for (int i = 0; i < totalOccurrence; i++) {
-                        int pos=postingsEnum.nextPosition();
-                        BytesRef bytes = postingsEnum.getPayload();
-                        MWEMetadata metadata = MWEMetadata.deserialize(bytes.bytes);
-                        populateFeature(metadata, tString, feature);
+    protected int[] computeSingleWorker(List<Integer> docIds) {
+        LOG.info("Total docs to process=" + docIds.size());
+        int count = 0;
+        for (int docId : docIds) {
+            try {
+                Terms lookupVector = SolrUtil.getTermVector(docId, properties.getSolrFieldNameJATENGramInfo(), solrIndexSearcher);
+                TermsEnum ngramEnum = lookupVector.iterator();
+                BytesRef luceneTerm = ngramEnum.next();
+                while (luceneTerm != null) {
+                    if (luceneTerm.length == 0) {
+                        luceneTerm = ngramEnum.next();
+                        continue;
                     }
+                    String tString = luceneTerm.utf8ToString();
+                    if (!allCandidates.contains(tString)) {
+                        luceneTerm = ngramEnum.next();
+                        continue;
+                    }
+                    PostingsEnum postingsEnum = ngramEnum.postings(null, PostingsEnum.ALL);
+                    if (postingsEnum.nextDoc() != PostingsEnum.NO_MORE_DOCS) {
+                        //tf in document
+                        int totalOccurrence = postingsEnum.freq();
+                        for (int i = 0; i < totalOccurrence; i++) {
+                            int pos = postingsEnum.nextPosition();
+                            BytesRef payload = postingsEnum.getPayload();
+                            MWEMetadata metadata = MWEMetadata.deserialize(payload.utf8ToString());
+                            populateFeature(metadata, tString, feature);
+
+                            if (totalOccurrence > 1 && tString.equals("1,25-dihydroxy vitamin")) {
+                                System.out.println("pos=" + pos + ", " +
+                                        postingsEnum.startOffset() + "-" + postingsEnum.endOffset()
+                                        + ", " + metadata.getMetaData(MWEMetadataType.SOURCE_SENTENCE_ID_IN_DOC));
+                            }
+                        }
+                        //postingsEnum.nextDoc();
+                    }
+                    luceneTerm=ngramEnum.next();
                 }
-                totalSuccess++;
+                count++;
+            } catch (IOException ioe) {
+                StringBuilder sb = new StringBuilder("Unable to build feature for document id:");
+                sb.append(docId).append("\n");
+                sb.append(ExceptionUtils.getFullStackTrace(ioe));
+                LOG.error(sb.toString());
+            } catch (JATEException je) {
+                StringBuilder sb = new StringBuilder("Unable to build feature for document id:");
+                sb.append(docId).append("\n");
+                sb.append(ExceptionUtils.getFullStackTrace(je));
+                LOG.error(sb.toString());
             }
-        } catch (IOException ioe) {
-            String error = String.format("Unable to read ngram information field:. \\n Exception: %s",
-                    ExceptionUtils.getFullStackTrace(ioe));
-            LOG.error(error);
         }
-        LOG.debug("progress : " + totalSuccess + "/" + terms.size());
-        return new int[]{totalSuccess, terms.size()};
+
+        LOG.debug("progress : " + count + "/" + docIds.size());
+        return new int[]{count, docIds.size()};
     }
 
     private void populateFeature(MWEMetadata metadata, String term, PositionFeature feature) {
@@ -107,19 +126,19 @@ public class PositionFeatureWorker extends JATERecursiveTaskWorker<String, int[]
         int totalSentsInPar = Integer.valueOf(metadata.getMetaData(MWEMetadataType.SENTENCES_IN_PARAGRAPH));
 
 
-        if(sourceParIdInDoc==0)
+        if (sourceParIdInDoc == 0)
             feature.incrementFoundInDocTitles(term);
 
-        double parDistFromTitle=calculateDistance(sourceParIdInDoc, totalParsInDoc);
+        double parDistFromTitle = calculateDistance(sourceParIdInDoc, totalParsInDoc);
         feature.addParDistFromTitle(term, parDistFromTitle);
-        double sentDistFromTitle=calculateDistance(sourceSentIdInDoc, totalSentsInDoc);
+        double sentDistFromTitle = calculateDistance(sourceSentIdInDoc, totalSentsInDoc);
         feature.addSentDistFromTitle(term, sentDistFromTitle);
         double sentDistFromPar = calculateDistance(sourceSentIdInPar, totalSentsInPar);
         feature.addSentDistFromPar(term, sentDistFromPar);
     }
 
     private double calculateDistance(int index, int total) {
-        return index/(double)total;
+        return index / (double) total;
     }
 
     //this method can be implemented to check if the term contains any elements in the gazetteer.
