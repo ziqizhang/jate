@@ -2,6 +2,7 @@ package uk.ac.shef.dcs.jate.feature;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -16,6 +17,9 @@ public class WordShapeFeature extends AbstractFeature {
 
     public WordShapeFeature(){}
 
+    public Set<String> getAllTerms(){
+        return hasAcronym.keySet();
+    }
     public boolean getHasAcronymFeature(String mwe){
         return hasAcronym.get(mwe);
     }

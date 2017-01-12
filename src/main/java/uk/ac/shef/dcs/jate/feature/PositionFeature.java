@@ -40,6 +40,9 @@ public class PositionFeature extends AbstractFeature{
         dists.add(dist);
         parDistsFromTitle.put(mwe, dists);
     }
+    public List<Double> getParDistFromTitle(String term) {
+        return parDistsFromTitle.get(term);
+    }
 
     public synchronized void addSentDistFromTitle(String mwe, double dist){
         List<Double> dists = sentDistsFromTitle.get(mwe);
@@ -48,12 +51,19 @@ public class PositionFeature extends AbstractFeature{
         dists.add(dist);
         sentDistsFromTitle.put(mwe, dists);
     }
+    public List<Double> getSentDistFromTitle(String term) {
+        return sentDistsFromTitle.get(term);
+    }
+
     public synchronized void addSentDistFromPar(String mwe, double dist){
         List<Double> dists = sentDistsFromPar.get(mwe);
         if(dists==null)
             dists=new ArrayList<>();
         dists.add(dist);
         sentDistsFromPar.put(mwe, dists);
+    }
+    public List<Double> getSentDistFromPar(String term) {
+        return sentDistsFromPar.get(term);
     }
 
 
@@ -63,7 +73,4 @@ public class PositionFeature extends AbstractFeature{
             f= 0;
         return f;
     }
-
-
-
 }
