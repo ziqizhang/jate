@@ -26,17 +26,17 @@ public class RegressionFeatureGenerator {
         testBedContainer.load();
         server = new EmbeddedSolrServer(testBedContainer, "GENIA");
 
-        File[] files= new File("/home/zqz/Work/data/jate_data/genia_gs/text/files_standard").listFiles();
+        File[] files= new File("/home/zqz/Work/data/jate_data/genia_gs/text/files_debug").listFiles();
         List<String> tasks = new ArrayList<>();
         JATEProperties prop = new JATEProperties();
-        /*for(File f: files) {
+        for(File f: files) {
             tasks.add(f.toString());
         }
         IndexingHandler indexer = new IndexingHandler();
         indexer.index(tasks, 100,
                 new TikaSimpleDocumentCreator(), server, prop);
         server.close();
-        System.exit(0);*/
+        System.exit(0);
         //server.commit();
 
         WordShapeFBMaster wordShapeFBMaster =

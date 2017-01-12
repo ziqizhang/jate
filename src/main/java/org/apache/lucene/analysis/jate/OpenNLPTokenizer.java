@@ -168,13 +168,6 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
             addPayloadAttribute(tokenMetadataAtt, ctx);
             //System.out.println(tokenMetadataAtt.getPayload().utf8ToString()+","+new String(buffer,0, termAtt.length()));
 
-            String txtStr = new String(fullText);
-            String wordStr =txtStr.substring(offsetAtt.startOffset(),offsetAtt.endOffset());
-            if(offsetAtt.startOffset()==0&&offsetAtt.endOffset()==14 &&wordStr.toLowerCase().contains("-dihydroxy"))
-                System.out.println();
-            if(offsetAtt.startOffset()==146&&offsetAtt.endOffset()==160&&wordStr.toLowerCase().contains("-dihydroxy"))
-                System.out.println();
-
             indexWord++;
 
             return true;

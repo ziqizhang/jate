@@ -53,8 +53,6 @@ public final class MWEFeatureFilter extends TokenFilter {
 
             exitingPayload.setPayload(new BytesRef(MWEMetadata.serialize(features)));
             termAtt.setEmpty().append(tok);
-            if(tok.toLowerCase().contains("1,25-dihydroxy vitamin"))
-                System.out.println();
             return true;
         } else {
             return false;

@@ -123,7 +123,7 @@ public final class ComplexShingleFilter extends MWEFilter implements SentenceCon
     private final PositionIncrementAttribute posIncrAtt = addAttribute(PositionIncrementAttribute.class);
     private final PositionLengthAttribute posLenAtt = addAttribute(PositionLengthAttribute.class);
     private final TypeAttribute typeAtt = addAttribute(TypeAttribute.class);
-    private final PayloadAttribute sentenceContextAtt = addAttribute(PayloadAttribute.class);
+    private final PayloadAttribute mweMetadata = addAttribute(PayloadAttribute.class);
 
 
     /**
@@ -224,7 +224,7 @@ public final class ComplexShingleFilter extends MWEFilter implements SentenceCon
 
                 if (outputThisShingle) {
                     inputWindow.getFirst().attSource.copyTo(this);
-                    BytesRef brFirstTokenMetadata = sentenceContextAtt.getPayload();
+                    BytesRef brFirstTokenMetadata = mweMetadata.getPayload();
                     MWEMetadata firstTokenMetadata =
                             MWEMetadata.deserialize(brFirstTokenMetadata.bytes);
                     SentenceContext firstTokenSentCtx = new SentenceContext(
@@ -234,7 +234,6 @@ public final class ComplexShingleFilter extends MWEFilter implements SentenceCon
                             nextToken.sentenceContext.getPayload();
                     MWEMetadata lastTokenMetadata = MWEMetadata.deserialize(brLastTokenmetadata.bytes);
                     SentenceContext lastTokenSentCtx = new SentenceContext(lastTokenMetadata);
-
 
                     if (!crossBoundary(firstTokenSentCtx, lastTokenSentCtx)) {
                         posIncrAtt.setPositionIncrement(isOutputHere ? 0 : 1);
@@ -259,7 +258,7 @@ public final class ComplexShingleFilter extends MWEFilter implements SentenceCon
                             metaData = inheritOtherMetadata(metaData, firstTokenMetadata);
                             addPayloadAttribute(metadataAttr, metaData);
                         }
-                        // System.out.println("==="+gramBuilder.toString()+","+sentenceContextAtt.getPayload().utf8ToString());
+                        // System.out.println("==="+gramBuilder.toString()+","+mweMetadata.getPayload().utf8ToString());
                     } else {
                         outputThisShingle = false;
                     }
