@@ -72,6 +72,9 @@ public class RegressionFeatureGenerator {
             //PDFT: distances of the source paragraph from the doc title, measured as #of paragraphs from title divided by
             //total paragraphs in doc
             List<Double> paragraphDistancesFromTitle=positionFeature.getParDistFromTitle(term);
+            /*if(paragraphDistancesFromTitle.size()>1){
+                System.out.println();
+            }*/
             double[] minMaxAvgPDFT=calculateMinMaxAvg(paragraphDistancesFromTitle);
             System.out.println("\tmin PDFT="+minMaxAvgPDFT[0]);
             System.out.println("\tmax PDFT="+minMaxAvgPDFT[1]);
@@ -84,11 +87,17 @@ public class RegressionFeatureGenerator {
             System.out.println("\tmin SDFT="+minMaxAvgSDFT[0]);
             System.out.println("\tmax SDFT="+minMaxAvgSDFT[1]);
             System.out.println("\tavg SDFT="+minMaxAvgSDFT[2]);
+            /*if(sentenceDistancesFromTitle.size()>1){
+                System.out.println();
+            }*/
 
             //SDFP: distances of the source sentence from the first sentence of its containing paragraph, measured as
             // #of sentences from the first sentence divided by
             //total sentences in the paragraph
             List<Double> sentenceDistancesFromPar=positionFeature.getSentDistFromPar(term);
+            /*if(sentenceDistancesFromPar.size()>1){
+                System.out.println();
+            }*/
             double[] minMaxAvgSDFP=calculateMinMaxAvg(sentenceDistancesFromPar);
             System.out.println("\tmin SDFP="+minMaxAvgSDFP[0]);
             System.out.println("\tmax SDFP="+minMaxAvgSDFP[1]);
