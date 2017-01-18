@@ -33,8 +33,10 @@ public class GENIACorpusParser {
 				NodeList sentences = doc.getElementsByTagName("sentence");
 				for (int j = 0; j < sentences.getLength(); j++) {
 					Node sent = sentences.item(j);
-
-					p.println(sent.getTextContent());
+					if (j == 0) {
+						p.println(sent.getTextContent());
+					}
+					p.print(sent.getTextContent()+" ");
 				}
 				p.close();
 			}
@@ -89,8 +91,8 @@ public class GENIACorpusParser {
     }
 
     public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException {
-        System.out.println("words in GS terms:"+countWordsInTerms(args[0]));
-        System.out.println("words in total:"+countWords(args[0]));
+//        System.out.println("words in GS terms:"+countWordsInTerms(args[0]));
+//        System.out.println("words in total:"+countWords(args[0]));
         parse(args[0],args[1]);
     }
 }
