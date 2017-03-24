@@ -19,8 +19,8 @@ import java.util.*;
  */
 public class Scorer {
 
-    private static String PATTERN_DIGITALS = "\\d+";
-    private static String PATTERN_SYMBOLS = "\\p{Punct}";
+    private final static String PATTERN_DIGITALS = "\\d+";
+    private final static String PATTERN_SYMBOLS = "\\p{Punct}";
 
 
     public static void createReportACLRD(Lemmatiser lemmatiser, String ateOutputFolder, String gsFile, String outFile,

@@ -88,7 +88,7 @@ public abstract class BaseEmbeddedSolrTest {
     public static void cleanIndexDirectory(String solrHome, String coreName) throws IOException {
 //       File indexDir = new File(solrHome + File.separator + coreName + File.separator +
 //                "data" + File.separator + "index" + File.separator);
-        File indexDir = Paths.get(solrHome, coreName, "data", "index").toFile();
+        File indexDir = Paths.get(solrHome, coreName, "data").toFile();
 
         try {
             if (indexDir.exists()) {
