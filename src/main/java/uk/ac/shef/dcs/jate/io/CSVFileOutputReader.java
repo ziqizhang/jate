@@ -8,6 +8,7 @@ import uk.ac.shef.dcs.jate.model.JATETerm;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,6 +30,7 @@ public class CSVFileOutputReader  implements FileOutputReader {
             out.add(new JATETerm(rec.get(0).trim(),
                     Double.valueOf(rec.get(1).trim())));
         }
+        Collections.sort(out);
         return out;
     }
 }

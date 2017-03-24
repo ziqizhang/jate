@@ -13,7 +13,6 @@ import uk.ac.shef.dcs.jate.util.IOUtil;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -28,7 +27,7 @@ public class Voting {
         String inFolder = "/home/zqz/GDrive/papers/cicling2017/data/seed-terms/genia";
         String outFile="/home/zqz/GDrive/papers/cicling2017/data/seed-terms/genia/voted.json";
         Map<String, Double> weights = new HashMap<>();
-        /*weights.put("genia_attf_seed_terms.json",1.0);
+        weights.put("genia_attf_seed_terms.json",1.0);
         weights.put("genia_chisquare_seed_terms.json",1.0);
         weights.put("genia_cvalue_seed_terms.json",1.0);
         weights.put("genia_cvalue_seed_terms_mttf1.json",1.0);
@@ -37,13 +36,13 @@ public class Voting {
         weights.put("genia_termex_seed_terms.json",1.0);
         weights.put("genia_tfidf_seed_terms.json",1.0);
         weights.put("genia_ttf_seed_terms.json",1.0);
-        weights.put("genia_weirdness_seed_terms.json",1.0);*/
+        weights.put("genia_weirdness_seed_terms.json",1.0);
         weights.put("genia_text_rank_result.csv",1.0);
 
         Map<String, FileOutputReader> readers = new HashMap<>();
         FileOutputReader jsonFileOutputReader = new JSONFileOutputReader(new Gson());
         FileOutputReader csvFileOutputReader = new CSVFileOutputReader(CSVFormat.DEFAULT);
-        /*readers.put("genia_attf_seed_terms.json",jsonFileOutputReader);
+        readers.put("genia_attf_seed_terms.json",jsonFileOutputReader);
         readers.put("genia_chisquare_seed_terms.json",jsonFileOutputReader);
         readers.put("genia_cvalue_seed_terms.json",jsonFileOutputReader);
         readers.put("genia_cvalue_seed_terms_mttf1.json",jsonFileOutputReader);
@@ -52,7 +51,7 @@ public class Voting {
         readers.put("genia_termex_seed_terms.json",jsonFileOutputReader);
         readers.put("genia_tfidf_seed_terms.json",jsonFileOutputReader);
         readers.put("genia_ttf_seed_terms.json",jsonFileOutputReader);
-        readers.put("genia_weirdness_seed_terms.json",jsonFileOutputReader);*/
+        readers.put("genia_weirdness_seed_terms.json",jsonFileOutputReader);
         readers.put("genia_text_rank_result.csv",csvFileOutputReader);
 
         Voting voting = new Voting();
