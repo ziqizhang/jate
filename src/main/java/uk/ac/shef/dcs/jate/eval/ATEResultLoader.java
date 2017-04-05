@@ -8,6 +8,7 @@ import uk.ac.shef.dcs.jate.model.JATETerm;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,8 +24,9 @@ public class ATEResultLoader {
 	        List<JATETerm> terms=gson.fromJson(new BufferedReader(
 	                new InputStreamReader(jsonFileStream , StandardCharsets.UTF_8)), 
 	        		new TypeToken<List<JATETerm>>(){}.getType());
-	
-	        List<String> result = new ArrayList<>();
+
+            Collections.sort(terms);
+            List<String> result = new ArrayList<>();
 	        for(JATETerm o: terms){
 	            result.add(o.getString());
 	        } 

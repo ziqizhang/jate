@@ -69,7 +69,9 @@ public class Scorer {
         List<String> gs = GSLoader.loadGenia(gsFile);
         Map<String, double[]> scores = new HashMap<>();
 
-        for (File f : new File(ateOutputFolder).listFiles()) {
+        List<File> all = Arrays.asList(new File(ateOutputFolder).listFiles());
+        Collections.sort(all);
+        for (File f : all) {
             String name = f.getName();
             if (name.charAt(0) == '.')
                 continue;

@@ -295,11 +295,11 @@ public abstract class App {
                 }
 
                 if (solrServer != null) {
-                    try {
+                    /*try {
 						solrServer.commit();
 					} catch (SolrServerException e) {
 						log.error(e.toString());
-					}
+					}*/
                     solrServer.close();
                     //workaround to avoid ERROR "CachingDirectoryFactory:150"
                     solrServer.getCoreContainer().getAllCoreNames().forEach(currentCoreName -> {
