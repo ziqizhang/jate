@@ -71,9 +71,11 @@ public class Scorer {
                                          int... ranks) throws IOException {
         PrintWriter p = new PrintWriter(outFile);
         List<String> gs = GSLoader.loadGenia(gsFile);
-        Map<String, double[]> scores = new HashMap<>();
+        Map<String, double[]> scores = new TreeMap<>();
 
-        for (File f : new File(ateOutputFolder).listFiles()) {
+        List<File> all = Arrays.asList(new File(ateOutputFolder).listFiles());
+        Collections.sort(all);
+        for (File f : all) {
             String name = f.getName();
             if (name.charAt(0) == '.')
                 continue;
@@ -94,7 +96,7 @@ public class Scorer {
         sb.append("\n");
 
         for (Map.Entry<String, double[]> en : scores.entrySet()) {
-            sb.append(en.getKey()).append(",");
+            sb.append(en.getKey().replaceAll(",","/")).append(",");
             double[] s = en.getValue();
             for (int i = 0; i < ranks.length; i++) {
                 sb.append(s[i]).append(",");

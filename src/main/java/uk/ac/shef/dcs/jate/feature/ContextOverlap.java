@@ -3,7 +3,7 @@ package uk.ac.shef.dcs.jate.feature;
 import java.util.List;
 
 /**
- * Context windows can have overlap. This class represent an overlap of two adjacent context windows.
+ * MWEMetadata windows can have overlap. This class represent an overlap of two adjacent context windows.
  *
  * </p>This includes the previous and following context window objects, and the list of terms (multi-set) appearing
  * in the overlapping zone. So a context window in sentence 1, with start token index=1 and end token index=10

@@ -16,8 +16,8 @@ public class SentenceContext {
     private int lastTokenIdx;
     private String posTag;
 
-    public SentenceContext(String string){
-        init(string);
+    public SentenceContext(MWEMetadata metaData) {
+        init(metaData);
     }
 
     public int getSentenceId() {
@@ -35,23 +35,13 @@ public class SentenceContext {
     }
 
 
-    private void init(String string){
-        String[] values= string.split(",");
-        //String[] result = new String[4];
-
-        for(String v: values){
-            if(v.startsWith("f="))
-                firstTokenIdx=Integer.valueOf(v.substring(2));
-            else if(v.startsWith("l="))
-                lastTokenIdx=Integer.valueOf(v.substring(2));
-            else if(v.startsWith("p="))
-                posTag=v.substring(2);
-            else if(v.startsWith("s="))
-                sentenceId=Integer.valueOf(v.substring(2));
-        }
-
+    private void init(MWEMetadata metadata) {
+        sentenceId = Integer.valueOf(metadata.getMetaData(MWEMetadataType.SOURCE_SENTENCE_ID_IN_DOC));
+        firstTokenIdx = Integer.valueOf(metadata.getMetaData(MWEMetadataType.FIRST_COMPOSING_TOKEN_ID_IN_SENT));
+        lastTokenIdx = Integer.valueOf(metadata.getMetaData(MWEMetadataType.LAST_COMPOSING_TOKEN_ID_IN_SENT));
+        posTag = metadata.getMetaData(MWEMetadataType.POS);
+        //totalSentsInDoc=Integer.valueOf(metadata.getMetaData(MWEMetadataType.SENTENCES_IN_DOC));
     }
-
 
     public String getPosTag() {
         return posTag;

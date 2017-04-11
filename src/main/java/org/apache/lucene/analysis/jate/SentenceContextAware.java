@@ -1,7 +1,5 @@
 package org.apache.lucene.analysis.jate;
 
-import org.apache.lucene.analysis.tokenattributes.PayloadAttribute;
-
 /**
  * Classes implementing this interface must record the following information, in the following format:
  *
@@ -19,17 +17,17 @@ import org.apache.lucene.analysis.tokenattributes.PayloadAttribute;
  *
  * The best option is probably calling SentenceContext.createString, passing the three int values
  */
+
 public interface SentenceContextAware {
 
     /**
      *
-     * @param attribute the PayloadAttribute to store information of a SentenceContext object
      * @param firstTokenIndex index of the first token of the MWE in the sentence
      * @param lastTokenIndex index of the last token of the MWE in the sentence
      * @param posTag PoS of the lexical unit (only valid for single token)
      * @param sentenceIndex the index (id) of the sentence
      */
-    void addSentenceContext(PayloadAttribute attribute, int firstTokenIndex, int lastTokenIndex,
-                            String posTag, int sentenceIndex);
+    MWEMetadata addSentenceContext(MWEMetadata ctx, int firstTokenIndex, int lastTokenIndex,
+                                   String posTag, int sentenceIndex);
 
 }

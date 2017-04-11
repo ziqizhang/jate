@@ -18,7 +18,9 @@ package org.apache.lucene.analysis.jate;
  */
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import opennlp.tools.sentdetect.SentenceDetector;
 import opennlp.tools.util.Span;
@@ -31,12 +33,12 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.PayloadAttribute;
 import org.apache.lucene.util.AttributeFactory;
 import org.apache.lucene.util.BytesRef;
+
 /**
  * Run OpenNLP SentenceDetector and Tokenizer.
  * Must have Sentence and/or Tokenizer.
  * <p>This class will split a text into sentences, the tokenize each sentence. For each token, it will record its sentence context information. See SentenceContext class.
  * The sentence context information is recorded as PayloadAttribute</p>
- *
  */
 public final class OpenNLPTokenizer extends Tokenizer implements SentenceContextAware {
     private static final int DEFAULT_BUFFER_SIZE = 256;
@@ -45,9 +47,13 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
     private int finalOffset;
     private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
     private final OffsetAttribute offsetAtt = addAttribute(OffsetAttribute.class);
-    private final PayloadAttribute sentenceContextAtt = addAttribute(PayloadAttribute.class);
+    private final PayloadAttribute tokenMetadataAtt = addAttribute(PayloadAttribute.class);
 
     //
+    private Map<Integer, Paragraph> sentsInParagraph = new HashMap<>(); //the key is the startoffset of a sentence
+    private Map<Paragraph, Integer> paragraphHasSents = new HashMap<>(); //key is the paragraph, value is the number of sentences in that paragraph
+    private Map<Integer, Integer> sentIdsInParagraph = new HashMap<>(); //key is the setnecen startoffset, value is the sentence's id in its source paragraph
+
     private Span[] sentences = null;
     private Span[][] words = null;
     private Span[] wordSet = null;
@@ -56,10 +62,12 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
     int indexWord = 0;
     private char[] fullText;
 
+    private ParagraphChunker paragraphOp = null;
     private SentenceDetector sentenceOp = null;
     private opennlp.tools.tokenize.Tokenizer tokenizerOp = null;
 
-    public OpenNLPTokenizer(AttributeFactory factory, SentenceDetector sentenceOp, opennlp.tools.tokenize.Tokenizer tokenizerOp) {
+    public OpenNLPTokenizer(AttributeFactory factory, SentenceDetector sentenceOp,
+                            opennlp.tools.tokenize.Tokenizer tokenizerOp) {
         super(factory);
         termAtt.resizeBuffer(DEFAULT_BUFFER_SIZE);
         if (sentenceOp == null && tokenizerOp == null) {
@@ -67,6 +75,19 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
         }
         this.sentenceOp = sentenceOp;
         this.tokenizerOp = tokenizerOp;
+    }
+
+    public OpenNLPTokenizer(AttributeFactory factory, SentenceDetector sentenceOp,
+                            opennlp.tools.tokenize.Tokenizer tokenizerOp,
+                            ParagraphChunker paragraphOp) {
+        super(factory);
+        termAtt.resizeBuffer(DEFAULT_BUFFER_SIZE);
+        if (sentenceOp == null && tokenizerOp == null) {
+            throw new IllegalArgumentException("OpenNLPTokenizer: need one or both of Sentence Detector and Tokenizer");
+        }
+        this.sentenceOp = sentenceOp;
+        this.tokenizerOp = tokenizerOp;
+        this.paragraphOp = paragraphOp;
     }
 
     // OpenNLP ops run all-at-once. Have to cache sentence and/or word spans and feed them out.
@@ -104,6 +125,7 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
             }
             // set termAtt from private buffer
             Span sentence = sentences[indexSentence];
+
             Span word = wordSet[indexWord];
 
             int spot = sentence.getStart() + word.getStart();
@@ -122,19 +144,29 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
             }
 
             //safeguard tweak to avoid invalid token offsets, see issue 26 on github
-            if(finalOffset-start>termLength) {
-                offsetAtt.setOffset(start, start+termLength);
-                LOG.warn("Invalid token start and end offsets diff greater than term length. End offset is reset to be start+tokenlength. "+
-                    "start="+start+", invalid end="+finalOffset+", termlength="+termLength+". See Issue 26 on JATE webpage");
+            if (finalOffset - start > termLength) {
+                offsetAtt.setOffset(start, start + termLength);
+                LOG.warn("Invalid token start and end offsets diff greater than term length. End offset is reset to be start+tokenlength. " +
+                        "start=" + start + ", invalid end=" + finalOffset + ", termlength=" + termLength + ". See Issue 26 on JATE webpage");
 /*                String wordStr =  new String(buffer, 0, offsetAtt.endOffset() - offsetAtt.startOffset());
                 System.out.println(wordStr);*/
-            }
-            else
+            } else
                 offsetAtt.setOffset(start, finalOffset);
 
-            addSentenceContext(sentenceContextAtt, indexWord, indexWord,
+            MWEMetadata ctx = addSentenceContext(new MWEMetadata(), indexWord, indexWord,
                     null, indexSentence);
-            //System.out.println(sentenceContextAtt.getPayload().utf8ToString()+","+new String(buffer,0, termAtt.length()));
+            if (paragraphOp != null) {
+                Paragraph sourcePar = sentsInParagraph.get(sentence.getStart());
+                int sentenceIdInParagraph= sentIdsInParagraph.get(sentences[indexSentence].getStart());
+                addOtherMetadata(ctx,
+                        sourcePar.indexInDoc,
+                        paragraphHasSents.get(sourcePar),
+                        paragraphHasSents.size(),
+                        sentenceIdInParagraph,
+                        sentences.length);
+            }
+            addPayloadAttribute(tokenMetadataAtt, ctx);
+            //System.out.println(tokenMetadataAtt.getPayload().utf8ToString()+","+new String(buffer,0, termAtt.length()));
 
             indexWord++;
 
@@ -154,7 +186,11 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
 
     void loadAll() throws IOException {
         fillBuffer();
-        detectSentences();
+        String txtStr = new String(fullText);
+        detectSentences(txtStr);
+        if (paragraphOp != null) {
+            detectParagraphs(txtStr);
+        }
         words = new Span[sentences.length][];
         for (int i = 0; i < sentences.length; i++) {
             splitWords(i);
@@ -168,9 +204,10 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
     }
 
     // read all text, turn into sentences
-    void detectSentences() throws IOException {
-        fullText.hashCode();
-        sentences = sentenceOp.sentPosDetect(new String(fullText));
+    void detectSentences(String fulltext) throws IOException {
+        //fullText.hashCode();
+        sentences = sentenceOp.sentPosDetect(fulltext);
+
        /* Span[] revised = new Span[sentences.length];
         //correct offsets, in case charfilters have been used and will change offsets
 
@@ -181,6 +218,48 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
             revised[i] = new Span(newStart, newEnd, span.getType(), span.getProb());
         }
         sentences=revised;*/
+    }
+
+    //split paragraphs and also create containment relation with sentences
+    void detectParagraphs(String txtStr) {
+        sentsInParagraph.clear();
+        paragraphHasSents.clear();
+        sentIdsInParagraph.clear();
+        List<Paragraph>
+                paragraphs = paragraphOp.chunk(txtStr);
+
+        if (paragraphs != null) {
+            int parCursor = 0;
+            Paragraph par = paragraphs.get(parCursor);
+            int sentenceIdInPar=0;
+            for (Span sent : sentences) {
+                if (sent.getStart() >= par.startOffset && sent.getStart() <= par.endOffset) {
+                    sentsInParagraph.put(sent.getStart(), par);
+                    Integer c = paragraphHasSents.get(par);
+                    if (c == null) c = 0;
+                    c++;
+                    paragraphHasSents.put(par, c);
+                    sentIdsInParagraph.put(sent.getStart(), sentenceIdInPar);
+                    sentenceIdInPar++;
+                } else {
+                    for (int i = parCursor + 1; i < paragraphs.size(); i++) {
+                        par = paragraphs.get(i);
+                        sentenceIdInPar=0;
+                        if (sent.getStart() >= par.startOffset && sent.getStart() <= par.endOffset) {
+                            sentsInParagraph.put(sent.getStart(), par);
+                            Integer c = paragraphHasSents.get(par);
+                            if (c == null) c = 0;
+                            c++;
+                            paragraphHasSents.put(par, c);
+                            parCursor = i;
+                            sentIdsInParagraph.put(sent.getStart(), sentenceIdInPar);
+                            sentenceIdInPar++;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     void fillBuffer() throws IOException {
@@ -219,17 +298,29 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
         restartAtBeginning();
     }
 
+    public MWEMetadata addSentenceContext(MWEMetadata ctx, int firstTokenIndex, int lastTokenIndex,
+                                          String posTag, int sentenceIndex) {
+        ctx.addMetaData(MWEMetadataType.FIRST_COMPOSING_TOKEN_ID_IN_SENT, String.valueOf(firstTokenIndex));
+        ctx.addMetaData(MWEMetadataType.LAST_COMPOSING_TOKEN_ID_IN_SENT, String.valueOf(lastTokenIndex));
+        ctx.addMetaData(MWEMetadataType.POS, posTag);
+        ctx.addMetaData(MWEMetadataType.SOURCE_SENTENCE_ID_IN_DOC, String.valueOf(sentenceIndex));
+        return ctx;
+    }
 
-    @Override
-    public void addSentenceContext(PayloadAttribute attribute, int firstTokenIndex, int lastTokenIndex,
-                                   String posTag, int sentenceIndex) {
-        StringBuilder s = new StringBuilder("f=").append(firstTokenIndex);
-        s.append(",l=").append(lastTokenIndex)
-                .append(",s=").append(sentenceIndex);
-        try {
-            attribute.setPayload(new BytesRef(s.toString().getBytes("UTF-8")));
-        } catch (UnsupportedEncodingException uee) {
-            attribute.setPayload(new BytesRef(s.toString().getBytes()));
-        }
+    protected void addOtherMetadata(MWEMetadata ctx, int paragraphId,
+                                    int totalSentencesInParagraph,
+                                    int totalParagraphsInDoc,
+                                    int sentenceIdInParagraph,
+                                    int totalSentencesInDoc) {
+        ctx.addMetaData(MWEMetadataType.SOURCE_PARAGRAPH_ID_IN_DOC, String.valueOf(paragraphId));
+        ctx.addMetaData(MWEMetadataType.SENTENCES_IN_PARAGRAPH, String.valueOf(totalSentencesInParagraph));
+        ctx.addMetaData(MWEMetadataType.PARAGRAPHS_IN_DOC, String.valueOf(totalParagraphsInDoc));
+        ctx.addMetaData(MWEMetadataType.SOURCE_SENTENCE_ID_IN_PARAGRAPH, String.valueOf(sentenceIdInParagraph));
+        ctx.addMetaData(MWEMetadataType.SENTENCES_IN_DOC, String.valueOf(totalSentencesInDoc));
+    }
+
+    public void addPayloadAttribute(PayloadAttribute attribute, MWEMetadata ctx) {
+        String data = MWEMetadata.serialize(ctx);
+        attribute.setPayload(new BytesRef(data));
     }
 }

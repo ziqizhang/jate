@@ -1,11 +1,12 @@
 package org.apache.lucene.analysis.jate;
 
+import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.PayloadAttribute;
 import org.apache.lucene.util.BytesRef;
 
-import java.io.UnsupportedEncodingException;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -13,6 +14,7 @@ import java.util.Set;
  */
 public abstract class MWEFilter extends TokenFilter implements SentenceContextAware {
 
+    private static final Logger log = Logger.getLogger(MWEFilter.class.getName());
     /**
      * default maximum tokens in an MWE is 2.
      */
@@ -59,9 +61,9 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
     /**
      * if true, leading non alpha numeric chars are removed
      */
-    public static final boolean DEFAULT_STRIP_LEADING_SYMBOL_CHARS=false;
-    public static final boolean DEFAULT_STRIP_TRAILING_SYMBOL_CHARS=false;
-    public static final boolean DEFAULT_STRIP_ANY_SYMBOL_CHARS=false;
+    public static final boolean DEFAULT_STRIP_LEADING_SYMBOL_CHARS = false;
+    public static final boolean DEFAULT_STRIP_TRAILING_SYMBOL_CHARS = false;
+    public static final boolean DEFAULT_STRIP_ANY_SYMBOL_CHARS = false;
 
     /**
      * maximum tokens in a MWE (number of tokens)
@@ -94,7 +96,7 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
     protected Set<String> stopWords;
     protected boolean stopWordsIgnoreCase;
 
-    protected final PayloadAttribute sentenceContext = addAttribute(PayloadAttribute.class);
+    protected final PayloadAttribute metadataAttr = addAttribute(PayloadAttribute.class);
 
     /**
      * Construct a token stream filtering the given input.
@@ -125,33 +127,39 @@ public abstract class MWEFilter extends TokenFilter implements SentenceContextAw
         this.removeTrailingStopwords = removeTrailingStopwords;
         this.removeLeadingSymbolicTokens = removeLeadingSymbolicTokens;
         this.removeTrailingSymbolicTokens = removeTrailingSymbolicTokens;
-        this.stripAllSymbolChars=stripAllSymbolChars;
-        this.stripLeadingSymbolChars=stripLeadingSymbolChars;
-        this.stripTrailingSymbolChars=stripTrailingSymbolChars;
+        this.stripAllSymbolChars = stripAllSymbolChars;
+        this.stripLeadingSymbolChars = stripLeadingSymbolChars;
+        this.stripTrailingSymbolChars = stripTrailingSymbolChars;
 
         this.stopWords = stopWords;
         this.stopWordsIgnoreCase = stopWordsIgnoreCase;
     }
 
-    @Override
-    public void addSentenceContext(PayloadAttribute sentenceContext, int firstTokenIndex,
-                                   int lastTokenIndex, String posTag, int sentenceIndex) {
-        if(firstTokenIndex!=lastTokenIndex)
-            posTag=""; //if first tok and last tok not the same, this is a multi-word-expression. makes no sense to attach a pos tag
-        StringBuilder s = new StringBuilder("f=").append(firstTokenIndex);
-        s.append(",l=").append(lastTokenIndex).append(",p=")
-                .append(posTag).append(",s=")
-                .append(sentenceIndex);
-        try {
-            sentenceContext.setPayload(new BytesRef(s.toString().getBytes("UTF-8")));
-        } catch (UnsupportedEncodingException uee) {
-            sentenceContext.setPayload(new BytesRef(s.toString().getBytes()));
-        }
+    public MWEMetadata addSentenceContext(MWEMetadata ctx, int firstTokenIndex, int lastTokenIndex,
+                                          String posTag, int sentenceIndex) {
+        ctx.addMetaData(MWEMetadataType.FIRST_COMPOSING_TOKEN_ID_IN_SENT, String.valueOf(firstTokenIndex));
+        ctx.addMetaData(MWEMetadataType.LAST_COMPOSING_TOKEN_ID_IN_SENT, String.valueOf(lastTokenIndex));
+        ctx.addMetaData(MWEMetadataType.POS, posTag);
+        ctx.addMetaData(MWEMetadataType.SOURCE_SENTENCE_ID_IN_DOC, String.valueOf(sentenceIndex));
+        return ctx;
     }
 
-    protected String stripSymbolChars(String in){
+    protected MWEMetadata inheritOtherMetadata(MWEMetadata ctx, MWEMetadata inheritFrom) {
+        for (Map.Entry<MWEMetadataType, String> e : inheritFrom.metadata.entrySet()) {
+            if (!ctx.metadata.containsKey(e.getKey()))
+                ctx.addMetaData(e.getKey(), e.getValue());
+        }
+        return ctx;
+    }
+
+    public void addPayloadAttribute(PayloadAttribute attribute, MWEMetadata ctx) {
+        String data = MWEMetadata.serialize(ctx);
+        attribute.setPayload(new BytesRef(data));
+    }
+
+    protected String stripSymbolChars(String in) {
         return PunctuationRemover.
-                stripPunctuations(in,stripAllSymbolChars, stripLeadingSymbolChars, stripTrailingSymbolChars);
+                stripPunctuations(in, stripAllSymbolChars, stripLeadingSymbolChars, stripTrailingSymbolChars);
     }
 
 }

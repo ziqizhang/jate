@@ -69,7 +69,7 @@ public class GSLoader {
             terms.add(splits[1].trim());
         }
 
-
+        System.out.println("total="+terms.size());
         return terms;
     }
 

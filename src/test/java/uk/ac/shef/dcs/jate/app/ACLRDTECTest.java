@@ -140,7 +140,7 @@ public abstract class ACLRDTECTest {
         }
     }
 
-    static void indexJATEDocuments(Path file, JATEProperties jateProp, boolean commit) throws JATEException {
+    public static void indexJATEDocuments(Path file, JATEProperties jateProp, boolean commit) throws JATEException {
         if (file == null || file.toString().contains(".DS_Store")) {
             return;
         }
