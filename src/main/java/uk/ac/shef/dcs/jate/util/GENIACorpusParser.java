@@ -10,6 +10,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.util.*;
 
 
 /**
@@ -48,6 +49,37 @@ public class GENIACorpusParser {
         	xmlFileStream.close();
         }
 
+    }
+
+    /**
+     * extract texts within '<cons></cons>' tags as gold standard terms
+     * @param xmlFile
+     * @param outFile
+     */
+    public static void extractGoldstandardTerms(String xmlFile, String outFile) throws ParserConfigurationException, IOException, SAXException {
+        DocumentBuilder docBuilder =DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        FileInputStream xmlFileStream = new FileInputStream(new File(xmlFile));
+        try {
+            Document document = docBuilder.parse(xmlFileStream);
+            PrintWriter p = new PrintWriter(outFile);
+            NodeList nodeList = document.getDocumentElement().getElementsByTagName("cons");
+            Set<String> all = new HashSet<>();
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Element con = (Element) nodeList.item(i);
+                String concept=con.getTextContent().trim();
+                if(concept.length()>0)
+                    all.add(concept);
+
+            }
+
+            List<String> sorted = new ArrayList<>(all);
+            Collections.sort(sorted);
+            for(String c: sorted)
+                p.println(c);
+            p.close();
+        } finally {
+            xmlFileStream.close();
+        }
     }
 
     public static int countWordsInTerms(String xmlFile) throws ParserConfigurationException, IOException, SAXException {
@@ -97,6 +129,7 @@ public class GENIACorpusParser {
     public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException {
 //        System.out.println("words in GS terms:"+countWordsInTerms(args[0]));
 //        System.out.println("words in total:"+countWords(args[0]));
-        parse(args[0],args[1]);
+        //parse(args[0],args[1]);
+        extractGoldstandardTerms(args[0],args[1]);
     }
 }
