@@ -261,7 +261,7 @@
 						outputUnigrams="true" outputUnigramsIfNoShingles="false" tokenSeparator=" "/>
 				<!-- #####FOR REGRESSION FEATURES: add MWEFeatureFilterFactory in the pipeline.
 				WARNING: comlexshinglefilterfactory MUST BE PLACED BEFORE LowerCase or Lemmatisation ####	-->
-				<filter class="org.apache.lucene.analysis.jate.MWEFeatureFilterFactory"/>
+				<!--filter class="org.apache.lucene.analysis.jate.MWEFeatureFilterFactory"/-->
 				<filter class="solr.LowerCaseFilterFactory" />
 				<!--filter class="solr.EnglishMinimalStemFilterFactory"/-->		
 				<!-- An English lemmatiser 
