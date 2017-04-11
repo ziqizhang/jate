@@ -33,7 +33,7 @@ public class IndexingHandler {
             try {
                 JATEDocument doc = docCreator.create(task);
 
-                String content=doc.getContent();
+                String content=doc.getContent().trim();
                 if(content.length()==0){
                     skipped.append(doc.getId()).append("\n");
                     continue;

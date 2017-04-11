@@ -66,6 +66,12 @@ public class FrequencyCtxSentenceBasedFBWorker extends JATERecursiveTaskWorker<I
             count++;
             try {
                 Terms lookupVector = SolrUtil.getTermVector(docId, properties.getSolrFieldNameJATENGramInfo(), solrIndexSearcher);
+                if(lookupVector==null){
+                    LOG.error("Term vector for document id="+count+" is null. The document may be empty");
+                    System.err.println("Term vector for document id="+count+" is null. The document may be empty");
+                    continue;
+                }
+
                 List<MWESentenceContext> terms = collectTermOffsets(
                         lookupVector);
 

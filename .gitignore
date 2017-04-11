@@ -17,5 +17,5 @@ testdata/solr-testbed/jateCore/data/*
 /target/
 .DS_Store
 debug/*
-testdata.tar.gz
+*.tar.gz
 src/test/resource/eval/ACL_RD-TEC/corpus/full/debug/
