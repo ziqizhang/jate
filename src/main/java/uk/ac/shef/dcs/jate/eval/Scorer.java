@@ -23,6 +23,7 @@ public class Scorer {
     private final static String PATTERN_SYMBOLS = "\\p{Punct}";
 
 
+
     public static void createReportACLRD(Lemmatiser lemmatiser, String ateOutputFolder, String gsFile, String outFile,
                                          boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
                                          int minChar, int maxChar, int minTokens, int maxTokens,
@@ -374,12 +375,12 @@ public class Scorer {
                     prunedTerm = prunedTerm.toLowerCase();
                 }
             } else {
-                System.out.println("missing term (not within the token range):"+term);
+                //System.out.println("missing term (not within the token range):"+term);
                 prunedTerm = "";
             }
 
         } else {
-            System.out.println("missing term (not within the char range):"+term);
+            //System.out.println("missing term (not within the char range):"+term);
             prunedTerm = "";
         }
         return prunedTerm;
@@ -397,10 +398,11 @@ public class Scorer {
                 false, false));
         if (args[3].equals("genia")) {
             createReportGenia(lem, args[0], args[1], args[2], true, false, true, 2, 100, 1, 5,
-                    50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000);
+                    50, 100, 500, 1000, 2000, 4000, 6000, 8000, 10000);
         } else {
             createReportACLRD(lem, args[0], args[1], args[2], true, false, true, 2, 100, 1, 10,
-                    50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000);
+                    50, 100, 500, 1000, 2000, 4000, 6000, 8000, 10000);
         }
+        System.exit(0);
     }
 }

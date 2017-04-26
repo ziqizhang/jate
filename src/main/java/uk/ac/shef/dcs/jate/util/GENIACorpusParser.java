@@ -17,6 +17,21 @@ import java.util.*;
  * Read GENIA corpus in the xml format and creates a corpus of raw text files
  */
 public class GENIACorpusParser {
+    public static Set<String> GENIA_GS_IGNORE=new HashSet<>();
+    static{
+        GENIA_GS_IGNORE.add("*");
+        GENIA_GS_IGNORE.add("(OR");
+        GENIA_GS_IGNORE.add("(NOT");
+        GENIA_GS_IGNORE.add("(TO");
+        GENIA_GS_IGNORE.add("(THAN");
+        GENIA_GS_IGNORE.add("(VERSUS");
+        GENIA_GS_IGNORE.add("(AND");
+        GENIA_GS_IGNORE.add("(BUT");
+        GENIA_GS_IGNORE.add("(AS");
+        GENIA_GS_IGNORE.add("(AND/OR");
+    }
+
+
     public static void parse(String xmlFile, String outFolder) throws ParserConfigurationException, IOException, SAXException {
         //Get the DOM Builder Factory
         DocumentBuilder docBuilder =DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -51,6 +66,15 @@ public class GENIACorpusParser {
 
     }
 
+    public static boolean ignore(String candidate){
+        for(String ign: GENIA_GS_IGNORE)
+            if(candidate.contains(ign))
+                return true;
+            /*if(candidate.startsWith("*"))
+                System.out.println();*/
+        return false;
+    }
+
     /**
      * extract texts within '<cons></cons>' tags as gold standard terms
      * @param xmlFile
@@ -66,8 +90,12 @@ public class GENIACorpusParser {
             Set<String> all = new HashSet<>();
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Element con = (Element) nodeList.item(i);
+                String attr=con.getAttribute("lex");
+                if(ignore(attr))
+                    continue;
                 String concept=con.getTextContent().trim();
-                if(concept.length()>0)
+
+                if(concept.length()>2)
                     all.add(concept);
 
             }

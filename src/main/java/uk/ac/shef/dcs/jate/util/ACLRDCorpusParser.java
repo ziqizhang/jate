@@ -1,15 +1,21 @@
 package uk.ac.shef.dcs.jate.util;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.model.JATEDocument;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.*;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.io.*;
 import java.text.Normalizer;
 import java.util.*;
@@ -22,24 +28,64 @@ import java.util.regex.Pattern;
  */
 public class ACLRDCorpusParser {
     public static void main(String[] args) throws FileNotFoundException, JATEException {
-        String inXMLFolder=args[0];
-        String outTxtFolder=args[1];
+        String inXMLFolder = args[0];
+        String outTxtFolder = args[1];
 
-        int count=0;
+        int count = 0;
 
-        for(File f: listFileTree(new File(inXMLFolder))) {
+        for (File f : listFileTree(new File(inXMLFolder))) {
             count++;
             System.out.println(count);
             JATEDocument doc = loadJATEDocFromXML(new FileInputStream(f));
-            PrintWriter p = new PrintWriter(outTxtFolder+File.separator+f.getName()+".txt");
+            PrintWriter p = new PrintWriter(outTxtFolder + File.separator + f.getName() + ".txt");
             p.println(doc.getContent());
             p.close();
         }
+
+        //process aclrdver2 abstracts to plain text
+        /*String inXMLFolder="/home/zqz/Work/data/jate_data/acl-rd-corpus-2.0/raw_abstract_txt";
+        String outFolder="/home/zqz/Work/data/jate_data/acl-rd-corpus-2.0/raw_abstract_plain_txt";
+        int count=0;
+        for (File f : listFileTree(new File(inXMLFolder))) {
+            count++;
+            System.out.println(count);
+            JATEDocument doc = null;
+            try {
+                doc = loadJATEDocFromXMLV2(f);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            PrintWriter p = new PrintWriter(outFolder + File.separator + f.getName() + ".txt");
+            p.println(doc.getContent());
+            p.close();
+        }*/
+
+        //process aclrdver2 abstracts to extrac terms
+        /*String inXMLFolder = "/home/zqz/Work/data/jate_data/acl-rd-corpus-2.0/annoitation_files/merge_1-over-2";
+        String outFile = "/home/zqz/Work/data/jate_data/acl-rd-corpus-2.0/acl-rd-ver2-gs-terms.txt";
+        int count = 0;
+        Set<String> terms = new HashSet<>();
+        for (File f : listFileTree(new File(inXMLFolder))) {
+            count++;
+            System.out.println(count);
+            try {
+                terms.addAll(extractGoldstandardTermsV2(f.toString()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        List<String> sorted = new ArrayList<>(terms);
+        Collections.sort(sorted);
+        PrintWriter p = new PrintWriter(outFile);
+        for (String s : sorted)
+            p.println(s);
+        p.close();
+*/
     }
 
     public static Collection<File> listFileTree(File dir) {
         Set<File> fileTree = new HashSet<File>();
-        if(dir==null||dir.listFiles()==null){
+        if (dir == null || dir.listFiles() == null) {
             return fileTree;
         }
         for (File entry : dir.listFiles()) {
@@ -158,6 +204,61 @@ public class ACLRDCorpusParser {
         return jateDocument;
     }
 
+    private static JATEDocument loadJATEDocFromXMLV2(File f) throws JATEException, IOException, SAXException, ParserConfigurationException {
+        DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        FileInputStream xmlFileStream = new FileInputStream(f);
+        try {
+            JATEDocument jdoc = new JATEDocument(f.toString());
+            Document document = docBuilder.parse(xmlFileStream);
+
+            Element doc = document.getDocumentElement();
+            NodeList list = doc.getChildNodes();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < list.getLength(); i++) {
+                Node n = list.item(i);
+                if (n.getNodeName().equalsIgnoreCase("title"))
+                    sb.append(n.getTextContent()).append(". \n");
+                else if (n.getNodeName().equalsIgnoreCase("section")) {
+                    NodeList s = n.getChildNodes();
+                    for (int j = 0; j < s.getLength(); j++) {
+                        Node sn = s.item(j);
+                        if (sn.getNodeName().equalsIgnoreCase("S")) {
+                            sb.append(sn.getTextContent()).append(" ");
+                        }
+                    }
+                }
+            }
+
+            jdoc.setContent(sb.toString().trim());
+            jdoc.setPath(f.getPath());
+            return jdoc;
+
+        } finally {
+            xmlFileStream.close();
+        }
+    }
+
+    public static Set<String> extractGoldstandardTermsV2(String xmlFile) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
+
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        String expression = "//term";
+        InputSource inputSource = new InputSource(xmlFile);
+        NodeList nodes = (NodeList) xpath.evaluate(expression, inputSource, XPathConstants.NODESET);
+
+        Set<String> all = new HashSet<>();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Element con = (Element) nodes.item(i);
+            String concept = con.getTextContent().trim();
+
+            if (concept.length() > 2)
+                all.add(concept);
+
+        }
+
+        return all;
+
+    }
+
     public static String cleanText(String normalizedText) {
         List<String> extractBrokenWords = extractBrokenWords(normalizedText);
 //        extractBrokenWords.parallelStream().forEach((extractBrokenWord) ->
@@ -174,7 +275,7 @@ public class ACLRDCorpusParser {
      * two regex pattern matching rules to extract broken words in ACL RD-TEC corpus caused by pdf converter
      * e.g., "P r e v i o u s" for "previous"
      *
-     * @param paragraphs  text
+     * @param paragraphs text
      * @return List<String>  a list of matched "broken word" text
      */
     public static List<String> extractBrokenWords(String paragraphs) {
@@ -196,8 +297,8 @@ public class ACLRDCorpusParser {
     /**
      * clean text for fixing broken words
      *
-     * @param paragraph   text
-     * @param brokenWord  matched broken word
+     * @param paragraph  text
+     * @param brokenWord matched broken word
      * @return String  cleaned text
      */
     public static String fixBrokenWords(String paragraph, String brokenWord) {
