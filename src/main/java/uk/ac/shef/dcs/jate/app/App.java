@@ -286,7 +286,12 @@ public abstract class App {
             
 //            core.close();
 //            solrServer.close();
-            
+            Iterator<JATETerm> it = result.iterator();
+            while(it.hasNext()){
+                JATETerm jt = it.next();
+                if(jt.getString().replaceAll("[^a-zA-Z0-9]","").length()==0)
+                    it.remove();
+            }
             return result;
         } finally {
 //            try {

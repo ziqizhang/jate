@@ -4,6 +4,7 @@ import dragon.nlp.tool.lemmatiser.EngLemmatiser;
 import opennlp.tools.util.eval.FMeasure;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.jate.PunctuationRemover;
+import org.json.simple.parser.ParseException;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.nlp.Lemmatiser;
 
@@ -27,12 +28,15 @@ public class Scorer {
     public static void createReportACLRD(Lemmatiser lemmatiser, String ateOutputFolder, String gsFile, String outFile,
                                          boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
                                          int minChar, int maxChar, int minTokens, int maxTokens,
-                                         int... ranks) throws IOException, JATEException {
+                                         int... ranks) throws IOException, JATEException, ParseException {
         PrintWriter p = new PrintWriter(outFile);
         List<String> gs = GSLoader.loadACLRD(gsFile);
-        Map<String, double[]> scores = new HashMap<>();
 
-        for (File f : new File(ateOutputFolder).listFiles()) {
+        Map<String, double[]> scores = new TreeMap<>();
+        List<File> all = Arrays.asList(new File(ateOutputFolder).listFiles());
+        Collections.sort(all);
+
+        for (File f : all) {
             String name = f.getName();
             if (name.charAt(0) == '.')
                 continue;
@@ -41,7 +45,7 @@ public class Scorer {
 
             double[] s = computePrecisionAtRank(lemmatiser, gs, terms, ignoreSymbols, ignoreDigits, lowercase, minChar,
                     maxChar, minTokens, maxTokens, ranks);
-            scores.put(name, s);
+            scores.put(name.replace(",","_"), s);
 
         }
 
@@ -69,7 +73,7 @@ public class Scorer {
     public static void createReportGenia(Lemmatiser lemmatiser, String ateOutputFolder, String gsFile, String outFile,
                                          boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
                                          int minChar, int maxChar, int minTokens, int maxTokens,
-                                         int... ranks) throws IOException {
+                                         int... ranks) throws IOException, ParseException {
         PrintWriter p = new PrintWriter(outFile);
         List<String> gs = GSLoader.loadGenia(gsFile);
         Map<String, double[]> scores = new TreeMap<>();
@@ -387,7 +391,7 @@ public class Scorer {
     }
 
 
-    public static void main(String[] args) throws IOException, JATEException {
+    public static void main(String[] args) throws IOException, JATEException, ParseException {
 
         /*calculateACLRDJate1("/Users/-/work/jate/experiment/CValue_ALGORITHM.txt", args[1], args[2], true, false, true,
                 2, 150, 1, 5,
@@ -401,8 +405,9 @@ public class Scorer {
                     50, 100, 500, 1000, 2000, 4000, 6000, 8000, 10000);
         } else {
             createReportACLRD(lem, args[0], args[1], args[2], true, false, true, 2, 100, 1, 10,
-                    50, 100, 500, 1000, 2000, 4000, 6000, 8000, 10000);
+                    50, 100, 250, 500, 1000);
         }
+        System.out.println(new Date());
         System.exit(0);
     }
 }

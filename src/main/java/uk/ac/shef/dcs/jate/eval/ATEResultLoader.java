@@ -2,14 +2,17 @@ package uk.ac.shef.dcs.jate.eval;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 import org.apache.commons.io.FileUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * load the output of an App class into memory.
@@ -17,21 +20,28 @@ import java.util.List;
  */
 public class ATEResultLoader {
 
-    public static List<String> load(String jsonFile) throws FileNotFoundException, UnsupportedEncodingException {
+    public static List<String> load(String jsonFile) throws IOException, ParseException {
         Gson gson = new Gson();
         FileInputStream jsonFileStream = new FileInputStream(jsonFile);
         try {
-	        List<JATETerm> terms=gson.fromJson(new BufferedReader(
-	                new InputStreamReader(jsonFileStream , StandardCharsets.UTF_8)), 
-	        		new TypeToken<List<JATETerm>>(){}.getType());
+            JSONParser parser = new JSONParser();
+            JSONArray obj = (JSONArray)parser.parse(new FileReader(jsonFile));
+            Iterator<?> it = obj.iterator();
+            List<JATETerm> terms = new ArrayList<>();
+            while (it.hasNext()){
+                JSONObject instance=(JSONObject)it.next();
+                JATETerm term = new JATETerm(instance.get("string").toString(), Double.valueOf(instance.get("score").toString()));
+                terms.add(term);
+            }
 
-            Collections.sort(terms);
+	        Collections.sort(terms);
             List<String> result = new ArrayList<>();
 	        for(JATETerm o: terms){
 	            result.add(o.getString());
 	        } 
 	        return result;
-        } finally {
+        }
+        finally {
         	if (jsonFileStream != null) {
         		try {
 					jsonFileStream.close();

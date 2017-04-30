@@ -64,9 +64,12 @@ public class GSLoader {
                 continue;
             }
             String[] splits = r.split("\\t");
-            if (splits[2].equals("0"))
+            if (splits.length==1)
+                terms.add(splits[0].trim());
+            else if (splits[2].equals("0"))
                 continue;
-            terms.add(splits[1].trim());
+            else
+                terms.add(splits[1].trim());
         }
 
         System.out.println("total="+terms.size());

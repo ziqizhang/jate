@@ -7,6 +7,7 @@ import org.apache.lucene.util.BytesRef;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.search.SolrIndexSearcher;
+import org.json.simple.parser.ParseException;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.app.App;
@@ -25,7 +26,7 @@ import java.util.*;
  */
 public class FileBasedOutputWriter {
 
-    public static void main(String[] args) throws JATEException, FileNotFoundException, UnsupportedEncodingException {
+    public static void main(String[] args) throws JATEException, IOException, ParseException {
         String outFolder=args[0];
         String solrHomePath = args[1];
         String solrCoreName = args[2];
