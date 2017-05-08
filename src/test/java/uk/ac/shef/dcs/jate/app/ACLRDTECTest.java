@@ -193,10 +193,12 @@ public abstract class ACLRDTECTest {
         List<String> rankedTerms = ATEResultLoader.load(jateTerms);
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms,
                 true, false, true,
-                2, 100, 1, 10,
+                1, 100, 1, 10,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
 
-        double recall = Scorer.recall(gsTerms, rankedTerms);
+        //double recall = Scorer.recall(gsTerms, rankedTerms);
+        double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, true, false, true,
+                1, 1000, 1, 100);
 
         assert 0.75 == recall;
 

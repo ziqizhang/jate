@@ -91,13 +91,13 @@
 		<fieldType name="text_general" class="solr.TextField" positionIncrementGap="100">
 			<analyzer type="index">
 				<tokenizer class="solr.StandardTokenizerFactory" />
-				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" />
+				<filter class="solr.StopFilterFactory" ignoreCase="true" words="smart-stop-list.txt" />
 				<!-- in this example, we will only use synonyms at query time <filter class="solr.SynonymFilterFactory" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/> -->
 				<filter class="solr.LowerCaseFilterFactory" />				
 			</analyzer>
 			<analyzer type="query">
 				<tokenizer class="solr.StandardTokenizerFactory" />
-				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" />
+				<filter class="solr.StopFilterFactory" ignoreCase="true" words="smart-stop-list.txt" />
 				<filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true" />
 				<filter class="solr.LowerCaseFilterFactory" />
 			</analyzer>
@@ -117,7 +117,7 @@
 			-->
 			<filter class="solr.StopFilterFactory"
 					ignoreCase="true"
-					words="stopwords.txt"/>
+					words="smart-stop-list.txt"/>
 			
 			<filter class="solr.LowerCaseFilterFactory"/>
 			<filter class="solr.EnglishPossessiveFilterFactory"/>
@@ -132,7 +132,7 @@
 			<filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
 			<filter class="solr.StopFilterFactory"
 					ignoreCase="true"
-					words="stopwords.txt"/>
+					words="smart-stop-list.txt"/>
 			<filter class="solr.LowerCaseFilterFactory"/>
 			<filter class="solr.EnglishPossessiveFilterFactory"/>
 			<filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
@@ -251,13 +251,13 @@
 			         -outputUnigramsIfNoShingles
 			         -tokenSeparator
 			         -->						
-				<filter class="org.apache.lucene.analysis.jate.ComplexShingleFilterFactory" minTokens="2" maxTokens="5"
-						maxCharLength="50" minCharLength="2" removeLeadingStopWords="true"
+				<filter class="org.apache.lucene.analysis.jate.ComplexShingleFilterFactory" minTokens="2" maxTokens="20"
+						maxCharLength="500" minCharLength="1" removeLeadingStopWords="true"
 						removeTrailingStopWords="true" removeLeadingSymbolicTokens="true"
 						removeTrailingSymbolicTokens="true"
 						stripAnySymbolChars="false"
 						stripLeadingSymbolChars="true" stripTrailingSymbolChars="true"
-						stopWords="stopwords.txt" stopWordsIgnoreCase="true"
+						stopWords="smart-stop-list.txt" stopWordsIgnoreCase="true"
 						outputUnigrams="true" outputUnigramsIfNoShingles="false" tokenSeparator=" "/>
 				<!-- #####FOR REGRESSION FEATURES: add MWEFeatureFilterFactory in the pipeline.
 				WARNING: comlexshinglefilterfactory MUST BE PLACED BEFORE LowerCase or Lemmatisation ####	-->
@@ -272,7 +272,7 @@
 				<filter class="org.apache.lucene.analysis.jate.EnglishLemmatisationFilterFactory"
 					lemmaResourceDir="lemmatiser"/>
 				<!-- standard Solr stop words filter -->
-				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" />
+				<filter class="solr.StopFilterFactory" ignoreCase="true" words="smart-stop-list.txt" />
 			</analyzer>
 		</fieldType>		
 
@@ -340,13 +340,13 @@
 			         -->				
 				<filter class="org.apache.lucene.analysis.jate.OpenNLPRegexChunkerFactory"
 							patterns="genia.patterns"
-							minTokens="1" maxTokens="5"
-							maxCharLength="50" minCharLength="2" removeLeadingStopWords="true"
+							minTokens="1" maxTokens="50"
+							maxCharLength="500" minCharLength="1" removeLeadingStopWords="true"
 							removeTrailingStopWords="true" removeLeadingSymbolicTokens="true"
 							removeTrailingSymbolicTokens="true"
 							stripAnySymbolChars="false"
 						stripLeadingSymbolChars="true" stripTrailingSymbolChars="true"
-							stopWords="stopwords.txt" stopWordsIgnoreCase="true"/>
+							stopWords="smart-stop-list.txt" stopWordsIgnoreCase="true"/>
 				<!--filter class="org.apache.lucene.analysis.jate.OpenNLPNounPhraseFilterFactory"
 							chunkerModel="en-chunker.bin"
 							minTokens="1" maxTokens="5"
@@ -355,7 +355,8 @@
 							removeTrailingSymbolicTokens="true"
 							stripAnySymbolChars="false"
 							stripLeadingSymbolChars="true" stripTrailingSymbolChars="true"
-							stopWords="stopwords.txt" stopWordsIgnoreCase="true"/-->
+							stopWords="smart-stop-list.txt" stopWordsIgnoreCase="true"/-->
+				<filter class="solr.LowerCaseFilterFactory" />
 				<!--filter class="solr.EnglishMinimalStemFilterFactory"/-->				
 				<!-- An English lemmatiser 
 					-lemmaResourceDir: must be a folder placed in the same folder as this schema, containing the resource
@@ -365,7 +366,7 @@
 				<filter class="org.apache.lucene.analysis.jate.EnglishLemmatisationFilterFactory"
 					lemmaResourceDir="lemmatiser"/>
 				<!-- standard Solr stop words filter -->
-				<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" />
+				<filter class="solr.StopFilterFactory" ignoreCase="true" words="smart-stop-list.txt" />
 			</analyzer>
 		</fieldType>				
 		<!-- ###################### JATE End #############################-->		

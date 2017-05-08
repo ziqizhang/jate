@@ -3,6 +3,7 @@ package uk.ac.shef.dcs.jate.eval;
 import dragon.nlp.tool.lemmatiser.EngLemmatiser;
 import opennlp.tools.util.eval.FMeasure;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.jate.PunctuationRemover;
 import org.json.simple.parser.ParseException;
 import uk.ac.shef.dcs.jate.JATEException;
@@ -13,13 +14,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
  * compute scores
  */
 public class Scorer {
-
     private final static String PATTERN_DIGITALS = "\\d+";
     private final static String PATTERN_SYMBOLS = "\\p{Punct}";
 
@@ -38,7 +40,7 @@ public class Scorer {
 
         for (File f : all) {
             String name = f.getName();
-            if (name.charAt(0) == '.')
+            if (String.valueOf(name.charAt(0)).equals("."))
                 continue;
             System.out.println(f);
             List<String> terms = ATEResultLoader.load(f.toString());
@@ -82,7 +84,7 @@ public class Scorer {
         Collections.sort(all);
         for (File f : all) {
             String name = f.getName();
-            if (name.charAt(0) == '.')
+            if (String.valueOf(name.charAt(0)) .equals("."))
                 continue;
             System.out.println(f);
             List<String> terms = ATEResultLoader.load(f.toString());
@@ -125,26 +127,45 @@ public class Scorer {
      * @param maxChar       maximum character length
      * @param minTokens     minimum token size
      * @param maxTokens     maximum token size
-     * @param ranks         list of rankinig for evaluation
+     * @param ranks         list of ranking for evaluation
      * @return double[]  list of precision@K
      */
     public static double[] computePrecisionAtRank(Lemmatiser lemmatiser, List<String> gs, List<String> terms,
                                                   boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
                                                   int minChar, int maxChar, int minTokens, int maxTokens,
                                                   int... ranks) {
-        gs = prune(gs, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
-        gs = normalize(gs, lemmatiser);
-        terms = prune(terms, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
+        List<String> normGS = prune(gs, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
+        normGS = normalize(normGS, lemmatiser, true);
+
+        List<String> normCandidates = prune(terms, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
+        normCandidates = normalize(normCandidates, lemmatiser, true);
 
         double[] scores = new double[ranks.length];
         for (int i = 0; i < ranks.length; i++) {
-            double p = precision(gs, terms.subList(0, ranks[i]));
-            scores[i] = round(p, 2);
+            if (normCandidates.size() > ranks[i]) {
+                double p = precision(normGS, normCandidates.subList(0, ranks[i]));
+                scores[i] = round(p, 2);
+            }
 
         }
 
         return scores;
     }
+
+    public static double computeOverallPrecision(Lemmatiser lemmatiser, List<String> gs, List<String> terms,
+                                                  boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
+                                                  int minChar, int maxChar, int minTokens, int maxTokens) {
+        List<String> normGS = prune(gs, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
+        normGS = normalize(normGS, lemmatiser, true);
+
+        List<String> normCandidates = prune(terms, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
+        normCandidates = normalize(normCandidates, lemmatiser, true);
+
+        double p = precision(normGS, normCandidates);
+        return round(p, 2);
+
+    }
+
 
     /**
      * @param lemmatiser,    for lemmatisation
@@ -177,7 +198,7 @@ public class Scorer {
                                                    boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
                                                    int minChar, int maxChar, int minTokens, int maxTokens) {
         List<String> normalisedTerms = prune(terms, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
-        normalisedTerms = normalize(normalisedTerms, lemmatiser);
+        normalisedTerms = normalize(normalisedTerms, lemmatiser, true);
 
         Set<String> finalTerms = new HashSet<>();
         finalTerms.addAll(normalisedTerms);
@@ -196,7 +217,7 @@ public class Scorer {
      * @param maxChar strip the term if contain max char
      * @param minTokens strip the term if contain min token
      * @param maxTokens strip the term if contain max token
-     * @return
+     * @return String normed term
      */
     public static String termNormalisation(String term, Lemmatiser lemmatiser,
                                            boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
@@ -275,15 +296,48 @@ public class Scorer {
     }
 
 
-    public static double recall(List<String> gsTerms, List<String> termResults) {
-        /*double recall = FMeasure.recall(gsTerms.toArray(), termResults.toArray());
-        System.out.println(new Date());*/
+    /**
+     *
+     * @param gsTerms GS terms
+     * @param termResults, ranked term candidates
+     * @param lemmatiser lemmatiser to normalise both GS terms and ranked term candidates
+     * @param ignoreSymbols bool value whether to ignore symbols for the evaluation
+     * @param ignoreDigits bool value whether to ignore digits for the evaluation
+     * @param lowercase bool value whether to ignore case for the evaluation
+     * @param minChar min char for whether to filter GS terms and candidate within a length range for the evaluation
+     * @param maxChar max char for whether to filter GS terms and candidate within a length range for the evaluation
+     * @param minTokens min token for whether to filter GS terms and candidate within a length range for the evaluation
+     * @param maxTokens max token for whether to filter GS terms and candidate within a length range for the evaluation
+     * @return
+     */
+    public static double recall(List<String> gsTerms, List<String> termResults, Lemmatiser lemmatiser,
+                                boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
+                                int minChar, int maxChar, int minTokens, int maxTokens) {
+        List<String> normGS = prune(gsTerms, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
+        normGS = normalize(normGS, lemmatiser, true);
+        List<String> normTerms = prune(termResults, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
+        normTerms = normalize(normTerms, lemmatiser, true);
 
-        Set<String> copy = new HashSet<>(gsTerms);
-        copy.retainAll(new HashSet<>(termResults));
-
-        return round((double) copy.size() / gsTerms.size(), 2);
+       return FMeasure.recall(normGS.toArray(), normTerms.toArray());
     }
+
+    public static List<String> synonymNormalisation4Genia(List<String> terms) {
+        List<String> synonymNormList = new ArrayList<>();
+        for (String term : terms) {
+            String normTerm = term.replace("mouse", "mice");
+            normTerm = normTerm.replace("Mouse", "Mice");
+            normTerm = normTerm.replace("analyses", "analysis");
+            normTerm = normTerm.replace("Analyses", "Analysis");
+            normTerm = normTerm.replace("women", "woman");
+            normTerm = normTerm.replace("l cell resistance", "Lymphoid cell resistance");
+            normTerm = normTerm.replace("DS lymphocyte", "DS ones");
+
+            synonymNormList.add(normTerm);
+        }
+        return synonymNormList;
+    }
+
+
 
     public static double fmeasure(List<String> gsTerms, List<String> termResults) {
         FMeasure fMeasure = new FMeasure();
@@ -291,12 +345,64 @@ public class Scorer {
         return fMeasure.getFMeasure();
     }
 
+    /**
+     * Retrieves the f-measure score.
+     *
+     * f-measure = 2 * precision * recall / (precision + recall)
+     * @return the rounded f-measure or -1 if precision + recall &lt;= 0
+     */
+    public static double getFMeasure(Double precision, Double recall) {
 
-    public static List<String> normalize(List<String> gsTerms, Lemmatiser lemmatiser) {
+        if (precision + recall > 0) {
+            double fmeasure = 2 * (precision * recall)
+                    / (precision + recall);
+            return round(fmeasure, 2);
+        } else {
+            // cannot divide by zero, return error code
+            return -1;
+        }
+    }
+
+    public static String lemmatizeSymbolCompoundTerm(String symbolCompound, String symbol, Lemmatiser lemmatiser) {
+        String[] splittedCompound = symbolCompound.split(symbol);
+        String lemmatizedCompound = "";
+        if (splittedCompound.length == 2) {
+            lemmatizedCompound = normaliseTerm(splittedCompound[0], lemmatiser) + symbol + normaliseTerm(splittedCompound[1], lemmatiser);
+            return lemmatizedCompound;
+        }
+        return symbolCompound;
+    }
+
+    /**
+     * normalise term list
+     *
+     * remove duplicates while retaining order
+     * @param termlist term list to be lemmatized
+     * @param lemmatiser lemmatiser initialised
+     * @param isTokenLevel is to apply lemmatization to token level
+     * @return normalised term list
+     */
+    public static List<String> normalize(List<String> termlist, Lemmatiser lemmatiser, boolean isTokenLevel) {
         List<String> result = new ArrayList<>();
-        for (String term : gsTerms) {
-            String normalisedTerm = normaliseTerm(term, lemmatiser);
-            if (StringUtils.isNotEmpty(normalisedTerm)) {
+        for (String term : termlist) {
+            String[] termUnits = term.split(" ");
+            String normalisedTerm ="";
+
+            if (isTokenLevel) {
+                for (String termUnit : termUnits) {
+                    // for terms such like "highly purified monocytes/macrophages"
+                    if (termUnit.contains("/")) {
+                        normalisedTerm += lemmatizeSymbolCompoundTerm(termUnit, "/", lemmatiser) + " ";
+                    } else {
+                        normalisedTerm += normaliseTerm(termUnit, lemmatiser) + " ";
+                    }
+                }
+                normalisedTerm = normalisedTerm.trim();
+            } else {
+                normalisedTerm = normaliseTerm(term, lemmatiser);
+            }
+
+            if (StringUtils.isNotEmpty(normalisedTerm) && !result.contains(normalisedTerm)) {
                 result.add(normalisedTerm);
             }
         }
@@ -304,7 +410,7 @@ public class Scorer {
 
     }
 
-    private static String normaliseTerm(String term, Lemmatiser lemmatiser) {
+    public static String normaliseTerm(String term, Lemmatiser lemmatiser) {
         String normalisedTerm = lemmatiser.normalize(term, "NN").trim();
         return normalisedTerm;
     }
@@ -328,7 +434,7 @@ public class Scorer {
         List<String> result = new ArrayList<>();
         for (String term : terms) {
             String prunedTerm = prune(term, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
-            if (StringUtils.isNotEmpty(prunedTerm)) {
+            if (StringUtils.isNotEmpty(prunedTerm) && !result.contains(prunedTerm)) {
                 result.add(prunedTerm);
             }
         }
@@ -398,6 +504,7 @@ public class Scorer {
                 50, 100, 500, 1000, 5000, 10000);
         System.exit(1);*/
 
+        /**
         Lemmatiser lem = new Lemmatiser(new EngLemmatiser(args[4],
                 false, false));
         if (args[3].equals("genia")) {
@@ -409,5 +516,7 @@ public class Scorer {
         }
         System.out.println(new Date());
         System.exit(0);
+                    50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000);
+        }**/
     }
 }
