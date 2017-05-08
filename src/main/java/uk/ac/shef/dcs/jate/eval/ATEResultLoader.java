@@ -20,7 +20,7 @@ import java.util.*;
  */
 public class ATEResultLoader {
 
-    public static List<String> load(String jsonFile) throws IOException, ParseException {
+    public static List<String> loadFromJSON(String jsonFile) throws IOException, ParseException {
         Gson gson = new Gson();
         FileInputStream jsonFileStream = new FileInputStream(jsonFile);
         try {
@@ -50,6 +50,33 @@ public class ATEResultLoader {
 				}
         	}
         }
+    }
+
+    public static List<String> loadFromCSV(String csvOutputFile) throws IOException {
+
+        String defaultSplit=",";
+        BufferedReader br = null;
+        List<String> rankedTermCandidates = new ArrayList<>();
+        try {
+            br = new BufferedReader(new FileReader(csvOutputFile));
+
+            String line = null;
+            int index = 0;
+            while ((line = br.readLine()) !=null) {
+                //skip head
+                if (index != 0) {
+                    String[] termScore = line.split(defaultSplit);
+                    rankedTermCandidates.add(termScore[0]);
+                }
+                index ++;
+            }
+        } finally {
+            if (br!=null) {
+                br.close();
+            }
+        }
+
+        return rankedTermCandidates;
     }
 
     public static List<String> load(List<JATETerm> jateTerms) {

@@ -2,7 +2,6 @@ package uk.ac.shef.dcs.jate.app;
 
 import dragon.nlp.tool.lemmatiser.EngLemmatiser;
 import org.apache.log4j.Logger;
-import org.apache.log4j.spi.RootLogger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
@@ -45,7 +44,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     public static final Path GENIA_CORPUS_CONCEPT_FILE = Paths.get(workingDir, "src", "test", "resource",
             "eval", "GENIA", "concept.txt");
 
-    public static final int EXPECTED_CANDIDATE_SIZE=12834;
+    public static final int EXPECTED_CANDIDATE_SIZE=41055;
     static Lemmatiser lemmatiser = new Lemmatiser(new EngLemmatiser(
             Paths.get(workingDir, "src", "test", "resource", "lemmatiser").toString(), false, false
     ));
@@ -62,7 +61,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     private static int EVAL_CONDITION_CUTOFF_TOP_K_PERCENT = 1;
     private static boolean EVAL_CONDITION_IGNORE_SYMBOL = true;
     private static boolean EVAL_CONDITION_IGNORE_DIGITS = false;
-    private static boolean EVAL_CONDITION_IGNORE_CASE_INSENSITIVE = true;
+    private static boolean EVAL_CONDITION_CASE_INSENSITIVE = true;
     private static int EVAL_CONDITION_CHAR_RANGE_MIN = 1;
     private static int EVAL_CONDITION_CHAR_RANGE_MAX = -1;
     private static int EVAL_CONDITION_TOKEN_RANGE_MIN = 1;
@@ -115,7 +114,6 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         }
 
         gsTerms = GSLoader.loadGenia(GENIA_CORPUS_CONCEPT_FILE.toString());
-        gsTerms = Scorer.synonymNormalisation4Genia(gsTerms);
 
         if (gsTerms == null) {
             throw new JATEException("GENIA CORPUS_DIR CONCEPT FILE CANNOT BE LOADED SUCCESSFULLY!");
@@ -132,7 +130,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
                         "pre-filtering min total freq: [%s], cut-off Top K precent: [%s] " +
                         "and min context (co-occur) frequency: [%s]",
                 EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS,
-                EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX,
                 EVAL_CONDITION_MIN_TERM_TOTAL_FREQUENCY, EVAL_CONDITION_CUTOFF_TOP_K_PERCENT,
@@ -259,46 +257,45 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
         LOG.info("candidate size:" + termList.size());
-        //Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
+        Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-//        rankedTerms = Scorer.synonymNormalisation4Genia(rankedTerms);
 
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms,
-                EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX,
                 EVAL_CONDITION_TOP_N);
 
         LOG.info("=============ATTF GENIA Benchmarking Results==================");
         double precision = Scorer.computeOverallPrecision(lemmatiser,gsTerms, rankedTerms, EVAL_CONDITION_IGNORE_SYMBOL,
-                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
         double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
-                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
         printResults(scores, precision, recall);
 
-//        assert 0.84 == scores[0];
-//        assert 0.83 == scores[1];
-//        assert 0.78 == scores[2];
-//        assert 0.74 == scores[3];
-//        assert 0.73 == scores[4];
-//        assert 0.71 == scores[5];
-//        assert 0.7 == scores[6];
-//        assert 0.72 == scores[7];
-//        assert 0.64 == scores[8];
-//        assert 0.58 == scores[9];
-//        assert 0.55 == scores[10];
-//        assert 0.54 == scores[11];
-//        assert 0.56 == scores[12];
-//        assert 0.57 == scores[13];
-//        assert 0.58 == scores[14];
-//        assert 0.58 == scores[15];
-//        assert 0.12 == recall;
+        assert 0.94 == scores[0];
+        assert 0.93 == scores[1];
+        assert 0.94 == scores[2];
+        assert 0.93 == scores[3];
+        assert 0.9 == scores[4];
+        assert 0.89 == scores[5];
+        assert 0.86 == scores[6];
+        assert 0.85 == scores[7];
+        assert 0.83 == scores[8];
+        assert 0.83 == scores[9];
+        assert 0.79 == scores[10];
+        assert 0.76 == scores[11];
+        assert 0.75 == scores[12];
+        assert 0.74 == scores[13];
+        assert 0.73 == scores[14];
+        assert 0.73 == scores[15];
+        assert 0.71 == recall;
     }
 
     @Test
@@ -322,46 +319,47 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
         LOG.info("candidate size:" + termList.size());
-        //Assert.assertEquals("Candidate size should be "+12544, 12544, termList.size());
+        Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE,
+                EXPECTED_CANDIDATE_SIZE, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
 
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms,
-                EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX,
                 EVAL_CONDITION_TOP_N);
 
         LOG.info("=============CHISQUARE GENIA Benchmarking Results==================");
         double precision = Scorer.computeOverallPrecision(lemmatiser,gsTerms, rankedTerms, EVAL_CONDITION_IGNORE_SYMBOL,
-                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
         double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
-                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
         printResults(scores,precision, recall);
 
-//        assert 0.66 == scores[0];
-//        assert 0.67 == scores[1];
-//        assert 0.71 == scores[2];
-//        assert 0.7 == scores[3];
-//        assert 0.69 == scores[4];
-//        assert 0.69 == scores[5];
-//        assert 0.68 == scores[6];
-//        assert 0.67 == scores[7];
-//        assert 0.66 == scores[8];
-//        assert 0.65 == scores[9];
-//        assert 0.64 == scores[10];
-//        assert 0.63== scores[11];
-//        assert 0.62 == scores[12];
-//        assert 0.61 == scores[13];
-//        assert 0.6 == scores[14];
-//        assert 0.59 == scores[15];
-//        assert 0.12 == recall;
+        assert 0.6 == scores[0];
+        assert 0.58 == scores[1];
+        assert 0.57 == scores[2];
+        assert 0.55 == scores[3];
+        assert 0.56 == scores[4];
+        assert 0.57 == scores[5];
+        assert 0.59 == scores[6];
+        assert 0.61 == scores[7];
+        assert 0.63 == scores[8];
+        assert 0.63 == scores[9];
+        assert 0.64 == scores[10];
+        assert 0.64== scores[11];
+        assert 0.64 == scores[12];
+        assert 0.64 == scores[13];
+        assert 0.64 == scores[14];
+        assert 0.64 == scores[15];
+        assert 0.71 == recall;
     }
 
     @Test
@@ -383,11 +381,11 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
         LOG.info("candidate size:" + termList.size());
-        //Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
+        Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms,
-                EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX,
                 EVAL_CONDITION_TOP_N);
@@ -395,34 +393,34 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("=============CVALUE GENIA Benchmarking Results==================");
 
         double precision = Scorer.computeOverallPrecision(lemmatiser,gsTerms, rankedTerms, EVAL_CONDITION_IGNORE_SYMBOL,
-                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
         double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
-                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
         printResults(scores, precision, recall);
 
-//        assert 0.8 == scores[0];
-//        assert 0.81 == scores[1];
-//        assert 0.81 == scores[2];
-//        assert 0.79 == scores[3];
-//        assert 0.78 == scores[4];
-//        assert 0.77 == scores[5];
-//        assert 0.76 == scores[6];
-//        assert 0.75 == scores[7];
-//        assert 0.71 == scores[8];
-//        assert 0.68 == scores[9];
-//        assert 0.63 == scores[10];
-//        assert 0.56 == scores[11];
-//        assert 0.56 == scores[12];
-//        assert 0.56 == scores[13];
-//        assert 0.57 == scores[14];
-//        assert 0.57 == scores[15];
-//        assert 0.12 == recall;
+        assert 0.78 == scores[0];
+        assert 0.77 == scores[1];
+        assert 0.76 == scores[2];
+        assert 0.75 == scores[3];
+        assert 0.75 == scores[4];
+        assert 0.77 == scores[5];
+        assert 0.75 == scores[6];
+        assert 0.76 == scores[7];
+        assert 0.75 == scores[8];
+        assert 0.74 == scores[9];
+        assert 0.73 == scores[10];
+        assert 0.72 == scores[11];
+        assert 0.7 == scores[12];
+        assert 0.69 == scores[13];
+        assert 0.69 == scores[14];
+        assert 0.67 == scores[15];
+        assert 0.71 == recall;
     }
 
     @Test
@@ -440,47 +438,47 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
             appGlossEx.write(termList);
         }
         LOG.info("candidate size:" + termList.size());
-        //Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
+        Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
 
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms,
-                EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX,
                 EVAL_CONDITION_TOP_N);
 
         LOG.info("=============GLOSSEX GENIA Benchmarking Results==================");
         double precision = Scorer.computeOverallPrecision(lemmatiser,gsTerms, rankedTerms, EVAL_CONDITION_IGNORE_SYMBOL,
-                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
         double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
-                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
         printResults(scores, precision, recall);
 
-//        assert 0.9 == scores[0];
-//        assert 0.82 == scores[1];
-//        assert 0.74 == scores[2];
-//        assert 0.69 == scores[3];
-//        assert 0.66 == scores[4];
-//        assert 0.65 == scores[5];
-//        assert 0.61 == scores[6];
-//        assert 0.61 == scores[7];
-//        assert 0.63 == scores[8];
-//        assert 0.63 == scores[9];
-//        assert 0.63 == scores[10];
-//        assert 0.63 == scores[11];
-//        assert 0.63 == scores[12];
-//        assert 0.63 == scores[13];
-//        assert 0.62 == scores[14];
-//        assert 0.61 == scores[15];
-//
-//        assert 0.12 == recall;
+        assert 0.74 == scores[0];//0.74
+        assert 0.54 == scores[1];//0.54
+        assert 0.58 == scores[2];//0.58
+        assert 0.63 == scores[3];//0.63
+        assert 0.63 == scores[4];//0.63
+        assert 0.63 == scores[5];//0.63
+        assert 0.62 == scores[6];//0.62
+        assert 0.62 == scores[7];//0.62
+        assert 0.62 == scores[8];//0.62
+        assert 0.61 == scores[9];//0.61
+        assert 0.62 == scores[10];//0.62
+        assert 0.62 == scores[11];//0.62
+        assert 0.63 == scores[12];//0.63
+        assert 0.63 == scores[13];//0.63
+        assert 0.63 == scores[14];//0.63
+        assert 0.63 == scores[15];//0.63
+
+        assert 0.71 == recall;
 
     }
 
@@ -514,45 +512,45 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
         LOG.info("candidate size:" + termList.size());
-        //Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
+        Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
 
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms,
-                EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX,
                 EVAL_CONDITION_TOP_N);
 
         LOG.info("=============RAKE GENIA Benchmarking Results==================");
         double precision = Scorer.computeOverallPrecision(lemmatiser,gsTerms, rankedTerms, EVAL_CONDITION_IGNORE_SYMBOL,
-                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
         double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
-                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
         printResults(scores, precision, recall);
 
-//        assert 0.8 == scores[0];
-//        assert 0.75 == scores[1];
-//        assert 0.67 == scores[2];
-//        assert 0.6 == scores[3];
-//        assert 0.56 == scores[4];
-//        assert 0.58== scores[5];
-//        assert 0.59 == scores[6];
-//        assert 0.58 == scores[7];
-//        assert 0.57 == scores[8];
-//        assert 0.56 == scores[9];
-//        assert 0.57 == scores[10];
-//        assert 0.59 == scores[11];
-//        assert 0.6 == scores[12];
-//        assert 0.6 == scores[13];
-//        assert 0.6 == scores[14];
-//        assert 0.6 == scores[15];
-//        assert 0.12 == recall;
+        assert 0.7 == scores[0];
+        assert 0.7 == scores[1];
+        assert 0.62 == scores[2];
+        assert 0.63 == scores[3];
+        assert 0.64 == scores[4];
+        assert 0.63== scores[5];
+        assert 0.63 == scores[6];
+        assert 0.62 == scores[7];
+        assert 0.61 == scores[8];
+        assert 0.61 == scores[9];
+        assert 0.61 == scores[10];
+        assert 0.61 == scores[11];
+        assert 0.62 == scores[12];
+        assert 0.62 == scores[13];
+        assert 0.62 == scores[14];
+        assert 0.61 == scores[15];
+        assert 0.71 == recall;
     }
 
     @Test
@@ -573,46 +571,46 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
         LOG.info("candidate size:" + termList.size());
-        //Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
+        Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms,
-                EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX,
                 EVAL_CONDITION_TOP_N);
 
         double precision = Scorer.computeOverallPrecision(lemmatiser,gsTerms, rankedTerms, EVAL_CONDITION_IGNORE_SYMBOL,
-                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
         double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
-                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
         LOG.info("=============RIDF GENIA Benchmarking Results==================");
         printResults(scores, precision, recall);
 
-//        assert 0.8 == scores[0];
-//        assert 0.78 == scores[1];
-//        assert 0.79 == scores[2];
-//        assert 0.79 == scores[3];
-//        assert 0.79 == scores[4];
-//        assert 0.79 == scores[5];
-//        assert 0.78 == scores[6];
-//        assert 0.78 == scores[7];
-//        assert 0.74 == scores[8];
-//        assert 0.73 == scores[9];
-//        assert 0.69 == scores[10];
-//        assert 0.65 == scores[11];
-//        assert 0.61 == scores[12];
-//        assert 0.6 == scores[13];
-//        assert 0.6 == scores[14];
-//        assert 0.59 == scores[15];
-//        assert 0.12 == recall;
+        assert 0.86 == scores[0];
+        assert 0.9 == scores[1];
+        assert 0.89 == scores[2];
+        assert 0.89 == scores[3];
+        assert 0.86 == scores[4];
+        assert 0.84 == scores[5];
+        assert 0.81 == scores[6];
+        assert 0.79 == scores[7];
+        assert 0.77 == scores[8];
+        assert 0.76 == scores[9];
+        assert 0.76 == scores[10];
+        assert 0.75 == scores[11];
+        assert 0.74 == scores[12];
+        assert 0.73 == scores[13];
+        assert 0.72 == scores[14];
+        assert 0.71 == scores[15];
+        assert 0.71 == recall;
     }
 
     @Test
@@ -633,47 +631,47 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
         LOG.info("candidate size:" + termList.size());
-        //Assert.assertEquals("Candidate size should be "+19338, 19338, termList.size());
+        Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms,
-                EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX,
                 EVAL_CONDITION_TOP_N);
 
         double precision = Scorer.computeOverallPrecision(lemmatiser,gsTerms, rankedTerms, EVAL_CONDITION_IGNORE_SYMBOL,
-                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
         double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
-                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
         LOG.info("=============TERMEX GENIA Benchmarking Results==================");
         printResults(scores, precision, recall);
-//
-//        assert 0.88 == scores[0];
-//        assert 0.9 == scores[1];
-//        assert 0.86 == scores[2];
-//        assert 0.84 == scores[3];
-//        assert 0.81 == scores[4];
-//        assert 0.82 == scores[5];
-//        assert 0.84 == scores[6];
-//        assert 0.83 == scores[7];
-//        assert 0.81 == scores[8];
-//        assert 0.8 == scores[9];
-//        assert 0.8 == scores[10];
-//        assert 0.79 == scores[11];
-//        assert 0.78 == scores[12];
-//        assert 0.76 == scores[13];
-//        assert 0.73 == scores[14];
-//        assert 0.69 == scores[15];
-//
-//        assert 0.12 == recall;
+
+        assert 0.7 == scores[0];
+        assert 0.59 == scores[1];
+        assert 0.6 == scores[2];
+        assert 0.62 == scores[3];
+        assert 0.62 == scores[4];
+        assert 0.63 == scores[5];
+        assert 0.64 == scores[6];
+        assert 0.65 == scores[7];
+        assert 0.64 == scores[8];
+        assert 0.65 == scores[9];
+        assert 0.67 == scores[10];
+        assert 0.67 == scores[11];
+        assert 0.66 == scores[12];
+        assert 0.65 == scores[13];
+        assert 0.65 == scores[14];
+        assert 0.64 == scores[15];
+
+        assert 0.71 == recall;
 
     }
 
@@ -687,7 +685,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info(String.format("appTFIDF ranking took [%s] milliseconds", (endTime - startTime)));
 
         LOG.info("candidate size:" + termList.size());
-        //Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
+        Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
         if (exportData) {
             appTFIDF.outputFile = "tfidf_genia.json";
@@ -696,17 +694,17 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms,
-                EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX,
                 EVAL_CONDITION_TOP_N);
 
         double precision = Scorer.computeOverallPrecision(lemmatiser,gsTerms, rankedTerms, EVAL_CONDITION_IGNORE_SYMBOL,
-                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
         double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
-                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
@@ -714,23 +712,23 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
         printResults(scores, precision, recall);
 
-//        assert 0.7 == scores[0];
-//        assert 0.65 == scores[1];
-//        assert 0.71 == scores[2];
-//        assert 0.73 == scores[3];
-//        assert 0.75 == scores[4];
-//        assert 0.77 == scores[5];
-//        assert 0.77 == scores[6];
-//        assert 0.76 == scores[7];
-//        assert 0.75 == scores[8];
-//        assert 0.73 == scores[9];
-//        assert 0.71 == scores[10];
-//        assert 0.7 == scores[11];
-//        assert 0.67 == scores[12];
-//        assert 0.64 == scores[13];
-//        assert 0.61 == scores[14];
-//        assert 0.59 == scores[15];
-//        assert 0.12 == recall;
+        assert 0.68 == scores[0];
+        assert 0.65 == scores[1];
+        assert 0.61 == scores[2];
+        assert 0.62 == scores[3];
+        assert 0.61 == scores[4];
+        assert 0.61 == scores[5];
+        assert 0.63 == scores[6];
+        assert 0.65 == scores[7];
+        assert 0.69 == scores[8];
+        assert 0.7 == scores[9];
+        assert 0.71 == scores[10];
+        assert 0.71 == scores[11];
+        assert 0.71 == scores[12];
+        assert 0.71 == scores[13];
+        assert 0.71 == scores[14];
+        assert 0.7 == scores[15];
+        assert 0.71 == recall;
 
     }
 
@@ -750,46 +748,45 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
         LOG.info("Candidate size: " + termList.size());
-        //Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
+        Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms,
-                EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX,
                 EVAL_CONDITION_TOP_N);
 
         double precision = Scorer.computeOverallPrecision(lemmatiser,gsTerms, rankedTerms, EVAL_CONDITION_IGNORE_SYMBOL,
-                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
         double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
-                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
         LOG.info("=============TTF GENIA Benchmarking Results==================");
         printResults(scores, precision, recall);
 
-//        assert 0.64 == scores[0];
-//        assert 0.64 == scores[1];
-//        assert 0.71 == scores[2];
-//        assert 0.73 == scores[3];
-//        assert 0.74 == scores[4];
-//        assert 0.76 == scores[5];
-//        assert 0.76 == scores[6];
-//        assert 0.76 == scores[7];
-//        assert 0.74 == scores[8];
-//        assert 0.73 == scores[9];
-//        assert 0.71 == scores[10];
-//        assert 0.69 == scores[11];
-//        assert 0.67 == scores[12];
-//        assert 0.64 == scores[13];
-//        assert 0.62 == scores[14];
-//        assert 0.6 == scores[15];
-//        assert 0.12 == recall;
+        assert 0.58 == scores[0];
+        assert 0.58 == scores[1];
+        assert 0.57 == scores[2];
+        assert 0.57 == scores[3];
+        assert 0.58 == scores[4];
+        assert 0.59 == scores[5];
+        assert 0.61 == scores[6];
+        assert 0.64 == scores[7];
+        assert 0.67 == scores[8];
+        assert 0.69 == scores[9];
+        assert 0.7 == scores[10];
+        assert 0.7 == scores[11];
+        assert 0.7 == scores[12];
+        assert 0.7 == scores[13];
+        assert 0.7 == scores[14];
+        assert 0.7 == scores[15];
 
-
+        assert 0.71 == recall;
     }
 
     @Test
@@ -809,45 +806,46 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // refer to genia.patterns in solr config for the default candidate extraction patterns
         // candidate extraction is performed at index-time
         LOG.info("Candidate size: " + termList.size());
-        //Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
+        Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms,
-                EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX,
                 EVAL_CONDITION_TOP_N);
 
         double precision = Scorer.computeOverallPrecision(lemmatiser,gsTerms, rankedTerms, EVAL_CONDITION_IGNORE_SYMBOL,
-                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
         double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
-                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_IGNORE_CASE_INSENSITIVE,
+                EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
         LOG.info("=============WEIRDNESS GENIA Benchmarking Results==================");
         printResults(scores, precision, recall);
 
-//        assert 0.8 == scores[0];
-//        assert 0.88 == scores[1];
-//        assert 0.89 == scores[2];
-//        assert 0.88 == scores[3];
-//        assert 0.87 == scores[4];
-//        assert 0.87 == scores[5];
-//        assert 0.84 == scores[6];
-//        assert 0.82 == scores[7];
-//        assert 0.79 == scores[8];
-//        assert 0.76 == scores[9];
-//        assert 0.73 == scores[10];
-//        assert 0.7 == scores[11];
-//        assert 0.68 == scores[12];
-//        assert 0.66 == scores[13];
-//        assert 0.64 == scores[14];
-//        assert 0.62 == scores[15];
-//        assert 0.12 == recall;
+        assert 0.7 == scores[0];
+        assert 0.78 == scores[1];
+        assert 0.73 == scores[2];
+        assert 0.76 == scores[3];
+        assert 0.78 == scores[4];
+        assert 0.77 == scores[5];
+        assert 0.76 == scores[6];
+        assert 0.76 == scores[7];
+        assert 0.74 == scores[8];
+        assert 0.73 == scores[9];
+        assert 0.72 == scores[10];
+        assert 0.71 == scores[11];
+        assert 0.71 == scores[12];
+        assert 0.71 == scores[13];
+        assert 0.7 == scores[14];
+        assert 0.7 == scores[15];
+
+        assert 0.71 == recall;
 
     }
 
