@@ -485,29 +485,6 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     }
 
     private void printResults(double[] scores, double precision, double recall) {
-//        LOG.info("  top 50 Precision:" + scores[0]);
-//        LOG.info("  top 100 Precision:" + scores[1]);
-//        LOG.info("  top 300 Precision:" + scores[2]);
-//        LOG.info("  top 500 Precision:" + scores[3]);
-//        LOG.info("  top 800 Precision:" + scores[4]);
-//        LOG.info("  top 1000 Precision:" + scores[5]);
-//        LOG.info("  top 1500 Precision:" + scores[6]);
-//        LOG.info("  top 2000 Precision:" + scores[7]);
-//        LOG.info("  top 3000 Precision:" + scores[8]);
-//        LOG.info("  top 4000 Precision:" + scores[9]);
-//        LOG.info("  top 5000 Precision:" + scores[10]);
-//        LOG.info("  top 6000 Precision:" + scores[11]);
-//        LOG.info("  top 7000 Precision:" + scores[12]);
-//        if (scores.length > 13) {
-//            LOG.info("  top 8000 Precision:" + scores[13]);
-//        }
-//        if (scores.length > 14) {
-//            LOG.info("  top 9000 Precision:" + scores[14]);
-//        }
-//        if (scores.length > 15) {
-//            LOG.info("  top 10000 Precision:" + scores[15]);
-//        }
-
         int topNIndex = 0;
         for (int topN : EVAL_CONDITION_TOP_N) {
             LOG.info(String.format("  top %s Precision: %s", topN, scores[topNIndex]) );
