@@ -40,6 +40,9 @@ public class Scorer {
     private static int[] EVAL_CONDITION_TOP_N = {50, 100, 300, 500, 800, 1000, 1500,
             2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000, 15000, 20000, 25000, 30000};
 
+    // top K percentage of candidates
+    private static int[] EVAL_CONDITION_TOP_K = {5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 75, 80};
+
 
     public static void createReportACLRD(Lemmatiser lemmatiser, String ateOutputFolder, String gsFile, String outFile,
                                          boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
@@ -89,7 +92,7 @@ public class Scorer {
     public static void createReportGenia(Lemmatiser lemmatiser, String ateOutputFolder, String ateOutputType, String gsFile, String outFile,
                                          boolean ignoreSymbols, boolean ignoreDigits, boolean caseInsensitive,
                                          int minChar, int maxChar, int minTokens, int maxTokens,
-                                         int... ranks) throws IOException, ParseException {
+                                         int[] topNRanks, int[] topKRanks) throws IOException, ParseException {
         PrintWriter p = new PrintWriter(outFile);
         List<String> gsTerms = GSLoader.loadGenia(gsFile);
         Map<String, double[]> scores = new HashMap<>();
@@ -98,6 +101,13 @@ public class Scorer {
         Collections.sort(all);
         for (File f : all) {
             String name = f.getName();
+
+            if (!name.contains(ateOutputType)) {
+                continue;
+            }
+
+            System.out.println("evaluating "+name+" ...");
+
             if (String.valueOf(name.charAt(0)) .equals("."))
                 continue;
             //System.out.println(f);
@@ -108,11 +118,17 @@ public class Scorer {
                 rankedTerms = ATEResultLoader.loadFromCSV(f.toString());
             }
 
-            double[] values = new double[ranks.length+2];
+            double[] values = new double[topNRanks.length+2];
 
             double[] topNPrecisions = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms,
                     ignoreSymbols, ignoreDigits, caseInsensitive,
-                    minChar, maxChar,minTokens, maxTokens,ranks);
+                    minChar, maxChar,minTokens, maxTokens,topNRanks);
+
+            int[] topNRanksFromTopK = getTopNFromTopK(rankedTerms.size(), topKRanks);
+
+            double[] topKPrecision = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms,
+                    ignoreSymbols, ignoreDigits, caseInsensitive,
+                    minChar, maxChar,minTokens, maxTokens,topNRanksFromTopK);
 
             double overallPrecision = Scorer.computeOverallPrecision(lemmatiser,gsTerms, rankedTerms, ignoreSymbols,
                     ignoreDigits, caseInsensitive,
@@ -124,7 +140,8 @@ public class Scorer {
 
             double overallF = Scorer.getFMeasure(overallPrecision, overallRecall);
 
-            values = ArrayUtils.addAll(topNPrecisions, new double[]{overallPrecision, overallRecall, overallF});
+            values = ArrayUtils.addAll(topNPrecisions, topKPrecision);
+            values = ArrayUtils.addAll(values, new double[]{overallPrecision, overallRecall, overallF, rankedTerms.size()});
 
             scores.put(name, values);
         }
@@ -133,20 +150,28 @@ public class Scorer {
 
         StringBuilder sb = new StringBuilder();
         //heads
-        for (int i : ranks) {
+        for (int i : topNRanks) {
             sb.append(",").append(i);
+        }
+        for (int k : topKRanks) {
+            sb.append(",").append(k+"%");
         }
         sb.append(",").append("Overall_P");
         sb.append(",").append("Overall_R");
         sb.append(",").append("Overall_F");
+        sb.append(",").append("Total_Size");
         sb.append("\n");
 
         for (Map.Entry<String, double[]> en : scores.entrySet()) {
             sb.append(en.getKey()).append(",");
             double[] values = en.getValue();
-            for (int i = 0; i < ranks.length; i++) {
+            for (int i = 0; i < topNRanks.length; i++) {
                 sb.append(values[i]).append(",");
             }
+            for (int i = 0; i < topKRanks.length; i++) {
+                sb.append(values[i+topNRanks.length]).append(",");
+            }
+            sb.append(values[values.length-4]).append(",");
             sb.append(values[values.length-3]).append(",");
             sb.append(values[values.length-2]).append(",");
             sb.append(values[values.length-1]);
@@ -154,6 +179,16 @@ public class Scorer {
         }
         p.println(sb.toString());
         p.close();
+    }
+
+    private static int[] getTopNFromTopK(int totalCandidateSize, int[] topKs) {
+        int[] topNs = new int[topKs.length];
+        int topKIndex = 0;
+        for (int topK : topKs) {
+            topNs[topKIndex] = Math.round(totalCandidateSize * ((float)topK/100));
+            ++topKIndex;
+        }
+        return topNs;
     }
 
 
@@ -556,8 +591,8 @@ public class Scorer {
         Lemmatiser lemmatiser = new Lemmatiser(new EngLemmatiser(
                 Paths.get(workingDir, "src", "test", "resource", "lemmatiser").toString(), false, false
         ));
-        String datasetName = args[0];
-        String ateOutputFolder = args[1];
+        String datasetName =args[0];
+        String ateOutputFolder =args[1];
         String ateOutputType = args[2];
         String outFile = args[3];
 
@@ -568,7 +603,7 @@ public class Scorer {
                     EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                     EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                     EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX,
-                    EVAL_CONDITION_TOP_N);
+                    EVAL_CONDITION_TOP_N, EVAL_CONDITION_TOP_K);
         } else {
             createReportACLRD(lemmatiser, args[0], args[1], args[2], true, false, true, 2, 100, 1, 10,
                     50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000);
