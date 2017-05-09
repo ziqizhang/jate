@@ -44,7 +44,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
     public static final Path GENIA_CORPUS_CONCEPT_FILE = Paths.get(workingDir, "src", "test", "resource",
             "eval", "GENIA", "concept.txt");
 
-    public static final int EXPECTED_CANDIDATE_SIZE=41055;
+    public static final int EXPECTED_CANDIDATE_SIZE=38805;
     static Lemmatiser lemmatiser = new Lemmatiser(new EngLemmatiser(
             Paths.get(workingDir, "src", "test", "resource", "lemmatiser").toString(), false, false
     ));
@@ -284,17 +284,18 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         assert 0.94 == scores[2];
         assert 0.93 == scores[3];
         assert 0.9 == scores[4];
-        assert 0.89 == scores[5];
-        assert 0.86 == scores[6];
-        assert 0.85 == scores[7];
-        assert 0.83 == scores[8];
+        assert 0.9 == scores[5];
+        assert 0.87 == scores[6];
+        assert 0.86 == scores[7];
+        assert 0.84 == scores[8];
         assert 0.83 == scores[9];
         assert 0.79 == scores[10];
-        assert 0.76 == scores[11];
-        assert 0.75 == scores[12];
-        assert 0.74 == scores[13];
-        assert 0.73 == scores[14];
-        assert 0.73 == scores[15];
+        assert 0.77 == scores[11];
+        assert 0.76 == scores[12];
+        assert 0.75 == scores[13];
+        assert 0.74 == scores[14];
+        assert 0.74 == scores[15];
+
         assert 0.71 == recall;
     }
 
@@ -344,21 +345,21 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         printResults(scores,precision, recall);
 
         assert 0.6 == scores[0];
-        assert 0.58 == scores[1];
+        assert 0.57 == scores[1];
         assert 0.57 == scores[2];
         assert 0.55 == scores[3];
-        assert 0.56 == scores[4];
-        assert 0.57 == scores[5];
-        assert 0.59 == scores[6];
-        assert 0.61 == scores[7];
-        assert 0.63 == scores[8];
-        assert 0.63 == scores[9];
-        assert 0.64 == scores[10];
-        assert 0.64== scores[11];
-        assert 0.64 == scores[12];
-        assert 0.64 == scores[13];
-        assert 0.64 == scores[14];
-        assert 0.64 == scores[15];
+        assert 0.57 == scores[4];
+        assert 0.58 == scores[5];
+        assert 0.6 == scores[6];
+        assert 0.62 == scores[7];
+        assert 0.64 == scores[8];
+        assert 0.65 == scores[9];
+        assert 0.66 == scores[10];
+        assert 0.66 == scores[11];
+        assert 0.66 == scores[12];
+        assert 0.66 == scores[13];
+        assert 0.66 == scores[14];
+        assert 0.65 == scores[15];
         assert 0.71 == recall;
     }
 
@@ -410,17 +411,20 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         assert 0.75 == scores[3];
         assert 0.75 == scores[4];
         assert 0.77 == scores[5];
-        assert 0.75 == scores[6];
+        assert 0.76 == scores[6];
         assert 0.76 == scores[7];
-        assert 0.75 == scores[8];
+        assert 0.76 == scores[8];
         assert 0.74 == scores[9];
-        assert 0.73 == scores[10];
+        assert 0.74 == scores[10];
         assert 0.72 == scores[11];
-        assert 0.7 == scores[12];
-        assert 0.69 == scores[13];
-        assert 0.69 == scores[14];
-        assert 0.67 == scores[15];
+        assert 0.72 == scores[12];
+        assert 0.72 == scores[13];
+        assert 0.7 == scores[14];
+        assert 0.68 == scores[15];
+
+        assert 0.56 == precision;
         assert 0.71 == recall;
+        assert 0.63 == Scorer.getFMeasure(precision, recall);
     }
 
     @Test
@@ -461,25 +465,24 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
         printResults(scores, precision, recall);
 
-        assert 0.74 == scores[0];//0.74
-        assert 0.54 == scores[1];//0.54
-        assert 0.58 == scores[2];//0.58
-        assert 0.63 == scores[3];//0.63
-        assert 0.63 == scores[4];//0.63
-        assert 0.63 == scores[5];//0.63
-        assert 0.62 == scores[6];//0.62
-        assert 0.62 == scores[7];//0.62
-        assert 0.62 == scores[8];//0.62
-        assert 0.61 == scores[9];//0.61
-        assert 0.62 == scores[10];//0.62
-        assert 0.62 == scores[11];//0.62
-        assert 0.63 == scores[12];//0.63
-        assert 0.63 == scores[13];//0.63
-        assert 0.63 == scores[14];//0.63
-        assert 0.63 == scores[15];//0.63
+        assert 0.74 == scores[0];
+        assert 0.54 == scores[1];
+        assert 0.62 == scores[2];
+        assert 0.66 == scores[3];
+        assert 0.64 == scores[4];
+        assert 0.66 == scores[5];
+        assert 0.65 == scores[6];
+        assert 0.66 == scores[7];
+        assert 0.66 == scores[8];
+        assert 0.66 == scores[9];
+        assert 0.67 == scores[10];
+        assert 0.67 == scores[11];
+        assert 0.67 == scores[12];
+        assert 0.67 == scores[13];
+        assert 0.67 == scores[14];
+        assert 0.67 == scores[15];
 
         assert 0.71 == recall;
-
     }
 
     private void printResults(double[] scores, double precision, double recall) {
@@ -542,7 +545,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         assert 0.63== scores[5];
         assert 0.63 == scores[6];
         assert 0.62 == scores[7];
-        assert 0.61 == scores[8];
+        assert 0.62 == scores[8];
         assert 0.61 == scores[9];
         assert 0.61 == scores[10];
         assert 0.61 == scores[11];
@@ -605,8 +608,8 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         assert 0.77 == scores[8];
         assert 0.76 == scores[9];
         assert 0.76 == scores[10];
-        assert 0.75 == scores[11];
-        assert 0.74 == scores[12];
+        assert 0.76 == scores[11];
+        assert 0.75 == scores[12];
         assert 0.73 == scores[13];
         assert 0.72 == scores[14];
         assert 0.71 == scores[15];
@@ -654,25 +657,24 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         LOG.info("=============TERMEX GENIA Benchmarking Results==================");
         printResults(scores, precision, recall);
 
-        assert 0.7 == scores[0];
-        assert 0.59 == scores[1];
-        assert 0.6 == scores[2];
-        assert 0.62 == scores[3];
-        assert 0.62 == scores[4];
-        assert 0.63 == scores[5];
-        assert 0.64 == scores[6];
-        assert 0.65 == scores[7];
-        assert 0.64 == scores[8];
-        assert 0.65 == scores[9];
-        assert 0.67 == scores[10];
-        assert 0.67 == scores[11];
-        assert 0.66 == scores[12];
-        assert 0.65 == scores[13];
-        assert 0.65 == scores[14];
-        assert 0.64 == scores[15];
+        assert 0.72 == scores[0];
+        assert 0.66 == scores[1];
+        assert 0.68 == scores[2];
+        assert 0.69 == scores[3];
+        assert 0.7 == scores[4];
+        assert 0.7 == scores[5];
+        assert 0.7 == scores[6];
+        assert 0.7 == scores[7];
+        assert 0.7 == scores[8];
+        assert 0.7 == scores[9];
+        assert 0.71 == scores[10];
+        assert 0.7 == scores[11];
+        assert 0.69 == scores[12];
+        assert 0.68 == scores[13];
+        assert 0.67 == scores[14];
+        assert 0.67 == scores[15];
 
         assert 0.71 == recall;
-
     }
 
     @Test
@@ -714,7 +716,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
         assert 0.68 == scores[0];
         assert 0.65 == scores[1];
-        assert 0.61 == scores[2];
+        assert 0.62 == scores[2];
         assert 0.62 == scores[3];
         assert 0.61 == scores[4];
         assert 0.61 == scores[5];
@@ -726,10 +728,9 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         assert 0.71 == scores[11];
         assert 0.71 == scores[12];
         assert 0.71 == scores[13];
-        assert 0.71 == scores[14];
-        assert 0.7 == scores[15];
+        assert 0.72 == scores[14];
+        assert 0.71 == scores[15];
         assert 0.71 == recall;
-
     }
 
     @Test
@@ -780,9 +781,9 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         assert 0.67 == scores[8];
         assert 0.69 == scores[9];
         assert 0.7 == scores[10];
-        assert 0.7 == scores[11];
-        assert 0.7 == scores[12];
-        assert 0.7 == scores[13];
+        assert 0.71 == scores[11];
+        assert 0.71 == scores[12];
+        assert 0.71 == scores[13];
         assert 0.7 == scores[14];
         assert 0.7 == scores[15];
 
@@ -807,7 +808,6 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         // candidate extraction is performed at index-time
         LOG.info("Candidate size: " + termList.size());
         Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
-
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
         double[] scores = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms,
@@ -834,19 +834,18 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         assert 0.76 == scores[3];
         assert 0.78 == scores[4];
         assert 0.77 == scores[5];
-        assert 0.76 == scores[6];
-        assert 0.76 == scores[7];
-        assert 0.74 == scores[8];
-        assert 0.73 == scores[9];
-        assert 0.72 == scores[10];
-        assert 0.71 == scores[11];
-        assert 0.71 == scores[12];
-        assert 0.71 == scores[13];
-        assert 0.7 == scores[14];
-        assert 0.7 == scores[15];
+        assert 0.77 == scores[6];
+        assert 0.77 == scores[7];
+        assert 0.75 == scores[8];
+        assert 0.75 == scores[9];
+        assert 0.73 == scores[10];
+        assert 0.73 == scores[11];
+        assert 0.73 == scores[12];
+        assert 0.72 == scores[13];
+        assert 0.71 == scores[14];
+        assert 0.71 == scores[15];
 
         assert 0.71 == recall;
-
     }
 
 }

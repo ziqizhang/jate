@@ -212,10 +212,13 @@
 			    	
 				#####FOR REGRESSION FEATURES: added 'paragraphChunker-class' parameter ####				
 				-->
-				<tokenizer class="org.apache.lucene.analysis.jate.OpenNLPTokenizerFactory"
+				<!--<tokenizer class="org.apache.lucene.analysis.jate.OpenNLPTokenizerFactory"
 							sentenceModel="en-sent.bin"
 							tokenizerModel="en-token.bin"
-							paragraphChunker-class="org.apache.lucene.analysis.jate.ParagraphChunkerRawText"/>
+							paragraphChunker-class="org.apache.lucene.analysis.jate.ParagraphChunkerRawText"/>-->
+				<tokenizer class="org.apache.lucene.analysis.jate.OpenNLPTokenizerFactory"
+						   sentenceModel="en-sent.bin"
+						   tokenizerModel="en-token.bin"/>
 				<!-- Asciifolding that converts alphabetic, numeric, and symbolic Unicode characters to ASCII characters-->
 				<filter class="solr.ASCIIFoldingFilterFactory"/>
 				<!-- A PoS tagger based on OpenNLP 
@@ -300,10 +303,14 @@
 
 				#####FOR REGRESSION FEATURES: added 'paragraphChunker-class' parameter ####				    	
 				-->				
-				<tokenizer class="org.apache.lucene.analysis.jate.OpenNLPTokenizerFactory"
+				<!--<tokenizer class="org.apache.lucene.analysis.jate.OpenNLPTokenizerFactory"
 							sentenceModel="en-sent.bin"
 							tokenizerModel="en-token.bin"
-							paragraphChunker-class="org.apache.lucene.analysis.jate.ParagraphChunkerRawText"/>
+							paragraphChunker-class="org.apache.lucene.analysis.jate.ParagraphChunkerRawText"/>-->
+				<tokenizer class="org.apache.lucene.analysis.jate.OpenNLPTokenizerFactory"
+						   sentenceModel="en-sent.bin"
+						   tokenizerModel="en-token.bin"/>
+
 				<!-- Asciifolding that converts alphabetic, numeric, and symbolic Unicode characters to ASCII characters-->
 				<filter class="solr.ASCIIFoldingFilterFactory"/>
 				<!-- A PoS tagger based on OpenNLP 

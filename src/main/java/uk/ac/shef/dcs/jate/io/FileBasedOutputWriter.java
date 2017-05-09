@@ -34,7 +34,7 @@ public class FileBasedOutputWriter {
         JATEProperties jateProp = App.getJateProperties(args[3]);
         List<String> predictions=null;
         if(args.length>4){
-            predictions=ATEResultLoader.load(args[4]);
+            predictions=ATEResultLoader.loadFromJSON(args[4]);
         }
 
         output(outFolder, solrServer.getCoreContainer().getCore(solrCoreName),
