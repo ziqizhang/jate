@@ -196,8 +196,8 @@ public abstract class ACLRDTECTest {
                 1, 100, 1, 10,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
 
-        //double recall = Scorer.recall(gsTerms, rankedTerms);
-        double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, true, false, true,
+        //double computeOverallRecall = Scorer.computeOverallRecall(gsTerms, rankedTerms);
+        double recall = Scorer.computeOverallRecall(gsTerms, rankedTerms, lemmatiser, true, false, true,
                 1, 1000, 1, 100);
 
         assert 0.75 == recall;
@@ -221,7 +221,7 @@ public abstract class ACLRDTECTest {
         LOG.info("  top 8000 Precision:" + scores[13]);
         LOG.info("  top 9000 Precision:" + scores[14]);
         LOG.info("  top 10000 Precision:" + scores[15]);
-        LOG.info("  overall recall:" + recall);
+        LOG.info("  overall computeOverallRecall:" + recall);
     }
 
     /**

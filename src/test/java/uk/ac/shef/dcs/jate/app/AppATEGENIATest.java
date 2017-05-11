@@ -273,7 +273,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
-        double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
+        double recall = Scorer.computeOverallRecall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
                 EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
@@ -337,7 +337,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
-        double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
+        double recall = Scorer.computeOverallRecall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
                 EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
@@ -398,7 +398,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
-        double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
+        double recall = Scorer.computeOverallRecall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
                 EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
@@ -458,7 +458,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
-        double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
+        double recall = Scorer.computeOverallRecall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
                 EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
@@ -493,7 +493,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         }
 
         LOG.info("  overall precision: " + precision);
-        LOG.info("  overall recall: " + recall);
+        LOG.info("  overall computeOverallRecall: " + recall);
         LOG.info("  overall F-measure: " + Scorer.getFMeasure(precision, recall));
     }
 
@@ -531,7 +531,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
-        double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
+        double recall = Scorer.computeOverallRecall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
                 EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
@@ -589,7 +589,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
-        double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
+        double recall = Scorer.computeOverallRecall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
                 EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
@@ -649,7 +649,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
-        double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
+        double recall = Scorer.computeOverallRecall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
                 EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
@@ -705,7 +705,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
                 EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
-        double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
+        double recall = Scorer.computeOverallRecall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
                 EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
@@ -763,7 +763,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
-        double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
+        double recall = Scorer.computeOverallRecall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
                 EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
@@ -821,7 +821,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);
 
-        double recall = Scorer.recall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
+        double recall = Scorer.computeOverallRecall(gsTerms, rankedTerms, lemmatiser, EVAL_CONDITION_IGNORE_SYMBOL,
                 EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                 EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                 EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX);

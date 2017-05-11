@@ -41,7 +41,7 @@ public class Scorer {
             2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000, 15000, 20000, 25000, 30000};
 
     // top K percentage of candidates
-    private static int[] EVAL_CONDITION_TOP_K = {5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 75, 80};
+    private static int[] EVAL_CONDITION_TOP_K = {1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 75, 80};
 
 
     public static void createReportACLRD(Lemmatiser lemmatiser, String ateOutputFolder, String gsFile, String outFile,
@@ -95,6 +95,11 @@ public class Scorer {
                                          int[] topNRanks, int[] topKRanks) throws IOException, ParseException {
         PrintWriter p = new PrintWriter(outFile);
         List<String> gsTerms = GSLoader.loadGenia(gsFile);
+
+        List<String> normGS = prune(gsTerms, ignoreSymbols, ignoreDigits, caseInsensitive,
+                minChar, maxChar,minTokens, maxTokens);
+        normGS = normalize(normGS, lemmatiser, true);
+
         Map<String, double[]> scores = new HashMap<>();
 
         List<File> all = Arrays.asList(new File(ateOutputFolder).listFiles());
@@ -118,29 +123,26 @@ public class Scorer {
                 rankedTerms = ATEResultLoader.loadFromCSV(f.toString());
             }
 
+            List<String> normCandidates = prune(rankedTerms, ignoreSymbols, ignoreDigits, caseInsensitive, minChar, maxChar, minTokens, maxTokens);
+            normCandidates = normalize(normCandidates, lemmatiser, true);
+
             double[] values = new double[topNRanks.length+2];
 
-            double[] topNPrecisions = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms,
-                    ignoreSymbols, ignoreDigits, caseInsensitive,
-                    minChar, maxChar,minTokens, maxTokens,topNRanks);
+            double[] topNPrecisions = computePrecisionAtRank(normGS, normCandidates, topNRanks);
 
             int[] topNRanksFromTopK = getTopNFromTopK(rankedTerms.size(), topKRanks);
 
-            double[] topKPrecision = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms,
-                    ignoreSymbols, ignoreDigits, caseInsensitive,
-                    minChar, maxChar,minTokens, maxTokens,topNRanksFromTopK);
+            double[] topKPrecision = computePrecisionAtRank(normGS, normCandidates, topNRanksFromTopK);
+            double[] topKRecall = computeRecallAtRank(normGS, normCandidates, topNRanksFromTopK);
 
-            double overallPrecision = Scorer.computeOverallPrecision(lemmatiser,gsTerms, rankedTerms, ignoreSymbols,
-                    ignoreDigits, caseInsensitive,
-                    minChar, maxChar,minTokens, maxTokens);
+            double overallPrecision = computeOverallPrecision(normGS, normCandidates);
 
-            double overallRecall = Scorer.recall(gsTerms, rankedTerms, lemmatiser,
-                    ignoreSymbols, ignoreDigits, caseInsensitive,
-                    minChar, maxChar,minTokens, maxTokens);
+            double overallRecall = computeOverallRecall(normGS, normCandidates);
 
-            double overallF = Scorer.getFMeasure(overallPrecision, overallRecall);
+            double overallF = getFMeasure(overallPrecision, overallRecall);
 
             values = ArrayUtils.addAll(topNPrecisions, topKPrecision);
+            values = ArrayUtils.addAll(values, topKRecall);
             values = ArrayUtils.addAll(values, new double[]{overallPrecision, overallRecall, overallF, rankedTerms.size()});
 
             scores.put(name, values);
@@ -154,7 +156,10 @@ public class Scorer {
             sb.append(",").append(i);
         }
         for (int k : topKRanks) {
-            sb.append(",").append(k+"%");
+            sb.append(",").append(k+"%_P");
+        }
+        for (int k : topKRanks) {
+            sb.append(",").append(k+"%_R");
         }
         sb.append(",").append("Overall_P");
         sb.append(",").append("Overall_R");
@@ -171,6 +176,9 @@ public class Scorer {
             for (int i = 0; i < topKRanks.length; i++) {
                 sb.append(values[i+topNRanks.length]).append(",");
             }
+            for (int i = 0; i < topKRanks.length; i++) {
+                sb.append(values[i+topNRanks.length+topKRanks.length]).append(",");
+            }
             sb.append(values[values.length-4]).append(",");
             sb.append(values[values.length-3]).append(",");
             sb.append(values[values.length-2]).append(",");
@@ -179,6 +187,7 @@ public class Scorer {
         }
         p.println(sb.toString());
         p.close();
+        System.out.println(String.format("complete. Check the latest evaluation in [%s]", outFile));
     }
 
     private static int[] getTopNFromTopK(int totalCandidateSize, int[] topKs) {
@@ -216,13 +225,15 @@ public class Scorer {
         List<String> normCandidates = prune(terms, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
         normCandidates = normalize(normCandidates, lemmatiser, true);
 
+        return computePrecisionAtRank(normGS, normCandidates, ranks);
+    }
+
+    public static double[] computePrecisionAtRank(List<String> normGS, List<String> normCandidates, int[] ranks) {
         double[] scores = new double[ranks.length];
         for (int i = 0; i < ranks.length; i++) {
             if (normCandidates.size() > ranks[i]) {
-                double p = precision(normGS, normCandidates.subList(0, ranks[i]));
-                scores[i] = round(p, 2);
+                scores[i] = computeOverallPrecision(normGS, normCandidates.subList(0, ranks[i]));
             }
-
         }
 
         return scores;
@@ -237,9 +248,23 @@ public class Scorer {
         List<String> normCandidates = prune(terms, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
         normCandidates = normalize(normCandidates, lemmatiser, true);
 
+        return computeOverallPrecision(normGS, normCandidates);
+    }
+
+    public static double[] computeRecallAtRank(List<String> normGS, List<String> normCandidates, int[] ranks) {
+        double[] scores = new double[ranks.length];
+        for (int i = 0; i < ranks.length; i++) {
+            if (normCandidates.size() > ranks[i]) {
+                scores[i] = computeOverallRecall(normGS, normCandidates.subList(0, ranks[i]));
+            }
+        }
+
+        return scores;
+    }
+
+    public static double computeOverallPrecision(List<String> normGS, List<String> normCandidates) {
         double p = precision(normGS, normCandidates);
         return round(p, 2);
-
     }
 
 
@@ -375,17 +400,32 @@ public class Scorer {
      * @param maxChar max char for whether to filter GS terms and candidate within a length range for the evaluation
      * @param minTokens min token for whether to filter GS terms and candidate within a length range for the evaluation
      * @param maxTokens max token for whether to filter GS terms and candidate within a length range for the evaluation
-     * @return recall
+     * @return computeOverallRecall
      */
-    public static double recall(List<String> gsTerms, List<String> termResults, Lemmatiser lemmatiser,
-                                boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
-                                int minChar, int maxChar, int minTokens, int maxTokens) {
+    public static double computeOverallRecall(List<String> gsTerms, List<String> termResults, Lemmatiser lemmatiser,
+                                              boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
+                                              int minChar, int maxChar, int minTokens, int maxTokens) {
         List<String> normGS = prune(gsTerms, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
         normGS = normalize(normGS, lemmatiser, true);
         List<String> normTerms = prune(termResults, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
         normTerms = normalize(normTerms, lemmatiser, true);
 
-       return round(FMeasure.recall(normGS.toArray(), normTerms.toArray()), 2);
+        return computeOverallRecall(normGS, normTerms);
+    }
+
+    public static double computeOverallRecall(List<String> normGS, List<String> normTerms) {
+        return round(FMeasure.recall(normGS.toArray(), normTerms.toArray()), 2);
+    }
+
+    public static double[] topNRecall(List<String> normGSTerms, List<String> normRankedTerms, int[] topN) {
+        double[] topNRecalls = new double[topN.length];
+        for (int i = 0; i < topN.length; i++) {
+            if (normRankedTerms.size() > topN[i]) {
+                double r = FMeasure.recall(normGSTerms.toArray(), normRankedTerms.subList(0, topN[i]).toArray());
+                topNRecalls[i] = round(r, 2);
+            }
+        }
+        return topNRecalls;
     }
 
     public static List<String> synonymNormalisation4Genia(List<String> terms) {
@@ -415,8 +455,8 @@ public class Scorer {
     /**
      * Retrieves the f-measure score.
      *
-     * f-measure = 2 * precision * recall / (precision + recall)
-     * @return the rounded f-measure or -1 if precision + recall &lt;= 0
+     * f-measure = 2 * precision * computeOverallRecall / (precision + computeOverallRecall)
+     * @return the rounded f-measure or -1 if precision + computeOverallRecall &lt;= 0
      */
     public static double getFMeasure(Double precision, Double recall) {
 
@@ -591,8 +631,9 @@ public class Scorer {
         Lemmatiser lemmatiser = new Lemmatiser(new EngLemmatiser(
                 Paths.get(workingDir, "src", "test", "resource", "lemmatiser").toString(), false, false
         ));
-        String datasetName =args[0];
-        String ateOutputFolder =args[1];
+
+        String datasetName = args[0];
+        String ateOutputFolder = args[1];
         String ateOutputType = args[2];
         String outFile = args[3];
 

@@ -52,8 +52,16 @@ public class ATEResultLoader {
         }
     }
 
+    /**
+     * load ranked term candidates from two-column csv file
+     *
+     * header row is expected.
+     *
+     * @param csvOutputFile csv output file of ranked term candidates
+     * @return List<String> ranked term candidate strings
+     * @throws IOException expection if file not found
+     */
     public static List<String> loadFromCSV(String csvOutputFile) throws IOException {
-
         String defaultSplit=",";
         BufferedReader br = null;
         List<String> rankedTermCandidates = new ArrayList<>();
