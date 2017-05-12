@@ -59,7 +59,7 @@ public class ScienceIECorpusParser {
                                             String keaPredictionOutFolder, Lemmatiser lem,
                                             SolrCore core,
                                             JATEProperties properties) throws IOException, ParseException {
-        List<String> ateCandidates = ATEResultLoader.load(ateOutFile);
+        List<String> ateCandidates = ATEResultLoader.loadFromJSON(ateOutFile);
         if (topN > ateCandidates.size() || topN < 1) {
             //automatically determine topN
             Set<String> uniqueKeywords = new HashSet<>();
