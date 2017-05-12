@@ -30,7 +30,12 @@ public class ATEResultLoader {
             List<JATETerm> terms = new ArrayList<>();
             while (it.hasNext()){
                 JSONObject instance=(JSONObject)it.next();
-                JATETerm term = new JATETerm(instance.get("string").toString(), Double.valueOf(instance.get("score").toString()));
+                Object score =instance.get("score");
+                JATETerm term=null;
+                if(score==null)
+                    term = new JATETerm(instance.get("string").toString(), Double.valueOf(instance.get("score").toString()));
+                else
+                    term=new JATETerm(instance.get("string").toString(),Double.valueOf(score.toString()));
                 terms.add(term);
             }
 

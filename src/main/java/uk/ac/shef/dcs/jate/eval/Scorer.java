@@ -645,6 +645,19 @@ public class Scorer {
                     EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                     EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX,
                     EVAL_CONDITION_TOP_N, EVAL_CONDITION_TOP_K);
+
+
+        /*calculateACLRDJate1("/Users/-/work/jate/experiment/CValue_ALGORITHM.txt", args[1], args[2], true, false, true,
+                2, 150, 1, 5,
+                50, 100, 500, 1000, 5000, 10000);
+        System.exit(1);*/
+/**
+        Lemmatiser lem = new Lemmatiser(new EngLemmatiser(args[4],
+                false, false));
+        if (args[3].equals("genia")) {
+            createReportGenia(lem, args[0], args[1], args[2], true, false, true, 2, 100, 1, 5,
+                    50, 100, 500, 1000, 2000, 3000);
+*/
         } else {
             createReportACLRD(lemmatiser, args[0], args[1], args[2], true, false, true, 2, 100, 1, 10,
                     50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000);

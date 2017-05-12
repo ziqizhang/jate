@@ -107,7 +107,7 @@ public class FileBasedOutputWriter {
         System.exit(0);
     }
 
-    private static Set<String> collectTerms(Terms termVectorLookup) throws IOException {
+    public static Set<String> collectTerms(Terms termVectorLookup) throws IOException {
         Set<String> result = new HashSet<>();
 
         TermsEnum tiRef= termVectorLookup.iterator();
