@@ -167,7 +167,7 @@ public class Scorer {
         sb.append("\n");
 
         for (Map.Entry<String, double[]> en : scores.entrySet()) {
-            sb.append(en.getKey()).append(",");
+            sb.append(en.getKey().replaceAll(",","_")).append(",");
             double[] values = en.getValue();
             for (int i = 0; i < topNRanks.length; i++) {
                 sb.append(values[i]).append(",");
