@@ -33,15 +33,14 @@ public class Scorer {
     private static boolean EVAL_CONDITION_IGNORE_SYMBOL = true;
     private static boolean EVAL_CONDITION_IGNORE_DIGITS = false;
     private static boolean EVAL_CONDITION_CASE_INSENSITIVE = true;
-    private static int EVAL_CONDITION_CHAR_RANGE_MIN = 1;
+    private static int EVAL_CONDITION_CHAR_RANGE_MIN = 2;
     private static int EVAL_CONDITION_CHAR_RANGE_MAX = -1;
     private static int EVAL_CONDITION_TOKEN_RANGE_MIN = 1;
-    private static int EVAL_CONDITION_TOKEN_RANGE_MAX = -1;
-    private static int[] EVAL_CONDITION_TOP_N = {50, 100, 300, 500, 800, 1000, 1500,
-            2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000, 15000, 20000, 25000, 30000};
+    private static int EVAL_CONDITION_TOKEN_RANGE_MAX = 5;
+    private static int[] EVAL_CONDITION_TOP_N = {50, 100, 500, 1000, 2000, 4000, 6000, 8000};
 
     // top K percentage of candidates
-    private static int[] EVAL_CONDITION_TOP_K = {1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 75, 80};
+    private static int[] EVAL_CONDITION_TOP_K = {};
 
 
     public static void createReportACLRD(Lemmatiser lemmatiser, String ateOutputFolder, String gsFile, String outFile,
@@ -100,7 +99,7 @@ public class Scorer {
                 minChar, maxChar,minTokens, maxTokens);
         normGS = normalize(normGS, lemmatiser, true);
 
-        Map<String, double[]> scores = new HashMap<>();
+        Map<String, double[]> scores = new TreeMap<>();
 
         List<File> all = Arrays.asList(new File(ateOutputFolder).listFiles());
         Collections.sort(all);
@@ -237,6 +236,24 @@ public class Scorer {
         }
 
         return scores;
+    }
+
+    public static double computeAveragePrecision(List<String> normGS, List<String> normCandidates, int K) {
+        List<String> subList = new ArrayList<>();
+
+        double prevR=0.0;
+        double sum=0.0;
+        for (int i = 0; i < K; i++) {
+            subList.add(normGS.get(i));
+            if (normCandidates.size() > K) {
+                double p = computeOverallPrecision(normGS, subList);
+                double r = computeOverallRecall(normGS, subList);
+
+                double mult = p*(r-prevR);
+                sum+=mult;
+            }
+        }
+        return sum;
     }
 
     public static double computeOverallPrecision(Lemmatiser lemmatiser, List<String> gs, List<String> terms,
@@ -613,7 +630,7 @@ public class Scorer {
 
 
     public static void main(String[] args) throws IOException, JATEException, ParseException {
-        if (args == null || args.length != 4) {
+        if (args == null || args.length < 4) {
             StringBuilder sb = new StringBuilder("Usage:\n");
             sb.append("java -cp 'jate.jar' ").append(Scorer.class.getName()).append(" ")
                     .append("[CORPUS_NAME] [ATE_OUTPUT_DIR] [ATE_OUTPUT_FILE_TYPE] ").append("\n\n");
@@ -640,7 +657,8 @@ public class Scorer {
         if (datasetName.equals("genia")) {
             Path GENIA_CORPUS_CONCEPT_FILE = Paths.get(workingDir, "src", "test", "resource",
                     "eval", "GENIA", "concept.txt");
-            createReportGenia(lemmatiser, ateOutputFolder, ateOutputType, GENIA_CORPUS_CONCEPT_FILE.toString(), outFile,
+            createReportGenia(lemmatiser, ateOutputFolder, ateOutputType,
+                    /*GENIA_CORPUS_CONCEPT_FILE.toString()*/args[4], outFile,
                     EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                     EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                     EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX,

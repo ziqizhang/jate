@@ -22,3 +22,5 @@ testdata/solr-testbed/scienceie_test/data/*
 debug/*
 *.tar.gz
 src/test/resource/eval/ACL_RD-TEC/corpus/full/debug/
+*.json
+*.lock
