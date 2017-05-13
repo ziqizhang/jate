@@ -100,6 +100,7 @@ public class Scorer {
         normGS = normalize(normGS, lemmatiser, true);
 
         Map<String, double[]> scores = new TreeMap<>();
+        Map<String, Double> avgPrecision = new TreeMap<>();
 
         List<File> all = Arrays.asList(new File(ateOutputFolder).listFiles());
         Collections.sort(all);
@@ -145,6 +146,9 @@ public class Scorer {
             values = ArrayUtils.addAll(values, new double[]{overallPrecision, overallRecall, overallF, rankedTerms.size()});
 
             scores.put(name, values);
+
+            double avgP=computeAveragePrecision(normGS, normCandidates, normGS.size());
+            avgPrecision.put(name, avgP);
         }
 
         //generate report
@@ -185,7 +189,14 @@ public class Scorer {
             sb.append("\n");
         }
         p.println(sb.toString());
+        p.println("\n\nAVERAGE PRECISION\n");
+        for(Map.Entry<String, Double> en: avgPrecision.entrySet()){
+            p.println(en.getKey().replaceAll(",","_")+","+en.getValue());
+        }
+
         p.close();
+
+
         System.out.println(String.format("complete. Check the latest evaluation in [%s]", outFile));
     }
 
