@@ -4,6 +4,7 @@ import dragon.nlp.tool.lemmatiser.EngLemmatiser;
 import opennlp.tools.util.eval.FMeasure;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.jate.PunctuationRemover;
+import org.apache.solr.common.util.Pair;
 import org.json.simple.parser.ParseException;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.nlp.Lemmatiser;
@@ -25,7 +26,7 @@ public class Scorer {
 
 
 
-    public static void createReportACLRD(Lemmatiser lemmatiser, String ateOutputFolder, String gsFile, String outFile,
+    public static void createReportACLRD(int expectedTerms, Lemmatiser lemmatiser, String ateOutputFolder, String gsFile, String outFile,
                                          boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
                                          int minChar, int maxChar, int minTokens, int maxTokens,
                                          int... ranks) throws IOException, JATEException, ParseException {
@@ -43,9 +44,9 @@ public class Scorer {
             System.out.println(f);
             List<String> terms = ATEResultLoader.load(f.toString());
 
-            double[] s = computePrecisionAtRank(lemmatiser, gs, terms, ignoreSymbols, ignoreDigits, lowercase, minChar,
+            Pair<double[], Double> result = computePrecisionAtRank(expectedTerms,lemmatiser, gs, terms, ignoreSymbols, ignoreDigits, lowercase, minChar,
                     maxChar, minTokens, maxTokens, ranks);
-            scores.put(name.replace(",","_"), s);
+            scores.put(name.replace(",","_"), result.getKey());
 
         }
 
@@ -69,14 +70,19 @@ public class Scorer {
         p.println(sb.toString());
         p.close();
     }
+    public static double computeOverallRecall(List<String> normGS, List<String> normTerms) {
+        return FMeasure.recall(normGS.toArray(), normTerms.toArray());
+    }
 
-    public static void createReportGenia(Lemmatiser lemmatiser, String ateOutputFolder, String gsFile, String outFile,
+    public static void createReportGenia(int expectedTerms,Lemmatiser lemmatiser, String ateOutputFolder, String gsFile, String outFile,
                                          boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
                                          int minChar, int maxChar, int minTokens, int maxTokens,
                                          int... ranks) throws IOException, ParseException {
         PrintWriter p = new PrintWriter(outFile);
         List<String> gs = GSLoader.loadGenia(gsFile);
-        Map<String, double[]> scores = new TreeMap<>();
+        Map<String, double[]> pAtN = new TreeMap<>();
+        Map<String, Double> recall=new TreeMap<>();
+        Map<String, Double> avgP = new TreeMap<>();
 
         List<File> all = Arrays.asList(new File(ateOutputFolder).listFiles());
         Collections.sort(all);
@@ -87,9 +93,13 @@ public class Scorer {
             System.out.println(f);
             List<String> terms = ATEResultLoader.load(f.toString());
 
-            double[] s = computePrecisionAtRank(lemmatiser, gs, terms, ignoreSymbols, ignoreDigits, lowercase, minChar,
+            Pair<double[], Double> result=computePrecisionAtRank(expectedTerms,
+                    lemmatiser, gs, terms, ignoreSymbols, ignoreDigits, lowercase, minChar,
                     maxChar, minTokens, maxTokens, ranks);
-            scores.put(name, s);
+
+            pAtN.put(name, result.getKey());
+            recall.put(name, result.getValue());
+            System.out.println("recall="+result.getValue());
         }
 
         //generate report
@@ -100,7 +110,7 @@ public class Scorer {
         }
         sb.append("\n");
 
-        for (Map.Entry<String, double[]> en : scores.entrySet()) {
+        for (Map.Entry<String, double[]> en : pAtN.entrySet()) {
             sb.append(en.getKey().replaceAll(",","/")).append(",");
             double[] s = en.getValue();
             for (int i = 0; i < ranks.length; i++) {
@@ -128,10 +138,10 @@ public class Scorer {
      * @param ranks         list of rankinig for evaluation
      * @return double[]  list of precision@K
      */
-    public static double[] computePrecisionAtRank(Lemmatiser lemmatiser, List<String> gs, List<String> terms,
-                                                  boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
-                                                  int minChar, int maxChar, int minTokens, int maxTokens,
-                                                  int... ranks) {
+    public static Pair<double[], Double> computePrecisionAtRank(int expectedTerms,Lemmatiser lemmatiser, List<String> gs, List<String> terms,
+                                                                boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
+                                                                int minChar, int maxChar, int minTokens, int maxTokens,
+                                                                int... ranks) {
         gs = prune(gs, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
         gs = normalize(gs, lemmatiser);
         terms = prune(terms, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
@@ -140,10 +150,13 @@ public class Scorer {
         for (int i = 0; i < ranks.length; i++) {
             double p = precision(gs, terms.subList(0, ranks[i]));
             scores[i] = round(p, 2);
-
         }
 
-        return scores;
+        double recall=computeOverallRecall(gs, terms);
+        System.out.println("recall="+recall);
+        double avgP=computeAveragePrecision(gs, terms,expectedTerms);
+
+        return new Pair<>(scores, avgP);
     }
 
     /**
@@ -171,6 +184,29 @@ public class Scorer {
         FMeasure fMeasure = new FMeasure();
         fMeasure.updateScores(finalGSTermSet.toArray(), finalTagTermSet.toArray());
         return fMeasure;
+    }
+
+    public static double computeAveragePrecision(List<String> normGS, List<String> normCandidates, int K) {
+        List<String> subList = new ArrayList<>();
+
+        double prevR=0.0;
+        double sum=0.0;
+        for (int i = 0; i < K; i++) {
+            subList.add(normGS.get(i));
+            if (normCandidates.size() > K) {
+                double p = computeOverallPrecision(normGS, subList);
+                double r = computeOverallRecall(normGS, subList);
+
+                double mult = p*(r-prevR);
+                sum+=mult;
+                if(i%1000==0) System.out.println(".");
+            }
+        }
+        return sum;
+    }
+    public static double computeOverallPrecision(List<String> normGS, List<String> normCandidates) {
+        double p = precision(normGS, normCandidates);
+        return round(p, 2);
     }
 
     public static Set<String> termSetNormalisation(List<String> terms, Lemmatiser lemmatiser,
@@ -401,10 +437,10 @@ public class Scorer {
         Lemmatiser lem = new Lemmatiser(new EngLemmatiser(args[4],
                 false, false));
         if (args[3].equals("genia")) {
-            createReportGenia(lem, args[0], args[1], args[2], true, false, true, 2, 100, 1, 5,
+            createReportGenia(Integer.valueOf(args[5]), lem, args[0], args[1], args[2], true, false, true, 2, 100, 1, 5,
                     50, 100, 500, 1000, 2000, 4000, 6000, 8000, 10000);
         } else {
-            createReportACLRD(lem, args[0], args[1], args[2], true, false, true, 2, 100, 1, 10,
+            createReportACLRD(Integer.valueOf(args[5]),lem, args[0], args[1], args[2], true, false, true, 2, 100, 1, 10,
                     50, 100, 250, 500, 1000);
         }
         System.out.println(new Date());
