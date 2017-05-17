@@ -357,49 +357,6 @@ public class Scorer {
         return normedTerm;
     }
 
-
-//    /**
-//     * compute Top K precision with strict or lenient benchmarking
-//     *
-//     * @return
-//     */
-
-    /**
-     * RESTORED Previous precision method. As it is redundant to normalise terms for every top K, and it is very
-     * computationally expensive for large list.
-     * <p>
-     * compute Top K precision with strict or lenient benchmarking
-     */
-    /*public static double computePrecisionWithNormalisation(List<String> gsTerms, List<String> terms,
-                                                             boolean ignoreSymbols, boolean ignoreDigits,
-                                                             boolean lowercase, int topK) throws JATEException {
-        double score = 0.0;
-
-        if (terms == null || terms.size() ==0) {
-            return score;
-        }
-
-        if (gsTerms == null || gsTerms.size() == 0) {
-            throw new JATEException("Gold Standard Terms is null!");
-        }
-
-        int defaultMinChar = 2; //originall 1. should use 2 at least
-        int defaultMaxChar = 1000;
-        int defaultMinTokens=1;
-        int defaultMaxTokens=10;
-
-        gsTerms = prune(gsTerms, ignoreSymbols, ignoreDigits, lowercase,
-                defaultMinChar, defaultMaxChar, defaultMinTokens, defaultMaxTokens);
-        terms = prune(terms, ignoreSymbols, ignoreDigits, lowercase,
-                defaultMinChar, defaultMaxChar, defaultMinTokens, defaultMaxTokens);
-
-        List<String> topKTerms = terms.subList(0, topK);
-        score = precision(gsTerms, topKTerms);
-
-        //score=computePrecisionAtRank(gsTerms, terms,topK);
-
-        return round(score, 2);
-    }*/
     public static double round(double value, int scale) {
         return new BigDecimal(value).setScale(scale, RoundingMode.HALF_UP).doubleValue();
     }
@@ -412,7 +369,9 @@ public class Scorer {
      * @return double  precision score
      */
     public static double precision(List<String> gsTerms, List<String> topKTerms) {
-        return FMeasure.precision(gsTerms.toArray(), topKTerms.toArray());
+        List<String> correct = new ArrayList<>(topKTerms);
+        correct.retainAll(gsTerms);
+        return round(correct.size()/(double) topKTerms.size(), 2);
     }
 
 
@@ -442,7 +401,9 @@ public class Scorer {
     }
 
     public static double computeOverallRecall(List<String> normGS, List<String> normTerms) {
-        return round(FMeasure.recall(normGS.toArray(), normTerms.toArray()), 2);
+        List<String> correct = new ArrayList<>(normGS);
+        correct.retainAll(normTerms);
+        return round(correct.size()/(double)normGS.size(), 2);
     }
 
     public static double[] topNRecall(List<String> normGSTerms, List<String> normRankedTerms, int[] topN) {
