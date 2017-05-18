@@ -192,7 +192,7 @@ public abstract class ACLRDTECTest {
     public void evaluate(List<JATETerm> jateTerms, String algorithmName) throws JATEException {
         LOG.info(String.format("evaluating %s ...", algorithmName));
         List<String> rankedTerms = ATEResultLoader.load(jateTerms);
-        Pair<double[], Double> result= Scorer.computePrecisionAtRank(300,lemmatiser,gsTerms, rankedTerms,
+        Pair<double[],double[]> result= Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms,
                 true, false, true,
                 2, 100, 1, 10,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);

@@ -1,1 +1,0 @@
-The core instance provides an example setting of JATE2.0 plugin mode.

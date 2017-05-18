@@ -371,8 +371,8 @@
 			         -->			
                 <filter class="org.apache.lucene.analysis.jate.OpenNLPRegexChunkerFactory"
                         patterns="mobile.patterns"
-                        minTokens="1" maxTokens="3"
-                        maxCharLength="40" minCharLength="2" removeLeadingStopWords="true"
+                        minTokens="1" maxTokens="4"
+                        maxCharLength="40" minCharLength="3" removeLeadingStopWords="true"
                         removeTrailingStopWords="true" removeLeadingSymbolicTokens="true"
                         removeTrailingSymbolicTokens="true"
                         stripAnySymbolChars="false"

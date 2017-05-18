@@ -225,7 +225,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         //Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        Pair<double[], Double> result = Scorer.computePrecisionAtRank(9450,lemmatiser,gsTerms, rankedTerms, true, false, true,
+        Pair<double[], double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 200, 1, 10,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
 
@@ -273,7 +273,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        Pair<double[], Double> result = Scorer.computePrecisionAtRank(9450,lemmatiser,gsTerms, rankedTerms, true, false, true,
+        Pair<double[], double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
 
@@ -318,7 +318,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        Pair<double[], Double> result = Scorer.computePrecisionAtRank(9450,lemmatiser,gsTerms, rankedTerms, true, false, true,
+        Pair<double[], double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         double[] scores=result.getKey();
@@ -361,7 +361,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        Pair<double[], Double> result = Scorer.computePrecisionAtRank(9450,lemmatiser,gsTerms, rankedTerms, true, false, true,
+        Pair<double[], double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
 
@@ -428,7 +428,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
 
-        Pair<double[], Double> result = Scorer.computePrecisionAtRank(9450,lemmatiser,gsTerms, rankedTerms, true, false, true,
+        Pair<double[], double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
 
@@ -473,7 +473,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        Pair<double[], Double> result= Scorer.computePrecisionAtRank(9450,lemmatiser,gsTerms, rankedTerms, true, false, true,
+        Pair<double[], double[]> result= Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         double recall = Scorer.recall(gsTerms, rankedTerms);
@@ -520,7 +520,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        Pair<double[], Double> result = Scorer.computePrecisionAtRank(9450,lemmatiser,gsTerms, rankedTerms, true, false, true,
+        Pair<double[], double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         double recall = Scorer.recall(gsTerms, rankedTerms);
@@ -564,7 +564,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        Pair<double[], Double> result = Scorer.computePrecisionAtRank(9450,lemmatiser,gsTerms, rankedTerms, true, false, true,
+        Pair<double[], double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         double recall = Scorer.recall(gsTerms, rankedTerms);
@@ -608,7 +608,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         //Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        Pair<double[], Double> result = Scorer.computePrecisionAtRank(9450,lemmatiser,gsTerms, rankedTerms, true, false, true,
+        Pair<double[], double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         double recall = Scorer.recall(gsTerms, rankedTerms);
@@ -654,7 +654,7 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        Pair<double[], Double> result = Scorer.computePrecisionAtRank(9450,lemmatiser,gsTerms, rankedTerms, true, false, true,
+        Pair<double[], double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         double recall = Scorer.recall(gsTerms, rankedTerms);

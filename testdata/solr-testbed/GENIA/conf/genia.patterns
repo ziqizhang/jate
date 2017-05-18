@@ -1,4 +1,10 @@
 #c/nc-value paper
 #default	(\bNN\b|\bNNP\b|\bNNS\b)+
 #taken and translated from http://users.cs.cf.ac.uk/I.Spasic/flexiterm/
-default	(((((\bNN\b|\bNNP\b|\bNNS\b|JJ) )*(\bNN\b|\bNNP\b|\bNNS\b)) IN (((\bNN\b|\bNNP\b|\bNNS\b|JJ) )*(\bNN\b|\bNNP\b|\bNNS\b)))|((\bNN\b|\bNNP\b|\bNNS\b|JJ )*(\bNN\b|\bNNP\b|\bNNS\b) POS (\bNN\b|\bNNP\b|\bNNS\b|JJ )*(\bNN\b|\bNNP\b|\bNNS\b)))|(((\bNN\b|\bNNP\b|\bNNS\b|JJ) )+(\bNN\b|\bNNP\b|\bNNS\b))
+#default	(((((\bNN\b|\bNNP\b|\bNNS\b|JJ) )*(\bNN\b|\bNNP\b|\bNNS\b)) IN (((\bNN\b|\bNNP\b|\bNNS\b|JJ) )*(\bNN\b|\bNNP\b|\bNNS\b)))|((\bNN\b|\bNNP\b|\bNNS\b|JJ )*(\bNN\b|\bNNP\b|\bNNS\b) POS (\bNN\b|\bNNP\b|\bNNS\b|JJ )*(\bNN\b|\bNNP\b|\bNNS\b)))|(((\bNN\b|\bNNP\b|\bNNS\b|JJ) )+(\bNN\b|\bNNP\b|\bNNS\b))
+
+default	(((((\bNN\b|\bNNP\b|\bNNS\b|JJ) )*(\bNN\b|\bNNP\b|\bNNS\b)) (\bIN\b) (((\bNN\b|\bNNP\b|\bNNS\b|JJ) )*(\bNN\b|\bNNP\b|\bNNS\b)))|((\bNN\b|\bNNP\b|\bNNS\b|JJ )*(\bNN\b|\bNNP\b|\bNNS\b) POS (\bNN\b|\bNNP\b|\bNNS\b|JJ )*(\bNN\b|\bNNP\b|\bNNS\b)))|(((\bNN\b|\bNNP\b|\bNNS\b|JJ) )+(\bNN\b|\bNNP\b|\bNNS\b))
+#CValue
+#default	(((\bNN\b|\bNNP\b|\bNNS\b|JJ) ) (\bNN\b|\bNNP\b|\bNNS\b))
+#default	(((\bNN\b|\bNNP\b|\bNNS\b|JJ) )+(\bNN\b|\bNNP\b|\bNNS\b))
+#default	(((\bNN\b|\bNNP\b|\bNNS\b|JJ) )*(\bIN\b)?((\bNN\b|\bNNP\b|\bNNS\b|JJ) )*(\bNN\b|\bNNP\b|\bNNS\b))
