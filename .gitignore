@@ -31,7 +31,7 @@ testdata/solr-testbed/GENIA/data/*
 testdata/solr-testbed/jateCore/data/*
 testdata/solr-testbed/ttc_wind/data/*
 testdata/solr-testbed/ttc_mobile/data/*
-testdata/solr-testbed/scienceie_test/data/*
+testdata/solr-testbed/scienceie/*
 /target/
 .DS_Store
 debug/*
