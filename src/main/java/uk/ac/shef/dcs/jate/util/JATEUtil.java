@@ -222,8 +222,8 @@ public class JATEUtil {
 
                     if (paragraph) {
                         String paragraph = new String(ch, start, length);
-
                         paperParagraphs.append(paragraph);
+                        paperParagraphs.append(" ");
                     }
                 }
             };

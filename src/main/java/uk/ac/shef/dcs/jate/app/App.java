@@ -77,6 +77,13 @@ public abstract class App {
     //used by algorithms such as weirdness, glossex, termex that compares against a reference corpus
     protected String referenceFrequencyFilePath = null;
 
+    public void setOutputFile(String outputFilePath) {
+        outputFile = outputFilePath;
+    }
+
+    public String getOutputFile() {
+        return outputFile;
+    }
 
     protected FrequencyTermBasedFBMaster freqFeatureBuilder = null;
     // term indexed feature (typically frequency info.)
