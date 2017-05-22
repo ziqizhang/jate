@@ -13,6 +13,7 @@ import uk.ac.shef.dcs.jate.JATEProperties;
 import uk.ac.shef.dcs.jate.app.App;
 import uk.ac.shef.dcs.jate.eval.ATEResultLoader;
 import uk.ac.shef.dcs.jate.model.JATETerm;
+import uk.ac.shef.dcs.jate.util.ATR4SFormatConvertor;
 import uk.ac.shef.dcs.jate.util.SolrUtil;
 
 import java.io.*;
@@ -32,9 +33,10 @@ public class FileBasedOutputWriter {
         String solrCoreName = args[2];
         final EmbeddedSolrServer solrServer = new EmbeddedSolrServer(Paths.get(solrHomePath), solrCoreName);
         JATEProperties jateProp = App.getJateProperties(args[3]);
-        List<String> predictions=null;
+        List<String> predictions=new ArrayList<>();
         if(args.length>4){
-            predictions=ATEResultLoader.load(args[4]);
+            //predictions=ATEResultLoader.load(args[4]);
+            predictions.addAll(ATR4SFormatConvertor.readAllTermStrings(new File(args[4])));
         }
 
         output(outFolder, solrServer.getCoreContainer().getCore(solrCoreName),
@@ -47,6 +49,7 @@ public class FileBasedOutputWriter {
      */
     public static void output(String outFolder, SolrCore core, JATEProperties properties, List<String> predictions){
         SolrIndexSearcher searcher = core.getSearcher().get();
+        Set<String> selected = new HashSet<>();
         List<Integer> docIds = new ArrayList<>();
         for (int i = 0; i < searcher.maxDoc(); i++) {
             docIds.add(i);
@@ -80,8 +83,10 @@ public class FileBasedOutputWriter {
                     sorted.addAll(terms);
                 else{
                     for(String t: terms){
-                        if(predictionStrings.contains(t))
+                        if(predictionStrings.contains(t)) {
                             sorted.add(t);
+                            selected.add(t);
+                        }
                        /* else
                             System.err.println("This candidate term in this document does not exist: {"+t+" @ "+filename);
                     */}
@@ -104,6 +109,7 @@ public class FileBasedOutputWriter {
             }
         }
         core.close();
+        System.out.println(selected.size());
         System.exit(0);
     }
 
