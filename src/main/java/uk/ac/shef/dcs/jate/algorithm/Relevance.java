@@ -52,7 +52,8 @@ public class Relevance extends ReferenceBased{
             JATETerm term = new JATETerm(tString);
 
             String[] elements = tString.split(" ");
-            double T = (double) elements.length;
+            //v1
+            /*double T = (double) elements.length;
             double SUMwi = 0.0;
 
             for (int i = 0; i < T; i++) {
@@ -76,8 +77,67 @@ public class Relevance extends ReferenceBased{
             }
 
             double TD = SUMwi / T;
-            term.setScore(TD);
+            term.setScore(TD);*/
 
+            //v2
+            double T = (double) elements.length;
+            double SUMwi = 0.0;
+
+            for (int i = 0; i < T; i++) {
+                String wi = elements[i];
+                double pc_wi = fFeatureRef.getTTFNorm(wi);
+                if (pc_wi == 0)
+                    pc_wi = nullWordProbInReference; //
+                if(matchOOM)
+                    pc_wi*=refScalar;
+
+                int freq=fFeatureWords.getTTF(wi);
+                if(freq==0)
+                    continue;//composing words can be stopwords and no frequency will be recorded
+
+                double inner_part=(double) freq / totalWordsInCorpus
+                        * fFeatureWords.getTermFrequencyInDocument(wi).size()/pc_wi;
+                //SUMwi += Math.log((double) gFeatureStore.getWordFreq(wi) / (double) gFeatureStore.getTotalCorpusWordFreq() / gFeatureStore.getRefWordFreqNorm(wi));
+                SUMwi += inner_part;
+            }
+
+            double TD = SUMwi / T;
+            double log_part = Math.log(TD+2)/Math.log(2);
+            double v = 1.0-(1/log_part);
+
+            //v3
+            /*double T = (double) elements.length;
+            double SUMwi = 0.0;
+
+            double ntf_t=0.0, df_t=0.0, ntf_r=0.0;
+            for (int i = 0; i < T; i++) {
+                String wi = elements[i];
+                double pc_wi = fFeatureRef.getTTFNorm(wi);
+                if (pc_wi == 0)
+                    pc_wi = nullWordProbInReference; //
+                if(matchOOM)
+                    pc_wi*=refScalar;
+
+                int freq=fFeatureWords.getTTF(wi);
+                if(freq==0)
+                    continue;//composing words can be stopwords and no frequency will be recorded
+
+                ntf_t+= freq / totalWordsInCorpus;
+                ntf_r+=pc_wi;
+                df_t+= fFeatureWords.getTermFrequencyInDocument(wi).size();
+            }
+
+            if(ntf_t==0){
+                term.setScore(0);
+                continue;
+            }
+
+            double TD =ntf_t*df_t/ntf_r;
+            double log_part = Math.log(TD+2)/Math.log(2);
+            double v = 1.0-(1/log_part);
+            term.setScore(v);*/
+
+            term.setScore(v);
             result.add(term);
         }
         Collections.sort(result);

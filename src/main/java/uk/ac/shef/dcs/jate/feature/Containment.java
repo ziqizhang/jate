@@ -25,4 +25,8 @@ public class Containment extends AbstractFeature {
             parents=new HashSet<>();
         return parents;
     }
+
+    Map<String, Set<String>> getTerm2ParentsMap(){
+        return term2Parents;
+    }
 }
