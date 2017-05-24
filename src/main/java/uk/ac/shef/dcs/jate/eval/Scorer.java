@@ -662,20 +662,20 @@ public class Scorer {
 
 
     public static void main(String[] args) throws IOException, JATEException, ParseException {
-//        if (args == null || args.length < 4) {
-//            StringBuilder sb = new StringBuilder("Usage:\n");
-//            sb.append("java -cp 'jate.jar' ").append(Scorer.class.getName()).append(" ")
-//                    .append("[CORPUS_NAME] [ATE_OUTPUT_DIR] [ATE_OUTPUT_FILE_TYPE] ").append("\n\n");
-//            sb.append("Example: java -cp 'jate.jar' /c/jate/outputDir/ csv genia_eval.csv \n\n");
-//            sb.append("[OPTIONS]:\n")
-//                    .append("\t\targs[0]:\t\t 'genia', 'aclrdtec1' or any other dataset name.\n")
-//                    .append("\t\targs[1]:\t\t ATE algorithms output folder that contains one or more ranked term candidates output.\n")
-//                    .append("\t\targs[2]:\t\t ATE algorithms output file type. Two options are 'csv' and 'json'. If file type is 'csv', it should contain a header row. \n")
-//                    .append("\t\targs[3]:\t\t A file name & path to save evaluation output (should not be the same folder of ATE algorithm output.\n");
-//
-//            System.out.println(sb);
-//            System.exit(-1);
-//        }
+        if (args == null || args.length < 4) {
+            StringBuilder sb = new StringBuilder("Usage:\n");
+            sb.append("java -cp 'jate.jar' ").append(Scorer.class.getName()).append(" ")
+                    .append("[CORPUS_NAME] [ATE_OUTPUT_DIR] [ATE_OUTPUT_FILE_TYPE] ").append("\n\n");
+            sb.append("Example: java -cp 'jate.jar' /c/jate/outputDir/ csv genia_eval.csv \n\n");
+            sb.append("[OPTIONS]:\n")
+                    .append("\t\targs[0]:\t\t 'genia', 'aclrdtec1' or any other dataset name.\n")
+                    .append("\t\targs[1]:\t\t ATE algorithms output folder that contains one or more ranked term candidates output.\n")
+                    .append("\t\targs[2]:\t\t ATE algorithms output file type. Two options are 'csv' and 'json'. If file type is 'csv', it should contain a header row. \n")
+                    .append("\t\targs[3]:\t\t A file name & path to save evaluation output (should not be the same folder of ATE algorithm output.\n");
+
+            System.out.println(sb);
+            System.exit(-1);
+        }
         String workingDir = System.getProperty("user.dir");
         Lemmatiser lemmatiser = new Lemmatiser(new EngLemmatiser(
                 Paths.get(workingDir, "src", "test", "resource", "lemmatiser").toString(), false, false
@@ -685,11 +685,11 @@ public class Scorer {
         Path ACL_1_CORPUS_CONCEPT_FILE = Paths.get(workingDir, "src", "test", "resource",
                 "eval", "ACL_RD-TEC", "terms.txt");
 
-        String datasetName = "aclrdtec1";//args[0];
-        String ateOutputFolder = "C:\\Data\\jate\\jate4supervision\\acl-1-index\\training_data\\setting2";// args[1];
-        String ateOutputType = "json";//args[2];
-        String outFile = "C:\\Data\\jate\\jate4supervision\\acl-1-index\\training_data\\acl_1_seed_set_eval.csv";//args[3];
-        String gsFile = ACL_1_CORPUS_CONCEPT_FILE.toString();//args[4];
+        String datasetName = args[0];
+        String ateOutputFolder = args[1];
+        String ateOutputType = args[2];
+        String outFile = args[3];
+        String gsFile = args[4];
 
         if (datasetName.equals("genia")) {
             /* gsFile = GENIA_CORPUS_CONCEPT_FILE.toString()*/
