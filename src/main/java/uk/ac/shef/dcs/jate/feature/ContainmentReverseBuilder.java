@@ -47,6 +47,9 @@ public class ContainmentReverseBuilder extends AbstractFeatureBuilder{
                 reverseMap.put(p, children);
             }
         }
-        return null;
+
+        Containment rc = new Containment();
+        rc.getTerm2ParentsMap().putAll(reverseMap);
+        return rc;
     }
 }

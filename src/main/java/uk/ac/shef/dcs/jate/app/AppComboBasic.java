@@ -44,7 +44,7 @@ public class AppComboBasic extends App {
 
         List<JATETerm> terms;
         try {
-            App app = new AppBasic(params);
+            App app = new AppComboBasic(params);
             if (isCorpusProvided(corpusDir)) {
                 app.index(Paths.get(corpusDir), Paths.get(solrHomePath), solrCoreName, jatePropertyFile);
             }
@@ -102,8 +102,8 @@ public class AppComboBasic extends App {
 
             ComboBasic cbasic = new ComboBasic();
             cbasic.registerFeature(FrequencyTermBased.class.getName(), this.freqFeature);
-            cbasic.registerFeature(Containment.class.getName(), cf);
-            cbasic.registerFeature(Containment.class.getName(), crf);
+            cbasic.registerFeature(ComboBasic.CONTAINMENT_PARENT+Containment.class.getName(), cf);
+            cbasic.registerFeature(ComboBasic.CONTAINMENT_CHILD+Containment.class.getName(), crf);
 
             List<String> candidates = new ArrayList<>(this.freqFeature.getMapTerm2TTF().keySet());
 

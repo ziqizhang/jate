@@ -54,6 +54,8 @@ public class ComboBasicWorker extends JATERecursiveTaskWorker<String, List<JATET
     protected List<JATETerm> computeSingleWorker(List<String> candidates) {
         List<JATETerm> result = new ArrayList<>();
         for (String tString: candidates) {
+            /*if(tString.equals("language"))
+                System.out.println();*/
             int ttf = fFeature.getTTF(tString);
             JATETerm term = new JATETerm(tString);
             //ComboBasic(t) = |t| log f (t) + αe t + βe ′ t ,

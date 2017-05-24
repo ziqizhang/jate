@@ -17,6 +17,8 @@ import java.util.concurrent.ForkJoinPool;
  * Created by zqz on 24/05/17.
  */
 public class ComboBasic extends Algorithm {
+    public static final String CONTAINMENT_PARENT="P_";
+    public static final String CONTAINMENT_CHILD="C_";
     private static final Logger LOG = Logger.getLogger(ComboBasic.class.getName());
     private double alpha = 0.75;
     private double beta = 0.1;
@@ -35,11 +37,11 @@ public class ComboBasic extends Algorithm {
         validateFeature(feature, FrequencyTermBased.class);
         FrequencyTermBased fFeature = (FrequencyTermBased) feature;
 
-        AbstractFeature feature2 = features.get(Containment.class.getName());
+        AbstractFeature feature2 = features.get(CONTAINMENT_PARENT+Containment.class.getName());
         validateFeature(feature2, Containment.class);
         Containment cFeature = (Containment) feature2;
 
-        AbstractFeature feature3 = features.get(Containment.class.getName());
+        AbstractFeature feature3 = features.get(CONTAINMENT_CHILD+Containment.class.getName());
         validateFeature(feature3, Containment.class);
         Containment crFeature = (Containment) feature3;
 
