@@ -72,7 +72,6 @@ public class Relevance extends ReferenceBased{
                         * fFeatureWords.getTermFrequencyInDocument(wi).size()/pc_wi;
                 double log_part = Math.log(inner_part+2)/Math.log(2);
                 double v = 1.0-(1/log_part);
-                //SUMwi += Math.log((double) gFeatureStore.getWordFreq(wi) / (double) gFeatureStore.getTotalCorpusWordFreq() / gFeatureStore.getRefWordFreqNorm(wi));
                 SUMwi += v;
             }
 
@@ -104,6 +103,7 @@ public class Relevance extends ReferenceBased{
             double TD = SUMwi / T;
             double log_part = Math.log(TD+2)/Math.log(2);
             double v = 1.0-(1/log_part);
+            term.setScore(v);
 
             //v3
             /*double T = (double) elements.length;
@@ -137,7 +137,7 @@ public class Relevance extends ReferenceBased{
             double v = 1.0-(1/log_part);
             term.setScore(v);*/
 
-            term.setScore(v);
+            //
             result.add(term);
         }
         Collections.sort(result);

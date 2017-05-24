@@ -53,18 +53,21 @@ public class BasicWorker extends JATERecursiveTaskWorker<String, List<JATETerm>>
             JATETerm term = new JATETerm(tString);
             //Basic(t) = |t| log f (t) + αe t
             double t =(double) tString.split(" ").length;
-            double log = Math.log(ttf);
+            if(t==1.0)
+                term.setScore(Math.log(ttf));
+            else {
+                double log = Math.log(ttf);
 
-            Set<String> parentTerms = cFeature.getTermParents(tString);
-            double et = (double) parentTerms.size();
+                Set<String> parentTerms = cFeature.getTermParents(tString);
+                double et = (double) parentTerms.size();
 
-            for (String parentTerm : parentTerms) {
-                et += (double) fFeature.getTTF(parentTerm);
+               /* for (String parentTerm : parentTerms) {
+                    et += (double) fFeature.getTTF(parentTerm);
+                }*/
+
+                double score = t * log + alpha * et;
+                term.setScore(score);
             }
-
-            double score = t*log+alpha*et;
-            term.setScore(score);
-
             result.add(term);
         }
         return result;

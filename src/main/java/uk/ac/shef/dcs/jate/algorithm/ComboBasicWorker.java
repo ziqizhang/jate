@@ -60,24 +60,28 @@ public class ComboBasicWorker extends JATERecursiveTaskWorker<String, List<JATET
             JATETerm term = new JATETerm(tString);
             //ComboBasic(t) = |t| log f (t) + αe t + βe ′ t ,
             double t =(double) tString.split(" ").length;
-            double log = Math.log(ttf);
-
-            Set<String> parentTerms = cFeature.getTermParents(tString);
-            double et = (double) parentTerms.size();
-
-            for (String parentTerm : parentTerms) {
-                et += (double) fFeature.getTTF(parentTerm);
+            if(t==1.0){
+                term.setScore(Math.log(ttf));
             }
+            else {
+                double log = Math.log(ttf);
 
-            Set<String> childTerms = crFeature.getTermParents(tString);
-            double etp = (double) childTerms.size();
-            for (String childTerm : childTerms) {
-                etp += (double) fFeature.getTTF(childTerm);
+                Set<String> parentTerms = cFeature.getTermParents(tString);
+                double et = (double) parentTerms.size();
+
+                /*for (String parentTerm : parentTerms) {
+                    et += (double) fFeature.getTTF(parentTerm);
+                }*/
+
+                Set<String> childTerms = crFeature.getTermParents(tString);
+                double etp = (double) childTerms.size();
+                /*for (String childTerm : childTerms) {
+                    etp += (double) fFeature.getTTF(childTerm);
+                }*/
+
+                double score = t * log + alpha * et + beta * etp;
+                term.setScore(score);
             }
-
-            double score = t*log+alpha*et + beta*etp;
-            term.setScore(score);
-
             result.add(term);
         }
         return result;

@@ -53,7 +53,7 @@ public class ATEResultLoader {
             List<JATETerm> terms = new ArrayList<>();
             while (it.hasNext()) {
                 JSONObject instance = (JSONObject) it.next();
-                Object s = instance.get("rank");
+                Object s = instance.get("score-mult");
                 if (s == null)
                     s = instance.get("score");
                 JATETerm term = new JATETerm(instance.get("string").toString(), Double.valueOf(s.toString()));
