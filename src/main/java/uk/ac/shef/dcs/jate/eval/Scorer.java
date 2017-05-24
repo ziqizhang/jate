@@ -6,6 +6,8 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.jate.PunctuationRemover;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.nlp.Lemmatiser;
 
@@ -22,182 +24,240 @@ import java.util.*;
  * compute scores
  */
 public class Scorer {
-    private final static String PATTERN_DIGITALS = "\\d+";
-    private final static String PATTERN_SYMBOLS = "\\p{Punct}";
-    public final static String FILE_TYPE_JSON = "json";
-    public final static String FILE_TYPE_CSV = "csv";
+    private static final Logger LOG = LoggerFactory.getLogger(Scorer.class.getName());
 
-    private static int EVAL_CONDITION_MIN_TERM_CONTEXT_FREQUENCY = 1;
-    private static int EVAL_CONDITION_MIN_TERM_TOTAL_FREQUENCY = 1;
-    private static int EVAL_CONDITION_CUTOFF_TOP_K_PERCENT = 1;
-    private static boolean EVAL_CONDITION_IGNORE_SYMBOL = true;
-    private static boolean EVAL_CONDITION_IGNORE_DIGITS = false;
-    private static boolean EVAL_CONDITION_CASE_INSENSITIVE = true;
-    private static int EVAL_CONDITION_CHAR_RANGE_MIN = 2;
-    private static int EVAL_CONDITION_CHAR_RANGE_MAX = -1;
-    private static int EVAL_CONDITION_TOKEN_RANGE_MIN = 1;
-    private static int EVAL_CONDITION_TOKEN_RANGE_MAX = 5;
-    private static int[] EVAL_CONDITION_TOP_N = {50, 100, 500, 1000, 2000, 4000, 6000, 8000};
+    protected final static String PATTERN_DIGITALS = "\\d+";
+    protected final static String PATTERN_SYMBOLS = "\\p{Punct}";
+    protected final static String FILE_TYPE_JSON = "json";
+    protected final static String FILE_TYPE_CSV = "csv";
 
-    // top K percentage of candidates
-    private static int[] EVAL_CONDITION_TOP_K = {};
+    public static int EVAL_CONDITION_MIN_TERM_CONTEXT_FREQUENCY = 1;
+    public static int EVAL_CONDITION_MIN_TERM_TOTAL_FREQUENCY = 1;
+    public static int EVAL_CONDITION_CUTOFF_TOP_K_PERCENT = 1;
+    public static boolean EVAL_CONDITION_IGNORE_SYMBOL = true;
+    public static boolean EVAL_CONDITION_IGNORE_DIGITS = false;
+    public static boolean EVAL_CONDITION_CASE_INSENSITIVE = true;
+    public static int EVAL_CONDITION_CHAR_RANGE_MIN = 2;
+    public static int EVAL_CONDITION_CHAR_RANGE_MAX = -1;
+    public static int EVAL_CONDITION_TOKEN_RANGE_MIN = 1;
+    public static int EVAL_CONDITION_TOKEN_RANGE_MAX = 5;
+    public static int[] EVAL_CONDITION_TOP_N = {50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000};
+
+    // top K percentage of candidates; K means percentage here
+    public static int[] EVAL_CONDITION_TOP_K = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30};
+    // whether to compute the AvP defined in [Astrakhantsev 2016]
+    // Astrakhantsev, N. (2016). ATR4S: Toolkit with State-of-the-art Automatic Terms Recognition Methods in Scala. arXiv preprint arXiv:1611.07804.
+    public static Boolean IS_COMPUTE_ATR4S_AvP = Boolean.FALSE;
 
 
-    public static void createReportACLRD(Lemmatiser lemmatiser, String ateOutputFolder, String gsFile, String outFile,
-                                         boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
-                                         int minChar, int maxChar, int minTokens, int maxTokens,
-                                         int... ranks) throws IOException, JATEException, ParseException {
-        PrintWriter p = new PrintWriter(outFile);
-        List<String> gs = GSLoader.loadACLRD(gsFile);
-
-        Map<String, double[]> scores = new TreeMap<>();
-        List<File> all = Arrays.asList(new File(ateOutputFolder).listFiles());
-        Collections.sort(all);
-
-        for (File f : all) {
-            String name = f.getName();
-            if (String.valueOf(name.charAt(0)).equals("."))
-                continue;
-            System.out.println(f);
-            List<String> terms = ATEResultLoader.loadFromJSON(f.toString());
-
-            double[] s = computePrecisionAtRank(lemmatiser, gs, terms, ignoreSymbols, ignoreDigits, lowercase, minChar,
-                    maxChar, minTokens, maxTokens, ranks);
-            scores.put(name.replace(",","_"), s);
-
-        }
-
-        //generate report
-
-        StringBuilder sb = new StringBuilder();
-        for (int i : ranks) {
-            sb.append(",").append(i);
-        }
-        sb.append("\n");
-
-        for (Map.Entry<String, double[]> en : scores.entrySet()) {
-            sb.append(en.getKey()).append(",");
-            double[] s = en.getValue();
-            for (int i = 0; i < ranks.length; i++) {
-                sb.append(s[i]).append(",");
-
-            }
-            sb.append("\n");
-        }
-        p.println(sb.toString());
-        p.close();
-    }
+//    public static void createReportACLRD(Lemmatiser lemmatiser, String ateOutputFolder, String gsFile, String outFile,
+//                                         boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
+//                                         int minChar, int maxChar, int minTokens, int maxTokens,
+//                                         int... ranks) throws IOException, JATEException, ParseException {
+//        PrintWriter p = new PrintWriter(outFile);
+//        List<String> gs = GSLoader.loadACLRD(gsFile);
+//
+//        Map<String, double[]> scores = new TreeMap<>();
+//        List<File> all = Arrays.asList(new File(ateOutputFolder).listFiles());
+//        Collections.sort(all);
+//
+//        for (File f : all) {
+//            String name = f.getName();
+//            if (String.valueOf(name.charAt(0)).equals("."))
+//                continue;
+//            System.out.println(f);
+//            List<String> terms = ATEResultLoader.loadFromJSON(f.toString());
+//
+//            double[] s = computePrecisionAtRank(lemmatiser, gs, terms, ignoreSymbols, ignoreDigits, lowercase, minChar,
+//                    maxChar, minTokens, maxTokens, ranks);
+//            scores.put(name.replace(",","_"), s);
+//
+//        }
+//
+//        //generate report
+//
+//        StringBuilder sb = new StringBuilder();
+//        for (int i : ranks) {
+//            sb.append(",").append(i);
+//        }
+//        sb.append("\n");
+//
+//        for (Map.Entry<String, double[]> en : scores.entrySet()) {
+//            sb.append(en.getKey()).append(",");
+//            double[] s = en.getValue();
+//            for (int i = 0; i < ranks.length; i++) {
+//                sb.append(s[i]).append(",");
+//
+//            }
+//            sb.append("\n");
+//        }
+//        p.println(sb.toString());
+//        p.close();
+//    }
 
     public static void createReportGenia(Lemmatiser lemmatiser, String ateOutputFolder, String ateOutputType, String gsFile, String outFile,
                                          boolean ignoreSymbols, boolean ignoreDigits, boolean caseInsensitive,
                                          int minChar, int maxChar, int minTokens, int maxTokens,
-                                         int[] topNRanks, int[] topKRanks) throws IOException, ParseException {
-        PrintWriter p = new PrintWriter(outFile);
+                                         int[] topNRanks, int[] topKRanks, Boolean isComputeATR4SAvP) throws IOException, ParseException {
         List<String> gsTerms = GSLoader.loadGenia(gsFile);
 
-        List<String> normGS = prune(gsTerms, ignoreSymbols, ignoreDigits, caseInsensitive,
-                minChar, maxChar,minTokens, maxTokens);
-        normGS = normalize(normGS, lemmatiser, true);
+        createEvaluationReport(lemmatiser, ateOutputFolder, ateOutputType, outFile, ignoreSymbols,
+                ignoreDigits, caseInsensitive, minChar, maxChar, minTokens, maxTokens, topNRanks, topKRanks,isComputeATR4SAvP,gsTerms);
+    }
 
-        Map<String, double[]> scores = new TreeMap<>();
-        Map<String, Double> avgPrecision = new TreeMap<>();
+    public static void createReportACLRD(Lemmatiser lemmatiser, String ateOutputFolder, String ateOutputType, String gsFile, String outFile,
+                                         boolean ignoreSymbols, boolean ignoreDigits, boolean caseInsensitive,
+                                         int minChar, int maxChar, int minTokens, int maxTokens,
+                                         int[] topNRanks, int[] topKRanks, Boolean isComputeATR4SAvP) throws IOException, ParseException {
+        List<String> gsTerms = GSLoader.loadACLRD(gsFile);
 
-        List<File> all = Arrays.asList(new File(ateOutputFolder).listFiles());
-        Collections.sort(all);
-        for (File f : all) {
-            String name = f.getName();
+        createEvaluationReport(lemmatiser, ateOutputFolder, ateOutputType, outFile, ignoreSymbols,
+                ignoreDigits, caseInsensitive, minChar, maxChar, minTokens, maxTokens, topNRanks, topKRanks, isComputeATR4SAvP, gsTerms);
+    }
 
-            if (!name.contains(ateOutputType)) {
-                continue;
+    public static void createEvaluationReport(Lemmatiser lemmatiser, String ateOutputFolder, String ateOutputType,
+                                              String outFile, boolean ignoreSymbols, boolean ignoreDigits,
+                                              boolean caseInsensitive, int minChar, int maxChar, int minTokens,
+                                              int maxTokens, int[] topNRanks, int[] topKRanks, Boolean isComputeATR4SAvP,
+                                              List<String> gsTerms) throws IOException, ParseException {
+        PrintWriter p = new PrintWriter(outFile);
+        try {
+            LOG.info(String.format("creating EvaluationReport for results in [%s]...", ateOutputFolder));
+            LOG.info("original gsTerms size :" + gsTerms.size());
+
+            List<String> normGS = prune(gsTerms, ignoreSymbols, ignoreDigits, caseInsensitive,
+                    minChar, maxChar, minTokens, maxTokens);
+            normGS = normalize(normGS, lemmatiser, true);
+
+            LOG.info("normalised gsTerms size :" + normGS.size());
+
+            Map<String, double[]> scores = new TreeMap<>();
+            Map<String, Double> avgPrecision = new TreeMap<>();
+
+            List<File> all = Arrays.asList(new File(ateOutputFolder).listFiles());
+            Collections.sort(all);
+            for (File f : all) {
+                String name = f.getName();
+
+                if (!name.contains(ateOutputType)) {
+                    continue;
+                }
+
+                LOG.info("evaluating " + name + " ...");
+
+                if (String.valueOf(name.charAt(0)).equals("."))
+                    continue;
+                //System.out.println(f);
+                List<String> rankedTerms = new ArrayList<>();
+                if (FILE_TYPE_JSON.equals(ateOutputType)) {
+                    rankedTerms = ATEResultLoader.loadFromJSON(f.toString());
+                } else if (FILE_TYPE_CSV.equals(ateOutputType)) {
+                    rankedTerms = ATEResultLoader.loadFromCSV(f.toString());
+                }
+
+                LOG.info("ranked terms are loaded. Total size : "+rankedTerms.size());
+                List<String> normRankedCandidates = prune(rankedTerms, ignoreSymbols, ignoreDigits,
+                        caseInsensitive, minChar, maxChar, minTokens, maxTokens);
+                // no need to do normalisation for JATE2 export
+                // please extend the method in your subclass if you need the support for any external output
+                // normCandidates = normalize(normCandidates, lemmatiser, true);
+                LOG.info("Candidate normalisation are completed. Normalised term size : " +
+                        normRankedCandidates.size());
+               computeEvalMetrics(name, normGS, normRankedCandidates, topNRanks, topKRanks, scores);
+
+
+                if (isComputeATR4SAvP) {
+                    double avgP = computeAveragePrecision(normGS, normRankedCandidates, normGS.size());
+                    avgPrecision.put(name, avgP);
+                    LOG.info("final computeAveragePrecision is completed.");
+                }
+
+                LOG.info("all evaluation metrics are computed for ["+ name + "].");
+
             }
 
-            System.out.println("evaluating "+name+" ...");
-
-            if (String.valueOf(name.charAt(0)) .equals("."))
-                continue;
-            //System.out.println(f);
-            List<String> rankedTerms = new ArrayList<>();
-            if (FILE_TYPE_JSON.equals(ateOutputType)) {
-                rankedTerms = ATEResultLoader.loadFromJSON(f.toString());
-            } else if (FILE_TYPE_CSV.equals(ateOutputType)) {
-                rankedTerms = ATEResultLoader.loadFromCSV(f.toString());
+            //generate report
+            LOG.info("exporting report ...");
+            StringBuilder sb = new StringBuilder();
+            //heads
+            for (int i : topNRanks) {
+                sb.append(",").append(i);
             }
-
-            List<String> normCandidates = prune(rankedTerms, ignoreSymbols, ignoreDigits, caseInsensitive, minChar, maxChar, minTokens, maxTokens);
-            normCandidates = normalize(normCandidates, lemmatiser, true);
-
-            double[] values = new double[topNRanks.length+2];
-
-            double[] topNPrecisions = computePrecisionAtRank(normGS, normCandidates, topNRanks);
-
-            int[] topNRanksFromTopK = getTopNFromTopK(rankedTerms.size(), topKRanks);
-
-            double[] topKPrecision = computePrecisionAtRank(normGS, normCandidates, topNRanksFromTopK);
-            double[] topKRecall = computeRecallAtRank(normGS, normCandidates, topNRanksFromTopK);
-
-            double overallPrecision = computeOverallPrecision(normGS, normCandidates);
-
-            double overallRecall = computeOverallRecall(normGS, normCandidates);
-
-            double overallF = getFMeasure(overallPrecision, overallRecall);
-
-            values = ArrayUtils.addAll(topNPrecisions, topKPrecision);
-            values = ArrayUtils.addAll(values, topKRecall);
-            values = ArrayUtils.addAll(values, new double[]{overallPrecision, overallRecall, overallF, rankedTerms.size()});
-
-            scores.put(name, values);
-
-            double avgP=computeAveragePrecision(normGS, normCandidates, normGS.size());
-            avgPrecision.put(name, avgP);
-        }
-
-        //generate report
-
-        StringBuilder sb = new StringBuilder();
-        //heads
-        for (int i : topNRanks) {
-            sb.append(",").append(i);
-        }
-        for (int k : topKRanks) {
-            sb.append(",").append(k+"%_P");
-        }
-        for (int k : topKRanks) {
-            sb.append(",").append(k+"%_R");
-        }
-        sb.append(",").append("Overall_P");
-        sb.append(",").append("Overall_R");
-        sb.append(",").append("Overall_F");
-        sb.append(",").append("Total_Size");
-        sb.append("\n");
-
-        for (Map.Entry<String, double[]> en : scores.entrySet()) {
-            sb.append(en.getKey().replaceAll(",","_")).append(",");
-            double[] values = en.getValue();
-            for (int i = 0; i < topNRanks.length; i++) {
-                sb.append(values[i]).append(",");
+            for (int k : topKRanks) {
+                sb.append(",").append(k + "%_P");
             }
-            for (int i = 0; i < topKRanks.length; i++) {
-                sb.append(values[i+topNRanks.length]).append(",");
+            for (int k : topKRanks) {
+                sb.append(",").append(k + "%_R");
             }
-            for (int i = 0; i < topKRanks.length; i++) {
-                sb.append(values[i+topNRanks.length+topKRanks.length]).append(",");
-            }
-            sb.append(values[values.length-4]).append(",");
-            sb.append(values[values.length-3]).append(",");
-            sb.append(values[values.length-2]).append(",");
-            sb.append(values[values.length-1]);
+            sb.append(",").append("Overall_P");
+            sb.append(",").append("Overall_R");
+            sb.append(",").append("Overall_F");
+            sb.append(",").append("Total_Size");
             sb.append("\n");
+
+            for (Map.Entry<String, double[]> en : scores.entrySet()) {
+                sb.append(en.getKey().replaceAll(",", "_")).append(",");
+                double[] values = en.getValue();
+                for (int i = 0; i < topNRanks.length; i++) {
+                    sb.append(values[i]).append(",");
+                }
+                for (int i = 0; i < topKRanks.length; i++) {
+                    sb.append(values[i + topNRanks.length]).append(",");
+                }
+                for (int i = 0; i < topKRanks.length; i++) {
+                    sb.append(values[i + topNRanks.length + topKRanks.length]).append(",");
+                }
+                sb.append(values[values.length - 4]).append(",");
+                sb.append(values[values.length - 3]).append(",");
+                sb.append(values[values.length - 2]).append(",");
+                sb.append(values[values.length - 1]);
+                sb.append("\n");
+            }
+            p.println(sb.toString());
+            if (isComputeATR4SAvP) {
+                p.println("\n\nAVERAGE PRECISION\n");
+                for (Map.Entry<String, Double> en : avgPrecision.entrySet()) {
+                    p.println(en.getKey().replaceAll(",", "_") + "," + en.getValue());
+                }
+            }
+        } finally{
+            p.close();
         }
-        p.println(sb.toString());
-        p.println("\n\nAVERAGE PRECISION\n");
-        for(Map.Entry<String, Double> en: avgPrecision.entrySet()){
-            p.println(en.getKey().replaceAll(",","_")+","+en.getValue());
-        }
 
-        p.close();
+        LOG.info(String.format("complete. Check the latest evaluation in [%s]", outFile));
+    }
 
+    public static void computeEvalMetrics(String name, List<String> normGS, List<String> rankedTerms, int[] topNRanks, int[] topKRanks, Map<String, double[]> scores) {
+        LOG.info("skip normalise candidate term again.");
 
-        System.out.println(String.format("complete. Check the latest evaluation in [%s]", outFile));
+        double[] values = new double[topNRanks.length + 2];
+
+        double[] topNPrecisions = computePrecisionAtRank(normGS, rankedTerms, topNRanks);
+
+        LOG.info("topNPrecisions calculation is completed. Top N size : " +
+                topNPrecisions.length);
+
+        int[] topNRanksFromTopK = getTopNFromTopK(rankedTerms.size(), topKRanks);
+
+        double[] topKPrecision = computePrecisionAtRank(normGS, rankedTerms, topNRanksFromTopK);
+        double[] topKRecall = computeRecallAtRank(normGS, rankedTerms, topNRanksFromTopK);
+
+        LOG.info("topKPrecision & topKRecall calculation is completed. Top K size : " +
+                topKPrecision.length);
+
+        double overallPrecision = computeOverallPrecision(normGS, rankedTerms);
+
+        double overallRecall = computeOverallRecall(normGS, rankedTerms);
+
+        double overallF = getFMeasure(overallPrecision, overallRecall);
+
+        LOG.info("overall P/R/F calculation is complete. ");
+
+        values = ArrayUtils.addAll(topNPrecisions, topKPrecision);
+        values = ArrayUtils.addAll(values, topKRecall);
+        values = ArrayUtils.addAll(values, new double[]{overallPrecision, overallRecall, overallF, rankedTerms.size()});
+
+        scores.put(name, values);
     }
 
     private static int[] getTopNFromTopK(int totalCandidateSize, int[] topKs) {
@@ -602,55 +662,51 @@ public class Scorer {
 
 
     public static void main(String[] args) throws IOException, JATEException, ParseException {
-        if (args == null || args.length < 4) {
-            StringBuilder sb = new StringBuilder("Usage:\n");
-            sb.append("java -cp 'jate.jar' ").append(Scorer.class.getName()).append(" ")
-                    .append("[CORPUS_NAME] [ATE_OUTPUT_DIR] [ATE_OUTPUT_FILE_TYPE] ").append("\n\n");
-            sb.append("Example: java -cp 'jate.jar' /c/jate/outputDir/ csv genia_eval.csv \n\n");
-            sb.append("[OPTIONS]:\n")
-                    .append("\t\targs[0]:\t\t 'genia' or any other dataset name.\n")
-                    .append("\t\targs[1]:\t\t ATE algorithms output folder that contains one or more ranked term candidates output.\n")
-                    .append("\t\targs[2]:\t\t ATE algorithms output file type. Two options are 'csv' and 'json'. If file type is 'csv', it should contain a header row. \n")
-                    .append("\t\targs[3]:\t\t A file name & path to save evaluation output (should not be the same folder of ATE algorithm output.\n");
-
-            System.out.println(sb);
-            System.exit(-1);
-        }
+//        if (args == null || args.length < 4) {
+//            StringBuilder sb = new StringBuilder("Usage:\n");
+//            sb.append("java -cp 'jate.jar' ").append(Scorer.class.getName()).append(" ")
+//                    .append("[CORPUS_NAME] [ATE_OUTPUT_DIR] [ATE_OUTPUT_FILE_TYPE] ").append("\n\n");
+//            sb.append("Example: java -cp 'jate.jar' /c/jate/outputDir/ csv genia_eval.csv \n\n");
+//            sb.append("[OPTIONS]:\n")
+//                    .append("\t\targs[0]:\t\t 'genia', 'aclrdtec1' or any other dataset name.\n")
+//                    .append("\t\targs[1]:\t\t ATE algorithms output folder that contains one or more ranked term candidates output.\n")
+//                    .append("\t\targs[2]:\t\t ATE algorithms output file type. Two options are 'csv' and 'json'. If file type is 'csv', it should contain a header row. \n")
+//                    .append("\t\targs[3]:\t\t A file name & path to save evaluation output (should not be the same folder of ATE algorithm output.\n");
+//
+//            System.out.println(sb);
+//            System.exit(-1);
+//        }
         String workingDir = System.getProperty("user.dir");
         Lemmatiser lemmatiser = new Lemmatiser(new EngLemmatiser(
                 Paths.get(workingDir, "src", "test", "resource", "lemmatiser").toString(), false, false
         ));
+        Path GENIA_CORPUS_CONCEPT_FILE = Paths.get(workingDir, "src", "test", "resource",
+                "eval", "GENIA", "concept.txt");
+        Path ACL_1_CORPUS_CONCEPT_FILE = Paths.get(workingDir, "src", "test", "resource",
+                "eval", "ACL_RD-TEC", "terms.txt");
 
-        String datasetName = args[0];
-        String ateOutputFolder = args[1];
-        String ateOutputType = args[2];
-        String outFile = args[3];
+        String datasetName = "aclrdtec1";//args[0];
+        String ateOutputFolder = "C:\\Data\\jate\\jate4supervision\\acl-1-index\\training_data\\setting2";// args[1];
+        String ateOutputType = "json";//args[2];
+        String outFile = "C:\\Data\\jate\\jate4supervision\\acl-1-index\\training_data\\acl_1_seed_set_eval.csv";//args[3];
+        String gsFile = ACL_1_CORPUS_CONCEPT_FILE.toString();//args[4];
 
         if (datasetName.equals("genia")) {
-            Path GENIA_CORPUS_CONCEPT_FILE = Paths.get(workingDir, "src", "test", "resource",
-                    "eval", "GENIA", "concept.txt");
+            /* gsFile = GENIA_CORPUS_CONCEPT_FILE.toString()*/
             createReportGenia(lemmatiser, ateOutputFolder, ateOutputType,
-                    /*GENIA_CORPUS_CONCEPT_FILE.toString()*/args[4], outFile,
+                    gsFile, outFile,
                     EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
                     EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
                     EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX,
-                    EVAL_CONDITION_TOP_N, EVAL_CONDITION_TOP_K);
-
-
-        /*calculateACLRDJate1("/Users/-/work/jate/experiment/CValue_ALGORITHM.txt", args[1], args[2], true, false, true,
-                2, 150, 1, 5,
-                50, 100, 500, 1000, 5000, 10000);
-        System.exit(1);*/
-/**
-        Lemmatiser lem = new Lemmatiser(new EngLemmatiser(args[4],
-                false, false));
-        if (args[3].equals("genia")) {
-            createReportGenia(lem, args[0], args[1], args[2], true, false, true, 2, 100, 1, 5,
-                    50, 100, 500, 1000, 2000, 3000);
-*/
+                    EVAL_CONDITION_TOP_N, EVAL_CONDITION_TOP_K, IS_COMPUTE_ATR4S_AvP);
         } else {
-            createReportACLRD(lemmatiser, args[0], args[1], args[2], true, false, true, 2, 100, 1, 10,
-                    50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000);
+            gsFile = ACL_1_CORPUS_CONCEPT_FILE.toString();
+            createReportACLRD(lemmatiser, ateOutputFolder, ateOutputType,
+                    gsFile, outFile,
+                    EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
+                    EVAL_CONDITION_CHAR_RANGE_MIN, EVAL_CONDITION_CHAR_RANGE_MAX,
+                    EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX,
+                    EVAL_CONDITION_TOP_N, EVAL_CONDITION_TOP_K, IS_COMPUTE_ATR4S_AvP);
         }
     }
 }

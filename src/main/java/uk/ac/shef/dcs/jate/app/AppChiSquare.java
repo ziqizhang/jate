@@ -105,8 +105,11 @@ public class AppChiSquare extends App {
 
     public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {
         log.info("extract terms from core ... ");
+        if (core.isClosed()) {
+            core.open();
+        }
         SolrIndexSearcher searcher = core.getSearcher().get();
-        try {
+//        try {
             FrequencyTermBasedFBMaster ftbb = new FrequencyTermBasedFBMaster(searcher, properties, 0);
             FrequencyTermBased ft = (FrequencyTermBased) ftbb.build();
 
@@ -146,13 +149,13 @@ public class AppChiSquare extends App {
             addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
                     properties.getSolrFieldNameID());
             return terms;
-        } finally {
-            try {
-                searcher.close();
-            } catch (IOException e) {
-                log.error(e.toString());
-            }
-        }
+//        } finally {
+//            try {
+//                searcher.close();
+//            } catch (IOException e) {
+//                log.error(e.toString());
+//            }
+//        }
     }
 
 }

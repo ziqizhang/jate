@@ -72,7 +72,7 @@ public class GSLoader {
                 terms.add(splits[1].trim());
         }
 
-        System.out.println("total="+terms.size());
+        System.out.println("ACLRD-TEC GoldStandard terms are loaded. Total_Size ="+terms.size());
         return terms;
     }
 

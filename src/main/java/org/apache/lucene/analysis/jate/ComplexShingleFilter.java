@@ -214,6 +214,12 @@ public final class ComplexShingleFilter extends MWEFilter implements SentenceCon
                     isAllFiller = false;
                 }
             }
+
+            if (nextToken == null || nextToken.sentenceContext == null) {
+                tokenAvailable = false;
+                return tokenAvailable;
+            }
+
             if (!isAllFiller && builtGramSize == gramSize.getValue()) {
                 String normalized = stripSymbolChars(gramBuilder.toString());
                 if (normalized.length() > maxCharLength || normalized.length() < minCharLength) {

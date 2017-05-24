@@ -55,32 +55,34 @@ public class JATEUtilTest {
 	        assert jateDocument.getId().equals("E06-2023");
 	        assert jateDocument.getContent() != null;
 	
-	        String paragraph0 = "According to linguistic theory, morphemes are considered to be the smallest " +
-	                "meaning-bearing elements of a language. However, no adequate language-independent definition of " +
-	                "the word as a unit has been agreed upon. If effective methods can be devised for the unsupervised " +
-	                "discovery of morphemes, they could aid the formulation of a linguistic theory of morphology for a " +
-	                "new language. The utilization of morphemes as basic representational units in a statistical " +
-	                "language model instead of words seems a promising course [Creutz, 2004].";
+	        String paragraph0 = "According to linguistic theory, morphemes are considered to be the " +
+					"smallest meaning-bearing elements of a language. However, no adequate " +
+					"language-independent definition of the word as a unit has been agreed upon. " +
+					"If effective methods can be devised for the unsupervised discovery of morphemes, " +
+					"they could aid the  formulation of a linguistic theory of morphology for a new language." +
+					" The utilization of morphemes as basic representational units in a statistical language " +
+					"model instead of words seems a promising course [Creutz, 2004 ] .";
 	
 	        assert jateDocument.getContent().contains(paragraph0);
 	
-	        String paragraph1 = "Many natural language processing tasks, including parsing, semantic modeling, " +
-	                "information retrieval, and machine translation, frequently require a morphological analysis " +
-	                "of the language at hand. The task of a morphological analyzer is to identify the lexeme, " +
-	                "citation form, or inflection class of surface word forms in a language. It seems that even " +
-	                "approximate automated morphological analysis would be beneficial for many NL applications " +
-	                "dealing with large vocabularies (e.g. text retrieval applications).";
+	        String paragraph1 = "Many natural language processing tasks, including parsing, semantic modeling," +
+					" information retrieval, and machine translation, frequently require a morphological " +
+					"analysis of the language at hand. The task of a morphological analyzer is to identify " +
+					"the lexeme, citation form, or inflection class of surface word forms in a language. " +
+					"It seems that even approximate automated morphological analysis would be beneficial " +
+					"for many NL applications dealing with large vocabularies " +
+					"(e.g.  text retrieval applications).";
 	
 	        assert jateDocument.getContent().contains(paragraph1);
 	
-	        String paragraph2 = "[Monson 2004] presents a framework for unsupervised induction of natural language " +
-	                "morphology, wherein candidate suffixes are grouped into candidate inflection classes, which are " +
-	                "then placed in a lattice structure. With similar arranged inflection classes placed near one " +
-	                "candidate in the lattice, it proposes this structure to be an ideal search space in which to " +
-	                "isolate the true inflection classes of a language. [Schone and Jurafsky 2000] presents an " +
-	                "unsupervised model in which knowledge-free distributional cues are combined orthography-based " +
-	                "with information automatically extracted from semantic word co-occurrence patterns " +
-	                "in the input corpus.";
+	        String paragraph2 = "[Monson 2004 ]  presents a framework for unsupervised induction of natural " +
+					"language morphology, wherein candidate suffixes are grouped into candidate inflection " +
+					"classes, which are then placed in a lattice structure. With similar arranged inflection " +
+					"classes placed near one candidate in the lattice, it proposes this structure to be an " +
+					"ideal search space in which to isolate the true inflection classes of a language. " +
+					"[Schone and Jurafsky 2000 ]  presents an unsupervised model in which knowledge-free " +
+					"distributional cues are combined orthography-based with information automatically " +
+					"extracted from semantic word co-occurrence patterns in the input corpus.";
 	
 	        assert jateDocument.getContent().contains(paragraph2);
         } finally {

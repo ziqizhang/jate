@@ -84,8 +84,12 @@ public class AppGlossEx extends App {
 	}
 
 	public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {
+		if (core.isClosed()) {
+			core.open();
+		}
+
 		SolrIndexSearcher searcher = core.getSearcher().get();
-		try {
+//		try {
 			this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
 			this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 
@@ -112,14 +116,14 @@ public class AppGlossEx extends App {
 
 			log.info("complete GlossEx term extraction.");
 			return terms;
-		} finally {
-			try {
-				searcher.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-				log.error("Failed to close current SolrIndexSearcher!" + e.getCause().toString());
-			}
-		}
+//		} finally {
+//			try {
+//				searcher.close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//				log.error("Failed to close current SolrIndexSearcher!" + e.getCause().toString());
+//			}
+//		}
 	}
 
 	protected static void printHelp() {

@@ -91,8 +91,11 @@ public class AppATTF extends App {
      * @throws JATEException
      */
     public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {
+        if (core.isClosed()) {
+            core.open();
+        }
         SolrIndexSearcher searcher = core.getSearcher().get();
-        try {
+//        try {
 	        this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, FrequencyTermBasedFBMaster.FEATURE_TYPE_TERM);
 	        this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 	
@@ -112,13 +115,13 @@ public class AppATTF extends App {
 	                properties.getSolrFieldNameID());
 	
 	        return terms;
-        } finally {
-        	try {
-				searcher.close();
-			} catch (IOException e) {
-				LOG.error(e.toString());
-			}
-        }
+//        } finally {
+//        	try {
+//				searcher.close();
+//			} catch (IOException e) {
+//				LOG.error(e.toString());
+//			}
+//        }
     }
 
 }

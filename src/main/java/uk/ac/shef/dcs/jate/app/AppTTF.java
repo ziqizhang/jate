@@ -79,8 +79,11 @@ public class AppTTF extends App {
 	}
 
 	public List<JATETerm> extract(SolrCore core, JATEProperties properties) throws JATEException {
+		if (core.isClosed()) {
+			core.open();
+		}
 		SolrIndexSearcher searcher = core.getSearcher().get();
-		try {
+//		try {
 			this.freqFeatureBuilder = new FrequencyTermBasedFBMaster(searcher, properties, 0);
 			this.freqFeature = (FrequencyTermBased) freqFeatureBuilder.build();
 
@@ -97,12 +100,12 @@ public class AppTTF extends App {
 			addAdditionalTermInfo(terms, searcher, properties.getSolrFieldNameJATENGramInfo(),
 					properties.getSolrFieldNameID());
 			return terms;
-		} finally {
-			try {
-				searcher.close();
-			} catch (IOException e) {
-				log.error(e.toString());
-			}
-		}
+//		} finally {
+//			try {
+//				searcher.close();
+//			} catch (IOException e) {
+//				log.error(e.toString());
+//			}
+//		}
 	}
 }
