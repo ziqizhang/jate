@@ -218,20 +218,8 @@
             -->
         <fieldType name="jate_text_2_ngrams" class="solr.TextField" positionIncrementGap="100">
             <analyzer type="index">
-                <!-- Solr standard filter to cleanse html unicode characters -->
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u0027" replacement=" ' " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u000a" replacement=" \\n " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u0009" replacement=" \\t " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u0008" replacement=" \\b " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u000d" replacement=" \\r " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u000c" replacement=" \\f " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u0022" replacement=" &quot; " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u005c" replacement=" \\ " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u003c" replacement=" &lt; " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u003e" replacement=" &gt; " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u003d" replacement=" = " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u0026" replacement=" &amp; " />
                 <!-- Solr standard filter to cleanse html entities -->
+                <!-- HTMLStripCharFilterFactory MUST be enabled for ACL RD-TEC 1.0 corpus to unescape Html characters, e.g, "&amp;quot;" -->
                 <charFilter class="solr.HTMLStripCharFilterFactory"/>
                 <!--<tokenizer class="solr.StandardTokenizerFactory" />-->
                 <!-- A tokenizer based on OpenNLP 
@@ -316,20 +304,8 @@
         <!--a configuration for PoS based candidate extraction-->
         <fieldType name="jate_text_2_terms" class="solr.TextField" positionIncrementGap="100">
             <analyzer type="index">
-                <!-- Solr standard filter to cleanse html unicode characters -->
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u0027" replacement=" ' " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u000a" replacement=" \\n " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u0009" replacement=" \\t " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u0008" replacement=" \\b " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u000d" replacement=" \\r " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u000c" replacement=" \\f " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u0022" replacement=" &quot; " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u005c" replacement=" \\ " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u003c" replacement=" &lt; " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u003e" replacement=" &gt; " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u003d" replacement=" = " />
-                <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\\u0026" replacement=" &amp; " />
                 <!-- Solr standard filter to cleanse html entities -->
+                <!-- HTMLStripCharFilterFactory MUST be enabled for ACL RD-TEC 1.0 corpus to unescape Html characters, e.g, "&amp;quot;" -->
                 <charFilter class="solr.HTMLStripCharFilterFactory"/>
                 <!--<tokenizer class="solr.StandardTokenizerFactory" />-->
                 <tokenizer class="org.apache.lucene.analysis.jate.OpenNLPTokenizerFactory"

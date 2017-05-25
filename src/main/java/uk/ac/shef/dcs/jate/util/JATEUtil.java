@@ -1,7 +1,6 @@
 package uk.ac.shef.dcs.jate.util;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.common.SolrInputDocument;
@@ -33,6 +32,8 @@ import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
+import static org.apache.commons.lang.StringEscapeUtils.unescapeHtml;
+import static org.apache.commons.lang.StringEscapeUtils.unescapeXml;
 
 public class JATEUtil {
 
@@ -222,8 +223,9 @@ public class JATEUtil {
 
                     if (paragraph) {
                         String paragraph = new String(ch, start, length);
+                        //WARNING: DO NOT put any line break or space between ACL RD-TEC 1.0 paragraphs
+                        //ACL RD-TEC 1.0 paragraphs has space gaps. Putting extra space gap will cause parsing error.
                         paperParagraphs.append(paragraph);
-                        paperParagraphs.append(" ");
                     }
                 }
             };
@@ -234,8 +236,10 @@ public class JATEUtil {
             fullText.append(paperTitle).append("\n").append(paperParagraphs);
 
             String normalizedText = Normalizer.normalize(fullText.toString(), Normalizer.Form.NFD);
-            normalizedText = StringEscapeUtils.unescapeXml(normalizedText);
+            normalizedText = unescapeXml(normalizedText);
             String cleanedText = cleanText(normalizedText);
+            //double/repeated unescape characters like "&amp;quot;"
+            cleanedText = unescapeHtml(unescapeHtml(cleanedText));
             jateDocument = new JATEDocument(paperId.toString());
             jateDocument.setContent(cleanedText.trim());
 
