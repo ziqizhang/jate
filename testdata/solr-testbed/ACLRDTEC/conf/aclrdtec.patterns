@@ -1,5 +1,5 @@
 #QasemiZadeh, B., & Handschuh, S. (2014). The ACL RD-TEC: A Dataset for Benchmarking Terminology Extraction and Classification in Computational Linguistics. In COLING 2014: 4th International Workshop on Computational Terminology.
-default	(\bNN\b) 
+default	(\bNN\b)
 default	(\bNNP\b) 
 default	(\bNN\b) (\bNN\b) 
 default	(\bJJ\b) (\bNN\b) 

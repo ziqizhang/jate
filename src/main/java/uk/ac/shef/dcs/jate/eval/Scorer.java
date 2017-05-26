@@ -19,6 +19,7 @@ import java.math.RoundingMode;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * compute scores
@@ -31,9 +32,6 @@ public class Scorer {
     protected final static String FILE_TYPE_JSON = "json";
     protected final static String FILE_TYPE_CSV = "csv";
 
-    public static int EVAL_CONDITION_MIN_TERM_CONTEXT_FREQUENCY = 1;
-    public static int EVAL_CONDITION_MIN_TERM_TOTAL_FREQUENCY = 1;
-    public static int EVAL_CONDITION_CUTOFF_TOP_K_PERCENT = 1;
     public static boolean EVAL_CONDITION_IGNORE_SYMBOL = true;
     public static boolean EVAL_CONDITION_IGNORE_DIGITS = false;
     public static boolean EVAL_CONDITION_CASE_INSENSITIVE = true;
@@ -48,52 +46,6 @@ public class Scorer {
     // whether to compute the AvP defined in [Astrakhantsev 2016]
     // Astrakhantsev, N. (2016). ATR4S: Toolkit with State-of-the-art Automatic Terms Recognition Methods in Scala. arXiv preprint arXiv:1611.07804.
     public static Boolean IS_COMPUTE_ATR4S_AvP = Boolean.FALSE;
-
-
-//    public static void createReportACLRD(Lemmatiser lemmatiser, String ateOutputFolder, String gsFile, String outFile,
-//                                         boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
-//                                         int minChar, int maxChar, int minTokens, int maxTokens,
-//                                         int... ranks) throws IOException, JATEException, ParseException {
-//        PrintWriter p = new PrintWriter(outFile);
-//        List<String> gs = GSLoader.loadACLRD(gsFile);
-//
-//        Map<String, double[]> scores = new TreeMap<>();
-//        List<File> all = Arrays.asList(new File(ateOutputFolder).listFiles());
-//        Collections.sort(all);
-//
-//        for (File f : all) {
-//            String name = f.getName();
-//            if (String.valueOf(name.charAt(0)).equals("."))
-//                continue;
-//            System.out.println(f);
-//            List<String> terms = ATEResultLoader.loadFromJSON(f.toString());
-//
-//            double[] s = computePrecisionAtRank(lemmatiser, gs, terms, ignoreSymbols, ignoreDigits, lowercase, minChar,
-//                    maxChar, minTokens, maxTokens, ranks);
-//            scores.put(name.replace(",","_"), s);
-//
-//        }
-//
-//        //generate report
-//
-//        StringBuilder sb = new StringBuilder();
-//        for (int i : ranks) {
-//            sb.append(",").append(i);
-//        }
-//        sb.append("\n");
-//
-//        for (Map.Entry<String, double[]> en : scores.entrySet()) {
-//            sb.append(en.getKey()).append(",");
-//            double[] s = en.getValue();
-//            for (int i = 0; i < ranks.length; i++) {
-//                sb.append(s[i]).append(",");
-//
-//            }
-//            sb.append("\n");
-//        }
-//        p.println(sb.toString());
-//        p.close();
-//    }
 
     public static void createReportGenia(Lemmatiser lemmatiser, String ateOutputFolder, String ateOutputType, String gsFile, String outFile,
                                          boolean ignoreSymbols, boolean ignoreDigits, boolean caseInsensitive,
@@ -127,7 +79,11 @@ public class Scorer {
 
             List<String> normGS = prune(gsTerms, ignoreSymbols, ignoreDigits, caseInsensitive,
                     minChar, maxChar, minTokens, maxTokens);
-            normGS = normalize(normGS, lemmatiser, true);
+            if (lemmatiser != null) {
+                normGS = normalize(normGS, lemmatiser, true);
+            } else {
+                LOG.info("skip lemmatisation on GS terms.");
+            }
 
             LOG.info("normalised gsTerms size :" + normGS.size());
 
@@ -155,9 +111,16 @@ public class Scorer {
                     rankedTerms = ATEResultLoader.loadFromCSV(f.toString());
                 }
 
-                LOG.info("ranked terms are loaded. Total size : "+rankedTerms.size());
-                List<String> normRankedCandidates = prune(rankedTerms, ignoreSymbols, ignoreDigits,
-                        caseInsensitive, minChar, maxChar, minTokens, maxTokens);
+                List<String> normRankedCandidates;
+                if (!ignoreSymbols && !ignoreDigits && !caseInsensitive && minChar == -1 && maxChar== -1 && minTokens == -1 && maxTokens == -1) {
+                    LOG.debug("skip prune terms.");
+                    LOG.debug("deduplication ...");
+                    normRankedCandidates = rankedTerms.stream().distinct().collect(Collectors.toList());;
+                    LOG.debug("deduplication is completed ...");
+                } else {
+                    normRankedCandidates = prune(rankedTerms, ignoreSymbols, ignoreDigits,
+                            caseInsensitive, minChar, maxChar, minTokens, maxTokens);
+                }
                 // no need to do normalisation for JATE2 export
                 // please extend the method in your subclass if you need the support for any external output
                 // normCandidates = normalize(normCandidates, lemmatiser, true);
@@ -429,8 +392,9 @@ public class Scorer {
      * @return double  precision score
      */
     public static double precision(List<String> gsTerms, List<String> topKTerms) {
-        List<String> correct = new ArrayList<>(topKTerms);
-        correct.retainAll(gsTerms);
+//        List<String> correct = new ArrayList<>(topKTerms);
+//        correct.retainAll(gsTerms);
+        List<String> correct = topKTerms.parallelStream().filter(gsTerms::contains).collect(Collectors.toList());
         return round(correct.size()/(double) topKTerms.size(), 2);
     }
 
@@ -461,8 +425,9 @@ public class Scorer {
     }
 
     public static double computeOverallRecall(List<String> normGS, List<String> normTerms) {
-        List<String> correct = new ArrayList<>(normGS);
-        correct.retainAll(normTerms);
+//        List<String> correct = new ArrayList<>(normGS);
+//        correct.retainAll(normTerms);
+        List<String> correct = normTerms.parallelStream().filter(normGS::contains).collect(Collectors.toList());
         return round(correct.size()/(double)normGS.size(), 2);
     }
 
@@ -609,6 +574,8 @@ public class Scorer {
      * Prune term surface form
      * see also @code {@link PunctuationRemover#stripPunctuations(String, boolean, boolean, boolean)}
      *
+     * set to false|-1 if do not want any prune
+     *
      * @param term, term surface form to be pruned
      * @param ignoreSymbols, if strip symbols in the term
      * @param ignoreDigits, if strip digits in the term
@@ -621,6 +588,12 @@ public class Scorer {
      */
     private static String prune(String term, boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase, int minChar, int maxChar, int minTokens, int maxTokens) {
         String prunedTerm = term;
+
+        if (!ignoreSymbols && !ignoreDigits && !lowercase && minChar == -1 && maxChar== -1 && minTokens == -1 && maxTokens == -1) {
+//            LOG.debug("skip prune term.");
+            return prunedTerm;
+        }
+
         if (ignoreDigits)
             prunedTerm = prunedTerm.replaceAll(PATTERN_DIGITALS, " ").replaceAll("\\s+", " ");
         if (ignoreSymbols)
@@ -700,7 +673,16 @@ public class Scorer {
                     EVAL_CONDITION_TOKEN_RANGE_MIN, EVAL_CONDITION_TOKEN_RANGE_MAX,
                     EVAL_CONDITION_TOP_N, EVAL_CONDITION_TOP_K, IS_COMPUTE_ATR4S_AvP);
         } else {
-            gsFile = ACL_1_CORPUS_CONCEPT_FILE.toString();
+            //gsFile = ACL_1_CORPUS_CONCEPT_FILE.toString();
+            //DOES NOT REALLY NEED ANY PRUNE/LEMMATISATION FOR ACL RD-TEC 1.0
+            // RECOMMENDED EVALUATION OF ACL RD-TEC 1.0 AS FOLLOWS
+//            createReportACLRD(null, ateOutputFolder, ateOutputType,
+//                    gsFile, outFile,
+//                    false, false, false,
+//                    -1, -1,
+//                    -1, -1,
+//                    EVAL_CONDITION_TOP_N, EVAL_CONDITION_TOP_K, IS_COMPUTE_ATR4S_AvP);
+
             createReportACLRD(lemmatiser, ateOutputFolder, ateOutputType,
                     gsFile, outFile,
                     EVAL_CONDITION_IGNORE_SYMBOL, EVAL_CONDITION_IGNORE_DIGITS, EVAL_CONDITION_CASE_INSENSITIVE,
