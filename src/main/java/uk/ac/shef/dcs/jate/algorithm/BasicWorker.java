@@ -61,7 +61,7 @@ public class BasicWorker extends JATERecursiveTaskWorker<String, List<JATETerm>>
                 Set<String> parentTerms = cFeature.getTermParents(tString);
                 double et = (double) parentTerms.size();
 
-               /* for (String parentTerm : parentTerms) {
+                /*for (String parentTerm : parentTerms) {
                     et += (double) fFeature.getTTF(parentTerm);
                 }*/
 

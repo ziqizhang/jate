@@ -24,35 +24,51 @@ import java.util.*;
 public class Voting {
 
     public static void main(String[] args) throws IOException {
-        String inFolder = "/home/zqz/GDrive/papers/cicling2017/data/seed-terms/genia";
-        String outFile="/home/zqz/GDrive/papers/cicling2017/data/seed-terms/genia/voted.json";
-        Map<String, Double> weights = new HashMap<>();
-        weights.put("genia_attf_seed_terms.json",1.0);
-        weights.put("genia_chisquare_seed_terms.json",1.0);
-        weights.put("genia_cvalue_seed_terms.json",1.0);
-        weights.put("genia_cvalue_seed_terms_mttf1.json",1.0);
-        weights.put("genia_glossex_seed_terms.json",1.0);
-        weights.put("genia_rake_seed_terms.json",1.0);
-        weights.put("genia_termex_seed_terms.json",1.0);
-        weights.put("genia_tfidf_seed_terms.json",1.0);
-        weights.put("genia_ttf_seed_terms.json",1.0);
-        weights.put("genia_weirdness_seed_terms.json",1.0);
-        weights.put("genia_text_rank_result.csv",1.0);
+        String inFolder = "/home/zqz/Work/data/termrank/jate_lrec2016/genia_atr4s/min1";
+        String outFile="/home/zqz/Work/data/termrank/jate_lrec2016/genia_atr4s/vote/vote.json";
+
+        /*String inFolder = "/home/zqz/Work/data/termrank/jate_lrec2016/aclrd_ver2_atr4s/min1";
+        String outFile="/home/zqz/Work/data/termrank/jate_lrec2016/aclrd_ver2_atr4s/vote/vote.json";
+*/
+        /*String inFolder = "/home/zqz/Work/data/termrank/jate_lrec2016/ttc_mobile_atr4s/min1";
+        String outFile="/home/zqz/Work/data/termrank/jate_lrec2016/ttc_mobile_atr4s/vote/vote.json";
+*/
+        /*String inFolder = "/home/zqz/Work/data/termrank/jate_lrec2016/ttc_wind_atr4s/min1";
+        String outFile="/home/zqz/Work/data/termrank/jate_lrec2016/ttc_wind_atr4s/vote/vote.json";
+*/
+        /*Map<String, Double> weights = new HashMap<>();
+        weights.put("chisquare.json",1.0);
+        weights.put("cvalue.json",1.0);
+        weights.put("glossex.json",1.0);
+        weights.put("rake.json",1.0);
+        weights.put("relevance.json",1.0);
+        weights.put("tfidf.json",1.0);
+        weights.put("weirdness.json",1.0);
 
         Map<String, FileOutputReader> readers = new HashMap<>();
         FileOutputReader jsonFileOutputReader = new JSONFileOutputReader(new Gson());
-        FileOutputReader csvFileOutputReader = new CSVFileOutputReader(CSVFormat.DEFAULT);
-        readers.put("genia_attf_seed_terms.json",jsonFileOutputReader);
-        readers.put("genia_chisquare_seed_terms.json",jsonFileOutputReader);
-        readers.put("genia_cvalue_seed_terms.json",jsonFileOutputReader);
-        readers.put("genia_cvalue_seed_terms_mttf1.json",jsonFileOutputReader);
-        readers.put("genia_glossex_seed_terms.json",jsonFileOutputReader);
-        readers.put("genia_rake_seed_terms.json",jsonFileOutputReader);
-        readers.put("genia_termex_seed_terms.json",jsonFileOutputReader);
-        readers.put("genia_tfidf_seed_terms.json",jsonFileOutputReader);
-        readers.put("genia_ttf_seed_terms.json",jsonFileOutputReader);
-        readers.put("genia_weirdness_seed_terms.json",jsonFileOutputReader);
-        readers.put("genia_text_rank_result.csv",csvFileOutputReader);
+        readers.put("chisquare.json",jsonFileOutputReader);
+        readers.put("cvalue.json",jsonFileOutputReader);
+        readers.put("glossex.json",jsonFileOutputReader);
+        readers.put("rake.json",jsonFileOutputReader);
+        readers.put("relevance.json",jsonFileOutputReader);
+        readers.put("tfidf.json",jsonFileOutputReader);
+        readers.put("weirdness.json",jsonFileOutputReader);*/
+
+        Map<String, Double> weights = new HashMap<>();
+        weights.put("Basic.txt",1.0);
+        weights.put("ComboBasic.txt",1.0);
+        weights.put("LinkProbability.txt",1.0);
+        weights.put("NovelTopicModel.txt",1.0);
+        weights.put("PU.txt",1.0);
+
+        Map<String, FileOutputReader> readers = new HashMap<>();
+        FileOutputReader jsonFileOutputReader = new JSONFileOutputReader(new Gson());
+        readers.put("Basic.txt",jsonFileOutputReader);
+        readers.put("ComboBasic.txt",jsonFileOutputReader);
+        readers.put("LinkProbability.txt",jsonFileOutputReader);
+        readers.put("NovelTopicModel.txt",jsonFileOutputReader);
+        readers.put("PU.txt",jsonFileOutputReader);
 
         Voting voting = new Voting();
         Pair[] results = voting.readAlgorithmResults(inFolder, weights, readers);

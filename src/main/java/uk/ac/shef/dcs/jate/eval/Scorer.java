@@ -42,6 +42,7 @@ public class Scorer {
                 continue;
             System.out.println(f);
             List<String> terms = ATEResultLoader.load(f.toString());
+            //List<String> terms = ATEResultLoader.loadToTermsRawText(f.toString());
 
             Pair<double[], double[]> result=computePrecisionAtRank(
                     lemmatiser, gs, terms, ignoreSymbols, ignoreDigits, lowercase, minChar,
@@ -103,6 +104,7 @@ public class Scorer {
                 continue;
             System.out.println(f);
             List<String> terms = ATEResultLoader.load(f.toString());
+            //List<String> terms = ATEResultLoader.loadToTermsRawText(f.toString());
 
             Pair<double[], double[]> result = computePrecisionAtRank(lemmatiser, gs, terms, ignoreSymbols, ignoreDigits, lowercase, minChar,
                     maxChar, minTokens, maxTokens, ranks);
@@ -192,6 +194,7 @@ public class Scorer {
 
         List<String> expectedTerms = new ArrayList<>(gs);
         expectedTerms.retainAll(terms);
+
         System.out.println("recall="+recall+", expectedterms for avg="+expectedTerms.size());
         double[] prf=computePRF(expectedTerms, terms);
 
@@ -372,10 +375,10 @@ public class Scorer {
                 false, false));
         if (args[3].equals("genia")) {
             createReportGenia(lem, args[0], args[1], args[2], true, false, true, 2, 100, 1, 5,
-                    50, 100, 500, 1000, 2000, 4000, 6000, 8000,10000);
+                    50, 100,500, 1000, 2000, 4000);
         } else {
             createReportACLRD(lem, args[0], args[1], args[2], true, false, true, 2, 100, 1, 10,
-                    50, 100, 500, 1000,2000,4000);
+                    50, 100,500, 1000,2000,4000);
         }
         System.out.println(new Date());
         System.exit(0);

@@ -397,7 +397,7 @@
                         lemmaResourceDir="lemmatiser"/>
                 <!-- standard Solr stop words filter -->
                 <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
-		<filter class="org.apache.lucene.analysis.jate.PatternBasedStopFilterFactory" removeDigits="true" patternFile="stoppatterns.txt"/>
+		<filter class="org.apache.lucene.analysis.jate.PatternBasedStopFilterFactory" removeDigits="false" patternFile="stoppatterns.txt"/>
             </analyzer>
         </fieldType>        
         <!-- ###################### JATE End #############################-->

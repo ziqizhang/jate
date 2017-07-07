@@ -31,8 +31,8 @@ public class ATEResultLoader {
         List<JATETerm> modified=loadToTerms("/home/zqz/Work/data/termrank/output_aclv2/" +
                 "Relevance-em_aclv2dbp-uni-sg-100-w3-m1,g_dn-pn-top1-pnl0-t0.5.json");*/
 
-        List<JATETerm> original=loadToTerms("/home/zqz/Work/data/termrank/jate_lrec2016/aclrd_ver2/min1/weirdness.json");
-        List<JATETerm> original2=loadToTerms("/home/zqz/Work/data/termrank/output_aclv2/Relevance.txt");
+        List<JATETerm> original = loadToTerms("/home/zqz/Work/data/termrank/jate_lrec2016/aclrd_ver2/min1/weirdness.json");
+        List<JATETerm> original2 = loadToTerms("/home/zqz/Work/data/termrank/output_aclv2/Relevance.txt");
         /*List<JATETerm> modified=loadToTerms("/home/zqz/Work/data/termrank/output_aclv2/" +
                 "Relevance-em_aclv2dbp-uni-sg-100-w3-m1,g_dn-pn-top1-pnl0-t0.5.json");
 */
@@ -41,6 +41,19 @@ public class ATEResultLoader {
 
     public static List<String> load(String jsonFile) throws IOException, ParseException {
         return toString(loadToTerms(jsonFile));
+    }
+
+    public static List<String> loadToTermsRawText(String rawTextFile) throws IOException, ParseException {
+        List<String> lines = FileUtils.readLines(new File(rawTextFile));
+        List<JATETerm> terms = new ArrayList<>();
+        for (String l : lines) {
+            String[] splits = l.split(",");
+            terms.add(new JATETerm(splits[0].trim(), Double.valueOf(splits[1])));
+        }
+
+        Collections.sort(terms);
+
+        return toString(terms);
     }
 
     public static List<JATETerm> loadToTerms(String jsonFile) throws IOException, ParseException {

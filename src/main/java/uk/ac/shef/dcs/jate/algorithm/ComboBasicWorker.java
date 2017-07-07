@@ -22,28 +22,28 @@ public class ComboBasicWorker extends JATERecursiveTaskWorker<String, List<JATET
     private double beta;
 
     public ComboBasicWorker(List<String> tasks, int maxTasksPerWorker,
-                       FrequencyTermBased fFeature, Containment cFeature,
+                            FrequencyTermBased fFeature, Containment cFeature,
                             Containment crFeature,
-                       double alpha, double beta
+                            double alpha, double beta
     ) {
         super(tasks, maxTasksPerWorker);
-        this.fFeature=fFeature;
-        this.cFeature=cFeature;
-        this.crFeature=crFeature;
-        this.alpha=alpha;
-        this.beta=beta;
+        this.fFeature = fFeature;
+        this.cFeature = cFeature;
+        this.crFeature = crFeature;
+        this.alpha = alpha;
+        this.beta = beta;
     }
 
     @Override
     protected JATERecursiveTaskWorker<String, List<JATETerm>> createInstance(List<String> candidates) {
-        return new ComboBasicWorker(candidates, maxTasksPerThread, fFeature, cFeature,crFeature, alpha,beta
+        return new ComboBasicWorker(candidates, maxTasksPerThread, fFeature, cFeature, crFeature, alpha, beta
         );
     }
 
     @Override
     protected List<JATETerm> mergeResult(List<JATERecursiveTaskWorker<String, List<JATETerm>>> jateRecursiveTaskWorkers) {
         List<JATETerm> result = new ArrayList<>();
-        for(JATERecursiveTaskWorker<String, List<JATETerm>> worker: jateRecursiveTaskWorkers){
+        for (JATERecursiveTaskWorker<String, List<JATETerm>> worker : jateRecursiveTaskWorkers) {
             result.addAll(worker.join());
         }
 
@@ -53,17 +53,16 @@ public class ComboBasicWorker extends JATERecursiveTaskWorker<String, List<JATET
     @Override
     protected List<JATETerm> computeSingleWorker(List<String> candidates) {
         List<JATETerm> result = new ArrayList<>();
-        for (String tString: candidates) {
+        for (String tString : candidates) {
             /*if(tString.equals("language"))
                 System.out.println();*/
             int ttf = fFeature.getTTF(tString);
             JATETerm term = new JATETerm(tString);
             //ComboBasic(t) = |t| log f (t) + αe t + βe ′ t ,
-            double t =(double) tString.split(" ").length;
-            if(t==1.0){
+            double t = (double) tString.split(" ").length;
+            if (t == 1.0) {
                 term.setScore(Math.log(ttf));
-            }
-            else {
+            } else {
                 double log = Math.log(ttf);
 
                 Set<String> parentTerms = cFeature.getTermParents(tString);
