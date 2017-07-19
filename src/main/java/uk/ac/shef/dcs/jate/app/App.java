@@ -3,6 +3,7 @@ package uk.ac.shef.dcs.jate.app;
 import com.google.gson.Gson;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.LeafReader;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
@@ -451,7 +452,7 @@ public abstract class App {
                                       String idField) throws JATEException {
         if (this.collectTermInfo) {
             try {
-                collectTermOffsets(terms, searcher.getLeafReader(), content2NgramField, idField);
+                collectTermOffsets(terms, searcher.getSlowAtomicReader(), content2NgramField, idField);
             } catch (IOException e) {
                 throw new JATEException("I/O exception when reading Solr index. " + e.toString());
             }

@@ -29,7 +29,7 @@ public class SolrUtil {
      */
     public static Terms getTermVector(String fieldname, SolrIndexSearcher solrIndexSearcher) throws JATEException {
         try {
-            Fields fields = MultiFields.getFields(solrIndexSearcher.getLeafReader());
+            Fields fields = MultiFields.getFields(solrIndexSearcher.getSlowAtomicReader());
 
             Terms vector = fields.terms(fieldname);
             if (vector == null)
@@ -79,7 +79,7 @@ public class SolrUtil {
 
     public static Terms getTermVector(int docId, String fieldname, SolrIndexSearcher solrIndexSearcher) throws JATEException {
         try {
-            Terms vector = solrIndexSearcher.getLeafReader().getTermVector(docId, fieldname);
+            Terms vector = solrIndexSearcher.getSlowAtomicReader().getTermVector(docId, fieldname);
 
             return vector;
         } catch (IOException ioe) {

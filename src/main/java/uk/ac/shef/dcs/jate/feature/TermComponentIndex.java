@@ -27,7 +27,7 @@ public class TermComponentIndex extends AbstractFeature {
         if (values!=null)
             sorted.addAll(values);
 
-        Collections.sort(sorted, (o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+        Collections.sort(sorted, (o1, o2) -> o2.first().compareTo(String.valueOf(o1.second())));
         return sorted;
     }
 }

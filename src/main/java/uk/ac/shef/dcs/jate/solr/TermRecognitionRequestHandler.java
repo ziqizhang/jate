@@ -429,10 +429,10 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
             }
 
             if (isBoosted) {
-                doc.add(indexSchema.getField(domainTermsFieldName).createField(filteredTerm.getKey(),
-                        filteredTerm.getValue().floatValue()));
+                doc.add(indexSchema.getField(domainTermsFieldName).createField(filteredTerm.first(),
+                        filteredTerm.second().floatValue()));
             } else {
-                doc.add(indexSchema.getField(domainTermsFieldName).createField(filteredTerm.getKey(),
+                doc.add(indexSchema.getField(domainTermsFieldName).createField(filteredTerm.first(),
                         DEFAULT_BOOST_VALUE));
             }
         }
