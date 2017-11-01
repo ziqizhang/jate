@@ -3,7 +3,7 @@ JATE (Java Automatic Term Extraction) is an open source library for automatic do
 
 For details of how to use JATE2, please follow the [wiki on the JATE website].
 
-General introduction of JATE is also available in [JATE1.0 wiki].
+<!-- General introduction of JATE is also available in [JATE1.0 wiki]. -->
 
 <!-- **To cite JATE:** -->
 
