@@ -5,7 +5,7 @@ For details of how to use JATE2, please follow the [wiki on the JATE website].
 
 General introduction of JATE is also available in [JATE1.0 wiki].
 
-[//]: <> (**To cite JATE:**)
+<!-- **To cite JATE:** -->
 
 [//]: <> Zhang, Z., Gao, J., Ciravegna, F. 2016. JATE 2.0: Java Automatic Term Extraction with Apache Solr. In _The Proceedings of the 10th Language Resources and Evaluation Conference_, May 2016, Portorož, Slovenia
 
