@@ -66,7 +66,7 @@ $ git push origin <feature-branch-name>
 For anything else, you can also find how to contact the team at:
 
  - [Jie GAO](http://staffwww.dcs.shef.ac.uk/people/J.Gao/)
- - Ziqi ZHANG
+ <!-- - Ziqi ZHANG -->
 
 ### Changes Overview
 
