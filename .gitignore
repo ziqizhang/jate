@@ -37,3 +37,7 @@ src/test/resource/eval/GENIA/gpml.css
 src/test/resource/eval/GENIA/gpml.css.legend.html
 src/test/resource/eval/GENIA/gpml.dtd
 src/test/resource/eval/GENIA/gpml.readme.html
+testdata/solr-testbed/knowmak/*
+testdata/solr-testbed/ttc_mobile/*
+testdata/solr-testbed/ttc_wind/*
+
