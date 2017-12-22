@@ -11,6 +11,7 @@ import org.json.simple.parser.ParseException;
 import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -76,7 +77,30 @@ public class ATEResultLoader {
             Collections.sort(terms);
 
             return terms;
-        } finally {
+        } catch(ClassCastException cce){
+            String content=FileUtils.readFileToString(new File(jsonFile), Charset.forName("utf8"));
+            if (content.startsWith("{")&&content.endsWith("}")){
+                content=content.substring(1, content.length()-1).trim();
+                List<JATETerm> terms = new ArrayList<>();
+                for (String element : content.split(",")){
+                    int splitpoint=element.lastIndexOf(":");
+                    if (splitpoint<0)
+                        continue;
+
+                    String tstr=element.substring(0,splitpoint).trim();
+                    tstr=tstr.substring(1,tstr.length()-1).trim();
+                    Double score = Double.valueOf(element.substring(splitpoint+1).trim());
+                    JATETerm term = new JATETerm(tstr, score);
+                    terms.add(term);
+                }
+
+                Collections.sort(terms);
+
+                return terms;
+            }
+            return null;
+
+        }finally {
             if (jsonFileStream != null) {
                 try {
                     jsonFileStream.close();

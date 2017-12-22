@@ -381,6 +381,6 @@ public class Scorer {
                     50, 100,500, 1000,2000,4000);
         }
         System.out.println(new Date());
-        System.exit(0);
+        //System.exit(0);
     }
 }
