@@ -102,4 +102,4 @@ For anything else, you can also find how to contact the team at:
    [wiki on the JATE website]: <https://github.com/ziqizhang/jate/wiki>
    [Fork the project]: <https://help.github.com/articles/fork-a-repo/>
    [issue]: <https://github.com/ziqizhang/jate/issues/42>
-   [email]: <ziqi.zhang@sheffield.ac.uk>
+   [email]: <mailto:ziqi.zhang@sheffield.ac.uk>
