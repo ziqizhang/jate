@@ -1,5 +1,5 @@
 ```diff
-# APPEAL FOR SUPPORT: Please tell us your use case with JATE
+APPEAL FOR SUPPORT: Please tell us your use case with JATE
 ```
 
 # JATE
