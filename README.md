@@ -12,7 +12,7 @@ However, as you all know, JATE is far from perfect. Over the years, we have rece
 * **If you are using JATE for your research, business, or simply doing anything that you were not able to without it, please share your use case with us.** This will help us make a compelling case to apply for fundings from various institutions to support the development and maintenance of JATE.
 * **If you have an innovative idea that can benefit from the usage or further development of JATE, we are keen to discuss it with you.** This will help us apply together for fundings to support activities that capitalise on innovation (due to the nature of these funding sources, innovation is the key).
 
-Therefore, please support us by sharing your stories and ideas on this [issue] (https://github.com/ziqizhang/jate/issues/42) or by [email] (mailto:ziqi.zhang@sheffield.ac.uk). Your continued support is the only power to drive JATE further!
+Therefore, please support us by sharing your stories and ideas on this [issue] or by [email]. Your continued support is the only power to drive JATE further!
 
 Thank you for reading this message.
 
@@ -101,3 +101,5 @@ For anything else, you can also find how to contact the team at:
    [JATE1.0 wiki]: <https://code.google.com/archive/p/jatetoolkit/wikis/JATEIntro.wiki>
    [wiki on the JATE website]: <https://github.com/ziqizhang/jate/wiki>
    [Fork the project]: <https://help.github.com/articles/fork-a-repo/>
+   [issue]: <https://github.com/ziqizhang/jate/issues/42>
+   [email]: <ziqi.zhang@sheffield.ac.uk>
