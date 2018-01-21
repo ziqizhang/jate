@@ -1,6 +1,21 @@
+# APPEAL FOR SUPPORT: PLEASE SHARE YOUR USE CASE OF JATE WITH US
 ```diff
-- APPEAL FOR SUPPORT: Please tell us your use case with JATE
+- you can reach us [here] (https://github.com/ziqizhang/jate/issues/42) or by [email]
 ```
+Dear visitors and users of JATE,
+
+Over the last few years we are absolutely thrilled and grateful by your continued interest and support for JATE such as increasing downloads, citations, bug reports/fixing, and further development/customisation activities on GitHub. Thanks to you, we are seeing JATE become one of the most popular tools for Automatic Term Extraction and Text Mining in general. 
+
+However, as you all know, JATE is far from perfect. Over the years, we have received numerous valuable suggestions on how to improve JATE and take it further. Some of these have been implemented, but **most have not**. As much enthusiastic and willing as you are to make these happen, we developers are a very small team and have to prioritise other jobs that we are employed for - **JATE is maintained free but we struggle finding spare time to provide quality maintenance of the tool, for which we apologise.**
+
+**Therefore, we seek your support:** 
+* **If you are using JATE for your research, business, or simply doing anything that you were not able to without it, please share your use case with us.** This will help us make a compelling case to apply for fundings from various institutions to support the development and maintenance of JATE.
+* **If you have an innovative idea that can benefit from the usage or further development of JATE, we are keen to discuss it with you.** This will help us apply together for fundings to support activities that capitalise on innovation (due to the nature of these funding sources, innovation is the key).
+
+Therefore, please support us by sharing your stories and ideas [here] (https://github.com/ziqizhang/jate/issues/42) or by [email]. Your continued support is the only power to drive JATE further!
+
+Thank you for reading this message.
+
 
 # JATE
 JATE (Java Automatic Term Extraction) is an open source library for automatic domain specific term extraction from text corpora. It is implemented within the [Apache Solr] framework (currently Solr 5.3), currently supporting more than 10 ATE algorithms, and almost any kinds of term candidate patterns. The seamless integration with Solr gives JATE potential to be easily customised and adapted to different documents (including binary), domains, and languages. 
@@ -70,7 +85,7 @@ $ git push origin <feature-branch-name>
 For anything else, you can also find how to contact the team at:
 
  - [Jie GAO](http://staffwww.dcs.shef.ac.uk/people/J.Gao/)
- - [Ziqi ZHANG] (https://ziqizhang.herokuapp.com/)
+ - [Ziqi ZHANG] (https://ziqizhang.github.com/)
 
 ### Changes Overview
 
