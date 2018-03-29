@@ -25,6 +25,19 @@ public class Scorer {
     private final static String PATTERN_DIGITALS = "\\d+";
     private final static String PATTERN_SYMBOLS = "\\p{Punct}";
 
+    public static void outputPrunedTerms(Lemmatiser lemmatiser, String gsFile, String outFile,
+                                         boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
+                                         int minChar, int maxChar, int minTokens, int maxTokens) throws IOException {
+        List<String> gs = GSLoader.loadGenia(gsFile);
+        gs = prune(gs, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
+        gs = normalize(gs, lemmatiser);
+        PrintWriter p = new PrintWriter(outFile);
+        for (String t: gs){
+            p.println(t);
+        }
+        p.close();
+    }
+
     public static void createReportGenia(Lemmatiser lemmatiser, String ateOutputFolder, String gsFile, String outFile,
                                          boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
                                          int minChar, int maxChar, int minTokens, int maxTokens,
@@ -380,6 +393,7 @@ public class Scorer {
             createReportACLRD(lem, args[0], args[1], args[2], true, false, true, 2, 100, 1, 10,
                     50, 100,500, 1000,2000,4000);
         }
+        //outputPrunedTerms(lem, args[0], args[1], true, false, true, 2, 100, 1, 5);
         System.out.println(new Date());
         //System.exit(0);
     }
