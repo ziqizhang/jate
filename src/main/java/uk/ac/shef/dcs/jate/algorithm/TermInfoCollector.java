@@ -12,11 +12,11 @@ import java.util.Set;
 
 public class TermInfoCollector {
 
-    protected LeafReader indexReader;
+    protected IndexReader indexReader;
     protected String ngramInfoFieldname;
     protected String idFieldname;
 
-    public TermInfoCollector(LeafReader indexReader, String ngramInfoFieldname,
+    public TermInfoCollector(IndexReader indexReader, String ngramInfoFieldname,
                              String idFieldname) {
         this.indexReader = indexReader;
         this.ngramInfoFieldname=ngramInfoFieldname;

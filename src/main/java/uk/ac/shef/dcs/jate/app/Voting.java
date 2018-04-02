@@ -24,8 +24,8 @@ import java.util.*;
 public class Voting {
 
     public static void main(String[] args) throws IOException {
-        String inFolder = "/home/zqz/GDrive/papers/cicling2017/data/seed-terms/genia";
-        String outFile="/home/zqz/GDrive/papers/cicling2017/data/seed-terms/genia/voted.json";
+        String inFolder = "/data/seed-terms/genia";
+        String outFile="/data/seed-terms/genia/voted.json";
         Map<String, Double> weights = new HashMap<>();
         weights.put("genia_attf_seed_terms.json",1.0);
         weights.put("genia_chisquare_seed_terms.json",1.0);
@@ -99,10 +99,10 @@ public class Voting {
 
         for (Pair result : algResultWithWeight) {
             Pair<List<JATETerm>, Double> pair = (Pair<List<JATETerm>, Double>) result;
-            for (int i = 0; i < pair.getKey().size(); i++) {
-                JATETerm jt = pair.getKey().get(i);
+            for (int i = 0; i < pair.first().size(); i++) {
+                JATETerm jt = pair.first().get(i);
                 String termStr = jt.getString();
-                double rankScore = 1.0 / (i + 1) * pair.getValue();
+                double rankScore = 1.0 / (i + 1) * pair.second();
                 Double finalScore = voteScores.get(termStr);
                 if (finalScore == null)
                     finalScore = 0.0;

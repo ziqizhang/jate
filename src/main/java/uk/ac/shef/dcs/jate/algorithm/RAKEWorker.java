@@ -73,8 +73,8 @@ public class RAKEWorker extends JATERecursiveTaskWorker<String, List<JATETerm>> 
                 //for the remaining part of degree, it depends on terms (parent term) that contain this element
                 List<Pair<String, Integer>> parentTerms=fTermCompIndex.getSorted(e);
                 for(Pair<String, Integer> pTerm: parentTerms){
-                    String pTermStr = pTerm.getKey();
-                    if(pTerm.getValue()==1) //we are only interested in multi-word expressions for computing degree
+                    String pTermStr = pTerm.first();
+                    if(pTerm.second()==1)
                         continue;
 
                     int pTF = fFeatureTerms.getTTF(pTermStr); //how many times this parent term appear in corpus
