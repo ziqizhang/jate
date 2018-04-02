@@ -1,3 +1,6 @@
+# NEWS
+**02 Apr 2018:** JATE 2.0 Beta.9 released. The main change is migration to Solr 6.6.0 (thanks to [MysterionRise]) - JATE is now based on Solr 6.6.0. **WARNING**: the index files created by this version of Solr is not compatible with the previous versions. Please consider this before upgrading! 
+
 # APPEAL FOR SUPPORT: PLEASE SHARE YOUR USE CASE OF JATE WITH US
 ```diff
 - you can reach us at https://github.com/ziqizhang/jate/issues/42 or by email (link at the end of this message)
@@ -103,3 +106,4 @@ For anything else, you can also find how to contact the team at:
    [Fork the project]: <https://help.github.com/articles/fork-a-repo/>
    [issue]: <https://github.com/ziqizhang/jate/issues/42>
    [email]: <mailto:ziqi.zhang@sheffield.ac.uk>
+   [MysterionRise]: <https://github.com/MysterionRise>
