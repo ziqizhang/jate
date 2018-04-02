@@ -340,7 +340,6 @@
         reduce the risk of propagating index corruption from older segments 
         into new ones, at the expense of slower merging.
     -->
-     <checkIntegrityAtMerge>false</checkIntegrityAtMerge>
   </indexConfig>
 
 
