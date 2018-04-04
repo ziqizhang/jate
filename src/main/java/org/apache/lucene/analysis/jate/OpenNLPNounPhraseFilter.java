@@ -45,7 +45,7 @@ public final class OpenNLPNounPhraseFilter extends OpenNLPMWEFilter {
     @Override
     public boolean incrementToken() throws IOException {
         clearAttributes();
-        if (first) {
+        /*if (first) {
             //gather all tokens from doc
             String[][] wordsAndPos = walkTokens();
             String[] words = wordsAndPos[0];
@@ -68,30 +68,32 @@ public final class OpenNLPNounPhraseFilter extends OpenNLPMWEFilter {
                 chunkTypes.put(sp.getStart(), sp.getType());
             }
             first = false;
-            tokenIdx = 0;
+            chunkEnd = 0;
         }
 
-        if (tokenIdx == tokenAttrs.size()) {
+        if (chunkEnd == tokenAttrs.size()) {
             resetParams();
             return false;
         }
 
-        if (chunkStart != -1 && chunkEnds.contains(tokenIdx)) {  //already found a new chunk and now we found its end
-            addMWE(tokenIdx);
+        if (chunkStart != -1 && chunkEnds.contains(chunkEnd)) {  //already found a new chunk and now we found its end
+            addMWE(chunkEnd);
             
             //do not increment token index here because end span is exclusive
-            //tokenIdx++;
+            //chunkEnd++;
             return true;
         }
-        if (chunkSpans.containsKey(tokenIdx)) { //at the beginning of a new chunk
-            chunkStart = tokenIdx;
-            chunkEnds = chunkSpans.get(tokenIdx);
-            tokenIdx = chunkEnds.get(0); //set tokenIdx to be the next end index for the beginning index
+        if (chunkSpans.containsKey(chunkEnd)) { //at the beginning of a new chunk
+            chunkStart = chunkEnd;
+            chunkEnds = chunkSpans.get(chunkEnd);
+            chunkEnd = chunkEnds.get(0); //set chunkEnd to be the next end index for the beginning index
             return true;
         } else { //a token that is not part of a chunk
-            tokenIdx++;
+            chunkEnd++;
             return true;
-        }
+        }*/
+
+        return true;
     }
 
     private Span[] createSpan(String[] tags) {

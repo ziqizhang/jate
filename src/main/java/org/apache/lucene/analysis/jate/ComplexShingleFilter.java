@@ -170,7 +170,23 @@ public final class ComplexShingleFilter extends MWEFilter implements SentenceCon
 
     @Override
     public boolean incrementToken() throws IOException {
+        boolean[] result = generateShingle();
+        while (result[0] && !result[1]){
+            result= generateShingle();
+        }
+
+        return result[0];
+    }
+
+    /**
+     *
+     * @return a boolean array of size 2. first=token available; second=shingle added
+     * @throws IOException
+     */
+    private boolean[] generateShingle() throws IOException {
+        boolean[] res = new boolean[2] ;
         boolean tokenAvailable = false;
+        boolean outputThisShingle = true;
         int builtGramSize = 0;
 
         if (gramSize.atMinValue() || inputWindow.size() < gramSize.getValue()) {
@@ -185,7 +201,7 @@ public final class ComplexShingleFilter extends MWEFilter implements SentenceCon
             Iterator<InputWindowToken> iter = inputWindow.iterator();
 
             int idxInWindow = -1;
-            boolean outputThisShingle = true;
+
             //this where the token n-gram is built
             for (int gramNum = 1;
                  iter.hasNext() && builtGramSize < gramSize.getValue();
@@ -215,9 +231,10 @@ public final class ComplexShingleFilter extends MWEFilter implements SentenceCon
                 }
             }
 
-            if (nextToken == null || nextToken.sentenceContext == null) {
-                tokenAvailable = false;
-                return tokenAvailable;
+            if (nextToken == null/* || nextToken.sentenceContext == null*/) {
+                res[0] = false;
+                res[1]=false;
+                return res;
             }
 
             if (!isAllFiller && builtGramSize == gramSize.getValue()) {
@@ -280,7 +297,10 @@ public final class ComplexShingleFilter extends MWEFilter implements SentenceCon
                 }
             }
         }
-        return tokenAvailable;
+
+        res[0]=tokenAvailable;
+        res[1]=outputThisShingle;
+        return res;
     }
 
     private boolean crossBoundary(SentenceContext firstTokenSentCtx, SentenceContext lastTokenSentCtx) {

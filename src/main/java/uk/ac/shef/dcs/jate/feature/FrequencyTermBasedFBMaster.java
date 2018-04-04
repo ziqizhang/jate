@@ -33,7 +33,11 @@ public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
     @Override
     public AbstractFeature build() throws JATEException {
         FrequencyTermBased feature = new FrequencyTermBased();
-        feature.setTotalDocs((Integer) solrIndexSearcher.getStatistics().get("numDocs"));
+        try {
+            feature.setTotalDocs(solrIndexSearcher.collectionStatistics("numDocs").maxDoc());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         try {
             Terms ngramInfo = SolrUtil.getTermVector(properties.getSolrFieldNameJATENGramInfo(), solrIndexSearcher);

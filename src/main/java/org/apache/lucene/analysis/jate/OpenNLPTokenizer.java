@@ -131,6 +131,7 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
             int spot = sentence.getStart() + word.getStart();
             termAtt.setEmpty();
             int termLength = word.getEnd() - word.getStart();
+
             if (termAtt.buffer().length < termLength) {
                 termAtt.resizeBuffer(termLength);
             }
@@ -146,10 +147,7 @@ public final class OpenNLPTokenizer extends Tokenizer implements SentenceContext
             //safeguard tweak to avoid invalid token offsets, see issue 26 on github
             if (finalOffset - start > termLength) {
                 offsetAtt.setOffset(start, start + termLength);
-                LOG.warn("Invalid token start and end offsets diff greater than term length. End offset is reset to be start+tokenlength. " +
-                        "start=" + start + ", invalid end=" + finalOffset + ", termlength=" + termLength + ". See Issue 26 on JATE webpage");
-/*                String wordStr =  new String(buffer, 0, offsetAtt.endOffset() - offsetAtt.startOffset());
-                System.out.println(wordStr);*/
+                LOG.warn("Token start and end offsets does not match with token length. Usually you may safely ignore this as it is often because there is an HTML entity in your text. Check Issue 26 on JATE webpage to make sure.");
             } else
                 offsetAtt.setOffset(start, finalOffset);
 

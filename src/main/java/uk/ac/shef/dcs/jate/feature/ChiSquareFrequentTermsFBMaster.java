@@ -16,12 +16,12 @@ public class ChiSquareFrequentTermsFBMaster extends AbstractFeatureBuilder {
     private final Map<ContextWindow, Integer> ctx2TTF;
     private final Map<String, Set<ContextWindow>> term2Ctx;
     private List<String> allFrequentTerms;
-    private final int ttfInCorpus;
+    private final long ttfInCorpus;
 
     public ChiSquareFrequentTermsFBMaster(
             Map<ContextWindow, Integer> ctx2TTF,
             Map<String, Set<ContextWindow>> term2Ctx,
-            int ttfInCorpus, JATEProperties properties) {
+            long ttfInCorpus, JATEProperties properties) {
         super(null, properties);
         this.allFrequentTerms = new ArrayList<>(term2Ctx.keySet());
         this.ctx2TTF = ctx2TTF;

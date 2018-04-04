@@ -14,13 +14,13 @@ class ChiSquareFrequentTermsFBWorker extends JATERecursiveTaskWorker<String, Int
     private final Map<ContextWindow, Integer> ctx2TTF;
     private final Map<String, Set<ContextWindow>> term2Ctx;
     private final ChiSquareFrequentTerms feature;
-    private final int ttfInCorpus;
+    private final long ttfInCorpus;
 
     ChiSquareFrequentTermsFBWorker(List<String> tasks, int maxTasksPerWorker,
                                           Map<ContextWindow, Integer> ctx2TTF,
                                           Map<String, Set<ContextWindow>> term2Ctx,
                                           ChiSquareFrequentTerms feature,
-                                          int ttfInCorpus) {
+                                          long ttfInCorpus) {
         super(tasks, maxTasksPerWorker);
         this.ctx2TTF = ctx2TTF;
         this.term2Ctx = term2Ctx;

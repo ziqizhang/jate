@@ -2,7 +2,7 @@ package uk.ac.shef.dcs.jate.nlp.opennlp;
 
 import opennlp.tools.namefind.RegexNameFinder;
 import opennlp.tools.util.Span;
-import org.apache.lucene.analysis.util.WordlistLoader;
+import org.apache.lucene.analysis.WordlistLoader;
 import org.junit.Assert;
 import org.junit.Test;
 import uk.ac.shef.dcs.jate.nlp.InstanceCreator;

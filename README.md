@@ -100,7 +100,7 @@ For anything else, you can also find how to contact the team at:
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job.)
    [Apache Solr]: <http://lucene.apache.org/solr/>
-   [here]: <http://staffwww.dcs.shef.ac.uk/people/Z.Zhang/resources/jate_1.11.tar.gz>
+   [here]: <https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/jatetoolkit/jate_1.11.zip>
    [JATE1.0 wiki]: <https://code.google.com/archive/p/jatetoolkit/wikis/JATEIntro.wiki>
    [wiki on the JATE website]: <https://github.com/ziqizhang/jate/wiki>
    [Fork the project]: <https://help.github.com/articles/fork-a-repo/>
