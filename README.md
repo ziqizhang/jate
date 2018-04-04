@@ -37,7 +37,7 @@ To cite the old version, please use instead:** Zhang, Z., Iria, J., Brewster, C.
 
 ### Support and Issues
 
-JATE2 is at an early stage of development. Its mailling list is available on [Google Groups] (https://groups.google.com/d/forum/jate2). If you have any **questions about using JATE**, please read the Wiki and the mailling list first. Please do not use the issue tracker for personal support requests nor feature requests. Support requests and development issues should be discussed in the mailling list.
+JATE2 is at an early stage of development. Its mailling list is available on [Google Groups](https://groups.google.com/d/forum/jate2). If you have any **questions about using JATE**, please read the Wiki and the mailling list first. Please do not use the issue tracker for personal support requests nor feature requests. Support requests and development issues should be discussed in the mailling list.
 
 For bug report, please [create an issue](https://github.com/ziqizhang/jate/issues). 
 
@@ -87,8 +87,8 @@ $ git push origin <feature-branch-name>
 
 For anything else, you can also find how to contact the team at:
 
+ - [Ziqi ZHANG](https://ziqizhang.github.com/)
  - [Jie GAO](http://staffwww.dcs.shef.ac.uk/people/J.Gao/)
- - [Ziqi ZHANG] (https://ziqizhang.github.com/)
 
 ### Changes Overview
 
@@ -100,7 +100,7 @@ For anything else, you can also find how to contact the team at:
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job.)
    [Apache Solr]: <http://lucene.apache.org/solr/>
-   [here]: <http://staffwww.dcs.shef.ac.uk/people/Z.Zhang/resources/jate_1.11.tar.gz>
+   [here]: <https://code.google.com/archive/p/jatetoolkit/downloads>
    [JATE1.0 wiki]: <https://code.google.com/archive/p/jatetoolkit/wikis/JATEIntro.wiki>
    [wiki on the JATE website]: <https://github.com/ziqizhang/jate/wiki>
    [Fork the project]: <https://help.github.com/articles/fork-a-repo/>
