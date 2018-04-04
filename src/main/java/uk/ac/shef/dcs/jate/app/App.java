@@ -310,10 +310,10 @@ public abstract class App {
 //						log.error(e.toString());
 //					}
 
-                    if (core != null) {
+                    /*if (core != null) {
                         core.close();
                     }
-
+*/
                     solrServer.close();
                     //workaround to avoid ERROR "CachingDirectoryFactory:150"
                     solrServer.getCoreContainer().getAllCoreNames().forEach(currentCoreName -> {
