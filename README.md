@@ -3,7 +3,7 @@
 
 
   * [Introduction](#intro)
-  * [Targeted Users](#users)
+  * [Reasons for using JATE](#why)
   * [Contributing](#contrib)
   * [Support](#support)
   * [License](#license)
@@ -12,11 +12,28 @@
 # <a name="intro"> Introduction
 JATE (Java Automatic Term Extraction) is an open source library for Automatic Term Extraction (or Recognition) from text corpora. It is implemented within the [Apache Solr] framework (currently Solr 6.6), currently supporting more than 10 ATE algorithms, and almost any kinds of term candidate patterns. The integration with Solr gives JATE potential to be easily customised and adapted to different documents (including binary), domains, and languages. 
 
-JATE is **not just a library for ATE**. It also implements several text processing utilities that can be easily used for other general-purpose indexing, such as tokenisation, advanced phrase and n-gram extraction. See [Targeted Users](#users)
+JATE is **not just a library for ATE**. It also implements several text processing utilities that can be easily used for other general-purpose indexing, such as tokenisation, advanced phrase and n-gram extraction. See [Who should use JATE](#users)
 
-# <a name="users"> Targeted Users
+# <a name="why"> Reasons for using JATE
+Indeed, a wide range of ATE tools and libraries have been developed over the years. In comparison, there are five reasons why JATE is unique:
 
-### Term Extraction
+* Free to use, for commercial or non-commercial purposes.
+* Built on the Apache Solr framework to benefit from its powerful text processing libraries, high compatibility and scalability, and rigorous community support. As examples, you can plug in the Tika library to process different document formats, use different text preprocessing (e.g., character filtering, HTML entity conversion), tokenisation and normalisation methods available through Lucene, or index your documents with extracted terms easily thanks to its integration with Solr.
+* A range of configurable linguistic processors for candidate term extraction, such as noun phrases, PoS patterns, and n-grams.
+* 10 state of the art ATE scoring and ranking algorithms.
+* A set of highly configurable, complex text processing utilities that can be used as Solr pluginsfor general purpose text indexing and retrieval. For example, sentence splitter, statistical tokeniser, lemmatiser, PoS tagger, phrase chunker and n-gram extractors that are sentence context aware and stopwords removable, etc.
+
+
+For **Terminology practitioners**, this means 
+JATE implements state-of-the-art term extraction methods that are highly customisable such that you can tailor them for your own ATE needs. These include:
+
+
+
+This means that you can configure a specific ATE application for your needs in a plug-and-play fashion 
+
+### Terminology researchers and developers
+
+### Information retrieval users
 
 For details of how to use JATE2, please follow the [wiki on the JATE website].
 
