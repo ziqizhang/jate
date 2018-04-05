@@ -1,6 +1,28 @@
 # NEWS
 **02 Apr 2018:** JATE 2.0 Beta.9 released. The main change is migration to Solr 6.6.0 (thanks to [MysterionRise]) - JATE is now based on Solr 6.6.0. **WARNING**: the index files created by this version of Solr is not compatible with the previous versions. Please consider this before upgrading! 
 
+
+  * [Introduction](#intro)
+  * [Targeted Users](#users)
+  * [Contributing](#contrib)
+  * [Support](#support)
+  * [License](#license)
+  * [Contact](#contact)
+
+# <a name="intro"> Introduction
+JATE (Java Automatic Term Extraction) is an open source library for Automatic Term Extraction (or Recognition) from text corpora. It is implemented within the [Apache Solr] framework (currently Solr 6.6), currently supporting more than 10 ATE algorithms, and almost any kinds of term candidate patterns. The integration with Solr gives JATE potential to be easily customised and adapted to different documents (including binary), domains, and languages. 
+
+JATE is **not just a library for ATE**. It also implements several text processing utilities that can be easily used for other general-purpose indexing, such as tokenisation, advanced phrase and n-gram extraction. See [Targeted Users](#users)
+
+# <a name="users"> Targeted Users
+
+### Term Extraction
+
+For details of how to use JATE2, please follow the [wiki on the JATE website].
+
+General introduction of JATE is also available in [JATE1.0 wiki].
+
+
 # APPEAL FOR SUPPORT: PLEASE SHARE YOUR USE CASE OF JATE WITH US
 ```diff
 - you can reach us at https://github.com/ziqizhang/jate/issues/42 or by email (link at the end of this message)
