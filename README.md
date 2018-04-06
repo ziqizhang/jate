@@ -1,5 +1,6 @@
 # NEWS
 **07 Apr 2018:** JATE 2.0 Beta.10 released. The main changes include: 1) migration to Solr 7.2.1. **WARNING**: the index files created by this version of Solr is not compatible with the previous versions; 2) fixing a couple of minor bugs documented in the Issues page; 3) added two more example configrations for the [TTC](https://github.com/ziqizhang/data#ate) corpora.
+
 **02 Apr 2018:** JATE 2.0 Beta.9 released. The main change is migration to Solr 6.6.0 (thanks to [MysterionRise]) - JATE is now based on Solr 6.6.0. **WARNING**: the index files created by this version of Solr is not compatible with the previous versions. Please consider this before upgrading! 
 
 
