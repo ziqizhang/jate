@@ -7,7 +7,7 @@
   * [Reasons for using JATE](#why)
   * [Support](#support)
   * [Contributing](#contrib)
-    - [Tell us your use of using JATE](#story)
+    - [Tell us your use case with JATE](#story)
     - [Collaboration](#collaboration)
     - [Code contribution](#code)
     - [Data contribution](#datac)
@@ -55,7 +55,7 @@ JATE is currently maintained by a [team of two members](#contact), who have othe
 
 JATE is a research software that originates from an [EPSRC](https://epsrc.ukri.org/) funded project '[Abraxas](http://gow.epsrc.ac.uk/NGBOViewGrant.aspx?GrantRef=GR/T22902/01)'. As you may appreciate, since the project terminated, there is no more funding to support the software and therefore all subsequent development and its current maintenance have been undertaken voluntarily by the team. JATE is far from perfect and yet we are trilled to see it becoming one of the most popular free text mining tools in the community, thanks to your support. 1We are also keen to make it better and therefore, we would be grateful for your contributions in many forms:
 
-### <a name="story"> Tell us your use of using JATE
+### <a name="story"> Tell us your use case with JATE
 
 We would be grateful if you tell us a little more of your use cases with JATE: are you using JATE to conduct cutting-edge research in another (or the same) subject area? Or are you using JATE to enable your business applications? By gathering as many detailed use cases as possible, you are helping us make a compelling case to apply for fundings from various institutions to support the development and maintenance of JATE. Please [get in touch with us by email](#contact) and share your story with us - it costs you no money but just a little of your time!
 
@@ -135,6 +135,8 @@ We share datasets used for the development and evaluation of ATE below.
 
 
 # <a name="license"> License
+
+JATE is licensed with LGPL 3.0, which permits free commercial and non-commercial use. See [details](https://github.com/ziqizhang/jate/blob/master/LICENSE) here. 
 
 # <a name="contact"> Contact
 
