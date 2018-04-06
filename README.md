@@ -3,7 +3,7 @@
 
 
   * [Introduction](#intro)
-  * [Cite JATE] (#cite)
+  * [Cite JATE](#cite)
   * [Reasons for using JATE](#why)
   * [Support](#support)
   * [Contributing](#contrib)
@@ -22,15 +22,15 @@ Please support us by citing JATE as below:
 
 **If you use the version from this Git repository:** Zhang, Z., Gao, J., Ciravegna, F. 2016. JATE 2.0: Java Automatic Term Extraction with Apache Solr. In _The Proceedings of the 10th Language Resources and Evaluation Conference_, May 2016, Portorož, Slovenia
 
-**If you use the old JATE 1.11** available [here] (no longer supported): Zhang, Z., Iria, J., Brewster, C., and Ciravegna, F. 2008. A Comparative Evaluation of Term Recognition Algorithms. In Proceedings of The 6th Language Resources and Evaluation Conference, May 2008, Marrakech, Morocco. 
+**If you use the old JATE 1.11** available [here] (no longer supported except an outdated [JATE 1.0 wiki page]): Zhang, Z., Iria, J., Brewster, C., and Ciravegna, F. 2008. A Comparative Evaluation of Term Recognition Algorithms. In Proceedings of The 6th Language Resources and Evaluation Conference, May 2008, Marrakech, Morocco. 
 
 
 # <a name="why"> Reasons for using JATE
 A wide range of ATE tools and libraries have been developed over the years. In comparison, there are **five reasons** why JATE is unique:
 
 * [Free to use](https://github.com/ziqizhang/jate/blob/dev/LICENSE), for commercial or non-commercial purposes.
-* Built on the Apache Solr framework to benefit from its [powerful text analysis libraries](https://lucene.apache.org/core/7_2_1/core/org/apache/lucene/analysis/package-summary.html#package.description), high compatibility and scalability, and rigorous community support. As examples, you can plug in the [Tika library](https://tika.apache.org/1.15/formats.html) to process different document formats, use different text preprocessing (e.g., character filtering, HTML entity conversion), tokenisation and normalisation methods available through Lucene, or [index your documents](https://github.com/ziqizhang/jate/wiki/Quick-start#plugin) with extracted terms easily thanks to its integration with Solr.
-* A range of configurable [linguistic processors](https://github.com/ziqizhang/jate/wiki/Example-of-schema-setting-in-Solr-core) for candidate term extraction, such as noun phrases, PoS patterns, and n-grams.
+* Built on the Apache Solr framework to benefit from its [powerful text analysis libraries](https://lucene.apache.org/core/7_2_1/core/org/apache/lucene/analysis/package-summary.html#package.description), high compatibility and scalability, and rigorous community support. As examples, you can plug in the [Tika library](https://tika.apache.org/1.15/formats.html) to process different document formats, use different text preprocessing (e.g., character filtering, HTML entity conversion), tokenisation and normalisation methods available through Lucene, or [index your documents and boost your queries](https://github.com/ziqizhang/jate/wiki/Quick-start#plugin) with extracted terms easily thanks to its integration with Solr.
+* Highly configurable [linguistic processors](https://github.com/ziqizhang/jate/wiki/Example-of-schema-setting-in-Solr-core) for candidate term extraction, such as noun phrases, PoS patterns, and n-grams.
 * 10 state of the art [ATE scoring and ranking algorithms](https://github.com/ziqizhang/jate/tree/master/src/main/java/uk/ac/shef/dcs/jate/algorithm).
 * A set of highly configurable, complex text processing utilities that can be used as Solr plugins for [general purpose text indexing and retrieval](https://github.com/ziqizhang/jate/tree/master/src/main/java/org/apache/lucene/analysis/jate). For example, sentence splitter, statistical tokeniser, lemmatiser, PoS tagger, phrase chunker and n-gram extractors that are sentence context aware and stopwords removable, etc.
 
@@ -39,9 +39,13 @@ For **terminology practitioners**, this means you can quickly build highly custo
 
 # <a name="support"> Support
 
-For details of how to use JATE2, please follow the [wiki on the JATE website].
+JATE is currently maintained by a [team of two members](#contact), who have other full-time roles but use as much their spare time as possible on this work. We try our best to respond to your queries but we apologise for any potential delays for this reason. However there are many ways you can [contribute to JATE](#contrib) to potentially make it better. Currently you can obtain support from us in the following ways:
 
-General introduction of JATE is also available in [JATE1.0 wiki].
+* A [wiki page] to get you started.
+* A [Google Group] to ask questions about JATE. 
+* An [issues] page to report bugs - only bug reporting please. For any questions please use the Google Group above.
+* [Contact the team](#contact) directly - please use this **only** if your query does not fall into any of the above categories.
+
 
 
 # APPEAL FOR SUPPORT: PLEASE SHARE YOUR USE CASE OF JATE WITH US
@@ -145,8 +149,10 @@ For anything else, you can also find how to contact the team at:
    [Apache Solr]: <http://lucene.apache.org/solr/>
    [here]: <https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/jatetoolkit/jate_1.11.zip>
    [JATE1.0 wiki]: <https://code.google.com/archive/p/jatetoolkit/wikis/JATEIntro.wiki>
-   [wiki on the JATE website]: <https://github.com/ziqizhang/jate/wiki>
+   [wiki page]: <https://github.com/ziqizhang/jate/wiki>
    [Fork the project]: <https://help.github.com/articles/fork-a-repo/>
    [issue]: <https://github.com/ziqizhang/jate/issues/42>
    [email]: <mailto:ziqi.zhang@sheffield.ac.uk>
    [MysterionRise]: <https://github.com/MysterionRise>
+   [Google Group]: <https://groups.google.com/d/forum/jate2>
+   [JATE 1.0 wiki page]: <https://code.google.com/archive/p/jatetoolkit/wikis/JATEIntro.wiki>
