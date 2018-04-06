@@ -15,13 +15,13 @@ JATE (Java Automatic Term Extraction) is an open source library for Automatic Te
 JATE is **not just a library for ATE**. It also implements several text processing utilities that can be easily used for other general-purpose indexing, such as tokenisation, advanced phrase and n-gram extraction. See [Who should use JATE](#users)
 
 # <a name="why"> Reasons for using JATE
-Indeed, a wide range of ATE tools and libraries have been developed over the years. In comparison, there are five reasons why JATE is unique:
+A wide range of ATE tools and libraries have been developed over the years. In comparison, there are **five reasons** why JATE is unique:
 
-* Free to use, for commercial or non-commercial purposes.
-* Built on the Apache Solr framework to benefit from its powerful text processing libraries, high compatibility and scalability, and rigorous community support. As examples, you can plug in the Tika library to process different document formats, use different text preprocessing (e.g., character filtering, HTML entity conversion), tokenisation and normalisation methods available through Lucene, or index your documents with extracted terms easily thanks to its integration with Solr.
-* A range of configurable linguistic processors for candidate term extraction, such as noun phrases, PoS patterns, and n-grams.
-* 10 state of the art ATE scoring and ranking algorithms.
-* A set of highly configurable, complex text processing utilities that can be used as Solr plugins for general purpose text indexing and retrieval. For example, sentence splitter, statistical tokeniser, lemmatiser, PoS tagger, phrase chunker and n-gram extractors that are sentence context aware and stopwords removable, etc.
+* [Free to use](https://github.com/ziqizhang/jate/blob/dev/LICENSE), for commercial or non-commercial purposes.
+* Built on the Apache Solr framework to benefit from its [powerful text analysis libraries](https://lucene.apache.org/core/7_2_1/core/org/apache/lucene/analysis/package-summary.html#package.description), high compatibility and scalability, and rigorous community support. As examples, you can plug in the [Tika library](https://tika.apache.org/1.15/formats.html) to process different document formats, use different text preprocessing (e.g., character filtering, HTML entity conversion), tokenisation and normalisation methods available through Lucene, or [index your documents](https://github.com/ziqizhang/jate/wiki/Quick-start#plugin) with extracted terms easily thanks to its integration with Solr.
+* A range of configurable [linguistic processors](https://github.com/ziqizhang/jate/wiki/Example-of-schema-setting-in-Solr-core) for candidate term extraction, such as noun phrases, PoS patterns, and n-grams.
+* 10 state of the art [ATE scoring and ranking algorithms](https://github.com/ziqizhang/jate/tree/master/src/main/java/uk/ac/shef/dcs/jate/algorithm).
+* A set of highly configurable, complex text processing utilities that can be used as Solr plugins for [general purpose text indexing and retrieval](https://github.com/ziqizhang/jate/tree/master/src/main/java/org/apache/lucene/analysis/jate). For example, sentence splitter, statistical tokeniser, lemmatiser, PoS tagger, phrase chunker and n-gram extractors that are sentence context aware and stopwords removable, etc.
 
 For **terminology practitioners**, this means you can quickly build highly customisable ATE tools that suit your data and domain, at no cost. For **terminology researchers and developers**, this means that you have many necessary building blocks for developing novel ATE methods, and a uniform environment where you can evaluate and compare different methods. For **general information retrieval users**, you have a range of advanced text processing utilities that you can easily plug into your existing Solr or Lucene based indexing and retrieval applications. 
 
