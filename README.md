@@ -7,6 +7,10 @@
   * [Reasons for using JATE](#why)
   * [Support](#support)
   * [Contributing](#contrib)
+    - [Tell us your use of using JATE](#story)
+    - [Collaboration](#collaboration)
+    - [Code contribution](#code)
+    - [Data contribution](#data)
   * [Other downloads](#other)
   * [License](#license)
   * [Contact](#contact)
@@ -51,11 +55,11 @@ JATE is currently maintained by a [team of two members](#contact), who have othe
 
 JATE is a research software that originates from an [EPSRC](https://epsrc.ukri.org/) funded project '[Abraxas](http://gow.epsrc.ac.uk/NGBOViewGrant.aspx?GrantRef=GR/T22902/01)'. As you may appreciate, since the project terminated, there is no more funding to support the software and therefore all subsequent development and its current maintenance have been undertaken voluntarily by the team. JATE is far from perfect and yet we are trilled to see it becoming one of the most popular free text mining tools in the community, thanks to your support. 1We are also keen to make it better and therefore, we would be grateful for your contributions in many forms:
 
-### Tell us your story of using JATE
+### <a name="story"> Tell us your use of using JATE
 
 We would be grateful if you tell us a little more of your use cases with JATE: are you using JATE to conduct cutting-edge research in another (or the same) subject area? Or are you using JATE to enable your business applications? By gathering as many detailed use cases as possible, you are helping us make a compelling case to apply for fundings from various institutions to support the development and maintenance of JATE. Please [get in touch with us by email](#contact) and share your story with us - it costs you no money but just a little of your time!
 
-### Collaborative projects
+### <a name="collaboration"> Collaboration
 
 We are keen to collaborate with any partners (academia or industry) to develop new project ideas. This can be, but not limited to, any of the following:
 
@@ -66,7 +70,7 @@ We are keen to collaborate with any partners (academia or industry) to develop n
 Please [get in touch with us by email](#contact) to discuss your ideas.
 
 
-### Code contribution
+### <a name="code"> Code contribution
 We welcome bug fixes, improvements, new features etc. Before embarking on making significant changes, please open an issue and ask first so that you do not risk duplicating efforts or spending time working on something that may be out of scope. To contribute code, please follow:
 
 ###### 1. [Fork the project], clone your fork, and add the upstream to your remote:
@@ -108,7 +112,7 @@ $ git push origin <feature-branch-name>
 **Important**: By submitting a patch, you agree to allow the project owners to license your work under the LGPLv3 license.
 
 
-### Data contribution
+### <a name="data"> Data contribution
 
 A crucial resource for developing ATE methods is data, and particularly 'annotated' data that consists of text corpora as well as a list of expected 'real' terms to be found within the corpora. We call this 'gold standard'. This is critical for evaluating and improving the performance of ATE in particular domains.
 
@@ -134,7 +138,7 @@ We share datasets used for the development and evaluation of ATE below.
 
 # <a name="contact"> Contact
 
-For anything else, you can also find how to contact the team at:
+The team member's personal webpages contain their email contacts:
 
  - [Jie GAO](http://staffwww.dcs.shef.ac.uk/people/J.Gao/)
  - [Ziqi ZHANG](https://ziqizhang.github.com/)
