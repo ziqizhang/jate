@@ -10,7 +10,7 @@
     - [Tell us your use of using JATE](#story)
     - [Collaboration](#collaboration)
     - [Code contribution](#code)
-    - [Data contribution](#data)
+    - [Data contribution](#datac)
   * [Other downloads](#other)
   * [License](#license)
   * [Contact](#contact)
@@ -112,7 +112,7 @@ $ git push origin <feature-branch-name>
 **Important**: By submitting a patch, you agree to allow the project owners to license your work under the LGPLv3 license.
 
 
-### <a name="data"> Data contribution
+### <a name="datac"> Data contribution
 
 A crucial resource for developing ATE methods is data, and particularly 'annotated' data that consists of text corpora as well as a list of expected 'real' terms to be found within the corpora. We call this 'gold standard'. This is critical for evaluating and improving the performance of ATE in particular domains.
 
