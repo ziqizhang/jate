@@ -67,7 +67,7 @@ Please [get in touch with us by email](#contact) to discuss your ideas.
 
 
 ### Code contribution
-We always welcome contributions to help make JATE better. Bug fixes, improvements, and new features are welcomed. Before embarking on making significant changes, please open an issue and ask first so that you do not risk duplicating efforts or spending time working on something that may be out of scope.
+We welcome bug fixes, improvements, new features etc. Before embarking on making significant changes, please open an issue and ask first so that you do not risk duplicating efforts or spending time working on something that may be out of scope. To contribute code, please follow:
 
 ###### 1. [Fork the project], clone your fork, and add the upstream to your remote:
 
@@ -118,6 +118,18 @@ If you would like to share any data you have created please also [get in touch b
 
 # <a name="other"> Other downloads
 
+### Other versions of JATE (no longer supported)
+This Git repository only hosts the most recent version of JATE. You can obtain some of the previous versions below: 
+
+* JATE 1.11: download [here]
+* Other JATE 2.0 based versions in the [Maven central repository](https://mvnrepository.com/artifact/uk.ac.shef.dcs/jate)
+
+### Data
+We share datasets used for the development and evaluation of ATE below.
+
+* Ziqi Zhang's [research data page](https://github.com/ziqizhang/data#ate) contains 4 datasets used for ATE research. 
+
+
 # <a name="license"> License
 
 # <a name="contact"> Contact
@@ -125,7 +137,7 @@ If you would like to share any data you have created please also [get in touch b
 For anything else, you can also find how to contact the team at:
 
  - [Jie GAO](http://staffwww.dcs.shef.ac.uk/people/J.Gao/)
- - [Ziqi ZHANG] (https://ziqizhang.github.com/)
+ - [Ziqi ZHANG](https://ziqizhang.github.com/)
 
 # <a name="history"> JATE release history
 *  JATE2.0 Beta version - 20 May 2016
