@@ -17,9 +17,9 @@
   * [Release history](#hi)
 
 # <a name="intro"> Introduction
-JATE (Java Automatic Term Extraction) is an open source library for Automatic Term Extraction (or Recognition) from text corpora. It is implemented within the [Apache Solr] framework (currently Solr 6.6), currently supporting more than 10 ATE algorithms, and almost any kinds of term candidate patterns. The integration with Solr gives JATE potential to be easily customised and adapted to different documents (including binary), domains, and languages. 
+JATE (Java Automatic Term Extraction) is an open source library for Automatic Term Extraction (or Recognition) from text corpora. It is implemented within the [Apache Solr] framework (currently Solr 6.6), currently supporting more than 10 ATE algorithms, and almost any kinds of term candidate patterns. The integration with Solr gives JATE potential to be easily customised and adapted to different document formats, domains, and languages. 
 
-JATE is **not just a library for ATE**. It also implements several text processing utilities that can be easily used for other general-purpose indexing, such as tokenisation, advanced phrase and n-gram extraction. See [Who should use JATE](#users)
+JATE is **not just a library for ATE**. It also implements several text processing utilities that can be easily used for other general-purpose indexing, such as tokenisation, advanced phrase and n-gram extraction. See [Reasons for using JATE](#why)
 
 
 # <a name="cite"> Cite JATE
@@ -53,7 +53,7 @@ JATE is currently maintained by a [team of two members](#contact), who have othe
 
 # <a name="contrib"> Contributing to JATE
 
-JATE is a research software that originates from an [EPSRC](https://epsrc.ukri.org/) funded project '[Abraxas](http://gow.epsrc.ac.uk/NGBOViewGrant.aspx?GrantRef=GR/T22902/01)'. As you may appreciate, since the project terminated, there is no more funding to support the software and therefore all subsequent development and its current maintenance have been undertaken voluntarily by the team. JATE is far from perfect and yet we are trilled to see it becoming one of the most popular free text mining tools in the community, thanks to your support. 1We are also keen to make it better and therefore, we would be grateful for your contributions in many forms:
+JATE is a research software that originates from an [EPSRC](https://epsrc.ukri.org/) funded project '[Abraxas](http://gow.epsrc.ac.uk/NGBOViewGrant.aspx?GrantRef=GR/T22902/01)'. As you may appreciate, since the project termination, there is no more funding to support the software and therefore all subsequent development and its current maintenance have been undertaken voluntarily by the team. JATE is far from perfect and yet we are trilled to see it becoming one of the most popular free text mining tools in the community, thanks to your support. 1We are also keen to make it better and therefore, we would be grateful for your contributions in many forms:
 
 ### <a name="story"> Tell us your use case with JATE
 

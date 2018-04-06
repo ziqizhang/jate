@@ -81,7 +81,10 @@ public final class OpenNLPNounPhraseFilter extends OpenNLPMWEFilter {
             chunk = chunks[currentSpanIndex];
             success=addMWE(chunk.getStart(), chunk.getEnd(), chunk.getType());
         }
-        return true;
+
+        if (currentSpanIndex<chunks.length)
+            return true;
+        return false;
 
     }
 
