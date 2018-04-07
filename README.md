@@ -1,5 +1,5 @@
 # NEWS
-**07 Apr 2018:** JATE 2.0 Beta.10 released. The main changes include: 1) migration to Solr 7.2.1. **WARNING**: the index files created by this version of Solr is not compatible with the previous versions; 2) fixing a couple of minor bugs documented in the Issues page; 3) added two more example configrations for the [TTC](https://github.com/ziqizhang/data#ate) corpora; 4) improved introduction page.
+**07 Apr 2018:** JATE 2.0 Beta.10 released. The main changes include: 1) migration to Solr 7.2.1. **WARNING**: the index files created by this version of Solr is not compatible with the previous versions; 2) fixing a couple of minor bugs documented in the Issues page; 3) added two more example configrations for the [TTC](https://github.com/ziqizhang/data#ate) corpora; 4) added two new algorithms, [Basic] and [ComboBasic]; 5) improved introduction page.
 
 **02 Apr 2018:** JATE 2.0 Beta.9 released. The main change is migration to Solr 6.6.0 (thanks to [MysterionRise]) - JATE is now based on Solr 6.6.0. **WARNING**: the index files created by this version of Solr is not compatible with the previous versions. Please consider this before upgrading! 
 
@@ -19,7 +19,7 @@
   * [Release history](#history)
 
 # <a name="intro"> Introduction
-JATE (Java Automatic Term Extraction) is an open source library for Automatic Term Extraction (or Recognition) from text corpora. It is implemented within the [Apache Solr] framework (currently Solr 7.2.1), currently supporting more than 10 ATE algorithms, and almost any kinds of term candidate patterns. The integration with Solr gives JATE potential to be easily customised and adapted to different document formats, domains, and languages. 
+JATE (Java Automatic Term Extraction) is an open source library for Automatic Term Extraction (or Recognition) from text corpora. It is implemented within the [Apache Solr] framework (currently Solr 7.2.1), currently supporting [more than 10 ATE algorithms](https://github.com/ziqizhang/jate/tree/master/src/main/java/uk/ac/shef/dcs/jate/algorithm), and almost any kinds of term candidate patterns. The integration with Solr gives JATE potential to be easily customised and adapted to different document formats, domains, and languages. 
 
 JATE is **not just a library for ATE**. It also implements several text processing utilities that can be easily used for other general-purpose indexing, such as tokenisation, advanced phrase and n-gram extraction. See [Reasons for using JATE](#why)
 
