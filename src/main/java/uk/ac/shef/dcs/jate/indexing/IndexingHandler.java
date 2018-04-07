@@ -31,6 +31,7 @@ public class IndexingHandler {
         StringBuilder skipped=new StringBuilder();
         for(String task: tasks){
             try {
+                LOG.info("Processing:"+task);
                 JATEDocument doc = docCreator.create(task);
 
                 String content=doc.getContent().trim();

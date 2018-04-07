@@ -456,7 +456,7 @@
 
     <uniqueKey>id</uniqueKey>
 
-    <defaultSearchField>text</defaultSearchField>
+    <!--defaultSearchField>text</defaultSearchField>
 
-    <solrQueryParser defaultOperator="OR"/>
+    <solrQueryParser defaultOperator="OR"/-->
 </schema>

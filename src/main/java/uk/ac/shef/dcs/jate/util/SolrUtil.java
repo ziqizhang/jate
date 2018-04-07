@@ -50,7 +50,7 @@ public class SolrUtil {
                 doc.removeField(copyField.getDestination().getName());
 
                 IndexableField jateField = copyField.getDestination().
-                        createField(doc.get(copyField.getSource().getName()), boost);
+                        createField(doc.get(copyField.getSource().getName()));
                 doc.add(jateField);
             }
         }

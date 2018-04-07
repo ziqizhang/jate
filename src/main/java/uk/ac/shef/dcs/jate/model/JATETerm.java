@@ -50,6 +50,9 @@ public class JATETerm implements Comparable<JATETerm>{
 
     @Override
     public int compareTo(JATETerm o) {
-        return Double.valueOf(o.getScore()).compareTo(getScore());
+        int result= Double.valueOf(o.getScore()).compareTo(getScore());
+        if (result==0)
+            return o.getString().compareTo(getString());
+        return result;
     }
 }

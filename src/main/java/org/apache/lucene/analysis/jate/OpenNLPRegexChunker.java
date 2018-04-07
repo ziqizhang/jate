@@ -41,6 +41,22 @@ public final class OpenNLPRegexChunker extends OpenNLPMWEFilter {
         regexChunker = new RegexNameFinder(patterns);
     }
 
+    /**
+     * This method does not process individual tokens. Instead, it operates as follows:
+     *
+     * - the first time it is called, the candidate list of phrases are extracted
+     *
+     * - then starting from the second time, each time this method is called to process a token,
+     *   it in fact processes one phrase and emit that phrase
+     *
+     * - it does so until either 1) no more phrases remain; or 2) no more tokens remain in the document.
+     *
+     * Therefore, in theory, it is possible that not all PoS matched chunks will be emitted, if the number
+     * of PoS matched chunks is larger than the number of tokens in the document
+     *
+     * @return
+     * @throws IOException
+     */
     @Override
     public boolean incrementToken() throws IOException {
         clearAttributes();
@@ -54,41 +70,38 @@ public final class OpenNLPRegexChunker extends OpenNLPMWEFilter {
             //tagging
             String[] pos = wordsAndPOS[1];
             //chunking
-            Span[] chunks = regexChunker.find(pos);
+            chunks = regexChunker.find(pos);
             chunks = prune(chunks, words);
-            for (Span sp : chunks) {
-                List<Integer> ends = chunkSpans.get(sp.getStart());
-                if(ends==null)
-                    ends=new ArrayList<>();
-                ends.add(sp.getEnd());
-
-                chunkSpans.put(sp.getStart(), ends);
-                chunkTypes.put(sp.getStart(), sp.getType());
-            }
+            Arrays.sort(chunks, (t1, t2) -> {
+                if (t1.getStart()< t2.getStart())
+                    return 0;
+                else if (t1.getStart()>t2.getStart())
+                    return 1;
+                else{
+                    return Integer.compare(t1.getEnd(), t2.getEnd());
+                }
+            });
             first = false;
-            tokenIdx = 0;
+            currentSpanIndex=0;
         }
 
-        if (tokenIdx == tokenAttrs.size()) {
+        if (currentSpanIndex == chunks.length) {
             resetParams();
             return false;
         }
 
-        if (chunkStart != -1 && chunkEnds.contains(tokenIdx)) {  //already found a new chunk and now we found its end
-            addMWE(tokenIdx);
-            //do not increment token index here because end span is exclusive
-            //tokenIdx++;
-            return true;
+        Span chunk = chunks[currentSpanIndex];
+        boolean success=addMWE(chunk.getStart(), chunk.getEnd(), chunk.getType());
+        while (!success && currentSpanIndex<chunks.length){
+            chunk = chunks[currentSpanIndex];
+            success=addMWE(chunk.getStart(), chunk.getEnd(), chunk.getType());
         }
-        if (chunkSpans.containsKey(tokenIdx)) { //found a new chunk, the current tokindex is the beginning of the chunk
-            chunkStart = tokenIdx;
-            chunkEnds = chunkSpans.get(tokenIdx);
-            tokenIdx = chunkEnds.get(0); //set tokenIdx to be the next end index for the beginning index
+
+        if (currentSpanIndex<chunks.length)
             return true;
-        } else { //a token that is not part of a chunk
-            tokenIdx++;
-            return true;
-        }
+        return false;
+
+
     }
 
 }

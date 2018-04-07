@@ -46,52 +46,46 @@ public final class OpenNLPNounPhraseFilter extends OpenNLPMWEFilter {
     public boolean incrementToken() throws IOException {
         clearAttributes();
         if (first) {
+            String[][] wordsAndPOS = walkTokens();
             //gather all tokens from doc
-            String[][] wordsAndPos = walkTokens();
-            String[] words = wordsAndPos[0];
+            String[] words = wordsAndPOS[0];
             if (words.length == 0) {
                 return false;
             }
             //tagging
-            String[] pos = wordsAndPos[1];
-            //chunking
+            String[] pos = wordsAndPOS[1];
             String[] tags = npChunker.chunk(words, pos);
-            Span[] chunks=createSpan(tags);
+            chunks=createSpan(tags);
             chunks = prune(chunks, words);
-            for (Span sp : chunks) {
-                List<Integer> ends = chunkSpans.get(sp.getStart());
-                if(ends==null)
-                    ends=new ArrayList<>();
-                ends.add(sp.getEnd());
-
-                chunkSpans.put(sp.getStart(), ends);
-                chunkTypes.put(sp.getStart(), sp.getType());
-            }
+            Arrays.sort(chunks, (t1, t2) -> {
+                if (t1.getStart()< t2.getStart())
+                    return 0;
+                else if (t1.getStart()>t2.getStart())
+                    return 1;
+                else{
+                    return Integer.compare(t1.getEnd(), t2.getEnd());
+                }
+            });
             first = false;
-            tokenIdx = 0;
+            currentSpanIndex=0;
         }
 
-        if (tokenIdx == tokenAttrs.size()) {
+        if (currentSpanIndex == chunks.length) {
             resetParams();
             return false;
         }
 
-        if (chunkStart != -1 && chunkEnds.contains(tokenIdx)) {  //already found a new chunk and now we found its end
-            addMWE(tokenIdx);
-            
-            //do not increment token index here because end span is exclusive
-            //tokenIdx++;
-            return true;
+        Span chunk = chunks[currentSpanIndex];
+        boolean success=addMWE(chunk.getStart(), chunk.getEnd(), chunk.getType());
+        while (!success && currentSpanIndex<chunks.length){
+            chunk = chunks[currentSpanIndex];
+            success=addMWE(chunk.getStart(), chunk.getEnd(), chunk.getType());
         }
-        if (chunkSpans.containsKey(tokenIdx)) { //at the beginning of a new chunk
-            chunkStart = tokenIdx;
-            chunkEnds = chunkSpans.get(tokenIdx);
-            tokenIdx = chunkEnds.get(0); //set tokenIdx to be the next end index for the beginning index
+
+        if (currentSpanIndex<chunks.length)
             return true;
-        } else { //a token that is not part of a chunk
-            tokenIdx++;
-            return true;
-        }
+        return false;
+
     }
 
     private Span[] createSpan(String[] tags) {

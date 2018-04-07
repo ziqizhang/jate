@@ -22,13 +22,10 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
 
     protected boolean first = true;
     protected static String SENTENCE_BREAK = "[.?!]";
-    // cloned attrs of all tokens
     protected List<AttributeSource> tokenAttrs = new ArrayList<>();
-    protected Map<Integer, List<Integer>> chunkSpans = new HashMap<>(); //start, end; end is exclusive
-    protected Map<Integer, String> chunkTypes = new HashMap<>();
-    protected int chunkStart = -1;
-    protected List<Integer> chunkEnds = new ArrayList<>(); //multiple chunks with the same start index but different end index are possible
-    protected int tokenIdx = 0;
+
+    protected Span[] chunks;
+    protected int currentSpanIndex;
 
 
     public OpenNLPMWEFilter(TokenStream input, int minTokens, int maxTokens,
@@ -54,8 +51,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
         super(input);
     }
 
-
-    protected boolean addMWE(int chunkEnd) {
+    protected boolean addMWE(int chunkStart, int chunkEnd, String chunkType) {
         AttributeSource start = tokenAttrs.get(chunkStart);
         AttributeSource end = tokenAttrs.get(chunkEnd - 1);
 
@@ -88,7 +84,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
                 termAtt.setEmpty().append(normalized);
                 offsetAtt.setOffset(start.getAttribute(OffsetAttribute.class).startOffset(),
                         end.getAttribute(OffsetAttribute.class).endOffset());
-                typeAtt.setType(chunkTypes.get(chunkStart));
+                typeAtt.setType(chunkType);
                 MWEMetadata metadata=addSentenceContext(new MWEMetadata(),
                         firstTokenSentCtx.getFirstTokenIdx(),
                         lastTokenSentCtx.getLastTokenIdx(),
@@ -102,15 +98,14 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
             //System.out.println(phrase.toString().trim()+","+sentenceContextAtt.getPayload().utf8ToString());
         }
 
-        chunkEnds.remove(Integer.valueOf(chunkEnd));
-        if (chunkEnds.size() == 0) {
-            tokenIdx = chunkStart + 1;
-            chunkStart = -1;
-        } else {
-            tokenIdx = chunkEnds.get(0); //set the next token index to be the next phrase's end token index
-        }
-
+        currentSpanIndex++;
         return added;
+    }
+
+
+    protected boolean addMWE(int chunkEnd) {
+
+        return true;
     }
 
     private MWEMetadata parseTokenMetadataPayload(PayloadAttribute attribute) {
@@ -258,12 +253,7 @@ public abstract class OpenNLPMWEFilter extends MWEFilter {
 
     protected void resetParams() {
         first = true;
-        tokenIdx = 0;
-        chunkStart = -1;
-        chunkEnds.clear();
-        ;
-        chunkSpans.clear();
-        chunkTypes.clear();
+        chunks=null;
     }
 
     //gather tokens and PoS's

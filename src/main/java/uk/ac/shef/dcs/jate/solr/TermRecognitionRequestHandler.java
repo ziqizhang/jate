@@ -377,8 +377,8 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
                     // workaround: doc version is not automatically indexed after the document is updated in this way
                     String currentVersionNo = doc.get("_version_");
                     doc.removeField("_version_");
-                    doc.add(indexSchema.getField("_version_").createField(versionIncrement(currentVersionNo),
-                            DEFAULT_BOOST_VALUE));
+                    doc.add(indexSchema.getField("_version_").createField(versionIncrement(currentVersionNo)
+                            ));
 
                     writerIn.updateDocument(new Term("id", doc.get("id")), doc);
                 } catch (IOException e) {
@@ -429,11 +429,11 @@ public class TermRecognitionRequestHandler extends RequestHandlerBase {
             }
 
             if (isBoosted) {
-                doc.add(indexSchema.getField(domainTermsFieldName).createField(filteredTerm.first(),
-                        filteredTerm.second().floatValue()));
+                doc.add(indexSchema.getField(domainTermsFieldName).createField(filteredTerm.first()
+                        ));
             } else {
-                doc.add(indexSchema.getField(domainTermsFieldName).createField(filteredTerm.first(),
-                        DEFAULT_BOOST_VALUE));
+                doc.add(indexSchema.getField(domainTermsFieldName).createField(filteredTerm.first()
+                        ));
             }
         }
     }

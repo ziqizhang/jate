@@ -102,9 +102,6 @@ public abstract class AbstractFeatureBuilder {
             if (t.length == 0)
                 continue;
             allTermCandidates.add(t.utf8ToString());
-
-            if(t.utf8ToString().equals("l hierar hy"))
-                System.out.println();
         }
         return allTermCandidates;
     }
