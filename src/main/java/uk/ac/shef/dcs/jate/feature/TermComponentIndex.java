@@ -13,6 +13,10 @@ import java.util.*;
 public class TermComponentIndex extends AbstractFeature {
     private Map<String, List<Pair<String, Integer>>> index = new HashMap<>();
 
+    protected Map<String, List<Pair<String, Integer>>> getComponentIndex(){
+        return index;
+    }
+
     public synchronized void add(String unigram, String term, int numTokens) {
         List<Pair<String, Integer>> contained = index.get(unigram);
         if (contained == null)
@@ -21,7 +25,7 @@ public class TermComponentIndex extends AbstractFeature {
         index.put(unigram, contained);
     }
 
-    public List<Pair<String, Integer>> getSorted(String unigram) {
+    public synchronized List<Pair<String, Integer>> getSorted(String unigram) {
         List<Pair<String, Integer>> sorted = new ArrayList<>();
         List<Pair<String, Integer>> values=index.get(unigram);
         if (values!=null)

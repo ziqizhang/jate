@@ -3,6 +3,7 @@ package uk.ac.shef.dcs.jate.eval;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class GSLoader {
      * @return List<String>  a list of gs terms for the ATE evaluation
      */
     public static List<String> loadGenia(String file) throws IOException {
-        List<String> terms = FileUtils.readLines(new File(file));
+        List<String> terms = FileUtils.readLines(new File(file),Charset.forName("utf8"));
 
         List<String> filteredGSTerms = filterByStopwords(terms);
 
@@ -55,7 +56,7 @@ public class GSLoader {
      * @throws IOException
      */
     public static List<String> loadACLRD(String file) throws IOException {
-        List<String> raw = FileUtils.readLines(new File(file));
+        List<String> raw = FileUtils.readLines(new File(file), Charset.forName("utf8"));
         List<String> terms = new ArrayList<>(raw.size() - 1);
         int count = 0;
         for (String r : raw) {

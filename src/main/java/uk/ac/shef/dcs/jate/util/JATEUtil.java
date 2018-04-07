@@ -1,5 +1,6 @@
 package uk.ac.shef.dcs.jate.util;
 
+import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
@@ -14,12 +15,15 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import uk.ac.shef.dcs.jate.JATEException;
 import uk.ac.shef.dcs.jate.JATEProperties;
+import uk.ac.shef.dcs.jate.io.JSONFileOutputReader;
 import uk.ac.shef.dcs.jate.model.JATEDocument;
+import uk.ac.shef.dcs.jate.model.JATETerm;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -123,7 +127,7 @@ public class JATEUtil {
 
         StringBuilder rawTextBuffer = new StringBuilder();
         try {
-            List<String> lines = FileUtils.readLines(rawTxtFile);
+            List<String> lines = FileUtils.readLines(rawTxtFile, Charset.forName("utf8"));
             if (lines.size() > 0) {
                 lines.forEach(rawTextBuffer::append);
             }
@@ -355,5 +359,37 @@ public class JATEUtil {
         if (commit) {
             server.commit();
         }
+    }
+
+    /**
+     * A debugging util class that compares two output json files, and finds out
+     * the difference in the two rankings.
+     * @param f1
+     * @param f2
+     */
+    public static void compareOutputs(String f1, String f2) throws IOException {
+        JSONFileOutputReader reader = new JSONFileOutputReader(new Gson());
+        List<JATETerm> l1 = reader.read(f1);
+        List<JATETerm> l2 = reader.read(f2);
+
+        assert l1.size()==l2.size();
+        for (int i=0; i<l1.size(); i++){
+            JATETerm t1 = l1.get(i);
+            JATETerm t2 = l2.get(i);
+
+            if (!t1.getString().equalsIgnoreCase(t2.getString()))
+                System.out.println("#"+i+" t1="+t1.getString()+" t1score="+t1.getScore()
+                        +"\tt2="+t2.getString()+" t2score="+t2.getScore());
+
+            if (t1.getScore()!=t2.getScore())
+                System.out.println("#"+i+" t="+t1.getString()+"\tt1score="+t1.getScore()
+                +"\tt2score="+t2.getScore());
+
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        compareOutputs("/home/zz/Work/data/semrerank/jate_lrec2016/aclrd_ver2/min1/cvalue_beta9.json",
+                "/home/zz/Work/data/semrerank/jate_lrec2016/aclrd_ver2/min1/cvalue_beta9-1.json");
     }
 }

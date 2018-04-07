@@ -80,7 +80,7 @@ public class ContentExtractor {
 
 	private String parseTXTToString(File file) throws IOException, TikaException {
 		Metadata metadata = new Metadata();
-		InputStream stream = TikaInputStream.get(file, metadata);
+		InputStream stream = TikaInputStream.get(file.toPath(), metadata);
 		try {
 			return parseTXTToString(stream, metadata);
 		} finally {

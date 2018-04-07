@@ -20,7 +20,7 @@ public class TermComponentIndexFBMaster extends AbstractFeatureBuilder {
 
     @Override
     public AbstractFeature build() throws JATEException {
-        TermComponentIndex feature = new TermComponentIndex();
+        TermComponentIndex feature;
 
         int cores = properties.getMaxCPUCores();
         cores = cores == 0 ? 1 : cores;
@@ -30,11 +30,11 @@ public class TermComponentIndexFBMaster extends AbstractFeatureBuilder {
         LOG.info("Beginning building features (TermComponentIndex). Total terms=" + candidates.size() + ", cpu cores=" +
                 cores + ", max per core=" + maxPerThread);
         TermComponentIndexFBWorker worker = new
-                TermComponentIndexFBWorker(candidates, maxPerThread,
-                feature);
+                TermComponentIndexFBWorker(candidates, maxPerThread
+                );
         ForkJoinPool forkJoinPool = new ForkJoinPool(cores);
-        int total = forkJoinPool.invoke(worker);
-        StringBuilder sb = new StringBuilder("Complete building features. Total processed terms = " + total);
+        feature = forkJoinPool.invoke(worker);
+        StringBuilder sb = new StringBuilder("Complete building features. Total processed terms = " + feature.getComponentIndex().size());
         LOG.info(sb.toString());
 
         return feature;

@@ -23,6 +23,7 @@ import uk.ac.shef.dcs.jate.nlp.Lemmatiser;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -34,7 +35,7 @@ public class ScienceIECorpusParser {
         Set<String> all = new HashSet<>();
         for (File f : new File(inFolder).listFiles()) {
             if (f.getName().endsWith(".ann")) {
-                List<String> lines = FileUtils.readLines(f);
+                List<String> lines = FileUtils.readLines(f,Charset.forName("utf8"));
                 for (String l : lines) {
                     String[] parts = l.split("\t");
                     if (parts.length < 3)
@@ -65,7 +66,7 @@ public class ScienceIECorpusParser {
             Set<String> uniqueKeywords = new HashSet<>();
             for (File f : new File(KEAGSFolder).listFiles()) {
                 if (f.getName().endsWith(".ann")) {
-                    List<String> lines = FileUtils.readLines(f);
+                    List<String> lines = FileUtils.readLines(f,Charset.forName("utf8"));
                     for (String l : lines) {
                         String[] parts = l.split("\t");
                         if (parts.length < 3)
@@ -105,7 +106,7 @@ public class ScienceIECorpusParser {
                         + f.getName());
                 //check what are in the prediction, and also in GS
                 Set<String> selectedCorrect = new HashSet<>();
-                List<String> lines = FileUtils.readLines(f);
+                List<String> lines = FileUtils.readLines(f, Charset.forName("utf8"));
                 for (String l : lines) {
                     String[] parts = l.split("\t");
                     if (parts.length < 3)

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -33,11 +34,7 @@ public class FrequencyTermBasedFBMaster extends AbstractFeatureBuilder {
     @Override
     public AbstractFeature build() throws JATEException {
         FrequencyTermBased feature = new FrequencyTermBased();
-        try {
-            feature.setTotalDocs(solrIndexSearcher.collectionStatistics("numDocs").maxDoc());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        feature.setTotalDocs(solrIndexSearcher.numDocs());
 
         try {
             Terms ngramInfo = SolrUtil.getTermVector(properties.getSolrFieldNameJATENGramInfo(), solrIndexSearcher);

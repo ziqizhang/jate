@@ -345,7 +345,7 @@
 						One pattern per line, and must be written as [key][\t][value], where key could be any name you give to
 						the pattern, and value is the actual regular expression pattern
 			         -->			
-                <!--filter class="org.apache.lucene.analysis.jate.OpenNLPRegexChunkerFactory"
+                <filter class="org.apache.lucene.analysis.jate.OpenNLPRegexChunkerFactory"
                         patterns="aclrdtec.patterns"
                         minTokens="1" maxTokens="5"
                         maxCharLength="40" minCharLength="2" removeLeadingStopWords="true"
@@ -353,8 +353,8 @@
                         removeTrailingSymbolicTokens="true"
                         stripAnySymbolChars="false"
                         stripLeadingSymbolChars="true" stripTrailingSymbolChars="true"
-                        stopWords="stopwords.txt" stopWordsIgnoreCase="true"/-->
-                <filter class="org.apache.lucene.analysis.jate.OpenNLPNounPhraseFilterFactory"
+                        stopWords="stopwords.txt" stopWordsIgnoreCase="true"/>
+                <!--filter class="org.apache.lucene.analysis.jate.OpenNLPNounPhraseFilterFactory"
                         chunkerModel="en-chunker.bin"
                         minTokens="1" maxTokens="5"
                         maxCharLength="40" minCharLength="2" removeLeadingStopWords="true"
@@ -362,7 +362,7 @@
                         removeTrailingSymbolicTokens="true"
                         stripAnySymbolChars="false"
                         stripLeadingSymbolChars="true" stripTrailingSymbolChars="true"
-                        stopWords="stopwords.txt" stopWordsIgnoreCase="true"/>
+                        stopWords="stopwords.txt" stopWordsIgnoreCase="true"/-->
                 <filter class="solr.LowerCaseFilterFactory" />
                 <!--<filter class="solr.EnglishMinimalStemFilterFactory"/>-->
                 <!-- An English lemmatiser 
