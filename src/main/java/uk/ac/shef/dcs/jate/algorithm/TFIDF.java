@@ -22,7 +22,7 @@ public class TFIDF extends Algorithm {
         double totalDocs = (double) fFeature.getTotalDocs();
         List<JATETerm> result = new ArrayList<>();
 
-        StringBuilder msg = new StringBuilder("Beginning computing TermEx values,");
+        StringBuilder msg = new StringBuilder("Beginning computing TFIDF values,");
         msg.append(", total terms=" + candidates.size());
         LOG.info(msg.toString());
         for (String tString: candidates) {

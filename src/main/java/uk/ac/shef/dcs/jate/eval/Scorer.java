@@ -32,7 +32,7 @@ public class Scorer {
         gs = prune(gs, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
         gs = normalize(gs, lemmatiser);
         PrintWriter p = new PrintWriter(outFile);
-        for (String t: gs){
+        for (String t : gs) {
             p.println(t);
         }
         p.close();
@@ -45,7 +45,7 @@ public class Scorer {
         PrintWriter p = new PrintWriter(outFile);
         List<String> gs = GSLoader.loadGenia(gsFile);
         Map<String, double[]> pAtN = new TreeMap<>();
-        Map<String, double[]> prf=new TreeMap<>();
+        Map<String, double[]> prf = new TreeMap<>();
 
         List<File> all = Arrays.asList(new File(ateOutputFolder).listFiles());
         Collections.sort(all);
@@ -57,12 +57,14 @@ public class Scorer {
             List<String> terms = ATEResultLoader.load(f.toString());
             //List<String> terms = ATEResultLoader.loadToTermsRawText(f.toString());
 
-            Pair<double[], double[]> result=computePrecisionAtRank(
+            List<double[]> result = computePrecisionAtRank(
                     lemmatiser, gs, terms, ignoreSymbols, ignoreDigits, lowercase, minChar,
                     maxChar, minTokens, maxTokens, ranks);
 
-            pAtN.put(name, result.getKey());
-            prf.put(name, result.getValue());
+            pAtN.put(name, result.get(0));
+            pAtN.put(name.replaceAll(",", "_")+"_swe",result.get(2));
+            pAtN.put(name.replaceAll(",", "_")+"_mwe",result.get(3));
+            prf.put(name, result.get(1));
             //System.out.println("recall="+result.getValue());
         }
 
@@ -75,7 +77,7 @@ public class Scorer {
         sb.append("\n");
 
         for (Map.Entry<String, double[]> en : pAtN.entrySet()) {
-            sb.append(en.getKey().replaceAll(",","_")).append(",");
+            sb.append(en.getKey().replaceAll(",", "_")).append(",");
             double[] s = en.getValue();
             for (int i = 0; i < ranks.length; i++) {
                 sb.append(s[i]).append(",");
@@ -85,9 +87,9 @@ public class Scorer {
         }
         p.println(sb.toString());
         p.println("\n\n\nPRF, P, R, F");
-        sb=new StringBuilder();
+        sb = new StringBuilder();
         for (Map.Entry<String, double[]> en : prf.entrySet()) {
-            sb.append(en.getKey().replaceAll(",","_")).append(",");
+            sb.append(en.getKey().replaceAll(",", "_")).append(",");
             double[] s = en.getValue();
             for (int i = 0; i < s.length; i++) {
                 sb.append(s[i]).append(",");
@@ -119,10 +121,12 @@ public class Scorer {
             List<String> terms = ATEResultLoader.load(f.toString());
             //List<String> terms = ATEResultLoader.loadToTermsRawText(f.toString());
 
-            Pair<double[], double[]> result = computePrecisionAtRank(lemmatiser, gs, terms, ignoreSymbols, ignoreDigits, lowercase, minChar,
+            List<double[]> result = computePrecisionAtRank(lemmatiser, gs, terms, ignoreSymbols, ignoreDigits, lowercase, minChar,
                     maxChar, minTokens, maxTokens, ranks);
-            scores.put(name.replaceAll(",","_"), result.getKey());
-            prf.put(name.replaceAll(",","_"), result.getValue());
+            scores.put(name.replaceAll(",", "_"), result.get(0));
+            scores.put(name.replaceAll(",", "_")+"_swe",result.get(2));
+            scores.put(name.replaceAll(",", "_")+"_mwe",result.get(3));
+            prf.put(name.replaceAll(",", "_"), result.get(1));
         }
         //generate report
 
@@ -143,9 +147,9 @@ public class Scorer {
         }
         p.println(sb.toString());
         p.println("\n\n\nPRF, P, R, F");
-        sb=new StringBuilder();
+        sb = new StringBuilder();
         for (Map.Entry<String, double[]> en : prf.entrySet()) {
-            sb.append(en.getKey().replaceAll(",","_")).append(",");
+            sb.append(en.getKey().replaceAll(",", "_")).append(",");
             double[] s = en.getValue();
             for (int i = 0; i < s.length; i++) {
                 sb.append(s[i]).append(",");
@@ -158,20 +162,29 @@ public class Scorer {
     }
 
     public static double computeOverallPrecision(Collection<String> normGS, Collection<String> normCandidates) {
-        double p = precision(normGS, normCandidates);
+        double p = precision(normGS, normCandidates)[0];
         return round(p, 2);
     }
 
-    public static double precision(Collection<String> gsTerms, Collection<String> topKTerms) {
+    public static double[] precision(Collection<String> gsTerms, Collection<String> topKTerms) {
         List<String> correct = new ArrayList<>(topKTerms);
         correct.retainAll(gsTerms);
-        return correct.size()/(double) topKTerms.size();
+
+        int sweCorrect = countSWETerms(correct);
+        int sweAll = countSWETerms(topKTerms);
+        int mweCorrect = correct.size() - sweCorrect;
+        int mweAll = topKTerms.size() - sweAll;
+        double sweP = sweAll == 0 ? Double.NaN : sweCorrect / (double) sweAll;
+        double mweP = mweAll == 0 ? Double.NaN : mweCorrect / (double) mweAll;
+
+        return new double[]{correct.size() / (double) topKTerms.size(),
+                sweP, mweP};
     }
 
     public static double computeOverallRecall(Collection<String> normGS, Collection<String> normTerms) {
         List<String> correct = new ArrayList<>(normGS);
         correct.retainAll(normTerms);
-        return (double)correct.size()/normGS.size();
+        return (double) correct.size() / normGS.size();
     }
 
 
@@ -189,36 +202,46 @@ public class Scorer {
      * @param ranks         list of rankinig for evaluation
      * @return double[]  list of precision@K
      */
-    public static Pair<double[], double[]> computePrecisionAtRank(Lemmatiser lemmatiser, List<String> gs, List<String> terms,
-                                                                boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
-                                                                int minChar, int maxChar, int minTokens, int maxTokens,
-                                                                int... ranks) {
+    public static List<double[]> computePrecisionAtRank(Lemmatiser lemmatiser, List<String> gs, List<String> terms,
+                                                                  boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase,
+                                                                  int minChar, int maxChar, int minTokens, int maxTokens,
+                                                                  int... ranks) {
         gs = prune(gs, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
         gs = normalize(gs, lemmatiser);
         terms = prune(terms, ignoreSymbols, ignoreDigits, lowercase, minChar, maxChar, minTokens, maxTokens);
 
         double[] scores = new double[ranks.length];
+        double[] scoresSWE = new double[ranks.length];
+        double[] scoresMWE = new double[ranks.length];
         for (int i = 0; i < ranks.length; i++) {
-            double p = precision(gs, terms.subList(0, ranks[i]));
-            scores[i] = round(p, 2);
+            double[] p = precision(gs, terms.subList(0, ranks[i]));
+            scores[i] = round(p[0], 2);
+            scoresSWE[i] = p[1];
+            scoresMWE[i] = p[2];
         }
 
-        double recall=computeOverallRecall(gs, terms);
+        double recall = computeOverallRecall(gs, terms);
 
         List<String> expectedTerms = new ArrayList<>(gs);
         expectedTerms.retainAll(terms);
 
-        System.out.println("recall="+recall+", expectedterms for avg="+expectedTerms.size());
-        double[] prf=computePRF(expectedTerms, terms);
+        System.out.println("recall=" + recall + ", expectedterms for avg=" + expectedTerms.size());
+        double[] prf = computePRF(expectedTerms, terms);
 
-        return new Pair<>(scores, prf);
+        //return new Pair<>(scores, prf);
+        List<double[]> result=new ArrayList<>();
+        result.add(scores);
+        result.add(prf);
+        result.add(scoresSWE);
+        result.add(scoresMWE);
+        return result;
     }
 
     public static double[] computePRF(List<String> maxExpectedGS, List<String> normCandidates) {
         List<String> subList = new ArrayList<>();
         int K = maxExpectedGS.size();
-        double prevR=0.0;
-        double sum=0.0;
+        double prevR = 0.0;
+        double sum = 0.0;
         for (int i = 0; i < K; i++) {
             /*if(i>2)
                 System.out.println();*/
@@ -226,37 +249,10 @@ public class Scorer {
         }
         double p = computeOverallPrecision(maxExpectedGS, subList);
         double r = computeOverallRecall(maxExpectedGS, subList);
-        double f = 2*p*r/(p+r);
-        if(r==0)
-            f=0;
+        double f = 2 * p * r / (p + r);
+        if (r == 0)
+            f = 0;
         return new double[]{p, r, f};
-    }
-
-    public static double computeAveragePrecision(List<String> normGS, List<String> normCandidates) {
-        List<String> subList = new ArrayList<>();
-        int K = normGS.size();
-        double prevR=0.0;
-        double sum=0.0;
-        for (int i = 0; i < K; i++) {
-            /*if(i>2)
-                System.out.println();*/
-            subList.add(normCandidates.get(i));
-            if (normCandidates.size() > K) {
-                double p = computeOverallPrecision(normGS, subList);
-                double r = computeOverallRecall(normGS, subList);
-                double rDiff=r-prevR;
-                /*if(round(rDiff,2)> (round(1.0/K,2)))
-                    System.out.println(">");*/
-                double mult = p*rDiff;
-                prevR=r;
-                sum+=mult;
-                if(i%1000==0 || i==K-1)
-                    System.out.println("."+new Date()+":"+i+": r-rpreV="+rDiff+", p="+p+", R="+r+", mult="+p*(r-prevR)+", sum="+sum);
-
-            }
-        }
-        System.out.println("avgp="+sum);
-        return sum;
     }
 
 
@@ -277,7 +273,6 @@ public class Scorer {
     }
 
 
-
     public static List<String> normalize(List<String> gsTerms, Lemmatiser lemmatiser) {
         List<String> result = new ArrayList<>();
         for (String term : gsTerms) {
@@ -293,6 +288,15 @@ public class Scorer {
     public static String normaliseTerm(String term, Lemmatiser lemmatiser) {
         String normalisedTerm = lemmatiser.normalize(term, "NN").trim();
         return normalisedTerm;
+    }
+
+    public static int countSWETerms(Collection<String> list) {
+        int swe = 0;
+        for (String t : list) {
+            if (t.split("\\s+").length == 1)
+                swe++;
+        }
+        return swe;
     }
 
     /**
@@ -325,14 +329,14 @@ public class Scorer {
      * Prune term surface form
      * see also @code {@link PunctuationRemover#stripPunctuations(String, boolean, boolean, boolean)}
      *
-     * @param term, term surface form to be pruned
+     * @param term,          term surface form to be pruned
      * @param ignoreSymbols, if strip symbols in the term
-     * @param ignoreDigits, if strip digits in the term
-     * @param lowercase, if lower case the term
-     * @param minChar, min char to strip
-     * @param maxChar, max char to strip
-     * @param minTokens, min token to strip
-     * @param maxTokens, max token to strip
+     * @param ignoreDigits,  if strip digits in the term
+     * @param lowercase,     if lower case the term
+     * @param minChar,       min char to strip
+     * @param maxChar,       max char to strip
+     * @param minTokens,     min token to strip
+     * @param maxTokens,     max token to strip
      * @return pruned term, return "" if the term is filtered by various constraints
      */
     private static String prune(String term, boolean ignoreSymbols, boolean ignoreDigits, boolean lowercase, int minChar, int maxChar, int minTokens, int maxTokens) {
@@ -388,10 +392,10 @@ public class Scorer {
                 false, false));
         if (args[3].equals("genia")) {
             createReportGenia(lem, args[0], args[1], args[2], true, false, true, 2, 100, 1, 5,
-                    50, 100,500, 1000, 2000, 4000);
+                    50, 100, 500, 1000, 2000, 4000);
         } else {
             createReportACLRD(lem, args[0], args[1], args[2], true, false, true, 2, 100, 1, 10,
-                    50, 100,500, 1000,2000,4000);
+                    50, 100, 500, 1000, 2000, 4000);
         }
         //outputPrunedTerms(lem, args[0], args[1], true, false, true, 2, 100, 1, 5);
         System.out.println(new Date());

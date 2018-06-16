@@ -225,13 +225,13 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         //Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        Pair<double[], double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
+        List<double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 200, 1, 10,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
 
         LOG.info("=============ATTF GENIA Benchmarking Results==================");
         double recall = Scorer.recall(gsTerms, rankedTerms);
-        double[] scores=result.getKey();
+        double[] scores=result.get(0);
         printResults(scores, recall);
 
         assert 0.84 == scores[0];
@@ -273,13 +273,13 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        Pair<double[], double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
+        List<double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
 
         LOG.info("=============CHISQUARE GENIA Benchmarking Results==================");
         double recall = Scorer.recall(gsTerms, rankedTerms);
-        double[] scores=result.getKey();
+        double[] scores=result.get(0);
         printResults(scores, recall);
 
         assert 0.66 == scores[0];
@@ -318,10 +318,10 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        Pair<double[], double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
+        List<double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
-        double[] scores=result.getKey();
+        double[] scores=result.get(0);
 
         LOG.info("=============CVALUE GENIA Benchmarking Results==================");
         double recall = Scorer.recall(gsTerms, rankedTerms);
@@ -361,13 +361,13 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        Pair<double[], double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
+        List<double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
 
         LOG.info("=============GLOSSEX GENIA Benchmarking Results==================");
         double recall = Scorer.recall(gsTerms, rankedTerms);
-        double[]scores=result.getKey();
+        double[]scores=result.get(0);
         printResults(scores, recall);
 
         assert 0.9 == scores[0];
@@ -428,13 +428,13 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
 
-        Pair<double[], double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
+        List<double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
 
         LOG.info("=============RAKE GENIA Benchmarking Results==================");
         double recall = Scorer.recall(gsTerms, rankedTerms);
-        double[] scores=result.getKey();
+        double[] scores=result.get(0);
         printResults(scores, recall);
 
         assert 0.8 == scores[0];
@@ -473,12 +473,12 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        Pair<double[], double[]> result= Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
+        List<double[]> result= Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         double recall = Scorer.recall(gsTerms, rankedTerms);
         LOG.info("=============RIDF GENIA Benchmarking Results==================");
-        double[] scores=result.getKey();
+        double[] scores=result.get(0);
         printResults(scores, recall);
 
         assert 0.8 == scores[0];
@@ -520,13 +520,13 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        Pair<double[], double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
+        List<double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         double recall = Scorer.recall(gsTerms, rankedTerms);
 
         LOG.info("=============TERMEX GENIA Benchmarking Results==================");
-        double[] scores=result.getKey();
+        double[] scores=result.get(0);
         printResults(scores, recall);
 
         assert 0.88 == scores[0];
@@ -564,13 +564,13 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        Pair<double[], double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
+        List<double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         double recall = Scorer.recall(gsTerms, rankedTerms);
         LOG.info("=============TFIDF GENIA Benchmarking Results==================");
 
-        double[] scores=result.getKey();
+        double[] scores=result.get(0);
         printResults(scores, recall);
 
         assert 0.7 == scores[0];
@@ -608,12 +608,12 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
         //Assert.assertEquals("Candidate size should be "+EXPECTED_CANDIDATE_SIZE, EXPECTED_CANDIDATE_SIZE, termList.size());
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        Pair<double[], double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
+        List<double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         double recall = Scorer.recall(gsTerms, rankedTerms);
         LOG.info("=============TTF GENIA Benchmarking Results==================");
-        double[] scores=result.getKey();
+        double[] scores=result.get(0);
         printResults(scores, recall);
 
         assert 0.64 == scores[0];
@@ -654,12 +654,12 @@ public class AppATEGENIATest extends BaseEmbeddedSolrTest {
 
 
         List<String> rankedTerms = ATEResultLoader.load(termList);
-        Pair<double[], double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
+        List<double[]> result = Scorer.computePrecisionAtRank(lemmatiser,gsTerms, rankedTerms, true, false, true,
                 2, 100, 1, 5,
                 50, 100, 300, 500, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000,10000);
         double recall = Scorer.recall(gsTerms, rankedTerms);
         LOG.info("=============WEIRDNESS GENIA Benchmarking Results==================");
-        double[] scores=result.getKey();
+        double[] scores=result.get(0);
         printResults(scores, recall);
 
         assert 0.8 == scores[0];
