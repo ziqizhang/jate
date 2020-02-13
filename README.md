@@ -143,7 +143,7 @@ JATE is licensed with LGPL 3.0, which permits free commercial and non-commercial
 
 The team member's personal webpages contain their email contacts:
 
- - [Jie GAO](http://staffwww.dcs.shef.ac.uk/people/J.Gao/)
+ - [Jie GAO](http://jerrygaolondon.github.io/)
  - [Ziqi ZHANG](https://ziqizhang.github.com/)
 
 # <a name="history"> JATE release history
