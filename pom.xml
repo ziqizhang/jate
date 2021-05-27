@@ -87,7 +87,7 @@
             <version>${opennlp-tools.version}</version>
         </dependency>
         <dependency>
-            <groupId>edu.drexel</groupId>
+            <groupId>de.julielab</groupId>
             <artifactId>dragontool</artifactId>
             <version>${dragontool.version}</version>
         </dependency>
