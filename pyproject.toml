@@ -1,0 +1,72 @@
+[tool.poetry]
+name = "jate"
+version = "0.0.0"
+description = "Just Automatic Term Extraction — the definitive Python library for automatic term extraction"
+authors = ["Ziqi Zhang <z.zhang@sheffield.ac.uk>"]
+license = "LGPL-3.0-or-later"
+readme = "README.md"
+homepage = "https://github.com/ziqizhang/jate"
+repository = "https://github.com/ziqizhang/jate"
+keywords = ["nlp", "term-extraction", "ate", "terminology", "text-mining", "c-value", "tfidf"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Text Processing :: Linguistic",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+packages = [{ include = "jate", from = "src" }]
+
+[tool.poetry.scripts]
+jate = "jate.cli:main"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+spacy = "^3.7"
+pandas = "^2.0"
+numpy = "^1.26"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+pytest-cov = "^5.0"
+pre-commit = "^4.0"
+mypy = "^1.10"
+black = "^24.0"
+isort = "^5.13"
+flake8 = "^7.0"
+
+[tool.poetry.group.ui.dependencies]
+streamlit = "^1.35"
+
+[tool.poetry.group.neural.dependencies]
+torch = "^2.0"
+transformers = "^4.40"
+
+[tool.poetry.group.llm.dependencies]
+langchain = "^0.3"
+langgraph = "^0.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+target-version = ["py310"]
+
+[tool.isort]
+profile = "black"
+line_length = 120
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
