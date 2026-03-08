@@ -1,0 +1,45 @@
+name: Bug Report
+description: Report a bug or unexpected behavior
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the bug clearly.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Minimal code or steps to reproduce the issue.
+      render: python
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: false
+
+  - type: input
+    id: version
+    attributes:
+      label: JATE version
+      placeholder: e.g., 1.0.0
+    validations:
+      required: false
+
+  - type: input
+    id: python-version
+    attributes:
+      label: Python version
+      placeholder: e.g., 3.11.9
+    validations:
+      required: false

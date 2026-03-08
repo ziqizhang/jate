@@ -3,7 +3,7 @@ name = "jate"
 version = "0.0.0"
 description = "Just Automatic Term Extraction — the definitive Python library for automatic term extraction"
 authors = ["Ziqi Zhang <z.zhang@sheffield.ac.uk>"]
-license = "LGPL-3.0-or-later"
+license = "Apache-2.0"
 readme = "README.md"
 homepage = "https://github.com/ziqizhang/jate"
 repository = "https://github.com/ziqizhang/jate"
@@ -14,7 +14,6 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Text Processing :: Linguistic",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
 ]
@@ -24,7 +23,7 @@ packages = [{ include = "jate", from = "src" }]
 jate = "jate.cli:main"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 spacy = "^3.7"
 pandas = "^2.0"
 numpy = "^1.26"
@@ -55,14 +54,14 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.black]
 line-length = 120
-target-version = ["py310"]
+target-version = ["py311"]
 
 [tool.isort]
 profile = "black"
 line_length = 120
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.11"
 strict = true
 warn_return_any = true
 warn_unused_configs = true

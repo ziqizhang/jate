@@ -1,0 +1,45 @@
+name: Feature Request
+description: Suggest a new feature or improvement for JATE
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest a feature! We're actively rebuilding JATE and welcome ideas.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What would you like to see?
+      description: Describe the feature or improvement you'd like.
+      placeholder: e.g., "Support for domain-specific stopword lists"
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use case
+      description: How would you use this feature? What problem does it solve?
+      placeholder: e.g., "I work with biomedical text and need to filter common medical stopwords..."
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which part of JATE does this relate to?
+      options:
+        - Algorithms (new or improved)
+        - API / usability
+        - Benchmarking / evaluation
+        - CLI
+        - Documentation
+        - UI / demo
+        - Multilingual support
+        - LLM integration
+        - Other
+    validations:
+      required: false
