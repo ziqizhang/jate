@@ -6,7 +6,7 @@ import re
 
 from jate.extractors.base import CandidateExtractorBase
 from jate.extractors.pos_pattern import STOPWORDS
-from jate.extractors.utils import compute_token_offsets
+from jate.extractors.utils import batch_process_docs, compute_token_offsets
 from jate.models import Candidate, Document
 from jate.protocols import CorpusStore, NLPBackend
 
@@ -42,20 +42,62 @@ class NGramExtractor(CandidateExtractorBase):
     ) -> list[Candidate]:
         merged: dict[str, Candidate] = {}
 
+        # Add ALL documents to the store (including empty ones).
         for doc in documents:
             corpus_store.add_document(doc)
-            text = doc.content
-            if not text.strip():
-                continue
 
-            # Split into sentences and compute document-level char offsets
+        valid_docs, spacy_docs = batch_process_docs(documents, nlp_backend)
+
+        if spacy_docs is not None:
+            self._extract_from_spacy_docs(valid_docs, spacy_docs, merged)
+        else:
+            self._extract_legacy(valid_docs, nlp_backend, merged)
+
+        return list(merged.values())
+
+    # ------------------------------------------------------------------
+    # Fast path: pre-processed spaCy Docs
+    # ------------------------------------------------------------------
+
+    def _extract_from_spacy_docs(
+        self,
+        valid_docs: list[Document],
+        spacy_docs: list,
+        merged: dict[str, Candidate],
+    ) -> None:
+        for doc, spacy_doc in zip(valid_docs, spacy_docs):
+            for sent_idx, sent in enumerate(spacy_doc.sents):
+                sent_offset = sent.start_char
+
+                tokens: list[str] = [token.text for token in sent]
+                lemmas: list[str] = [token.lemma_ for token in sent]
+                token_offsets = compute_token_offsets(sent.text, tokens)
+
+                self._process_sentence(
+                    doc, sent_idx, sent_offset,
+                    tokens, lemmas, token_offsets, merged,
+                )
+
+    # ------------------------------------------------------------------
+    # Legacy path: per-sentence NLP calls (backward compat)
+    # ------------------------------------------------------------------
+
+    def _extract_legacy(
+        self,
+        valid_docs: list[Document],
+        nlp_backend: NLPBackend,
+        merged: dict[str, Candidate],
+    ) -> None:
+        for doc in valid_docs:
+            text = doc.content
+
             sentences: list[str] = nlp_backend.sentence_split(text)
             sent_char_offsets: list[int] = []
             search_from = 0
             for sent_text in sentences:
                 idx = text.find(sent_text, search_from)
                 if idx == -1:
-                    idx = search_from  # fallback
+                    idx = search_from
                 sent_char_offsets.append(idx)
                 search_from = idx + len(sent_text)
 
@@ -67,43 +109,58 @@ class NGramExtractor(CandidateExtractorBase):
                 tokens: list[str] = nlp_backend.tokenize(sent_text)
                 lemma_pairs: list[tuple[str, str]] = nlp_backend.lemmatize(sent_text)
                 lemmas: list[str] = [lem for _, lem in lemma_pairs]
-
-                # Compute character offsets for tokens in the sentence text.
                 token_offsets = compute_token_offsets(sent_text, tokens)
 
-                for n in range(self._min_n, self._max_n + 1):
-                    for i in range(len(tokens) - n + 1):
-                        span_tokens = tokens[i : i + n]
-                        span_lemmas = lemmas[i : i + n]
+                self._process_sentence(
+                    doc, sent_idx, sent_offset,
+                    tokens, lemmas, token_offsets, merged,
+                )
 
-                        # Skip n-grams starting or ending with stopwords or punctuation.
-                        if _is_stop_or_punct(span_tokens[0]) or _is_stop_or_punct(span_tokens[-1]):
-                            continue
+    # ------------------------------------------------------------------
+    # Shared sentence processing
+    # ------------------------------------------------------------------
 
-                        surface = " ".join(span_tokens)
-                        # Java JATE behaviour: only lemmatise the rightmost word.
-                        if len(span_tokens) == 1:
-                            normalized = span_lemmas[0].lower()
-                        else:
-                            normalized = " ".join(
-                                [t.lower() for t in span_tokens[:-1]] + [span_lemmas[-1].lower()]
-                            )
+    def _process_sentence(
+        self,
+        doc: Document,
+        sent_idx: int,
+        sent_offset: int,
+        tokens: list[str],
+        lemmas: list[str],
+        token_offsets: list[tuple[int, int]],
+        merged: dict[str, Candidate],
+    ) -> None:
+        for n in range(self._min_n, self._max_n + 1):
+            for i in range(len(tokens) - n + 1):
+                span_tokens = tokens[i : i + n]
+                span_lemmas = lemmas[i : i + n]
 
-                        # Character offsets converted to document-level.
-                        doc_start = sent_offset + token_offsets[i][0]
-                        doc_end = sent_offset + token_offsets[i + n - 1][1]
+                # Skip n-grams starting or ending with stopwords or punctuation.
+                if _is_stop_or_punct(span_tokens[0]) or _is_stop_or_punct(span_tokens[-1]):
+                    continue
 
-                        if normalized in merged:
-                            merged[normalized].add_position(doc.doc_id, doc_start, doc_end, sentence_idx=sent_idx, surface=surface)
-                        else:
-                            cand = Candidate(
-                                surface_form=surface,
-                                normalized_form=normalized,
-                            )
-                            cand.add_position(doc.doc_id, doc_start, doc_end, sentence_idx=sent_idx)
-                            merged[normalized] = cand
+                surface = " ".join(span_tokens)
+                # Java JATE behaviour: only lemmatise the rightmost word.
+                if len(span_tokens) == 1:
+                    normalized = span_lemmas[0].lower()
+                else:
+                    normalized = " ".join(
+                        [t.lower() for t in span_tokens[:-1]] + [span_lemmas[-1].lower()]
+                    )
 
-        return list(merged.values())
+                # Character offsets converted to document-level.
+                doc_start = sent_offset + token_offsets[i][0]
+                doc_end = sent_offset + token_offsets[i + n - 1][1]
+
+                if normalized in merged:
+                    merged[normalized].add_position(doc.doc_id, doc_start, doc_end, sentence_idx=sent_idx, surface=surface)
+                else:
+                    cand = Candidate(
+                        surface_form=surface,
+                        normalized_form=normalized,
+                    )
+                    cand.add_position(doc.doc_id, doc_start, doc_end, sentence_idx=sent_idx)
+                    merged[normalized] = cand
 
 
 # ------------------------------------------------------------------
