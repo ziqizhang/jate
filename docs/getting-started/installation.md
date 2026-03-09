@@ -1,11 +1,5 @@
 # Installation
 
-## From PyPI
-
-```bash
-pip install jate
-```
-
 ## From source
 
 ```bash
@@ -40,14 +34,16 @@ JATE has optional dependency groups for specific features:
 
 ```bash
 # Interactive web UI (Streamlit)
-pip install jate[ui]
+pip install ".[ui]"
 
 # Neural methods (PyTorch, transformers)
-pip install jate[neural]
+pip install ".[neural]"
 
 # LLM-augmented extraction (LangChain, LangGraph)
-pip install jate[llm]
+pip install ".[llm]"
 ```
+
+> **Note:** PyPI publishing is planned but not yet available. Install from source for now.
 
 ## Verify installation
 
