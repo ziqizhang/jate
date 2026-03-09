@@ -90,6 +90,21 @@ for name, result in results.items():
     print(f"{name:12s}  top 5: {top5}")
 ```
 
+### Speed up with parallelism
+
+For large corpora, enable parallel processing:
+
+```python
+config = jate.JATEConfig(max_workers=4)
+results = jate.compare(
+    docs,
+    algorithms=["cvalue", "tfidf", "rake", "ridf", "basic"],
+    config=config,
+)
+```
+
+This parallelises co-occurrence computation and containment index building across multiple processes. Default is `max_workers=1` (sequential, no overhead).
+
 ## Evaluate against a gold standard
 
 ```python
