@@ -4,10 +4,15 @@ from __future__ import annotations
 
 import math
 
+from typing import TYPE_CHECKING
+
 from jate.algorithms._reference_utils import _match_orders_of_magnitude
 from jate.algorithms.base import Algorithm
 from jate.models import Candidate, Term, TermExtractionResult
 from jate.protocols import CorpusStore
+
+if TYPE_CHECKING:
+    from jate.context import ContextIndex
 
 
 class TermEx(Algorithm):
@@ -68,6 +73,7 @@ class TermEx(Algorithm):
         self,
         candidates: list[Candidate],
         corpus_store: CorpusStore,
+        context_index: ContextIndex | None = None,
     ) -> TermExtractionResult:
         total_words = corpus_store.get_corpus_total()
         if total_words == 0:

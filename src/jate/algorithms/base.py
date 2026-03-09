@@ -3,9 +3,13 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
 
 from jate.models import Candidate, TermExtractionResult
 from jate.protocols import CorpusStore
+
+if TYPE_CHECKING:
+    from jate.context import ContextIndex
 
 
 class Algorithm(ABC):
@@ -30,6 +34,7 @@ class Algorithm(ABC):
         self,
         candidates: list[Candidate],
         corpus_store: CorpusStore,
+        context_index: ContextIndex | None = None,
     ) -> TermExtractionResult:
         """Score every candidate and return a :class:`TermExtractionResult`.
 
@@ -39,5 +44,7 @@ class Algorithm(ABC):
             Candidate terms produced by an extractor.
         corpus_store:
             A store providing corpus-level statistics.
+        context_index:
+            Optional context index for context-aware scoring.
         """
         ...

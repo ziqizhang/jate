@@ -4,9 +4,14 @@ from __future__ import annotations
 
 import math
 
+from typing import TYPE_CHECKING
+
 from jate.algorithms.base import Algorithm
 from jate.models import Candidate, Term, TermExtractionResult
 from jate.protocols import CorpusStore
+
+if TYPE_CHECKING:
+    from jate.context import ContextIndex
 
 
 class TFIDF(Algorithm):
@@ -25,6 +30,7 @@ class TFIDF(Algorithm):
         self,
         candidates: list[Candidate],
         corpus_store: CorpusStore,
+        context_index: ContextIndex | None = None,
     ) -> TermExtractionResult:
         total_docs = corpus_store.get_total_documents()
         result = TermExtractionResult()

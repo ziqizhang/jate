@@ -2,9 +2,14 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from jate.algorithms.base import Algorithm
 from jate.models import Candidate, Term, TermExtractionResult
 from jate.protocols import CorpusStore
+
+if TYPE_CHECKING:
+    from jate.context import ContextIndex
 
 
 class RAKE(Algorithm):
@@ -40,6 +45,7 @@ class RAKE(Algorithm):
         self,
         candidates: list[Candidate],
         corpus_store: CorpusStore,
+        context_index: ContextIndex | None = None,
     ) -> TermExtractionResult:
         result = TermExtractionResult()
 
