@@ -22,6 +22,7 @@ from jate.algorithms import (
 )
 from jate.api import compare, extract, extract_corpus
 from jate.benchmark import BenchmarkRunner
+from jate.context import ContextIndex
 from jate.corpus import Corpus
 from jate.evaluation import EvaluationResult, Evaluator
 from jate.extractors import NGramExtractor, NounPhraseExtractor, PosPatternExtractor
@@ -62,6 +63,8 @@ __all__ = [
     "Evaluator",
     "EvaluationResult",
     "BenchmarkRunner",
+    # Context
+    "ContextIndex",
     # Corpus
     "Corpus",
     # Stores

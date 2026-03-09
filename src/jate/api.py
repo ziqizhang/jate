@@ -75,6 +75,25 @@ def _available_extractor_names() -> str:
 # -----------------------------------------------------------------------
 
 
+def _build_context_index(
+    candidates: list[Candidate],
+    documents: list[Any],
+    nlp: SpacyBackend,
+) -> Any:
+    """Build ContextIndex if candidates have sentence-level data."""
+    from jate.context import ContextIndex
+
+    has_sentences = any(
+        len(pos) >= 3 and pos[2] >= 0
+        for c in candidates
+        for positions in c.doc_positions.values()
+        for pos in positions
+    )
+    if not has_sentences:
+        return None
+    return ContextIndex.build(candidates, documents, nlp_backend=nlp)
+
+
 def _build_word_frequencies(
     candidates: list[Candidate],
     store: MemoryCorpusStore | SQLiteCorpusStore,
@@ -284,8 +303,10 @@ def extract(
     candidates = ext.extract(documents, nlp, store)
     store.index_candidates(candidates)
 
+    context_index = _build_context_index(candidates, documents, nlp)
+
     algo = _resolve_algorithm(algorithm, candidates=candidates, store=store, **algo_kwargs)
-    result = algo.score(candidates, store)
+    result = algo.score(candidates, store, context_index=context_index)
 
     # Apply filters
     result = result.filter_by_frequency(min_frequency)
@@ -354,8 +375,10 @@ def extract_corpus(
     candidates = ext.extract(documents, nlp, store)
     store.index_candidates(candidates)
 
+    context_index = _build_context_index(candidates, documents, nlp)
+
     algo = _resolve_algorithm(algorithm, candidates=candidates, store=store, **algo_kwargs)
-    result = algo.score(candidates, store)
+    result = algo.score(candidates, store, context_index=context_index)
 
     # Apply filters
     result = result.filter_by_frequency(min_frequency)
@@ -411,10 +434,12 @@ def compare(
     candidates = ext.extract(documents, nlp, store)
     store.index_candidates(candidates)
 
+    context_index = _build_context_index(candidates, documents, nlp)
+
     results: dict[str, TermExtractionResult] = {}
     for algo_name in algorithms:
         algo = _resolve_algorithm(algo_name, candidates=candidates, store=store, **kwargs)
-        result = algo.score(candidates, store)
+        result = algo.score(candidates, store, context_index=context_index)
         result = result.filter_by_frequency(min_frequency)
         result = result.filter_by_length(min_words=min_words, max_words=max_words)
         for i, term in enumerate(result):
