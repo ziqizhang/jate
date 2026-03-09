@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import pytest
-from jate.features import TermFrequency
-from jate.models import Candidate
+from jate.features import TermFrequency, WordFrequency
+from jate.models import Candidate, Document
 
 
 class TestTermFrequency:
@@ -45,3 +45,32 @@ class TestTermFrequency:
         assert tf.get_ttf("nonexistent") == 0
         assert tf.get_df("nonexistent") == 0
         assert tf.get_ttf_norm("nonexistent") == 0.0
+
+
+class TestWordFrequency:
+    def test_build_from_documents(self):
+        docs = [
+            Document(doc_id="d1", content="neural network for deep learning"),
+            Document(doc_id="d2", content="neural network analysis"),
+        ]
+        # Simple whitespace tokenizer for testing
+        def tokenize(text):
+            return text.lower().split()
+
+        wf = WordFrequency.build(docs, tokenize_fn=tokenize)
+        assert wf.get_ttf("neural") == 2
+        assert wf.get_ttf("network") == 2
+        assert wf.get_ttf("for") == 1
+        assert wf.get_ttf("deep") == 1
+        assert wf.get_ttf("learning") == 1
+        assert wf.get_ttf("analysis") == 1
+        assert wf.get_ttf("nonexistent") == 0
+        assert wf.corpus_total == 8  # 5 + 3
+
+    def test_build_with_spacy_tokenizer(self):
+        """WordFrequency should accept any callable tokenizer."""
+        docs = [Document(doc_id="d1", content="Machine learning works.")]
+        wf = WordFrequency.build(docs, tokenize_fn=lambda t: t.lower().split())
+        assert wf.get_ttf("machine") == 1
+        assert wf.get_ttf("learning") == 1
+        assert wf.get_ttf("works.") == 1  # basic split doesn't strip punctuation

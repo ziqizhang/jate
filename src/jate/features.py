@@ -6,7 +6,7 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass, field
 
-from jate.models import Candidate
+from jate.models import Candidate, Document
 from jate.parallel import parallel_map, split_range
 
 
@@ -66,6 +66,55 @@ class TermFrequency:
 
     def get_doc_freq_map(self, term: str) -> dict[str, int]:
         return dict(self.term2fid.get(term.lower(), {}))
+
+
+@dataclass(slots=True)
+class WordFrequency:
+    """Word-level (unigram) corpus frequency statistics.
+
+    Mirrors Java's ``FrequencyTermBased`` (feature type 1).
+
+    Built by tokenizing every document and counting individual word occurrences.
+    Unlike TermFrequency, this counts ALL tokens, not just candidate terms.
+    """
+
+    word2ttf: dict[str, int] = field(default_factory=dict)
+    word2fid: dict[str, dict[str, int]] = field(default_factory=dict)
+    corpus_total: int = 0
+
+    @classmethod
+    def build(
+        cls,
+        documents: list[Document],
+        tokenize_fn: callable,
+    ) -> WordFrequency:
+        word2ttf: dict[str, int] = defaultdict(int)
+        word2fid: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+
+        for doc in documents:
+            tokens = tokenize_fn(doc.content)
+            for token in tokens:
+                word = token.lower()
+                word2ttf[word] += 1
+                word2fid[word][doc.doc_id] += 1
+
+        corpus_total = sum(word2ttf.values())
+        return cls(
+            word2ttf=dict(word2ttf),
+            word2fid={k: dict(v) for k, v in word2fid.items()},
+            corpus_total=corpus_total,
+        )
+
+    def get_ttf(self, word: str) -> int:
+        return self.word2ttf.get(word.lower(), 0)
+
+    def get_df(self, word: str) -> int:
+        return len(self.word2fid.get(word.lower(), {}))
+
+    def get_ttf_norm(self, word: str) -> float:
+        """Java: getTTFNorm = TTF / (corpusTotal + 1)."""
+        ttf = self.get_ttf(word)
+        return ttf / (self.corpus_total + 1)
 
 
 def _containment_chunk(args: tuple) -> dict[str, list[str]]:
