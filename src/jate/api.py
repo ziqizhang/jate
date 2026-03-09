@@ -25,10 +25,12 @@ from jate.algorithms import (
     TermEx,
     Weirdness,
 )
+from jate.config import JATEConfig
 from jate.extractors.base import CandidateExtractorBase
 from jate.extractors.ngram import NGramExtractor
 from jate.extractors.noun_phrase import NounPhraseExtractor
 from jate.extractors.pos_pattern import PosPatternExtractor
+from jate.features import build_child_containment_index, build_containment_index
 from jate.models import Candidate, TermExtractionResult
 from jate.nlp.document_loader import DocumentLoader
 from jate.nlp.spacy_backend import SpacyBackend
@@ -265,6 +267,7 @@ def extract(
     algorithm: str = "cvalue",
     model: str = "en_core_web_sm",
     extractor: str = "pos_pattern",
+    config: JATEConfig | None = None,
     min_frequency: int = 1,
     min_words: int = 1,
     max_words: int | None = None,
@@ -282,6 +285,8 @@ def extract(
         spaCy model name.
     extractor:
         Candidate extractor name (``"pos_pattern"``, ``"ngram"``, ``"noun_phrase"``).
+    config:
+        Pipeline configuration (controls parallelism). Defaults to sequential.
     min_frequency:
         Minimum term frequency to include.
     min_words:
@@ -296,17 +301,25 @@ def extract(
     TermExtractionResult
         Scored and sorted terms.
     """
+    if config is None:
+        config = JATEConfig()
+
     nlp = SpacyBackend(model)
     documents = DocumentLoader.load_texts([text])
     store = MemoryCorpusStore()
     ext = _resolve_extractor(extractor)
     candidates = ext.extract(documents, nlp, store)
-    store.index_candidates(candidates)
+    store.index_candidates(candidates, max_workers=config.max_workers)
 
     context_index = _build_context_index(candidates, documents, nlp)
 
+    # Pre-build containment indexes once for algorithms that need them
+    containment = build_containment_index(candidates, max_workers=config.max_workers)
+    child_containment = build_child_containment_index(candidates, max_workers=config.max_workers)
+
     algo = _resolve_algorithm(algorithm, candidates=candidates, store=store, **algo_kwargs)
-    result = algo.score(candidates, store, context_index=context_index)
+    score_kwargs = _build_score_kwargs(algo, context_index, containment, child_containment)
+    result = algo.score(candidates, store, **score_kwargs)
 
     # Apply filters
     result = result.filter_by_frequency(min_frequency)
@@ -326,6 +339,7 @@ def extract_corpus(
     model: str = "en_core_web_sm",
     extractor: str = "pos_pattern",
     db_path: str | None = None,
+    config: JATEConfig | None = None,
     min_frequency: int = 2,
     min_words: int = 1,
     max_words: int | None = None,
@@ -346,6 +360,8 @@ def extract_corpus(
         Candidate extractor name.
     db_path:
         If given, uses SQLiteCorpusStore for persistence.
+    config:
+        Pipeline configuration (controls parallelism). Defaults to sequential.
     min_frequency:
         Minimum term frequency to include.
     min_words:
@@ -360,6 +376,9 @@ def extract_corpus(
     TermExtractionResult
         Scored and sorted terms.
     """
+    if config is None:
+        config = JATEConfig()
+
     nlp = SpacyBackend(model)
 
     # Detect input type and load documents
@@ -373,12 +392,22 @@ def extract_corpus(
 
     ext = _resolve_extractor(extractor)
     candidates = ext.extract(documents, nlp, store)
-    store.index_candidates(candidates)
+
+    # Only MemoryCorpusStore supports max_workers
+    if isinstance(store, MemoryCorpusStore):
+        store.index_candidates(candidates, max_workers=config.max_workers)
+    else:
+        store.index_candidates(candidates)
 
     context_index = _build_context_index(candidates, documents, nlp)
 
+    # Pre-build containment indexes once for algorithms that need them
+    containment = build_containment_index(candidates, max_workers=config.max_workers)
+    child_containment = build_child_containment_index(candidates, max_workers=config.max_workers)
+
     algo = _resolve_algorithm(algorithm, candidates=candidates, store=store, **algo_kwargs)
-    result = algo.score(candidates, store, context_index=context_index)
+    score_kwargs = _build_score_kwargs(algo, context_index, containment, child_containment)
+    result = algo.score(candidates, store, **score_kwargs)
 
     # Apply filters
     result = result.filter_by_frequency(min_frequency)
@@ -397,6 +426,7 @@ def compare(
     algorithms: list[str] | None = None,
     model: str = "en_core_web_sm",
     extractor: str = "pos_pattern",
+    config: JATEConfig | None = None,
     min_frequency: int = 1,
     min_words: int = 1,
     max_words: int | None = None,
@@ -415,6 +445,8 @@ def compare(
         spaCy model name.
     extractor:
         Candidate extractor name.
+    config:
+        Pipeline configuration (controls parallelism). Defaults to sequential.
     **kwargs:
         Extra keyword arguments forwarded to each algorithm constructor.
 
@@ -423,6 +455,9 @@ def compare(
     dict[str, TermExtractionResult]
         Mapping of algorithm name to its scored results.
     """
+    if config is None:
+        config = JATEConfig()
+
     if algorithms is None:
         algorithms = ["tfidf", "cvalue", "rake", "ridf", "basic"]
 
@@ -432,14 +467,19 @@ def compare(
 
     ext = _resolve_extractor(extractor)
     candidates = ext.extract(documents, nlp, store)
-    store.index_candidates(candidates)
+    store.index_candidates(candidates, max_workers=config.max_workers)
 
     context_index = _build_context_index(candidates, documents, nlp)
+
+    # Pre-build containment indexes once for all algorithms
+    containment = build_containment_index(candidates, max_workers=config.max_workers)
+    child_containment = build_child_containment_index(candidates, max_workers=config.max_workers)
 
     results: dict[str, TermExtractionResult] = {}
     for algo_name in algorithms:
         algo = _resolve_algorithm(algo_name, candidates=candidates, store=store, **kwargs)
-        result = algo.score(candidates, store, context_index=context_index)
+        score_kwargs = _build_score_kwargs(algo, context_index, containment, child_containment)
+        result = algo.score(candidates, store, **score_kwargs)
         result = result.filter_by_frequency(min_frequency)
         result = result.filter_by_length(min_words=min_words, max_words=max_words)
         for i, term in enumerate(result):
@@ -452,6 +492,22 @@ def compare(
 # -----------------------------------------------------------------------
 # Internal helpers
 # -----------------------------------------------------------------------
+
+
+def _build_score_kwargs(
+    algo: Algorithm,
+    context_index: Any,
+    containment: dict[str, list[str]],
+    child_containment: dict[str, list[str]],
+) -> dict[str, Any]:
+    """Build keyword arguments for ``algo.score()`` based on algorithm type."""
+    kwargs: dict[str, Any] = {"context_index": context_index}
+    if isinstance(algo, ComboBasic):
+        kwargs["containment"] = containment
+        kwargs["child_containment"] = child_containment
+    elif isinstance(algo, (Basic, CValue)):
+        kwargs["containment"] = containment
+    return kwargs
 
 
 def _load_sources(sources: list[str] | str) -> list[Any]:

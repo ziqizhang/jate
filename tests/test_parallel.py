@@ -145,3 +145,30 @@ class TestParallelContainment:
         children = build_child_containment_index(cands, max_workers=1)
         assert "neural network" in children["deep neural network"]
         assert "network" in children["deep neural network"]
+
+
+class TestParallelCompare:
+    def test_sequential_and_parallel_match(self) -> None:
+        from jate.api import compare
+
+        text = "Machine learning and neural networks are used in deep learning research. Neural network architectures improve machine learning models."
+        results_seq = compare(
+            [text],
+            algorithms=["tfidf", "cvalue", "basic", "ttf"],
+            config=JATEConfig(max_workers=1),
+            min_frequency=1,
+        )
+        results_par = compare(
+            [text],
+            algorithms=["tfidf", "cvalue", "basic", "ttf"],
+            config=JATEConfig(max_workers=2),
+            min_frequency=1,
+        )
+        assert set(results_seq.keys()) == set(results_par.keys())
+        for algo_name in results_seq:
+            scores_seq = {t.string: t.score for t in results_seq[algo_name]}
+            scores_par = {t.string: t.score for t in results_par[algo_name]}
+            assert scores_seq.keys() == scores_par.keys(), f"{algo_name} term sets differ"
+            for term in scores_seq:
+                assert abs(scores_seq[term] - scores_par[term]) < 1e-9, \
+                    f"{algo_name}/{term}: {scores_seq[term]} != {scores_par[term]}"
