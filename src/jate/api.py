@@ -313,12 +313,16 @@ def extract(
 
     context_index = _build_context_index(candidates, documents, nlp)
 
-    # Pre-build containment indexes once for algorithms that need them
-    containment = build_containment_index(candidates, max_workers=config.max_workers)
-    child_containment = build_child_containment_index(candidates, max_workers=config.max_workers)
-
     algo = _resolve_algorithm(algorithm, candidates=candidates, store=store, **algo_kwargs)
-    score_kwargs = _build_score_kwargs(algo, context_index, containment, child_containment)
+    score_kwargs: dict[str, Any] = {"context_index": context_index}
+    if isinstance(algo, (Basic, CValue, NCValue)):
+        containment = build_containment_index(candidates, max_workers=config.max_workers)
+        score_kwargs["containment"] = containment
+    elif isinstance(algo, ComboBasic):
+        containment = build_containment_index(candidates, max_workers=config.max_workers)
+        child_containment = build_child_containment_index(candidates, max_workers=config.max_workers)
+        score_kwargs["containment"] = containment
+        score_kwargs["child_containment"] = child_containment
     result = algo.score(candidates, store, **score_kwargs)
 
     # Apply filters
@@ -401,12 +405,16 @@ def extract_corpus(
 
     context_index = _build_context_index(candidates, documents, nlp)
 
-    # Pre-build containment indexes once for algorithms that need them
-    containment = build_containment_index(candidates, max_workers=config.max_workers)
-    child_containment = build_child_containment_index(candidates, max_workers=config.max_workers)
-
     algo = _resolve_algorithm(algorithm, candidates=candidates, store=store, **algo_kwargs)
-    score_kwargs = _build_score_kwargs(algo, context_index, containment, child_containment)
+    score_kwargs: dict[str, Any] = {"context_index": context_index}
+    if isinstance(algo, (Basic, CValue, NCValue)):
+        containment = build_containment_index(candidates, max_workers=config.max_workers)
+        score_kwargs["containment"] = containment
+    elif isinstance(algo, ComboBasic):
+        containment = build_containment_index(candidates, max_workers=config.max_workers)
+        child_containment = build_child_containment_index(candidates, max_workers=config.max_workers)
+        score_kwargs["containment"] = containment
+        score_kwargs["child_containment"] = child_containment
     result = algo.score(candidates, store, **score_kwargs)
 
     # Apply filters
@@ -505,7 +513,7 @@ def _build_score_kwargs(
     if isinstance(algo, ComboBasic):
         kwargs["containment"] = containment
         kwargs["child_containment"] = child_containment
-    elif isinstance(algo, (Basic, CValue)):
+    elif isinstance(algo, (Basic, CValue, NCValue)):
         kwargs["containment"] = containment
     return kwargs
 

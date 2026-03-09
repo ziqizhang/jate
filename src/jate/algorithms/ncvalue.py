@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from jate.algorithms.base import Algorithm
 from jate.algorithms.cvalue import CValue
@@ -39,10 +39,14 @@ class NCValue(Algorithm):
         candidates: list[Candidate],
         corpus_store: CorpusStore,
         context_index: ContextIndex | None = None,
+        containment: dict[str, list[str]] | None = None,
     ) -> TermExtractionResult:
-        # First compute C-Value scores
+        # First compute C-Value scores, forwarding containment if provided
         cvalue_algo = CValue()
-        cvalue_result = cvalue_algo.score(candidates, corpus_store)
+        cvalue_kwargs: dict[str, Any] = {}
+        if containment is not None:
+            cvalue_kwargs["containment"] = containment
+        cvalue_result = cvalue_algo.score(candidates, corpus_store, **cvalue_kwargs)
         cvalue_scores: dict[str, float] = {t.string: t.score for t in cvalue_result}
 
         # Compute context scores
