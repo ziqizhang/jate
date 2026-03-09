@@ -73,6 +73,13 @@ for algo_name, result in results.items():
         print(f"  {term.string:30s}  {term.score:.4f}")
 ```
 
+For large corpora, speed up with parallel processing:
+
+```python
+config = jate.JATEConfig(max_workers=4)
+results = jate.compare(docs, algorithms=["cvalue", "tfidf", "rake"], config=config)
+```
+
 ### Evaluation against a gold standard
 
 ```python
@@ -135,9 +142,10 @@ jate benchmark --top 100
 
 1. **Candidate extraction** — identifies potential terms using POS patterns, n-grams, or noun phrases
 2. **Lemmatisation** — normalises candidates to their lemmatised form (e.g. "neural networks" and "neural network" become one entry)
-3. **Corpus statistics** — builds frequency and co-occurrence counts (in-memory or SQLite-backed)
-4. **Scoring** — applies the chosen algorithm to rank candidates
-5. **Output** — returns `TermExtractionResult` with the normalised term, score, and all observed surface forms
+3. **Sentence context** *(automatic)* — builds sentence co-occurrence and adjacency features for algorithms that use them (Chi-Square, NC-Value)
+4. **Corpus statistics** — builds frequency and co-occurrence counts (in-memory or SQLite-backed)
+5. **Scoring** — applies the chosen algorithm to rank candidates
+6. **Output** — returns `TermExtractionResult` with the normalised term, score, and all observed surface forms
 
 Each `Term` in the result contains:
 - `string` — the canonical (lemmatised) form, used for scoring and evaluation
