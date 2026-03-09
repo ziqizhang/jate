@@ -1,0 +1,435 @@
+acyclic graph
+adjective
+affix
+affixes
+algorithm
+alphabet
+analyzer
+annotated corpus
+approach
+approximation
+approximation algorithm
+artificial intelligence
+association for computational linguistics
+atis
+automatic evaluation
+automatic translation
+backtracking
+beam
+beam search
+binary tree
+bleu
+bleu score
+bottom-up parsing
+case
+characters
+chinese word
+chinese words
+chunk
+chunks
+citation
+classification
+co-occurrence
+coding
+common sense reasoning
+community
+compact representation
+complex sentence
+composition
+computational linguist
+computational linguistics
+computational morphology
+computer system
+computing
+concept
+content selection
+corpora
+corpus size
+coupling
+customization
+data base
+data structure
+database
+database query
+databases
+decoder
+decoding
+definite clause grammar
+definite clause grammars
+derivation
+derivations
+development set
+dialog
+dialogue partner
+dice
+dictionary
+disambiguation
+discourse
+discriminative training
+disjunction
+distribution
+document
+eam search
+em algorithm
+english grammar
+entropy
+error rate
+evaluation set
+event calculus
+events
+expert system
+f-measure
+fact
+feature
+finite alphabet
+finite clause
+finite set
+finite-state acceptor
+finite-state transducer
+finite-state transducers
+first order logic
+foreign word
+foreign words
+formal language
+formal semantics
+formalism
+formalisms
+frame
+free distribution
+generalisation
+generation
+generation algorithm
+generation system
+grammar
+grammar rule
+grammar rules
+grammars
+greedy search
+greedy search algorithm
+guage generation
+headline generation evaluation
+headline summarization
+heuristic
+heuristics
+hierarchical structure
+histogram
+hological analysis
+hypothesis
+hypothesis space
+identification
+implementation
+induction
+inflection
+information agent
+information content
+information retrieval
+information science
+information source
+information sources
+information system
+information systems
+information theory
+inheritance
+intelligence
+intelligent system
+intelligent systems
+interfaces
+internet
+interpolation
+interpretation
+iterbi
+key-word
+keyword
+kneser-ney smoothing
+knowledge
+knowledge base
+knowledge represe
+knowledge representation
+knowledge representation technique
+language analysis
+language generation
+language interfaces
+language model
+language model probability
+language models
+language morphology
+language morphology induction
+language processing
+language processing application
+language processing applications
+language processing task
+language processing tasks
+language processor
+language use
+large corpora
+latent semantic
+latent semantic analysis
+lattice
+lattice structure
+lattices
+leaf
+learning
+lexeme
+lexica
+lexical analysis
+lexicon
+linear model
+linguist
+linguistic
+linguistic processing
+linguistic theory
+linguistics
+log-linear model
+log-linear models
+logic
+logical analysis
+machine transl
+machine translation
+mapping
+matching
+matching technique
+meaning
+measure
+measures
+method
+minimum description length
+model optimization
+model probability
+model structure
+modeling
+modelling
+morph
+morpheme
+morpheme discovery
+morphemes
+morphologic
+morphological analysis
+morphological analyzer
+morphological rule
+morphological rules
+morphology
+morphology induction
+mt evaluation
+mt system
+multimedia interface
+names
+natural languag
+natural language
+natural language generation
+natural language interface
+natural language interfaces
+natural language morphology
+natural language proce
+natural language processing
+natural language processing tasks
+natural language processor
+natural language system
+natural language text
+natural language texts
+ne translation
+nist
+nl application
+nl system
+nlg system
+nlp
+norm
+normalization
+normalization factor
+norwegian
+nouns
+ontology
+optimization
+oracle
+orthography
+parallel text
+parse
+parser
+parser system
+parsing
+parsing method
+parsing process
+part of speech
+pattern matching
+penalty factor
+penman
+performance evaluation
+permutation
+perplexity
+persian
+phological analysis
+phological analyzer
+phrase
+phrase translation
+phrase-based decoder
+phrase-based translation
+portability
+possible translation
+pragmatic reasoning
+precision
+predicates
+preposition
+prepositions
+priori
+probabilistic finite-state
+probabilistic model
+probabilistic models
+probabilities
+probability
+probability distribution
+probability distributions
+probability value
+procedure
+process
+processing
+processing tasks
+processor
+prolog
+prolog code
+prolog program
+pronunciation
+queries
+query
+query language
+query processing
+query system
+querying
+question answering
+rating
+reading
+reasoning
+reasoning system
+recognition
+relation
+representation formalism
+representation language
+representation technique
+representations
+schema
+scoring
+search
+search algorithm
+search problem
+search space
+segmentation
+segments
+semantic
+semantic analysis
+semantic knowledge
+semantic knowledge base
+semantic model
+semantic net
+semantic network
+semantic processing
+semantic similarity
+semantic type
+semantic type checking
+sense reasoning
+sentence
+sentence realization
+sentences
+server
+shortest-path
+sicstus prolog
+smoothing
+source language
+source text
+speech recognit
+speech recognition
+speech synthesis
+splitting
+sql query
+statistic
+statistical knowledge
+statistical language model
+statistical machine translation
+stem
+stems
+stochastic language model
+substring
+suffix
+suffixes
+summarization
+summarization application
+supervised learning
+supervised method
+supervised mode
+supervised model
+symbol
+symbols
+syntactic expression
+syntactic relation
+syntactic relations
+syntax
+syntax analysis
+syntax and semantics
+synthesis
+system response
+tags
+target language
+technique
+technology
+term
+terminals
+terms
+test set
+text
+text generation
+text retrieval
+text retrieval application
+textual information
+textual input
+theorem
+theory
+tile
+toolkit
+topic identification
+topic identification algorithm
+training
+transducer
+transducers
+translation accuracy
+translation table
+translations
+translator
+tree
+tree model
+tree structure
+trigram
+trigram language model
+tural language processing
+two-phase generation
+type checking
+type hierarchy
+unannotated corpus
+understanding
+unification
+unification-based approach
+uniform probability
+universal language
+unsupervised induction
+unsupervised learning
+unsupervised method
+user
+user interface
+user interfaces
+utterance
+verb
+verbal inflection
+vertex
+viterbi
+vowel
+web server
+weighted finite-state transducer
+weighted finite-state transducers
+word
+word boundaries
+word co-occurrence
+word discovery
+word form
+word lattice
+word lattices
+word order
+word type
+words
+world wide web
+writing system

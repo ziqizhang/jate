@@ -48,6 +48,35 @@ def _build_parser() -> argparse.ArgumentParser:
     p_compare.add_argument("--model", default="en_core_web_sm", help="spaCy model (default: en_core_web_sm)")
     p_compare.add_argument("--top", type=int, default=10, help="Top N terms per algorithm (default: 10)")
 
+    # --- benchmark ---------------------------------------------------------
+    p_bench = subparsers.add_parser("benchmark", help="Benchmark algorithms against a gold standard")
+    p_bench.add_argument(
+        "--dataset",
+        default="acl_rdtec_mini",
+        help="Dataset name (default: acl_rdtec_mini)",
+    )
+    p_bench.add_argument(
+        "--algorithms",
+        default=None,
+        help="Comma-separated algorithm names (default: all common algorithms)",
+    )
+    p_bench.add_argument(
+        "--extractor",
+        default="pos_pattern",
+        help="Candidate extractor (default: pos_pattern)",
+    )
+    p_bench.add_argument(
+        "--model",
+        default="en_core_web_sm",
+        help="spaCy model (default: en_core_web_sm)",
+    )
+    p_bench.add_argument(
+        "--top",
+        type=int,
+        default=None,
+        help="Evaluate only top-K terms per algorithm",
+    )
+
     # --- demo --------------------------------------------------------------
     subparsers.add_parser("demo", help="Launch the demo UI")
 
@@ -103,6 +132,8 @@ def main() -> None:
         _cmd_corpus(args)
     elif args.command == "compare":
         _cmd_compare(args)
+    elif args.command == "benchmark":
+        _cmd_benchmark(args)
 
 
 def _cmd_extract(args: argparse.Namespace) -> None:
@@ -166,6 +197,35 @@ def _cmd_compare(args: argparse.Namespace) -> None:
     for algo_name, result in results.items():
         print(f"\n=== {algo_name.upper()} ===")
         print(_format_table(result, args.top))
+
+
+def _cmd_benchmark(args: argparse.Namespace) -> None:
+    from jate.benchmark import BenchmarkRunner
+
+    # Resolve dataset
+    dataset_name = args.dataset.lower().strip()
+    if dataset_name == "acl_rdtec_mini":
+        from jate.datasets.acl_rdtec import load_acl_rdtec_mini
+
+        documents, gold_terms = load_acl_rdtec_mini()
+    else:
+        print(f"Unknown dataset: {args.dataset!r}. Available: acl_rdtec_mini")
+        sys.exit(1)
+
+    algo_list: list[str] | None = None
+    if args.algorithms:
+        algo_list = [a.strip() for a in args.algorithms.split(",")]
+
+    runner = BenchmarkRunner()
+    results = runner.run(
+        documents,
+        gold_terms,
+        algorithms=algo_list,
+        extractor=args.extractor,
+        model=args.model,
+        top_k=args.top,
+    )
+    runner.print_results(results)
 
 
 def _print_result(result: object, output_format: str, top: int | None) -> None:

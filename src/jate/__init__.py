@@ -21,7 +21,9 @@ from jate.algorithms import (
     Weirdness,
 )
 from jate.api import compare, extract, extract_corpus
+from jate.benchmark import BenchmarkRunner
 from jate.corpus import Corpus
+from jate.evaluation import EvaluationResult, Evaluator
 from jate.extractors import NGramExtractor, NounPhraseExtractor, PosPatternExtractor
 from jate.models import Candidate, Document, Term, TermExtractionResult
 from jate.nlp import DocumentLoader, SpacyBackend
@@ -56,6 +58,10 @@ __all__ = [
     "PosPatternExtractor",
     "NGramExtractor",
     "NounPhraseExtractor",
+    # Evaluation & Benchmark
+    "Evaluator",
+    "EvaluationResult",
+    "BenchmarkRunner",
     # Corpus
     "Corpus",
     # Stores
