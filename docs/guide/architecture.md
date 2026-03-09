@@ -5,10 +5,13 @@ JATE follows a pipeline architecture with pluggable components at each stage.
 ## Pipeline overview
 
 ```
-Documents → Candidate Extraction → Corpus Statistics → Scoring → Ranked Terms
-               ↓                        ↓                ↓
-         NLP Backend              CorpusStore         Algorithm
-         (spaCy)              (Memory / SQLite)     (13 options)
+Documents → NLP Batch Processing → Candidate Extraction → Corpus Statistics → Scoring → Ranked Terms
+                  ↓                       ↓                      ↓                ↓
+            SpacyBackend              Extractor             CorpusStore        Algorithm
+            (nlp.pipe())          (POS/ngram/NP)        (Memory / SQLite)    (13 options)
+                                                              ↓
+                                                        ContextIndex
+                                                   (sentence co-occurrence)
 ```
 
 ### 1. Document ingestion
@@ -44,6 +47,16 @@ Two implementations:
 |-------|----------|
 | `MemoryCorpusStore` | Fast, in-memory, for single sessions |
 | `SQLiteCorpusStore` | Persistent, for large corpora or repeated analysis |
+
+### 4b. Sentence-level context
+
+A `ContextIndex` provides sub-document context features used by some algorithms:
+
+- **Sentence co-occurrence** — how often two terms appear in the same sentence (used by Chi-Square)
+- **Context term totals** — number of distinct context terms per sentence (used by Chi-Square)
+- **Adjacent words** — words immediately adjacent to term occurrences (used by NC-Value)
+
+The ContextIndex is built automatically when extractors provide sentence-level position data. It is passed to algorithms as an optional parameter.
 
 ### 5. Scoring
 
@@ -85,13 +98,28 @@ algo = CValue()
 result = algo.score(candidates, corpus.store)
 ```
 
+### Configurable parallelism
+
+CPU-intensive stages (co-occurrence computation, containment index building) support parallel execution via `ProcessPoolExecutor`. Users opt in with `JATEConfig(max_workers=N)`. Default is sequential (`max_workers=1`) — no overhead.
+
+```python
+config = jate.JATEConfig(max_workers=4)
+result = jate.extract_corpus(docs, algorithm="cvalue", config=config)
+```
+
+NLP processing uses spaCy's `nlp.pipe()` for efficient batching, which releases the GIL during C-level parsing.
+
 ## Module map
 
 ```
 jate/
 ├── __init__.py          # Public exports
 ├── api.py               # Layer 1 & 2: extract(), extract_corpus(), compare()
+├── config.py            # JATEConfig dataclass
+├── context.py           # ContextIndex (sentence co-occurrence, adjacent words)
+├── features.py          # Shared containment index builders
 ├── models.py            # Term, Candidate, Document, TermExtractionResult
+├── parallel.py          # parallel_map, split_range utilities
 ├── protocols.py         # Protocol interfaces
 ├── corpus.py            # Corpus wrapper class
 ├── cli.py               # CLI entry point
@@ -107,7 +135,8 @@ jate/
 │   ├── base.py          # CandidateExtractorBase ABC
 │   ├── pos_pattern.py
 │   ├── ngram.py
-│   └── noun_phrase.py
+│   ├── noun_phrase.py
+│   └── utils.py         # Shared utilities (batch processing, token offsets)
 ├── nlp/                 # NLP backends
 │   ├── spacy_backend.py
 │   └── document_loader.py
