@@ -29,10 +29,12 @@ def split_range(start: int, end: int, n_chunks: int) -> list[tuple[int, int]]:
     total = end - start
     if total <= 0 or n_chunks <= 0:
         return []
-    chunk_size = max(1, total // n_chunks)
+    n_chunks = min(n_chunks, total)
+    base, remainder = divmod(total, n_chunks)
     ranges = []
-    for i in range(0, total, chunk_size):
-        chunk_start = start + i
-        chunk_end = min(start + i + chunk_size, end)
-        ranges.append((chunk_start, chunk_end))
+    cursor = start
+    for i in range(n_chunks):
+        size = base + (1 if i < remainder else 0)
+        ranges.append((cursor, cursor + size))
+        cursor += size
     return ranges
