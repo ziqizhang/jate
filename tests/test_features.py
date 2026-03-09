@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import pytest
-from jate.features import ContextFrequency, ContextWindow, ReferenceFrequency, TermFrequency, WordFrequency
+from jate.features import Containment, ContextFrequency, ContextWindow, ReferenceFrequency, TermComponentIndex, TermFrequency, WordFrequency
 from jate.models import Candidate, Document
 
 
@@ -151,3 +151,59 @@ class TestContextFrequency:
         assert cf.get_n_w("deep learning") == 3
         # machine learning appears only in sentence 1: n_w = 2
         assert cf.get_n_w("machine learning") == 2
+
+
+class TestTermComponentIndex:
+    def test_build(self):
+        c1 = Candidate(surface_form="neural network", normalized_form="neural network")
+        c2 = Candidate(surface_form="deep neural network", normalized_form="deep neural network")
+        c3 = Candidate(surface_form="network analysis", normalized_form="network analysis")
+        idx = TermComponentIndex.build([c1, c2, c3])
+
+        # "neural" maps to two terms
+        neural_terms = idx.get_sorted("neural")
+        assert len(neural_terms) == 2
+        # Sorted by descending word count
+        assert neural_terms[0] == ("deep neural network", 3)
+        assert neural_terms[1] == ("neural network", 2)
+
+        # "network" maps to three terms
+        network_terms = idx.get_sorted("network")
+        assert len(network_terms) == 3
+
+    def test_unknown_word(self):
+        idx = TermComponentIndex.build([])
+        assert idx.get_sorted("unknown") == []
+
+
+class TestContainment:
+    def test_build_parents(self):
+        c1 = Candidate(surface_form="neural network", normalized_form="neural network")
+        c2 = Candidate(surface_form="deep neural network", normalized_form="deep neural network")
+        c3 = Candidate(surface_form="network analysis", normalized_form="network analysis")
+        tci = TermComponentIndex.build([c1, c2, c3])
+        cont = Containment.build([c1, c2, c3], tci)
+
+        parents = cont.get_parents("neural network")
+        assert "deep neural network" in parents
+        assert "network analysis" not in parents  # not a parent
+
+    def test_build_children(self):
+        c1 = Candidate(surface_form="neural network", normalized_form="neural network")
+        c2 = Candidate(surface_form="deep neural network", normalized_form="deep neural network")
+        tci = TermComponentIndex.build([c1, c2])
+        cont = Containment.build([c1, c2], tci)
+        rev = cont.reverse()
+
+        children = rev.get_parents("deep neural network")  # reversed: "parents" = children
+        assert "neural network" in children
+
+    def test_word_boundary_regex(self):
+        """Hyphenated terms should not false-match."""
+        c1 = Candidate(surface_form="co op", normalized_form="co op")
+        c2 = Candidate(surface_form="co-operative co op", normalized_form="co-operative co op")
+        tci = TermComponentIndex.build([c1, c2])
+        cont = Containment.build([c1, c2], tci)
+        parents = cont.get_parents("co op")
+        # "co op" IS contained in "co-operative co op" as a whole-word match
+        assert "co-operative co op" in parents

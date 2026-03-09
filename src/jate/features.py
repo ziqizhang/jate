@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import re
 from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, NamedTuple
@@ -302,79 +303,118 @@ class ContextFrequency:
         )
 
 
-def _containment_chunk(args: tuple) -> dict[str, list[str]]:
-    """Find parent terms for a slice of candidates."""
-    all_candidates, start, end = args
-    partial: dict[str, list[str]] = {}
-    for i in range(start, end):
-        c = all_candidates[i]
-        c_nf = c.normalized_form
-        c_words = len(c_nf.split())
-        parents: list[str] = []
-        for other in all_candidates:
-            o_nf = other.normalized_form
-            if o_nf == c_nf:
-                continue
-            if len(o_nf.split()) > c_words and f" {c_nf} " in f" {o_nf} ":
-                parents.append(o_nf)
-        partial[c_nf] = parents
-    return partial
+@dataclass(slots=True)
+class TermComponentIndex:
+    """Maps unigrams to candidate terms containing them.
+
+    Mirrors Java's ``TermComponentIndex``. Used by RAKE and
+    Containment for efficient lookup.
+    """
+
+    index: dict[str, list[tuple[str, int]]] = field(default_factory=dict)
+
+    @classmethod
+    def build(cls, candidates: list[Candidate]) -> TermComponentIndex:
+        raw: dict[str, list[tuple[str, int]]] = defaultdict(list)
+        for cand in candidates:
+            term = cand.normalized_form.lower()
+            words = term.split()
+            wc = len(words)
+            for w in words:
+                raw[w].append((term, wc))
+        # Sort each entry by descending word count
+        for word in raw:
+            raw[word].sort(key=lambda x: -x[1])
+        return cls(index=dict(raw))
+
+    def get_sorted(self, word: str) -> list[tuple[str, int]]:
+        """Return [(term, word_count)] sorted by descending word count."""
+        return list(self.index.get(word.lower(), []))
+
+
+@dataclass(slots=True)
+class Containment:
+    """Parent/child containment relationships between terms.
+
+    Mirrors Java's ``Containment``. Built using TermComponentIndex
+    for efficient lookup and regex for precise word-boundary matching.
+    """
+
+    term2parents: dict[str, set[str]] = field(default_factory=dict)
+
+    @classmethod
+    def build(
+        cls,
+        candidates: list[Candidate],
+        term_component_index: TermComponentIndex,
+        max_workers: int = 1,
+    ) -> Containment:
+        term2parents: dict[str, set[str]] = {}
+        all_terms = {c.normalized_form.lower() for c in candidates}
+
+        for cand in candidates:
+            term = cand.normalized_form.lower()
+            words = term.split()
+            term_wc = len(words)
+
+            # Collect candidate parents via TermComponentIndex
+            compare_candidates: set[str] = set()
+            for w in words:
+                for parent_term, parent_wc in term_component_index.get_sorted(w):
+                    if parent_wc <= term_wc:
+                        break  # sorted descending, no more longer terms
+                    if parent_term in all_terms:
+                        compare_candidates.add(parent_term)
+
+            # Regex word-boundary check (Java: (?<!\w)term(?!\w))
+            pattern = re.compile(r"(?<!\w)" + re.escape(term) + r"(?!\w)")
+            parents: set[str] = set()
+            for parent in compare_candidates:
+                if pattern.search(parent):
+                    parents.add(parent)
+
+            term2parents[term] = parents
+
+        return cls(term2parents=term2parents)
+
+    def get_parents(self, term: str) -> set[str]:
+        return self.term2parents.get(term.lower(), set())
+
+    def reverse(self) -> Containment:
+        """Java's ContainmentReverseBuilder: invert parent->child to child->parent."""
+        reversed_map: dict[str, set[str]] = defaultdict(set)
+        for child, parents in self.term2parents.items():
+            for parent in parents:
+                reversed_map[parent].add(child)
+        return Containment(term2parents=dict(reversed_map))
 
 
 def build_containment_index(
     candidates: list[Candidate],
     max_workers: int = 1,
 ) -> dict[str, list[str]]:
-    """Build parent containment index: term -> [longer terms containing it]."""
+    """Build parent containment index: term -> [longer terms containing it].
+
+    Backward-compatible wrapper around Containment.build().
+    """
     if not candidates:
         return {}
-    if max_workers <= 1:
-        return _containment_chunk((candidates, 0, len(candidates)))
-    chunks = [
-        (candidates, start, end)
-        for start, end in split_range(0, len(candidates), max_workers)
-    ]
-    partial_dicts = parallel_map(_containment_chunk, chunks, max_workers)
-    merged: dict[str, list[str]] = {}
-    for partial in partial_dicts:
-        merged.update(partial)
-    return merged
-
-
-def _child_containment_chunk(args: tuple) -> dict[str, list[str]]:
-    """Find child terms for a slice of candidates."""
-    all_candidates, start, end = args
-    partial: dict[str, list[str]] = {}
-    for i in range(start, end):
-        c = all_candidates[i]
-        c_nf = c.normalized_form
-        c_words = len(c_nf.split())
-        children: list[str] = []
-        for other in all_candidates:
-            o_nf = other.normalized_form
-            if o_nf == c_nf:
-                continue
-            if len(o_nf.split()) < c_words and f" {o_nf} " in f" {c_nf} ":
-                children.append(o_nf)
-        partial[c_nf] = children
-    return partial
+    tci = TermComponentIndex.build(candidates)
+    cont = Containment.build(candidates, tci, max_workers=max_workers)
+    return {term: list(parents) for term, parents in cont.term2parents.items()}
 
 
 def build_child_containment_index(
     candidates: list[Candidate],
     max_workers: int = 1,
 ) -> dict[str, list[str]]:
-    """Build child containment index: term -> [shorter terms contained in it]."""
+    """Build child containment index: term -> [shorter terms contained in it].
+
+    Backward-compatible wrapper around Containment.build() + reverse().
+    """
     if not candidates:
         return {}
-    if max_workers <= 1:
-        return _child_containment_chunk((candidates, 0, len(candidates)))
-    chunks = [
-        (candidates, start, end)
-        for start, end in split_range(0, len(candidates), max_workers)
-    ]
-    partial_dicts = parallel_map(_child_containment_chunk, chunks, max_workers)
-    merged: dict[str, list[str]] = {}
-    for partial in partial_dicts:
-        merged.update(partial)
-    return merged
+    tci = TermComponentIndex.build(candidates)
+    cont = Containment.build(candidates, tci, max_workers=max_workers)
+    rev = cont.reverse()
+    return {term: list(children) for term, children in rev.term2parents.items()}
