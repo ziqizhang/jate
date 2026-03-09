@@ -2,7 +2,9 @@
 from __future__ import annotations
 
 from jate.config import JATEConfig
+from jate.models import Candidate
 from jate.parallel import parallel_map, split_range
+from jate.store.memory_store import MemoryCorpusStore
 
 
 class TestJATEConfig:
@@ -77,3 +79,37 @@ class TestSplitRange:
         assert len(result) == 3
         assert result[0][0] == 5
         assert result[-1][1] == 15
+
+
+def _make_indexed_store(max_workers: int = 1) -> MemoryCorpusStore:
+    """Build a store with known candidates and index them."""
+    candidates = []
+    for term, doc_ids in [
+        ("neural network", ["d1", "d2", "d3"]),
+        ("machine learning", ["d1", "d2"]),
+        ("deep learning", ["d2", "d3"]),
+        ("network", ["d1", "d2", "d3", "d4"]),
+    ]:
+        c = Candidate(surface_form=term, normalized_form=term)
+        for doc_id in doc_ids:
+            c.add_position(doc_id, 0, len(term))
+        candidates.append(c)
+    store = MemoryCorpusStore()
+    store.index_candidates(candidates, max_workers=max_workers)
+    return store
+
+
+class TestParallelCooccurrence:
+    def test_sequential_and_parallel_match(self) -> None:
+        store_seq = _make_indexed_store(max_workers=1)
+        store_par = _make_indexed_store(max_workers=2)
+        terms = ["neural network", "machine learning", "deep learning", "network"]
+        for i, a in enumerate(terms):
+            for b in terms[i + 1:]:
+                assert store_seq.get_cooccurrences(a, b) == store_par.get_cooccurrences(a, b), \
+                    f"Mismatch for ({a}, {b})"
+
+    def test_known_cooccurrence_values(self) -> None:
+        store = _make_indexed_store(max_workers=2)
+        assert store.get_cooccurrences("neural network", "machine learning") == 2
+        assert store.get_cooccurrences("neural network", "deep learning") == 2

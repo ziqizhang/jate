@@ -3,6 +3,21 @@
 from __future__ import annotations
 
 from jate.models import Candidate, Document
+from jate.parallel import parallel_map, split_range
+
+
+def _compute_cooc_chunk(args: tuple) -> dict[tuple[str, str], int]:
+    """Compute co-occurrences for a chunk of the outer loop (must be top-level for pickling)."""
+    terms, term_docs, start, end = args
+    partial: dict[tuple[str, str], int] = {}
+    for i in range(start, end):
+        t_a = terms[i]
+        docs_a = term_docs[t_a]
+        for t_b in terms[i + 1 :]:
+            shared = len(docs_a & term_docs[t_b])
+            if shared > 0:
+                partial[(t_a, t_b)] = shared
+    return partial
 
 
 class MemoryCorpusStore:
@@ -32,10 +47,13 @@ class MemoryCorpusStore:
     # Candidate indexing
     # ------------------------------------------------------------------
 
-    def index_candidates(self, candidates: list[Candidate]) -> None:
+    def index_candidates(
+        self, candidates: list[Candidate], *, max_workers: int = 1
+    ) -> None:
         """Bulk-index candidate frequencies.
 
-        Also computes pairwise co-occurrence counts.
+        Also computes pairwise co-occurrence counts.  When *max_workers* > 1
+        the co-occurrence computation is parallelized across processes.
         """
         term_docs: dict[str, set[str]] = {}
 
@@ -48,11 +66,22 @@ class MemoryCorpusStore:
 
         # Compute co-occurrences
         terms = sorted(term_docs.keys())
-        for i, t_a in enumerate(terms):
-            for t_b in terms[i + 1 :]:
-                shared = len(term_docs[t_a] & term_docs[t_b])
-                if shared > 0:
-                    self._cooccurrences[(t_a, t_b)] = shared
+
+        if max_workers > 1:
+            chunks = split_range(0, len(terms), max_workers)
+            results = parallel_map(
+                _compute_cooc_chunk,
+                [(terms, term_docs, s, e) for s, e in chunks],
+                max_workers=max_workers,
+            )
+            for partial in results:
+                self._cooccurrences.update(partial)
+        else:
+            for i, t_a in enumerate(terms):
+                for t_b in terms[i + 1 :]:
+                    shared = len(term_docs[t_a] & term_docs[t_b])
+                    if shared > 0:
+                        self._cooccurrences[(t_a, t_b)] = shared
 
     # ------------------------------------------------------------------
     # Queries
