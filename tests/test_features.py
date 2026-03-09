@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import pytest
-from jate.features import TermFrequency, WordFrequency
+from jate.features import ReferenceFrequency, TermFrequency, WordFrequency
 from jate.models import Candidate, Document
 
 
@@ -74,3 +74,26 @@ class TestWordFrequency:
         assert wf.get_ttf("machine") == 1
         assert wf.get_ttf("learning") == 1
         assert wf.get_ttf("works.") == 1  # basic split doesn't strip punctuation
+
+
+class TestReferenceFrequency:
+    def test_build_from_dict(self):
+        data = {"neural": 100, "network": 80, "deep": 50}
+        rf = ReferenceFrequency(word2ttf=data, corpus_total=1000)
+        assert rf.get_ttf("neural") == 100
+        assert rf.get_ttf("unknown") == 0
+        assert rf.corpus_total == 1000
+        assert rf.null_prob == pytest.approx(50 / 1000)  # min_freq / total
+
+    def test_build_as_self_reference(self):
+        """When no external ref corpus, build from WordFrequency."""
+        docs = [Document(doc_id="d1", content="neural network deep learning")]
+        wf = WordFrequency.build(docs, tokenize_fn=lambda t: t.lower().split())
+        rf = ReferenceFrequency.from_word_frequency(wf)
+        assert rf.get_ttf("neural") == 1
+        assert rf.corpus_total == 4
+
+    def test_null_prob_excludes_zero(self):
+        rf = ReferenceFrequency(word2ttf={"a": 10, "b": 0}, corpus_total=100)
+        # null_prob = min of non-zero freqs / total = 10 / 100
+        assert rf.null_prob == pytest.approx(0.1)

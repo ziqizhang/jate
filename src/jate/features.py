@@ -117,6 +117,38 @@ class WordFrequency:
         return ttf / (self.corpus_total + 1)
 
 
+@dataclass(slots=True)
+class ReferenceFrequency:
+    """Reference corpus word frequency statistics.
+
+    Mirrors Java's ``FrequencyTermBased`` loaded from a reference file.
+    """
+
+    word2ttf: dict[str, int] = field(default_factory=dict)
+    corpus_total: int = 0
+
+    @property
+    def null_prob(self) -> float:
+        """Minimum non-zero probability. Java: setNullWordProbInReference."""
+        nonzero = [v for v in self.word2ttf.values() if v > 0]
+        if nonzero and self.corpus_total > 0:
+            return min(nonzero) / self.corpus_total
+        return 0.1
+
+    def get_ttf(self, word: str) -> int:
+        return self.word2ttf.get(word.lower(), 0)
+
+    def get_ttf_norm(self, word: str) -> float:
+        return self.get_ttf(word) / (self.corpus_total + 1)
+
+    @classmethod
+    def from_word_frequency(cls, wf: WordFrequency) -> ReferenceFrequency:
+        """Build self-reference from target corpus word frequencies."""
+        filtered = {k: v for k, v in wf.word2ttf.items() if v > 0}
+        total = sum(filtered.values()) if filtered else 1
+        return cls(word2ttf=filtered, corpus_total=total)
+
+
 def _containment_chunk(args: tuple) -> dict[str, list[str]]:
     """Find parent terms for a slice of candidates."""
     all_candidates, start, end = args
