@@ -41,19 +41,19 @@ CANDIDATES = [
     Candidate(
         surface_form="machine learning",
         normalized_form="machine learning",
-        doc_positions={"doc1": [(0, 16)], "doc2": [(5, 21)]},
+        doc_positions={"doc1": [(0, 16, -1)], "doc2": [(5, 21, -1)]},
         total_frequency=2,
     ),
     Candidate(
         surface_form="deep learning",
         normalized_form="deep learning",
-        doc_positions={"doc2": [(0, 13)]},
+        doc_positions={"doc2": [(0, 13, -1)]},
         total_frequency=1,
     ),
     Candidate(
         surface_form="learning",
         normalized_form="learning",
-        doc_positions={"doc1": [(8, 16)], "doc2": [(5, 13)]},
+        doc_positions={"doc1": [(8, 16, -1)], "doc2": [(5, 13, -1)]},
         total_frequency=2,
     ),
 ]

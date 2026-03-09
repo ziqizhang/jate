@@ -69,7 +69,19 @@ class TestCandidate:
         assert c.total_frequency == 3
         assert c.document_frequency == 2
         assert len(c.doc_positions["doc1"]) == 2
-        assert c.doc_positions["doc2"] == [(5, 9)]
+        assert c.doc_positions["doc2"] == [(5, 9, -1)]
+
+    def test_add_position_with_sentence_idx(self) -> None:
+        c = Candidate(surface_form="test")
+        c.add_position("doc1", 0, 4, sentence_idx=2)
+        assert c.doc_positions["doc1"] == [(0, 4, 2)]
+        assert c.total_frequency == 1
+
+    def test_add_position_default_sentence_idx(self) -> None:
+        c = Candidate(surface_form="test")
+        c.add_position("doc1", 0, 4)
+        assert c.doc_positions["doc1"][0] == (0, 4, -1)
+        assert c.doc_positions["doc1"][0][2] == -1
 
 
 # ---------------------------------------------------------------------------

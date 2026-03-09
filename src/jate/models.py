@@ -55,8 +55,8 @@ class Candidate:
     surface_form: str
     normalized_form: str = ""
     pos_pattern: str = ""
-    # doc_id -> list of (start, end) character offsets
-    doc_positions: dict[str, list[tuple[int, int]]] = field(default_factory=dict)
+    # doc_id -> list of (start, end, sentence_idx) character offsets
+    doc_positions: dict[str, list[tuple[int, int, int]]] = field(default_factory=dict)
     total_frequency: int = 0
     surface_forms: set[str] = field(default_factory=set)
 
@@ -67,10 +67,10 @@ class Candidate:
         self.surface_forms.add(self.surface_form)
 
     def add_position(
-        self, doc_id: str, start: int, end: int, surface: str = ""
+        self, doc_id: str, start: int, end: int, sentence_idx: int = -1, surface: str = ""
     ) -> None:
         """Record a new occurrence of this candidate in a document."""
-        self.doc_positions.setdefault(doc_id, []).append((start, end))
+        self.doc_positions.setdefault(doc_id, []).append((start, end, sentence_idx))
         self.total_frequency += 1
         if surface:
             self.surface_forms.add(surface)

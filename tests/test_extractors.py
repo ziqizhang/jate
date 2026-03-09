@@ -157,9 +157,10 @@ class TestPosPatternExtractor:
         for c in candidates:
             assert c.total_frequency >= 1
             for doc_id, positions in c.doc_positions.items():
-                for start, end in positions:
+                for start, end, sent_idx in positions:
                     assert start >= 0
                     assert end > start
+                    assert isinstance(sent_idx, int)
 
     def test_adds_documents_to_store(self) -> None:
         nlp = _get_nlp()
