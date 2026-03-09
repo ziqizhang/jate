@@ -25,6 +25,17 @@ from jate.benchmark import BenchmarkRunner
 from jate.config import JATEConfig
 from jate.context import ContextIndex
 from jate.corpus import Corpus
+from jate.features import (
+    ChiSquareFrequentTerms,
+    Cooccurrence,
+    Containment,
+    ContextFrequency,
+    ContextWindow,
+    ReferenceFrequency,
+    TermComponentIndex,
+    TermFrequency,
+    WordFrequency,
+)
 from jate.evaluation import EvaluationResult, Evaluator
 from jate.extractors import NGramExtractor, NounPhraseExtractor, PosPatternExtractor
 from jate.models import Candidate, Document, Term, TermExtractionResult
@@ -66,6 +77,16 @@ __all__ = [
     "BenchmarkRunner",
     # Context
     "ContextIndex",
+    # Features
+    "TermFrequency",
+    "WordFrequency",
+    "ReferenceFrequency",
+    "ContextWindow",
+    "ContextFrequency",
+    "TermComponentIndex",
+    "Containment",
+    "Cooccurrence",
+    "ChiSquareFrequentTerms",
     # Corpus
     "Corpus",
     # Stores
