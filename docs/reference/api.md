@@ -10,6 +10,10 @@ Auto-generated from source docstrings.
 
 ::: jate.api.compare
 
+## Configuration
+
+::: jate.config.JATEConfig
+
 ## Models
 
 ::: jate.models.Term
@@ -33,6 +37,10 @@ Auto-generated from source docstrings.
 ## Corpus
 
 ::: jate.corpus.Corpus
+
+## Context
+
+::: jate.context.ContextIndex
 
 ## Algorithms
 
@@ -83,6 +91,18 @@ Auto-generated from source docstrings.
 ::: jate.store.memory_store.MemoryCorpusStore
 
 ::: jate.store.sqlite_store.SQLiteCorpusStore
+
+## Parallel Utilities
+
+::: jate.parallel.parallel_map
+
+::: jate.parallel.split_range
+
+## Feature Builders
+
+::: jate.features.build_containment_index
+
+::: jate.features.build_child_containment_index
 
 ## Protocols
 
