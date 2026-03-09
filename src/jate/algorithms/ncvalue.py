@@ -45,19 +45,11 @@ class NCValue(Algorithm):
         cvalue_result = cvalue_algo.score(candidates, corpus_store)
         cvalue_scores: dict[str, float] = {t.string: t.score for t in cvalue_result}
 
-        # Compute context weights: for each candidate, sum co-occurrence
-        # weights with all other candidates
-        context_scores: dict[str, float] = {}
-        for candidate in candidates:
-            ctx_score = 0.0
-            nf = candidate.normalized_form
-            for other in candidates:
-                if other.normalized_form == nf:
-                    continue
-                cooc = corpus_store.get_cooccurrences(nf, other.normalized_form)
-                if cooc > 0:
-                    ctx_score += cooc
-            context_scores[nf] = ctx_score
+        # Compute context scores
+        if context_index is not None:
+            context_scores = self._context_from_adjacency(candidates, context_index)
+        else:
+            context_scores = self._context_from_cooccurrence(candidates, corpus_store)
 
         # Normalise context scores to [0, 1] range
         max_ctx = max(context_scores.values()) if context_scores else 1.0
@@ -79,3 +71,56 @@ class NCValue(Algorithm):
             result.add(term)
 
         return result.sort()
+
+    def _context_from_adjacency(
+        self,
+        candidates: list[Candidate],
+        context_index: ContextIndex,
+    ) -> dict[str, float]:
+        """Frantzi et al. context scoring from adjacent words.
+
+        weight(w) = t(w) / n
+        where t(w) = number of distinct candidate terms that word w appears adjacent to
+        and n = total number of candidate terms
+
+        context_score(term) = sum(weight(w) * freq(w, term)) for each adjacent word w
+        """
+        n = len(candidates) if candidates else 1
+
+        # Count t(w): how many distinct terms each word is adjacent to
+        word_term_count: dict[str, int] = {}
+        for cand in candidates:
+            adj = context_index.get_adjacent_words(cand.normalized_form)
+            for word in adj:
+                word_term_count[word] = word_term_count.get(word, 0) + 1
+
+        context_scores: dict[str, float] = {}
+        for cand in candidates:
+            nf = cand.normalized_form
+            adj = context_index.get_adjacent_words(nf)
+            score = 0.0
+            for word, freq in adj.items():
+                t_w = word_term_count.get(word, 0)
+                weight = t_w / n
+                score += weight * freq
+            context_scores[nf] = score
+        return context_scores
+
+    def _context_from_cooccurrence(
+        self,
+        candidates: list[Candidate],
+        corpus_store: CorpusStore,
+    ) -> dict[str, float]:
+        """Fallback: document-level co-occurrence context scoring."""
+        context_scores: dict[str, float] = {}
+        for candidate in candidates:
+            ctx_score = 0.0
+            nf = candidate.normalized_form
+            for other in candidates:
+                if other.normalized_form == nf:
+                    continue
+                cooc = corpus_store.get_cooccurrences(nf, other.normalized_form)
+                if cooc > 0:
+                    ctx_score += cooc
+            context_scores[nf] = ctx_score
+        return context_scores

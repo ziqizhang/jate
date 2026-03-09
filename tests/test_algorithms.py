@@ -197,6 +197,47 @@ class TestNCValue:
         assert scores == sorted(scores, reverse=True)
 
 
+class TestNCValueWithContext:
+    def test_uses_adjacent_words(self) -> None:
+        """When ContextIndex provided, NC-Value uses adjacency-based context."""
+        store = _make_store()
+        candidates = _make_candidates()
+
+        ctx = ContextIndex(
+            sent_cooc={},
+            context_totals={},
+            adjacent={
+                "neural network": {"deep": 3, "large": 2, "train": 1},
+                "machine learning": {"supervised": 2, "use": 1},
+                "deep neural network": {"train": 1},
+                "network": {"neural": 5, "large": 1},
+            },
+        )
+
+        algo = NCValue()
+        result_without = algo.score(candidates, store)
+        result_with = algo.score(candidates, store, context_index=ctx)
+
+        scores_without = {t.string: t.score for t in result_without}
+        scores_with = {t.string: t.score for t in result_with}
+
+        # Scores should differ
+        assert scores_with != scores_without
+
+    def test_falls_back_without_context(self) -> None:
+        """Without ContextIndex, NC-Value uses co-occurrence (existing behavior)."""
+        store = _make_store()
+        candidates = _make_candidates()
+        algo = NCValue()
+
+        result1 = algo.score(candidates, store)
+        result2 = algo.score(candidates, store, context_index=None)
+
+        scores1 = {t.string: t.score for t in result1}
+        scores2 = {t.string: t.score for t in result2}
+        assert scores1 == scores2
+
+
 # ---------------------------------------------------------------------------
 # ATTF
 # ---------------------------------------------------------------------------
