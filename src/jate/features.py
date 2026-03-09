@@ -389,6 +389,103 @@ class Containment:
         return Containment(term2parents=dict(reversed_map))
 
 
+@dataclass(slots=True)
+class Cooccurrence:
+    """Term co-occurrence based on shared contexts.
+
+    Mirrors Java's ``Cooccurrence``. For each context where both a target
+    term and a reference term appear, the co-occurrence count is incremented
+    by ``min(freq_target_in_ctx, freq_ref_in_ctx)``.
+    """
+
+    matrix: dict[tuple[str, str], int] = field(default_factory=dict)
+
+    @classmethod
+    def build(
+        cls,
+        target_ctx: ContextFrequency,
+        ref_ctx: ContextFrequency,
+    ) -> Cooccurrence:
+        matrix: dict[tuple[str, str], int] = defaultdict(int)
+
+        # Collect raw directed co-occurrence, then combine
+        raw: dict[tuple[str, str], int] = defaultdict(int)
+        for ctx, target_tfic in target_ctx.ctx2tfic.items():
+            ref_tfic = ref_ctx.ctx2tfic.get(ctx)
+            if ref_tfic is None:
+                continue
+            for target_term, target_freq in target_tfic.items():
+                for ref_term, ref_freq in ref_tfic.items():
+                    if target_term == ref_term:
+                        continue
+                    # Store as directed pair (target -> ref)
+                    raw[(target_term, ref_term)] += min(target_freq, ref_freq)
+
+        # Merge directed pairs into undirected (sorted key), taking max
+        # to avoid double-counting when target_ctx is ref_ctx
+        seen: set[tuple[str, str]] = set()
+        for (a, b), count in raw.items():
+            key = tuple(sorted([a, b]))
+            if key not in seen:
+                seen.add(key)
+                matrix[key] = count
+
+        return cls(matrix=dict(matrix))
+
+    def get(self, term_a: str, term_b: str) -> int:
+        key = tuple(sorted([term_a.lower(), term_b.lower()]))
+        return self.matrix.get(key, 0)
+
+    def get_cooccurrences_for(self, term: str) -> dict[str, int]:
+        """All co-occurring terms and their counts for a given term."""
+        t = term.lower()
+        result: dict[str, int] = {}
+        for (a, b), count in self.matrix.items():
+            if a == t:
+                result[b] = count
+            elif b == t:
+                result[a] = count
+        return result
+
+
+@dataclass(slots=True)
+class ChiSquareFrequentTerms:
+    """Expected probabilities for frequent reference terms.
+
+    Mirrors Java's ``ChiSquareFrequentTerms``.
+    ``p_g = (sum of TTF in contexts where g appears) / ttfInCorpus``
+    """
+
+    exp_prob: dict[str, float] = field(default_factory=dict)
+    sum_exp_prob: float = 0.0
+    max_exp_prob: float = 0.0
+
+    @classmethod
+    def build(
+        cls,
+        ref_ctx_freq: ContextFrequency,
+        corpus_total: int,
+        fraction: float = 0.3,
+    ) -> ChiSquareFrequentTerms:
+        if corpus_total <= 0:
+            corpus_total = 1
+
+        exp_prob: dict[str, float] = {}
+        for term, contexts in ref_ctx_freq.term2ctx.items():
+            g_w = sum(ref_ctx_freq.ctx2ttf.get(ctx, 0) for ctx in contexts)
+            p_g = g_w / corpus_total
+            exp_prob[term] = p_g
+
+        sum_exp_prob = sum(exp_prob.values())
+        max_exp_prob = max(exp_prob.values()) if exp_prob else 0.0
+
+        return cls(
+            exp_prob=exp_prob,
+            sum_exp_prob=sum_exp_prob,
+            max_exp_prob=max_exp_prob,
+        )
+
+
 def build_containment_index(
     candidates: list[Candidate],
     max_workers: int = 1,

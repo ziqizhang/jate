@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import pytest
-from jate.features import Containment, ContextFrequency, ContextWindow, ReferenceFrequency, TermComponentIndex, TermFrequency, WordFrequency
+from jate.features import ChiSquareFrequentTerms, Cooccurrence, Containment, ContextFrequency, ContextWindow, ReferenceFrequency, TermComponentIndex, TermFrequency, WordFrequency
 from jate.models import Candidate, Document
 
 
@@ -207,3 +207,71 @@ class TestContainment:
         parents = cont.get_parents("co op")
         # "co op" IS contained in "co-operative co op" as a whole-word match
         assert "co-operative co op" in parents
+
+
+class TestCooccurrence:
+    def test_build_from_context_frequency(self):
+        # Sentence 0: "neural network" x2, "deep learning" x1
+        # Sentence 1: "neural network" x1, "machine learning" x1
+        c1 = Candidate(surface_form="neural network", normalized_form="neural network")
+        c1.add_position("doc1", 0, 14, sentence_idx=0)
+        c1.add_position("doc1", 30, 44, sentence_idx=0)
+        c1.add_position("doc1", 100, 114, sentence_idx=1)
+
+        c2 = Candidate(surface_form="deep learning", normalized_form="deep learning")
+        c2.add_position("doc1", 15, 28, sentence_idx=0)
+
+        c3 = Candidate(surface_form="machine learning", normalized_form="machine learning")
+        c3.add_position("doc1", 115, 131, sentence_idx=1)
+
+        cf = ContextFrequency.build([c1, c2, c3])
+        cooc = Cooccurrence.build(cf, cf)
+
+        # In sentence 0: min(nn=2, dl=1) = 1
+        assert cooc.get("neural network", "deep learning") == 1
+        # In sentence 1: min(nn=1, ml=1) = 1
+        assert cooc.get("neural network", "machine learning") == 1
+        # deep learning and machine learning never share a sentence
+        assert cooc.get("deep learning", "machine learning") == 0
+
+    def test_symmetric(self):
+        c1 = Candidate(surface_form="a", normalized_form="a")
+        c1.add_position("doc1", 0, 1, sentence_idx=0)
+        c2 = Candidate(surface_form="b", normalized_form="b")
+        c2.add_position("doc1", 2, 3, sentence_idx=0)
+        cf = ContextFrequency.build([c1, c2])
+        cooc = Cooccurrence.build(cf, cf)
+        assert cooc.get("a", "b") == cooc.get("b", "a")
+
+
+class TestChiSquareFrequentTerms:
+    def test_build(self):
+        c1 = Candidate(surface_form="neural network", normalized_form="neural network")
+        c1.add_position("doc1", 0, 14, sentence_idx=0)
+        c1.add_position("doc1", 30, 44, sentence_idx=0)
+        c2 = Candidate(surface_form="deep learning", normalized_form="deep learning")
+        c2.add_position("doc1", 15, 28, sentence_idx=0)
+        cf = ContextFrequency.build([c1, c2])
+        tf = TermFrequency.build([c1, c2], total_docs=1)
+
+        # With fraction=1.0 (all terms are "frequent")
+        ft = ChiSquareFrequentTerms.build(cf, tf.corpus_total, fraction=1.0)
+        assert "neural network" in ft.exp_prob
+        assert "deep learning" in ft.exp_prob
+        assert ft.sum_exp_prob == pytest.approx(
+            ft.exp_prob["neural network"] + ft.exp_prob["deep learning"]
+        )
+
+    def test_p_g_formula(self):
+        """p_g = (sum of TTF in contexts where g appears) / corpus_total."""
+        c1 = Candidate(surface_form="a", normalized_form="a")
+        c1.add_position("doc1", 0, 1, sentence_idx=0)  # sentence 0: a x1
+        c2 = Candidate(surface_form="b", normalized_form="b")
+        c2.add_position("doc1", 2, 3, sentence_idx=0)  # sentence 0: b x1
+        cf = ContextFrequency.build([c1, c2])
+        # ctx TTF for sentence 0 = 2 (a:1 + b:1)
+        # g_w for "a" = sum of TTF in contexts containing "a" = 2
+        # corpus_total = 2
+        # p_g("a") = 2 / 2 = 1.0
+        ft = ChiSquareFrequentTerms.build(cf, corpus_total=2, fraction=1.0)
+        assert ft.exp_prob["a"] == pytest.approx(1.0)
