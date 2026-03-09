@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from jate.config import JATEConfig
+from jate.features import build_child_containment_index, build_containment_index
 from jate.models import Candidate
 from jate.parallel import parallel_map, split_range
 from jate.store.memory_store import MemoryCorpusStore
@@ -113,3 +114,34 @@ class TestParallelCooccurrence:
         store = _make_indexed_store(max_workers=2)
         assert store.get_cooccurrences("neural network", "machine learning") == 2
         assert store.get_cooccurrences("neural network", "deep learning") == 2
+
+
+def _containment_candidates() -> list[Candidate]:
+    return [
+        Candidate(surface_form="neural network", normalized_form="neural network"),
+        Candidate(surface_form="deep neural network", normalized_form="deep neural network"),
+        Candidate(surface_form="machine learning", normalized_form="machine learning"),
+        Candidate(surface_form="network", normalized_form="network"),
+    ]
+
+
+class TestParallelContainment:
+    def test_sequential_and_parallel_match(self) -> None:
+        cands = _containment_candidates()
+        parents_seq = build_containment_index(cands, max_workers=1)
+        parents_par = build_containment_index(cands, max_workers=2)
+        assert parents_seq == parents_par
+
+    def test_known_containment(self) -> None:
+        cands = _containment_candidates()
+        parents = build_containment_index(cands, max_workers=1)
+        assert "deep neural network" in parents["neural network"]
+        assert "neural network" in parents["network"]
+        assert "deep neural network" in parents["network"]
+        assert parents["deep neural network"] == []
+
+    def test_children_index(self) -> None:
+        cands = _containment_candidates()
+        children = build_child_containment_index(cands, max_workers=1)
+        assert "neural network" in children["deep neural network"]
+        assert "network" in children["deep neural network"]
