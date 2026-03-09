@@ -1,5 +1,11 @@
 # Installation
 
+## From PyPI
+
+```bash
+pip install jate
+```
+
 ## From source
 
 ```bash
@@ -43,7 +49,7 @@ pip install ".[neural]"
 pip install ".[llm]"
 ```
 
-> **Note:** PyPI publishing is planned but not yet available. Install from source for now.
+> **Note:** Optional dependency groups require installing from source. PyPI install includes core dependencies only.
 
 ## Verify installation
 

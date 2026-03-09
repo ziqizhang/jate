@@ -7,6 +7,12 @@ A Python library for automatic term extraction (ATE) from text corpora. JATE pro
 ## Installation
 
 ```bash
+pip install jate
+```
+
+Or from source:
+
+```bash
 git clone https://github.com/ziqizhang/jate.git
 cd jate
 pip install .
