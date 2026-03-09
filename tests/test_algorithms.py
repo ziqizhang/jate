@@ -6,6 +6,7 @@ import math
 
 import pytest
 
+from jate.context import ContextIndex
 from jate.algorithms import (
     ATTF,
     RAKE,
@@ -296,6 +297,50 @@ class TestChiSquare:
         assert len(result) == 4
         scores = [t.score for t in result]
         assert scores == sorted(scores, reverse=True)
+
+
+class TestChiSquareWithContext:
+    def test_uses_sentence_cooccurrence(self) -> None:
+        """When ContextIndex provided, Chi-Square uses sentence co-occurrence."""
+        store = _make_store()
+        candidates = _make_candidates()
+
+        # ContextIndex where co-occurrence counts differ from document-level store
+        ctx = ContextIndex(
+            sent_cooc={("machine learning", "neural network"): 1},
+            context_totals={
+                "neural network": 5,
+                "machine learning": 5,
+                "deep neural network": 3,
+                "network": 8,
+            },
+            adjacent={},
+        )
+
+        frequent_terms = {"machine learning": 0.3, "neural network": 0.2}
+        algo = ChiSquare(frequent_terms=frequent_terms)
+        result_without = algo.score(candidates, store)
+        result_with = algo.score(candidates, store, context_index=ctx)
+
+        scores_without = {t.string: t.score for t in result_without}
+        scores_with = {t.string: t.score for t in result_with}
+
+        # Scores should differ because co-occurrence counts and n_w differ
+        assert scores_with != scores_without
+
+    def test_falls_back_without_context(self) -> None:
+        """Without ContextIndex, Chi-Square uses corpus store (existing behavior)."""
+        store = _make_store()
+        candidates = _make_candidates()
+        frequent_terms = {"machine learning": 0.3, "neural network": 0.2}
+        algo = ChiSquare(frequent_terms=frequent_terms)
+
+        result1 = algo.score(candidates, store)
+        result2 = algo.score(candidates, store, context_index=None)
+
+        scores1 = {t.string: t.score for t in result1}
+        scores2 = {t.string: t.score for t in result2}
+        assert scores1 == scores2
 
 
 # ---------------------------------------------------------------------------

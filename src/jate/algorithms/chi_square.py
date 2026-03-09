@@ -67,7 +67,10 @@ class ChiSquare(Algorithm):
         for candidate in candidates:
             nf = candidate.normalized_form
             # n_w: total number of terms in contexts where w appears
-            n_w = self._context_term_totals.get(nf, corpus_store.get_term_frequency(nf))
+            if context_index is not None:
+                n_w = context_index.get_context_term_total(nf)
+            else:
+                n_w = self._context_term_totals.get(nf, corpus_store.get_term_frequency(nf))
             if n_w == 0:
                 result.add(Term(
                     string=candidate.normalized_form,
@@ -84,7 +87,11 @@ class ChiSquare(Algorithm):
 
             # Adjust for actual co-occurrences
             for g_term, p_g in self._frequent_terms.items():
-                freq_wg = corpus_store.get_cooccurrences(nf, g_term)
+                # Use sentence co-occurrence if available
+                if context_index is not None:
+                    freq_wg = context_index.get_sentence_cooccurrences(nf, g_term)
+                else:
+                    freq_wg = corpus_store.get_cooccurrences(nf, g_term)
                 if freq_wg == 0:
                     continue
 
