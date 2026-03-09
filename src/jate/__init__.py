@@ -18,6 +18,7 @@ from jate.algorithms import (
     GlossEx,
     NCValue,
     TermEx,
+    Voting,
     Weirdness,
 )
 from jate.api import compare, extract, extract_corpus
@@ -67,6 +68,7 @@ __all__ = [
     "Weirdness",
     "TermEx",
     "GlossEx",
+    "Voting",
     # Extractors
     "PosPatternExtractor",
     "NGramExtractor",

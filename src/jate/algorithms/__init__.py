@@ -15,6 +15,7 @@ from jate.algorithms.ridf import RIDF
 from jate.algorithms.termex import TermEx
 from jate.algorithms.tfidf import TFIDF
 from jate.algorithms.ttf import TTF
+from jate.algorithms.voting import Voting
 from jate.algorithms.weirdness import Weirdness
 
 __all__ = [
@@ -31,5 +32,6 @@ __all__ = [
     "TermEx",
     "TFIDF",
     "TTF",
+    "Voting",
     "Weirdness",
 ]

@@ -26,6 +26,7 @@ from jate.algorithms import (
     GlossEx,
     NCValue,
     TermEx,
+    Voting,
     Weirdness,
 )
 from jate.config import JATEConfig
@@ -374,6 +375,8 @@ def compare(
     min_frequency: int = 1,
     min_words: int = 1,
     max_words: int | None = None,
+    voting: bool = False,
+    voting_weights: dict[str, float] | None = None,
     **kwargs: Any,
 ) -> dict[str, TermExtractionResult]:
     """Run multiple algorithms on the same corpus and compare results.
@@ -391,13 +394,20 @@ def compare(
         Candidate extractor name.
     config:
         Pipeline configuration (controls parallelism). Defaults to sequential.
+    voting:
+        If ``True``, also include a ``"voting"`` key in the results with
+        a reciprocal-rank-fusion ensemble of all algorithm results.
+    voting_weights:
+        Optional per-algorithm weights for voting (algorithm name -> weight).
+        Defaults to equal weight of 1.0 for all algorithms.
     **kwargs:
         Extra keyword arguments forwarded to each algorithm constructor.
 
     Returns
     -------
     dict[str, TermExtractionResult]
-        Mapping of algorithm name to its scored results.
+        Mapping of algorithm name to its scored results.  If *voting* is
+        ``True``, an additional ``"voting"`` key is included.
     """
     if config is None:
         config = JATEConfig()
@@ -427,6 +437,13 @@ def compare(
         for i, term in enumerate(result):
             term.rank = i + 1
         results[algo_name] = result
+
+    if voting:
+        weights = voting_weights or {}
+        pairs: list[tuple[TermExtractionResult, float]] = [
+            (results[name], weights.get(name, 1.0)) for name in algorithms
+        ]
+        results["voting"] = Voting.combine(pairs)
 
     return results
 
