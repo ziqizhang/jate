@@ -45,7 +45,6 @@ CLAUDE.md
 
 # Node (semantic-release)
 node_modules/
-package-lock.json
 
 # MkDocs
 site/
