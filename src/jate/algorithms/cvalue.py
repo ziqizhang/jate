@@ -39,24 +39,25 @@ class CValue(Algorithm):
         candidates: list[Candidate],
         corpus_store: CorpusStore,
         context_index: ContextIndex | None = None,
+        containment: dict[str, list[str]] | None = None,
     ) -> TermExtractionResult:
-        # Build containment index: for each candidate, find longer candidates
-        # that contain it as a substring.
-        containment: dict[str, list[str]] = {}
-        norm_forms = {c.normalized_form for c in candidates}
-        for c in candidates:
-            parents: list[str] = []
-            for other in candidates:
-                if other.normalized_form == c.normalized_form:
-                    continue
-                # Parent must be strictly longer and contain this term
-                # as a whole-word subsequence (space-padded `in` check).
-                if (
-                    len(other.normalized_form.split()) > len(c.normalized_form.split())
-                    and f" {c.normalized_form} " in f" {other.normalized_form} "
-                ):
-                    parents.append(other.normalized_form)
-            containment[c.normalized_form] = parents
+        # Build containment index if not provided: for each candidate, find
+        # longer candidates that contain it as a substring.
+        if containment is None:
+            containment = {}
+            for c in candidates:
+                parents: list[str] = []
+                for other in candidates:
+                    if other.normalized_form == c.normalized_form:
+                        continue
+                    # Parent must be strictly longer and contain this term
+                    # as a whole-word subsequence (space-padded `in` check).
+                    if (
+                        len(other.normalized_form.split()) > len(c.normalized_form.split())
+                        and f" {c.normalized_form} " in f" {other.normalized_form} "
+                    ):
+                        parents.append(other.normalized_form)
+                containment[c.normalized_form] = parents
 
         result = TermExtractionResult()
         for candidate in candidates:

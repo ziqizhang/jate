@@ -36,20 +36,22 @@ class Basic(Algorithm):
         candidates: list[Candidate],
         corpus_store: CorpusStore,
         context_index: ContextIndex | None = None,
+        containment: dict[str, list[str]] | None = None,
     ) -> TermExtractionResult:
-        # Build containment index
-        containment: dict[str, list[str]] = {}
-        for c in candidates:
-            parents: list[str] = []
-            for other in candidates:
-                if other.normalized_form == c.normalized_form:
-                    continue
-                if (
-                    len(other.normalized_form.split()) > len(c.normalized_form.split())
-                    and f" {c.normalized_form} " in f" {other.normalized_form} "
-                ):
-                    parents.append(other.normalized_form)
-            containment[c.normalized_form] = parents
+        # Build containment index if not provided
+        if containment is None:
+            containment = {}
+            for c in candidates:
+                parents: list[str] = []
+                for other in candidates:
+                    if other.normalized_form == c.normalized_form:
+                        continue
+                    if (
+                        len(other.normalized_form.split()) > len(c.normalized_form.split())
+                        and f" {c.normalized_form} " in f" {other.normalized_form} "
+                    ):
+                        parents.append(other.normalized_form)
+                containment[c.normalized_form] = parents
 
         result = TermExtractionResult()
         for candidate in candidates:

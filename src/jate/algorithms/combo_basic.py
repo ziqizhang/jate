@@ -37,26 +37,37 @@ class ComboBasic(Algorithm):
         candidates: list[Candidate],
         corpus_store: CorpusStore,
         context_index: ContextIndex | None = None,
+        containment: dict[str, list[str]] | None = None,
+        child_containment: dict[str, list[str]] | None = None,
     ) -> TermExtractionResult:
-        # Build parent containment (longer terms containing this one)
-        parent_map: dict[str, list[str]] = {}
-        # Build child containment (shorter terms contained in this one)
-        child_map: dict[str, list[str]] = {}
+        # Use pre-built containment maps if provided, otherwise build locally
+        if containment is not None:
+            parent_map = containment
+        else:
+            parent_map = {}
 
-        for c in candidates:
-            parents: list[str] = []
-            children: list[str] = []
-            for other in candidates:
-                if other.normalized_form == c.normalized_form:
-                    continue
-                c_words = len(c.normalized_form.split())
-                o_words = len(other.normalized_form.split())
-                if o_words > c_words and f" {c.normalized_form} " in f" {other.normalized_form} ":
-                    parents.append(other.normalized_form)
-                elif o_words < c_words and f" {other.normalized_form} " in f" {c.normalized_form} ":
-                    children.append(other.normalized_form)
-            parent_map[c.normalized_form] = parents
-            child_map[c.normalized_form] = children
+        if child_containment is not None:
+            child_map = child_containment
+        else:
+            child_map = {}
+
+        if containment is None or child_containment is None:
+            for c in candidates:
+                parents: list[str] = []
+                children: list[str] = []
+                for other in candidates:
+                    if other.normalized_form == c.normalized_form:
+                        continue
+                    c_words = len(c.normalized_form.split())
+                    o_words = len(other.normalized_form.split())
+                    if o_words > c_words and f" {c.normalized_form} " in f" {other.normalized_form} ":
+                        parents.append(other.normalized_form)
+                    elif o_words < c_words and f" {other.normalized_form} " in f" {c.normalized_form} ":
+                        children.append(other.normalized_form)
+                if containment is None:
+                    parent_map[c.normalized_form] = parents
+                if child_containment is None:
+                    child_map[c.normalized_form] = children
 
         result = TermExtractionResult()
         for candidate in candidates:
