@@ -4,14 +4,11 @@ from __future__ import annotations
 
 import math
 
-from typing import TYPE_CHECKING
+from typing import Any
 
 from jate.algorithms.base import Algorithm
+from jate.features import Containment, TermFrequency
 from jate.models import Candidate, Term, TermExtractionResult
-from jate.protocols import CorpusStore
-
-if TYPE_CHECKING:
-    from jate.context import ContextIndex
 
 
 class ComboBasic(Algorithm):
@@ -35,44 +32,31 @@ class ComboBasic(Algorithm):
     def score(
         self,
         candidates: list[Candidate],
-        corpus_store: CorpusStore,
-        context_index: ContextIndex | None = None,
-        containment: dict[str, list[str]] | None = None,
-        child_containment: dict[str, list[str]] | None = None,
+        term_freq: TermFrequency,
+        **kwargs: Any,
     ) -> TermExtractionResult:
-        # Use pre-built containment maps if provided, otherwise build locally
-        if containment is not None:
-            parent_map = containment
-        else:
-            parent_map = {}
+        containment: Containment | None = kwargs.get("containment")
+        child_containment: Containment | None = kwargs.get("child_containment")
 
-        if child_containment is not None:
-            child_map = child_containment
-        else:
-            child_map = {}
-
+        # Build containment if not provided (fallback)
         if containment is None or child_containment is None:
-            for c in candidates:
-                parents: list[str] = []
-                children: list[str] = []
-                for other in candidates:
-                    if other.normalized_form == c.normalized_form:
-                        continue
-                    c_words = len(c.normalized_form.split())
-                    o_words = len(other.normalized_form.split())
-                    if o_words > c_words and f" {c.normalized_form} " in f" {other.normalized_form} ":
-                        parents.append(other.normalized_form)
-                    elif o_words < c_words and f" {other.normalized_form} " in f" {c.normalized_form} ":
-                        children.append(other.normalized_form)
-                if containment is None:
-                    parent_map[c.normalized_form] = parents
-                if child_containment is None:
-                    child_map[c.normalized_form] = children
+            from jate.features import Containment as _Cont, TermComponentIndex
+
+            tci = TermComponentIndex.build(candidates)
+            if containment is None:
+                containment = _Cont.build(candidates, tci)
+            if child_containment is None:
+                # child_containment is the reverse: for each term, which shorter terms it contains
+                if containment is not None:
+                    child_containment = containment.reverse()
+                else:
+                    built = _Cont.build(candidates, tci)
+                    child_containment = built.reverse()
 
         result = TermExtractionResult()
         for candidate in candidates:
             nf = candidate.normalized_form
-            ttf = corpus_store.get_term_frequency(nf)
+            ttf = term_freq.get_ttf(nf)
             word_count = len(nf.split())
 
             if ttf <= 0:
@@ -81,8 +65,8 @@ class ComboBasic(Algorithm):
                 s = math.log(ttf)
             else:
                 log_f = math.log(ttf)
-                et = float(len(parent_map.get(nf, [])))
-                etp = float(len(child_map.get(nf, [])))
+                et = float(len(containment.get_parents(nf)))
+                etp = float(len(child_containment.get_parents(nf)))
                 s = word_count * log_f + self._alpha * et + self._beta * etp
 
             term = Term(

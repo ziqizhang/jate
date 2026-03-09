@@ -6,7 +6,17 @@ import math
 
 import pytest
 
-from jate.context import ContextIndex
+from jate.features import (
+    ChiSquareFrequentTerms,
+    Cooccurrence,
+    Containment,
+    ContextFrequency,
+    ContextWindow,
+    ReferenceFrequency,
+    TermComponentIndex,
+    TermFrequency,
+    WordFrequency,
+)
 from jate.algorithms import (
     ATTF,
     RAKE,
@@ -22,48 +32,7 @@ from jate.algorithms import (
     TermEx,
     Weirdness,
 )
-from jate.models import Candidate, Document, TermExtractionResult
-
-# ---------------------------------------------------------------------------
-# Mock CorpusStore
-# ---------------------------------------------------------------------------
-
-
-class MockCorpusStore:
-    """Dict-based CorpusStore satisfying the protocol."""
-
-    def __init__(
-        self,
-        term_freq: dict[str, int] | None = None,
-        doc_freq: dict[str, int] | None = None,
-        total_docs: int = 10,
-        corpus_total: int = 1000,
-        cooccurrences: dict[tuple[str, str], int] | None = None,
-    ) -> None:
-        self._tf = term_freq or {}
-        self._df = doc_freq or {}
-        self._total_docs = total_docs
-        self._corpus_total = corpus_total
-        self._cooc = cooccurrences or {}
-
-    def add_document(self, document: Document) -> None:
-        pass
-
-    def get_term_frequency(self, term: str) -> int:
-        return self._tf.get(term, 0)
-
-    def get_document_frequency(self, term: str) -> int:
-        return self._df.get(term, 0)
-
-    def get_total_documents(self) -> int:
-        return self._total_docs
-
-    def get_cooccurrences(self, term_a: str, term_b: str) -> int:
-        return self._cooc.get((term_a, term_b), self._cooc.get((term_b, term_a), 0))
-
-    def get_corpus_total(self) -> int:
-        return self._corpus_total
-
+from jate.models import Candidate, TermExtractionResult
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -85,10 +54,10 @@ def _make_candidates() -> list[Candidate]:
     ]
 
 
-def _make_store() -> MockCorpusStore:
-    """Standard store matching the standard candidates."""
-    return MockCorpusStore(
-        term_freq={
+def _make_term_freq() -> TermFrequency:
+    """Standard TermFrequency matching the standard candidates."""
+    return TermFrequency(
+        term2ttf={
             "neural network": 50,
             "deep neural network": 20,
             "machine learning": 80,
@@ -98,22 +67,29 @@ def _make_store() -> MockCorpusStore:
             "machine": 90,
             "learning": 85,
         },
-        doc_freq={
-            "neural network": 5,
-            "deep neural network": 2,
-            "machine learning": 8,
-            "network": 10,
-            "neural": 7,
-            "deep": 3,
-            "machine": 9,
-            "learning": 8,
+        term2fid={
+            "neural network": {"d1": 10, "d2": 10, "d3": 10, "d4": 10, "d5": 10},
+            "deep neural network": {"d1": 10, "d2": 10},
+            "machine learning": {"d1": 10, "d2": 10, "d3": 10, "d4": 10, "d5": 10, "d6": 10, "d7": 10, "d8": 10},
+            "network": {"d1": 10, "d2": 10, "d3": 10, "d4": 10, "d5": 10, "d6": 10, "d7": 10, "d8": 10, "d9": 10, "d10": 10},
+            "neural": {"d1": 10, "d2": 10, "d3": 10, "d4": 10, "d5": 10, "d6": 10, "d7": 10},
+            "deep": {"d1": 10, "d2": 10, "d3": 10},
+            "machine": {"d1": 10, "d2": 10, "d3": 10, "d4": 10, "d5": 10, "d6": 10, "d7": 10, "d8": 10, "d9": 10},
+            "learning": {"d1": 10, "d2": 10, "d3": 10, "d4": 10, "d5": 10, "d6": 10, "d7": 10, "d8": 10},
         },
-        total_docs=10,
         corpus_total=1000,
-        cooccurrences={
-            ("neural network", "machine learning"): 3,
-            ("neural network", "deep neural network"): 2,
-            ("machine learning", "deep neural network"): 1,
+        total_docs=10,
+    )
+
+
+def _make_containment() -> Containment:
+    """Containment matching the standard candidates."""
+    return Containment(
+        term2parents={
+            "neural network": {"deep neural network"},
+            "deep neural network": set(),
+            "machine learning": set(),
+            "network": {"neural network", "deep neural network"},
         },
     )
 
@@ -125,10 +101,10 @@ def _make_store() -> MockCorpusStore:
 
 class TestTFIDF:
     def test_known_scores(self) -> None:
-        store = _make_store()
+        tf = _make_term_freq()
         candidates = _make_candidates()
         algo = TFIDF()
-        result = algo.score(candidates, store)
+        result = algo.score(candidates, tf)
         assert isinstance(result, TermExtractionResult)
         assert len(result) == 4
 
@@ -140,7 +116,7 @@ class TestTFIDF:
         assert abs(scores["neural network"] - expected) < 1e-9
 
     def test_sorted_descending(self) -> None:
-        result = TFIDF().score(_make_candidates(), _make_store())
+        result = TFIDF().score(_make_candidates(), _make_term_freq())
         scores = [t.score for t in result]
         assert scores == sorted(scores, reverse=True)
 
@@ -153,9 +129,10 @@ class TestTFIDF:
 class TestCValue:
     def test_containment_logic(self) -> None:
         """'neural network' is contained in 'deep neural network'."""
-        store = _make_store()
+        tf = _make_term_freq()
         candidates = _make_candidates()
-        result = CValue().score(candidates, store)
+        containment = _make_containment()
+        result = CValue().score(candidates, tf, containment=containment)
         scores = {t.string: t.score for t in result}
 
         # "neural network" (2 words) is contained in "deep neural network"
@@ -171,14 +148,13 @@ class TestCValue:
         assert abs(scores["deep neural network"] - expected_dnn) < 1e-9
 
     def test_single_word(self) -> None:
-        store = _make_store()
+        tf = _make_term_freq()
         candidates = _make_candidates()
-        result = CValue().score(candidates, store)
+        containment = _make_containment()
+        result = CValue().score(candidates, tf, containment=containment)
         scores = {t.string: t.score for t in result}
-        # "network" (1 word), no parent among candidates that strictly contain it
-        # as substring match: "neural network" contains "network"
+        # "network" (1 word), parents: "neural network" and "deep neural network"
         # log2(1 + 0.1) = log2(1.1)
-        # parent terms: "neural network" and "deep neural network" both contain "network"
         # pTa=2, sumFreqB = 50+20=70
         expected = math.log2(1.1) * (100 - 70 / 2)
         assert abs(scores["network"] - expected) < 1e-9
@@ -191,7 +167,7 @@ class TestCValue:
 
 class TestNCValue:
     def test_produces_result(self) -> None:
-        result = NCValue().score(_make_candidates(), _make_store())
+        result = NCValue().score(_make_candidates(), _make_term_freq())
         assert len(result) == 4
         scores = [t.score for t in result]
         assert scores == sorted(scores, reverse=True)
@@ -199,13 +175,14 @@ class TestNCValue:
 
 class TestNCValueWithContext:
     def test_uses_adjacent_words(self) -> None:
-        """When ContextIndex provided, NC-Value uses adjacency-based context."""
-        store = _make_store()
+        """When ContextFrequency provided, NC-Value uses adjacency-based context."""
+        tf = _make_term_freq()
         candidates = _make_candidates()
 
-        ctx = ContextIndex(
-            sent_cooc={},
-            context_totals={},
+        ctx_freq = ContextFrequency(
+            ctx2ttf={},
+            ctx2tfic={},
+            term2ctx={},
             adjacent={
                 "neural network": {"deep": 3, "large": 2, "train": 1},
                 "machine learning": {"supervised": 2, "use": 1},
@@ -215,8 +192,8 @@ class TestNCValueWithContext:
         )
 
         algo = NCValue()
-        result_without = algo.score(candidates, store)
-        result_with = algo.score(candidates, store, context_index=ctx)
+        result_without = algo.score(candidates, tf)
+        result_with = algo.score(candidates, tf, context_freq=ctx_freq)
 
         scores_without = {t.string: t.score for t in result_without}
         scores_with = {t.string: t.score for t in result_with}
@@ -225,13 +202,13 @@ class TestNCValueWithContext:
         assert scores_with != scores_without
 
     def test_falls_back_without_context(self) -> None:
-        """Without ContextIndex, NC-Value uses co-occurrence (existing behavior)."""
-        store = _make_store()
+        """Without ContextFrequency, NC-Value uses co-occurrence (existing behavior)."""
+        tf = _make_term_freq()
         candidates = _make_candidates()
         algo = NCValue()
 
-        result1 = algo.score(candidates, store)
-        result2 = algo.score(candidates, store, context_index=None)
+        result1 = algo.score(candidates, tf)
+        result2 = algo.score(candidates, tf)
 
         scores1 = {t.string: t.score for t in result1}
         scores2 = {t.string: t.score for t in result2}
@@ -245,9 +222,9 @@ class TestNCValueWithContext:
 
 class TestATTF:
     def test_formula(self) -> None:
-        store = _make_store()
+        tf = _make_term_freq()
         candidates = _make_candidates()
-        result = ATTF().score(candidates, store)
+        result = ATTF().score(candidates, tf)
         scores = {t.string: t.score for t in result}
         # neural network: tf=50, df=5 -> 10.0
         assert scores["neural network"] == 10.0
@@ -262,16 +239,16 @@ class TestATTF:
 
 class TestTTF:
     def test_score_equals_frequency(self) -> None:
-        store = _make_store()
+        tf = _make_term_freq()
         candidates = _make_candidates()
-        result = TTF().score(candidates, store)
+        result = TTF().score(candidates, tf)
         scores = {t.string: t.score for t in result}
         assert scores["neural network"] == 50.0
         assert scores["machine learning"] == 80.0
         assert scores["network"] == 100.0
 
     def test_sorted(self) -> None:
-        result = TTF().score(_make_candidates(), _make_store())
+        result = TTF().score(_make_candidates(), _make_term_freq())
         scores = [t.score for t in result]
         assert scores == sorted(scores, reverse=True)
 
@@ -283,17 +260,19 @@ class TestTTF:
 
 class TestBasic:
     def test_single_word(self) -> None:
-        store = _make_store()
+        tf = _make_term_freq()
         candidates = _make_candidates()
-        result = Basic().score(candidates, store)
+        containment = _make_containment()
+        result = Basic().score(candidates, tf, containment=containment)
         scores = {t.string: t.score for t in result}
         # Single-word: score = log(ttf)
         assert abs(scores["network"] - math.log(100)) < 1e-9
 
     def test_multi_word(self) -> None:
-        store = _make_store()
+        tf = _make_term_freq()
         candidates = _make_candidates()
-        result = Basic(alpha=0.72).score(candidates, store)
+        containment = _make_containment()
+        result = Basic(alpha=0.72).score(candidates, tf, containment=containment)
         scores = {t.string: t.score for t in result}
         # "neural network" has 1 parent ("deep neural network")
         # score = 2 * log(50) + 0.72 * 1
@@ -308,15 +287,21 @@ class TestBasic:
 
 class TestComboBasic:
     def test_produces_result(self) -> None:
-        store = _make_store()
+        tf = _make_term_freq()
         candidates = _make_candidates()
-        result = ComboBasic().score(candidates, store)
+        result = ComboBasic().score(candidates, tf)
         assert len(result) == 4
 
     def test_multi_word_with_children(self) -> None:
-        store = _make_store()
+        tf = _make_term_freq()
         candidates = _make_candidates()
-        result = ComboBasic(alpha=0.75, beta=0.1).score(candidates, store)
+        containment = _make_containment()
+        child_containment = containment.reverse()
+        result = ComboBasic(alpha=0.75, beta=0.1).score(
+            candidates, tf,
+            containment=containment,
+            child_containment=child_containment,
+        )
         scores = {t.string: t.score for t in result}
         # "deep neural network" (3 words): no parents, children = "neural network", "network"
         # score = 3 * log(20) + 0.75 * 0 + 0.1 * 2
@@ -331,53 +316,76 @@ class TestComboBasic:
 
 class TestChiSquare:
     def test_produces_result(self) -> None:
-        frequent_terms = {"machine learning": 0.3, "neural network": 0.2, "deep learning": 0.1}
-        store = _make_store()
-        algo = ChiSquare(frequent_terms=frequent_terms)
-        result = algo.score(_make_candidates(), store)
+        tf = _make_term_freq()
+        chi_ft = ChiSquareFrequentTerms(
+            exp_prob={"machine learning": 0.3, "neural network": 0.2, "deep learning": 0.1},
+            sum_exp_prob=0.6,
+            max_exp_prob=0.3,
+        )
+        algo = ChiSquare()
+        result = algo.score(_make_candidates(), tf, chi_square_ft=chi_ft)
         assert len(result) == 4
         scores = [t.score for t in result]
         assert scores == sorted(scores, reverse=True)
 
 
 class TestChiSquareWithContext:
-    def test_uses_sentence_cooccurrence(self) -> None:
-        """When ContextIndex provided, Chi-Square uses sentence co-occurrence."""
-        store = _make_store()
+    def test_uses_cooccurrence(self) -> None:
+        """When Cooccurrence provided, Chi-Square uses it for co-occurrence."""
+        tf = _make_term_freq()
         candidates = _make_candidates()
 
-        # ContextIndex where co-occurrence counts differ from document-level store
-        ctx = ContextIndex(
-            sent_cooc={("machine learning", "neural network"): 1},
-            context_totals={
-                "neural network": 5,
-                "machine learning": 5,
-                "deep neural network": 3,
-                "network": 8,
+        ctx_freq = ContextFrequency(
+            ctx2ttf={
+                ContextWindow("d1", 0): 5,
+                ContextWindow("d1", 1): 5,
+            },
+            ctx2tfic={
+                ContextWindow("d1", 0): {"neural network": 2, "machine learning": 3},
+                ContextWindow("d1", 1): {"neural network": 1, "deep neural network": 2, "network": 2},
+            },
+            term2ctx={
+                "neural network": {ContextWindow("d1", 0), ContextWindow("d1", 1)},
+                "machine learning": {ContextWindow("d1", 0)},
+                "deep neural network": {ContextWindow("d1", 1)},
+                "network": {ContextWindow("d1", 1)},
             },
             adjacent={},
         )
 
-        frequent_terms = {"machine learning": 0.3, "neural network": 0.2}
-        algo = ChiSquare(frequent_terms=frequent_terms)
-        result_without = algo.score(candidates, store)
-        result_with = algo.score(candidates, store, context_index=ctx)
+        cooc = Cooccurrence(matrix={
+            ("machine learning", "neural network"): 1,
+        })
+
+        chi_ft = ChiSquareFrequentTerms(
+            exp_prob={"machine learning": 0.3, "neural network": 0.2},
+            sum_exp_prob=0.5,
+            max_exp_prob=0.3,
+        )
+
+        algo = ChiSquare()
+        result_without = algo.score(candidates, tf, chi_square_ft=chi_ft)
+        result_with = algo.score(candidates, tf, context_freq=ctx_freq, cooccurrence=cooc, chi_square_ft=chi_ft)
 
         scores_without = {t.string: t.score for t in result_without}
         scores_with = {t.string: t.score for t in result_with}
 
-        # Scores should differ because co-occurrence counts and n_w differ
+        # Scores should differ because n_w source and co-occurrence counts differ
         assert scores_with != scores_without
 
     def test_falls_back_without_context(self) -> None:
-        """Without ContextIndex, Chi-Square uses corpus store (existing behavior)."""
-        store = _make_store()
+        """Without context features, Chi-Square uses term_freq as fallback."""
+        tf = _make_term_freq()
         candidates = _make_candidates()
-        frequent_terms = {"machine learning": 0.3, "neural network": 0.2}
-        algo = ChiSquare(frequent_terms=frequent_terms)
+        chi_ft = ChiSquareFrequentTerms(
+            exp_prob={"machine learning": 0.3, "neural network": 0.2},
+            sum_exp_prob=0.5,
+            max_exp_prob=0.3,
+        )
+        algo = ChiSquare()
 
-        result1 = algo.score(candidates, store)
-        result2 = algo.score(candidates, store, context_index=None)
+        result1 = algo.score(candidates, tf, chi_square_ft=chi_ft)
+        result2 = algo.score(candidates, tf, chi_square_ft=chi_ft)
 
         scores1 = {t.string: t.score for t in result1}
         scores2 = {t.string: t.score for t in result2}
@@ -391,18 +399,21 @@ class TestChiSquareWithContext:
 
 class TestRAKE:
     def test_produces_result(self) -> None:
-        word_freq = {"neural": 70, "network": 100, "deep": 30, "machine": 90, "learning": 85}
-        # term_component_index: word -> list of (parent_term, word_count)
-        tci = {
-            "neural": [("neural network", 2), ("deep neural network", 3)],
-            "network": [("neural network", 2), ("deep neural network", 3)],
+        tf = _make_term_freq()
+        word_freq = WordFrequency(
+            word2ttf={"neural": 70, "network": 100, "deep": 30, "machine": 90, "learning": 85},
+            word2fid={},
+            corpus_total=375,
+        )
+        tci = TermComponentIndex(index={
+            "neural": [("deep neural network", 3), ("neural network", 2)],
+            "network": [("deep neural network", 3), ("neural network", 2)],
             "deep": [("deep neural network", 3)],
             "machine": [("machine learning", 2)],
             "learning": [("machine learning", 2)],
-        }
-        store = _make_store()
-        algo = RAKE(word_frequencies=word_freq, term_component_index=tci)
-        result = algo.score(_make_candidates(), store)
+        })
+        algo = RAKE()
+        result = algo.score(_make_candidates(), tf, word_freq=word_freq, term_component_index=tci)
         assert len(result) == 4
         # All scores should be positive
         for term in result:
@@ -416,9 +427,9 @@ class TestRAKE:
 
 class TestRIDF:
     def test_poisson_formula(self) -> None:
-        store = _make_store()
+        tf = _make_term_freq()
         candidates = _make_candidates()
-        result = RIDF().score(candidates, store)
+        result = RIDF().score(candidates, tf)
         scores = {t.string: t.score for t in result}
 
         # "neural network": ttf=50, df=5, N=10
@@ -435,7 +446,7 @@ class TestRIDF:
         assert abs(scores["neural network"] - expected) < 1e-9
 
     def test_sorted(self) -> None:
-        result = RIDF().score(_make_candidates(), _make_store())
+        result = RIDF().score(_make_candidates(), _make_term_freq())
         scores = [t.score for t in result]
         assert scores == sorted(scores, reverse=True)
 
@@ -447,14 +458,13 @@ class TestRIDF:
 
 class TestWeirdness:
     def test_ratio_with_reference(self) -> None:
-        ref_freq = {"neural": 500, "network": 800, "deep": 200, "machine": 600, "learning": 700}
-        ref_total = 100000
-        store = _make_store()
-        algo = Weirdness(
-            reference_frequencies=ref_freq,
-            reference_total=ref_total,
+        ref_freq = ReferenceFrequency(
+            word2ttf={"neural": 500, "network": 800, "deep": 200, "machine": 600, "learning": 700},
+            corpus_total=100000,
         )
-        result = algo.score(_make_candidates(), store)
+        tf = _make_term_freq()
+        algo = Weirdness(match_oom=False)
+        result = algo.score(_make_candidates(), tf, ref_freq=ref_freq)
         assert len(result) == 4
 
         # Verify "network" (single word): score = log(100/1000 / (800/100000))
@@ -463,9 +473,12 @@ class TestWeirdness:
         assert abs(scores["network"] - expected) < 1e-9
 
     def test_sorted(self) -> None:
-        ref_freq = {"neural": 500, "network": 800, "deep": 200, "machine": 600, "learning": 700}
-        algo = Weirdness(reference_frequencies=ref_freq, reference_total=100000)
-        result = algo.score(_make_candidates(), _make_store())
+        ref_freq = ReferenceFrequency(
+            word2ttf={"neural": 500, "network": 800, "deep": 200, "machine": 600, "learning": 700},
+            corpus_total=100000,
+        )
+        algo = Weirdness(match_oom=False)
+        result = algo.score(_make_candidates(), _make_term_freq(), ref_freq=ref_freq)
         scores = [t.score for t in result]
         assert scores == sorted(scores, reverse=True)
 
@@ -477,18 +490,21 @@ class TestWeirdness:
 
 class TestTermEx:
     def test_produces_result(self) -> None:
-        ref_freq = {"neural": 500, "network": 800, "deep": 200, "machine": 600, "learning": 700}
-        algo = TermEx(
-            reference_frequencies=ref_freq,
-            reference_total=100000,
+        ref_freq = ReferenceFrequency(
+            word2ttf={"neural": 500, "network": 800, "deep": 200, "machine": 600, "learning": 700},
+            corpus_total=100000,
         )
-        result = algo.score(_make_candidates(), _make_store())
+        algo = TermEx()
+        result = algo.score(_make_candidates(), _make_term_freq(), ref_freq=ref_freq)
         assert len(result) == 4
 
     def test_sorted(self) -> None:
-        ref_freq = {"neural": 500, "network": 800, "deep": 200, "machine": 600, "learning": 700}
-        algo = TermEx(reference_frequencies=ref_freq, reference_total=100000)
-        result = algo.score(_make_candidates(), _make_store())
+        ref_freq = ReferenceFrequency(
+            word2ttf={"neural": 500, "network": 800, "deep": 200, "machine": 600, "learning": 700},
+            corpus_total=100000,
+        )
+        algo = TermEx()
+        result = algo.score(_make_candidates(), _make_term_freq(), ref_freq=ref_freq)
         scores = [t.score for t in result]
         assert scores == sorted(scores, reverse=True)
 
@@ -500,21 +516,24 @@ class TestTermEx:
 
 class TestGlossEx:
     def test_produces_result(self) -> None:
-        ref_freq = {"neural": 500, "network": 800, "deep": 200, "machine": 600, "learning": 700}
-        algo = GlossEx(
-            reference_frequencies=ref_freq,
-            reference_total=100000,
+        ref_freq = ReferenceFrequency(
+            word2ttf={"neural": 500, "network": 800, "deep": 200, "machine": 600, "learning": 700},
+            corpus_total=100000,
         )
-        result = algo.score(_make_candidates(), _make_store())
+        algo = GlossEx()
+        result = algo.score(_make_candidates(), _make_term_freq(), ref_freq=ref_freq)
         assert len(result) == 4
 
     def test_single_vs_multi_word_weights(self) -> None:
         """Single-word terms should use (0.9, 0.1) weights."""
-        ref_freq = {"neural": 500, "network": 800}
-        algo = GlossEx(reference_frequencies=ref_freq, reference_total=100000)
+        ref_freq = ReferenceFrequency(
+            word2ttf={"neural": 500, "network": 800},
+            corpus_total=100000,
+        )
+        algo = GlossEx()
         single = [_make_candidate("network", total_freq=100)]
-        store = _make_store()
-        result = algo.score(single, store)
+        tf = _make_term_freq()
+        result = algo.score(single, tf, ref_freq=ref_freq)
         assert len(result) == 1
         # Score should be computed with 0.9 * TD + 0.1 * TC
         assert result[0].score > 0
@@ -527,21 +546,22 @@ class TestGlossEx:
 
 class TestAllAlgorithmsSorted:
     @pytest.mark.parametrize(
-        "algo",
+        "algo_and_kwargs",
         [
-            TFIDF(),
-            CValue(),
-            NCValue(),
-            ATTF(),
-            TTF(),
-            Basic(),
-            ComboBasic(),
-            RIDF(),
+            (TFIDF(), {}),
+            (CValue(), {}),
+            (NCValue(), {}),
+            (ATTF(), {}),
+            (TTF(), {}),
+            (Basic(), {}),
+            (ComboBasic(), {}),
+            (RIDF(), {}),
         ],
-        ids=lambda a: a.name,
+        ids=lambda x: x[0].name,
     )
-    def test_results_sorted_descending(self, algo) -> None:  # type: ignore[no-untyped-def]
-        result = algo.score(_make_candidates(), _make_store())
+    def test_results_sorted_descending(self, algo_and_kwargs) -> None:  # type: ignore[no-untyped-def]
+        algo, kwargs = algo_and_kwargs
+        result = algo.score(_make_candidates(), _make_term_freq(), **kwargs)
         scores = [t.score for t in result]
         assert scores == sorted(scores, reverse=True), f"{algo.name} results not sorted"
 

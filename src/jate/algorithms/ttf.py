@@ -2,14 +2,11 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import Any
 
 from jate.algorithms.base import Algorithm
+from jate.features import TermFrequency
 from jate.models import Candidate, Term, TermExtractionResult
-from jate.protocols import CorpusStore
-
-if TYPE_CHECKING:
-    from jate.context import ContextIndex
 
 
 class TTF(Algorithm):
@@ -25,13 +22,13 @@ class TTF(Algorithm):
     def score(
         self,
         candidates: list[Candidate],
-        corpus_store: CorpusStore,
-        context_index: ContextIndex | None = None,
+        term_freq: TermFrequency,
+        **kwargs: Any,
     ) -> TermExtractionResult:
         result = TermExtractionResult()
 
         for candidate in candidates:
-            ttf = corpus_store.get_term_frequency(candidate.normalized_form)
+            ttf = term_freq.get_ttf(candidate.normalized_form)
             term = Term(
                 string=candidate.normalized_form,
                 score=float(ttf),

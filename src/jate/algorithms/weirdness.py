@@ -4,15 +4,12 @@ from __future__ import annotations
 
 import math
 
-from typing import TYPE_CHECKING
+from typing import Any
 
 from jate.algorithms._reference_utils import _match_orders_of_magnitude
 from jate.algorithms.base import Algorithm
+from jate.features import ReferenceFrequency, TermFrequency, WordFrequency
 from jate.models import Candidate, Term, TermExtractionResult
-from jate.protocols import CorpusStore
-
-if TYPE_CHECKING:
-    from jate.context import ContextIndex
 
 
 class Weirdness(Algorithm):
@@ -28,35 +25,16 @@ class Weirdness(Algorithm):
 
     where *T* is the number of words in *t*.
 
-    Constructor takes *reference_frequencies*: a dict mapping words to their
-    frequencies in the reference corpus, and *reference_total*: total word
-    count in the reference corpus.
+    Required kwargs
+    ---------------
+    word_freq : WordFrequency
+        Word-level corpus frequency statistics.
+    ref_freq : ReferenceFrequency
+        Reference corpus word frequency statistics.
     """
 
-    def __init__(
-        self,
-        reference_frequencies: dict[str, int],
-        reference_total: int,
-        word_frequencies: dict[str, int] | None = None,
-        match_oom: bool = True,
-    ) -> None:
-        self._ref_freq = reference_frequencies
-        self._ref_total = reference_total
-        self._word_freq = word_frequencies or {}
-
-        # Compute null probability (smallest normalized freq in reference)
-        if reference_frequencies and reference_total > 0:
-            min_freq = min(reference_frequencies.values())
-            self._null_prob = min_freq / reference_total
-        else:
-            self._null_prob = 0.1
-
-        # Order-of-magnitude scaling (Java ReferenceBased.matchOrdersOfMagnitude)
-        self._oom_scalar = (
-            _match_orders_of_magnitude(self._word_freq, reference_frequencies, reference_total)
-            if match_oom and self._word_freq
-            else 1.0
-        )
+    def __init__(self, match_oom: bool = True) -> None:
+        self._match_oom = match_oom
 
     @property
     def description(self) -> str:
@@ -65,10 +43,27 @@ class Weirdness(Algorithm):
     def score(
         self,
         candidates: list[Candidate],
-        corpus_store: CorpusStore,
-        context_index: ContextIndex | None = None,
+        term_freq: TermFrequency,
+        **kwargs: Any,
     ) -> TermExtractionResult:
-        total_words = corpus_store.get_corpus_total()
+        word_freq: WordFrequency | None = kwargs.get("word_freq")
+        ref_freq: ReferenceFrequency | None = kwargs.get("ref_freq")
+
+        if ref_freq is None:
+            ref_freq = ReferenceFrequency()
+
+        null_prob = ref_freq.null_prob
+        ref_total = ref_freq.corpus_total
+
+        # Compute OOM scalar
+        if self._match_oom and word_freq is not None and ref_freq.word2ttf:
+            oom_scalar = _match_orders_of_magnitude(
+                word_freq.word2ttf, ref_freq.word2ttf, ref_total
+            )
+        else:
+            oom_scalar = 1.0
+
+        total_words = word_freq.corpus_total if word_freq is not None else term_freq.corpus_total
         if total_words == 0:
             total_words = 1
 
@@ -81,19 +76,17 @@ class Weirdness(Algorithm):
 
             for wi in elements:
                 # Word frequency in target corpus
-                freq = self._word_freq.get(wi, 0)
-                if freq == 0:
-                    freq = corpus_store.get_term_frequency(wi)
+                freq = word_freq.get_ttf(wi) if word_freq is not None else term_freq.get_ttf(wi)
                 if freq == 0:
                     continue
 
                 # Normalised probability in reference corpus
-                ref_freq = self._ref_freq.get(wi, 0)
-                if ref_freq > 0 and self._ref_total > 0:
-                    pc_wi = ref_freq / self._ref_total
+                ref_f = ref_freq.get_ttf(wi)
+                if ref_f > 0 and ref_total > 0:
+                    pc_wi = ref_f / ref_total
                 else:
-                    pc_wi = self._null_prob
-                pc_wi *= self._oom_scalar
+                    pc_wi = null_prob
+                pc_wi *= oom_scalar
 
                 v = (freq / total_words) / pc_wi
                 sum_wi += math.log(v)
@@ -102,7 +95,7 @@ class Weirdness(Algorithm):
             term = Term(
                 string=candidate.normalized_form,
                 score=td,
-                frequency=corpus_store.get_term_frequency(nf),
+                frequency=term_freq.get_ttf(nf),
                 surface_forms=set(candidate.surface_forms),
             )
             result.add(term)

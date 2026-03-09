@@ -2,14 +2,16 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import Any
 
 from jate.algorithms.base import Algorithm
+from jate.features import (
+    ChiSquareFrequentTerms,
+    Cooccurrence,
+    ContextFrequency,
+    TermFrequency,
+)
 from jate.models import Candidate, Term, TermExtractionResult
-from jate.protocols import CorpusStore
-
-if TYPE_CHECKING:
-    from jate.context import ContextIndex
 
 
 class ChiSquare(Algorithm):
@@ -17,10 +19,6 @@ class ChiSquare(Algorithm):
 
     See Matsuo & Ishizuka (2003), *Keyword Extraction from a Single Document
     Using Word Co-Occurrence Statistical Information*.
-
-    Constructor takes *frequent_terms*: a dict mapping frequent/reference terms
-    to their expected probabilities, used as the basis for chi-square
-    computation.
 
     For each candidate *w*, the score is:
 
@@ -30,27 +28,16 @@ class ChiSquare(Algorithm):
 
     Final score = ``sum_chi_w - max_chi`` (subtract the max single
     chi-square contribution).
-    """
 
-    def __init__(
-        self,
-        frequent_terms: dict[str, float],
-        context_term_totals: dict[str, int] | None = None,
-    ) -> None:
-        """
-        Parameters
-        ----------
-        frequent_terms:
-            Mapping of reference/frequent terms to their expected probabilities.
-        context_term_totals:
-            Mapping of candidate term to the total number of terms in contexts
-            where the candidate appears (n_w).  If ``None``, falls back to
-            corpus term frequency as a proxy.
-        """
-        self._frequent_terms = frequent_terms
-        self._context_term_totals = context_term_totals or {}
-        self._sum_exp_prob = sum(frequent_terms.values())
-        self._max_exp_prob = max(frequent_terms.values()) if frequent_terms else 0.0
+    Required kwargs
+    ---------------
+    context_freq : ContextFrequency
+        Sentence-level context frequencies.
+    cooccurrence : Cooccurrence
+        Term co-occurrence data.
+    chi_square_ft : ChiSquareFrequentTerms
+        Expected probabilities for frequent reference terms.
+    """
 
     @property
     def description(self) -> str:
@@ -59,18 +46,32 @@ class ChiSquare(Algorithm):
     def score(
         self,
         candidates: list[Candidate],
-        corpus_store: CorpusStore,
-        context_index: ContextIndex | None = None,
+        term_freq: TermFrequency,
+        **kwargs: Any,
     ) -> TermExtractionResult:
+        context_freq: ContextFrequency | None = kwargs.get("context_freq")
+        cooccurrence: Cooccurrence | None = kwargs.get("cooccurrence")
+        chi_square_ft: ChiSquareFrequentTerms | None = kwargs.get("chi_square_ft")
+
+        # Extract frequent terms data
+        if chi_square_ft is not None:
+            frequent_terms = chi_square_ft.exp_prob
+            sum_exp_prob = chi_square_ft.sum_exp_prob
+            max_exp_prob = chi_square_ft.max_exp_prob
+        else:
+            frequent_terms = {}
+            sum_exp_prob = 0.0
+            max_exp_prob = 0.0
+
         result = TermExtractionResult()
 
         for candidate in candidates:
             nf = candidate.normalized_form
             # n_w: total number of terms in contexts where w appears
-            if context_index is not None:
-                n_w = context_index.get_context_term_total(nf)
+            if context_freq is not None:
+                n_w = context_freq.get_n_w(nf)
             else:
-                n_w = self._context_term_totals.get(nf, corpus_store.get_term_frequency(nf))
+                n_w = term_freq.get_ttf(nf)
             if n_w == 0:
                 result.add(Term(
                     string=candidate.normalized_form,
@@ -80,18 +81,17 @@ class ChiSquare(Algorithm):
                 ))
                 continue
 
-            max_chi_square = self._max_exp_prob
+            max_chi_square = max_exp_prob
 
             # Baseline: assume all co-occurrences are zero
-            sum_chi_w = n_w * self._sum_exp_prob
+            sum_chi_w = n_w * sum_exp_prob
 
             # Adjust for actual co-occurrences
-            for g_term, p_g in self._frequent_terms.items():
-                # Use sentence co-occurrence if available
-                if context_index is not None:
-                    freq_wg = context_index.get_sentence_cooccurrences(nf, g_term)
+            for g_term, p_g in frequent_terms.items():
+                if cooccurrence is not None:
+                    freq_wg = cooccurrence.get(nf, g_term)
                 else:
-                    freq_wg = corpus_store.get_cooccurrences(nf, g_term)
+                    freq_wg = 0
                 if freq_wg == 0:
                     continue
 
@@ -115,7 +115,7 @@ class ChiSquare(Algorithm):
             term = Term(
                 string=candidate.normalized_form,
                 score=s,
-                frequency=corpus_store.get_term_frequency(nf),
+                frequency=term_freq.get_ttf(nf),
                 surface_forms=set(candidate.surface_forms),
             )
             result.add(term)

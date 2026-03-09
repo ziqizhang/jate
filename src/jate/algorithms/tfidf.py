@@ -4,14 +4,11 @@ from __future__ import annotations
 
 import math
 
-from typing import TYPE_CHECKING
+from typing import Any
 
 from jate.algorithms.base import Algorithm
+from jate.features import TermFrequency
 from jate.models import Candidate, Term, TermExtractionResult
-from jate.protocols import CorpusStore
-
-if TYPE_CHECKING:
-    from jate.context import ContextIndex
 
 
 class TFIDF(Algorithm):
@@ -29,18 +26,16 @@ class TFIDF(Algorithm):
     def score(
         self,
         candidates: list[Candidate],
-        corpus_store: CorpusStore,
-        context_index: ContextIndex | None = None,
+        term_freq: TermFrequency,
+        **kwargs: Any,
     ) -> TermExtractionResult:
-        total_docs = corpus_store.get_total_documents()
+        total_docs = term_freq.total_docs
         result = TermExtractionResult()
 
-        corpus_total = corpus_store.get_corpus_total()
-
         for candidate in candidates:
-            tf = corpus_store.get_term_frequency(candidate.normalized_form)
-            df = corpus_store.get_document_frequency(candidate.normalized_form)
-            tf_norm = tf / (corpus_total + 1)
+            tf = term_freq.get_ttf(candidate.normalized_form)
+            df = term_freq.get_df(candidate.normalized_form)
+            tf_norm = term_freq.get_ttf_norm(candidate.normalized_form)
             if df == 0:
                 idf = 0.0
             else:

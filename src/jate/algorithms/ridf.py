@@ -4,14 +4,11 @@ from __future__ import annotations
 
 import math
 
-from typing import TYPE_CHECKING
+from typing import Any
 
 from jate.algorithms.base import Algorithm
+from jate.features import TermFrequency
 from jate.models import Candidate, Term, TermExtractionResult
-from jate.protocols import CorpusStore
-
-if TYPE_CHECKING:
-    from jate.context import ContextIndex
 
 
 class RIDF(Algorithm):
@@ -36,16 +33,16 @@ class RIDF(Algorithm):
     def score(
         self,
         candidates: list[Candidate],
-        corpus_store: CorpusStore,
-        context_index: ContextIndex | None = None,
+        term_freq: TermFrequency,
+        **kwargs: Any,
     ) -> TermExtractionResult:
-        total_docs = float(corpus_store.get_total_documents())
+        total_docs = float(term_freq.total_docs)
         result = TermExtractionResult()
 
         for candidate in candidates:
             nf = candidate.normalized_form
-            ttf = corpus_store.get_term_frequency(nf)
-            df = corpus_store.get_document_frequency(nf)
+            ttf = term_freq.get_ttf(nf)
+            df = term_freq.get_df(nf)
 
             if df == 0 or total_docs == 0:
                 result.add(Term(

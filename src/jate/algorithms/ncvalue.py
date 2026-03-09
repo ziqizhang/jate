@@ -2,15 +2,12 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from jate.algorithms.base import Algorithm
 from jate.algorithms.cvalue import CValue
+from jate.features import Containment, ContextFrequency, TermFrequency
 from jate.models import Candidate, Term, TermExtractionResult
-from jate.protocols import CorpusStore
-
-if TYPE_CHECKING:
-    from jate.context import ContextIndex
 
 
 class NCValue(Algorithm):
@@ -37,23 +34,25 @@ class NCValue(Algorithm):
     def score(
         self,
         candidates: list[Candidate],
-        corpus_store: CorpusStore,
-        context_index: ContextIndex | None = None,
-        containment: dict[str, list[str]] | None = None,
+        term_freq: TermFrequency,
+        **kwargs: Any,
     ) -> TermExtractionResult:
+        containment: Containment | None = kwargs.get("containment")
+        context_freq: ContextFrequency | None = kwargs.get("context_freq")
+
         # First compute C-Value scores, forwarding containment if provided
         cvalue_algo = CValue()
         cvalue_kwargs: dict[str, Any] = {}
         if containment is not None:
             cvalue_kwargs["containment"] = containment
-        cvalue_result = cvalue_algo.score(candidates, corpus_store, **cvalue_kwargs)
+        cvalue_result = cvalue_algo.score(candidates, term_freq, **cvalue_kwargs)
         cvalue_scores: dict[str, float] = {t.string: t.score for t in cvalue_result}
 
         # Compute context scores
-        if context_index is not None:
-            context_scores = self._context_from_adjacency(candidates, context_index)
+        if context_freq is not None:
+            context_scores = self._context_from_adjacency(candidates, context_freq)
         else:
-            context_scores = self._context_from_cooccurrence(candidates, corpus_store)
+            context_scores = self._context_from_cooccurrence(candidates, term_freq)
 
         # Normalise context scores to [0, 1] range
         max_ctx = max(context_scores.values()) if context_scores else 1.0
@@ -69,7 +68,7 @@ class NCValue(Algorithm):
             term = Term(
                 string=nf,
                 score=s,
-                frequency=corpus_store.get_term_frequency(nf),
+                frequency=term_freq.get_ttf(nf),
                 surface_forms=set(candidate.surface_forms),
             )
             result.add(term)
@@ -79,7 +78,7 @@ class NCValue(Algorithm):
     def _context_from_adjacency(
         self,
         candidates: list[Candidate],
-        context_index: ContextIndex,
+        context_freq: ContextFrequency,
     ) -> dict[str, float]:
         """Frantzi et al. context scoring from adjacent words.
 
@@ -94,14 +93,14 @@ class NCValue(Algorithm):
         # Count t(w): how many distinct terms each word is adjacent to
         word_term_count: dict[str, int] = {}
         for cand in candidates:
-            adj = context_index.get_adjacent_words(cand.normalized_form)
+            adj = context_freq.get_adjacent_words(cand.normalized_form)
             for word in adj:
                 word_term_count[word] = word_term_count.get(word, 0) + 1
 
         context_scores: dict[str, float] = {}
         for cand in candidates:
             nf = cand.normalized_form
-            adj = context_index.get_adjacent_words(nf)
+            adj = context_freq.get_adjacent_words(nf)
             score = 0.0
             for word, freq in adj.items():
                 t_w = word_term_count.get(word, 0)
@@ -113,17 +112,23 @@ class NCValue(Algorithm):
     def _context_from_cooccurrence(
         self,
         candidates: list[Candidate],
-        corpus_store: CorpusStore,
+        term_freq: TermFrequency,
     ) -> dict[str, float]:
-        """Fallback: document-level co-occurrence context scoring."""
+        """Fallback: document-level co-occurrence context scoring.
+
+        Uses shared documents between candidates as a simple co-occurrence proxy.
+        """
         context_scores: dict[str, float] = {}
         for candidate in candidates:
             ctx_score = 0.0
             nf = candidate.normalized_form
+            nf_docs = set(term_freq.term2fid.get(nf.lower(), {}).keys())
             for other in candidates:
-                if other.normalized_form == nf:
+                onf = other.normalized_form
+                if onf == nf:
                     continue
-                cooc = corpus_store.get_cooccurrences(nf, other.normalized_form)
+                other_docs = set(term_freq.term2fid.get(onf.lower(), {}).keys())
+                cooc = len(nf_docs & other_docs)
                 if cooc > 0:
                     ctx_score += cooc
             context_scores[nf] = ctx_score

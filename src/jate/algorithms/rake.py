@@ -2,14 +2,11 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import Any
 
 from jate.algorithms.base import Algorithm
+from jate.features import TermComponentIndex, TermFrequency, WordFrequency
 from jate.models import Candidate, Term, TermExtractionResult
-from jate.protocols import CorpusStore
-
-if TYPE_CHECKING:
-    from jate.context import ContextIndex
 
 
 class RAKE(Algorithm):
@@ -24,18 +21,13 @@ class RAKE(Algorithm):
     Degree of a word = its own frequency + sum over all parent terms
     containing this word of ``parent_tf * (len(parent) - 1)``.
 
-    Constructor takes *word_frequencies*: a dict of individual word
-    frequencies in the corpus, and *term_component_index*: a dict mapping
-    each word to a list of ``(parent_term, word_count)`` tuples.
+    Required kwargs
+    ---------------
+    word_freq : WordFrequency
+        Word-level corpus frequency statistics.
+    term_component_index : TermComponentIndex
+        Maps each word to candidate terms containing it.
     """
-
-    def __init__(
-        self,
-        word_frequencies: dict[str, int],
-        term_component_index: dict[str, list[tuple[str, int]]],
-    ) -> None:
-        self._word_frequencies = word_frequencies
-        self._term_component_index = term_component_index
 
     @property
     def description(self) -> str:
@@ -44,9 +36,16 @@ class RAKE(Algorithm):
     def score(
         self,
         candidates: list[Candidate],
-        corpus_store: CorpusStore,
-        context_index: ContextIndex | None = None,
+        term_freq: TermFrequency,
+        **kwargs: Any,
     ) -> TermExtractionResult:
+        word_freq: WordFrequency | None = kwargs.get("word_freq")
+        tci: TermComponentIndex | None = kwargs.get("term_component_index")
+
+        # Build TermComponentIndex from candidates if not provided
+        if tci is None:
+            tci = TermComponentIndex.build(candidates)
+
         result = TermExtractionResult()
 
         for candidate in candidates:
@@ -55,7 +54,7 @@ class RAKE(Algorithm):
             total_score = 0.0
 
             for word in elements:
-                freq = self._word_frequencies.get(word, 0)
+                freq = word_freq.get_ttf(word) if word_freq is not None else 0
                 if freq == 0:
                     continue
 
@@ -63,11 +62,11 @@ class RAKE(Algorithm):
                 degree = freq
 
                 # Add contributions from parent terms containing this word
-                parent_terms = self._term_component_index.get(word, [])
+                parent_terms = tci.get_sorted(word)
                 for parent_term_str, parent_word_count in parent_terms:
                     if parent_word_count == 1:
                         continue
-                    parent_tf = corpus_store.get_term_frequency(parent_term_str)
+                    parent_tf = term_freq.get_ttf(parent_term_str)
                     parent_elements = parent_term_str.split()
                     for ep in parent_elements:
                         if ep == word:
@@ -80,7 +79,7 @@ class RAKE(Algorithm):
             term = Term(
                 string=candidate.normalized_form,
                 score=total_score,
-                frequency=corpus_store.get_term_frequency(nf),
+                frequency=term_freq.get_ttf(nf),
                 surface_forms=set(candidate.surface_forms),
             )
             result.add(term)

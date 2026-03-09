@@ -4,14 +4,11 @@ from __future__ import annotations
 
 import math
 
-from typing import TYPE_CHECKING
+from typing import Any
 
 from jate.algorithms.base import Algorithm
+from jate.features import Containment, TermFrequency
 from jate.models import Candidate, Term, TermExtractionResult
-from jate.protocols import CorpusStore
-
-if TYPE_CHECKING:
-    from jate.context import ContextIndex
 
 
 class CValue(Algorithm):
@@ -37,45 +34,35 @@ class CValue(Algorithm):
     def score(
         self,
         candidates: list[Candidate],
-        corpus_store: CorpusStore,
-        context_index: ContextIndex | None = None,
-        containment: dict[str, list[str]] | None = None,
+        term_freq: TermFrequency,
+        **kwargs: Any,
     ) -> TermExtractionResult:
-        # Build containment index if not provided: for each candidate, find
-        # longer candidates that contain it as a substring.
+        containment: Containment | None = kwargs.get("containment")
+
+        # Build containment if not provided (fallback)
         if containment is None:
-            containment = {}
-            for c in candidates:
-                parents: list[str] = []
-                for other in candidates:
-                    if other.normalized_form == c.normalized_form:
-                        continue
-                    # Parent must be strictly longer and contain this term
-                    # as a whole-word subsequence (space-padded `in` check).
-                    if (
-                        len(other.normalized_form.split()) > len(c.normalized_form.split())
-                        and f" {c.normalized_form} " in f" {other.normalized_form} "
-                    ):
-                        parents.append(other.normalized_form)
-                containment[c.normalized_form] = parents
+            from jate.features import Containment as _Cont, TermComponentIndex
+
+            tci = TermComponentIndex.build(candidates)
+            containment = _Cont.build(candidates, tci)
 
         result = TermExtractionResult()
         for candidate in candidates:
             nf = candidate.normalized_form
-            ttf = corpus_store.get_term_frequency(nf)
+            ttf = term_freq.get_ttf(nf)
             word_count = len(nf.split())
 
             # Java uses log2(|a| + 0.1) to handle single-word terms
             log2a = math.log2(word_count + 0.1)
             freq_a = float(ttf)
 
-            parent_terms = containment.get(nf, [])
+            parent_terms = containment.get_parents(nf)
             p_ta = float(len(parent_terms))
 
             if p_ta == 0:
                 s = log2a * freq_a
             else:
-                sum_freq_b = sum(corpus_store.get_term_frequency(pt) for pt in parent_terms)
+                sum_freq_b = sum(term_freq.get_ttf(pt) for pt in parent_terms)
                 s = log2a * (freq_a - sum_freq_b / p_ta)
 
             term = Term(

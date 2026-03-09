@@ -4,15 +4,12 @@ from __future__ import annotations
 
 import math
 
-from typing import TYPE_CHECKING
+from typing import Any
 
 from jate.algorithms._reference_utils import _match_orders_of_magnitude
 from jate.algorithms.base import Algorithm
+from jate.features import ReferenceFrequency, TermFrequency, WordFrequency
 from jate.models import Candidate, Term, TermExtractionResult
-from jate.protocols import CorpusStore
-
-if TYPE_CHECKING:
-    from jate.context import ContextIndex
 
 
 class TermEx(Algorithm):
@@ -28,42 +25,23 @@ class TermEx(Algorithm):
     - DC (Domain Consensus) = entropy-based measure of term distribution
     - LC (Lexical Cohesion) = ``T * log(ttf) * ttf / sum_word_freq``
 
-    Constructor takes reference corpus data and weight parameters.
+    Required kwargs
+    ---------------
+    word_freq : WordFrequency
+        Word-level corpus frequency statistics.
+    ref_freq : ReferenceFrequency
+        Reference corpus word frequency statistics.
     """
 
     def __init__(
         self,
-        reference_frequencies: dict[str, int],
-        reference_total: int,
-        word_frequencies: dict[str, int] | None = None,
-        doc_term_frequencies: dict[str, dict[str, int]] | None = None,
-        doc_totals: dict[str, int] | None = None,
         alpha: float = 0.33,
         beta: float = 0.33,
         zeta: float = 0.34,
     ) -> None:
-        self._ref_freq = reference_frequencies
-        self._ref_total = reference_total
-        self._word_freq = word_frequencies or {}
-        self._doc_term_freq = doc_term_frequencies or {}
-        self._doc_totals = doc_totals or {}
         self._alpha = alpha
         self._beta = beta
         self._zeta = zeta
-
-        # Null probability for missing reference words
-        if reference_frequencies and reference_total > 0:
-            min_freq = min(reference_frequencies.values())
-            self._null_prob = min_freq / reference_total
-        else:
-            self._null_prob = 0.1
-
-        # Order-of-magnitude scaling (Java ReferenceBased.matchOrdersOfMagnitude)
-        self._oom_scalar = (
-            _match_orders_of_magnitude(self._word_freq, reference_frequencies, reference_total)
-            if self._word_freq
-            else 1.0
-        )
 
     @property
     def description(self) -> str:
@@ -72,10 +50,27 @@ class TermEx(Algorithm):
     def score(
         self,
         candidates: list[Candidate],
-        corpus_store: CorpusStore,
-        context_index: ContextIndex | None = None,
+        term_freq: TermFrequency,
+        **kwargs: Any,
     ) -> TermExtractionResult:
-        total_words = corpus_store.get_corpus_total()
+        word_freq: WordFrequency | None = kwargs.get("word_freq")
+        ref_freq: ReferenceFrequency | None = kwargs.get("ref_freq")
+
+        if ref_freq is None:
+            ref_freq = ReferenceFrequency()
+
+        null_prob = ref_freq.null_prob
+        ref_total = ref_freq.corpus_total
+
+        # Compute OOM scalar
+        if word_freq is not None and ref_freq.word2ttf:
+            oom_scalar = _match_orders_of_magnitude(
+                word_freq.word2ttf, ref_freq.word2ttf, ref_total
+            )
+        else:
+            oom_scalar = 1.0
+
+        total_words = word_freq.corpus_total if word_freq is not None else term_freq.corpus_total
         if total_words == 0:
             total_words = 1
 
@@ -90,28 +85,32 @@ class TermEx(Algorithm):
             dp_lower = 0.0
             sum_fwi = 0.0
             for wi in elements:
-                wf = self._word_freq.get(wi, 0)
-                if wf == 0:
-                    wf = corpus_store.get_term_frequency(wi)
+                wf = word_freq.get_ttf(wi) if word_freq is not None else term_freq.get_ttf(wi)
                 dp_upper += wf
                 sum_fwi += wf
 
-                ref_f = self._ref_freq.get(wi, 0)
+                ref_f = ref_freq.get_ttf(wi)
                 if ref_f == 0:
-                    ref_f_val = self._null_prob * self._ref_total if self._ref_total > 0 else 1.0
+                    ref_f_val = null_prob * ref_total if ref_total > 0 else 1.0
                 else:
                     ref_f_val = float(ref_f)
-                ref_f_val *= self._oom_scalar
+                ref_f_val *= oom_scalar
                 dp_lower += ref_f_val
 
-            ref_total = self._ref_total if self._ref_total > 0 else 1
-            dp = (dp_upper / total_words) / (dp_lower / ref_total) if dp_lower > 0 else 0.0
+            ref_total_safe = ref_total if ref_total > 0 else 1
+            dp = (dp_upper / total_words) / (dp_lower / ref_total_safe) if dp_lower > 0 else 0.0
 
             # DC: Domain Consensus (entropy over documents)
             dc = 0.0
-            for doc_id, doc_tf_map in self._doc_term_freq.items():
-                tfid = doc_tf_map.get(nf, 0)
-                ttfid = self._doc_totals.get(doc_id, 1)
+            doc_freq_map = term_freq.get_doc_freq_map(nf)
+            for doc_id, tfid in doc_freq_map.items():
+                # Approximate per-doc total from term_freq
+                # Sum all term frequencies in this doc
+                ttfid = sum(
+                    doc_freqs.get(doc_id, 0)
+                    for doc_freqs in term_freq.term2fid.values()
+                    if doc_id in doc_freqs
+                )
                 if ttfid == 0:
                     ttfid = 1
                 norm = tfid / ttfid if tfid > 0 else 0.0
@@ -120,7 +119,7 @@ class TermEx(Algorithm):
             dc = -dc  # negate as in Java
 
             # LC: Lexical Cohesion
-            ttf = corpus_store.get_term_frequency(nf)
+            ttf = term_freq.get_ttf(nf)
             if sum_fwi == 0:
                 lc = 0.0
             else:

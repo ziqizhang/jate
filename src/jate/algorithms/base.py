@@ -3,13 +3,10 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
+from typing import Any
 
+from jate.features import TermFrequency
 from jate.models import Candidate, TermExtractionResult
-from jate.protocols import CorpusStore
-
-if TYPE_CHECKING:
-    from jate.context import ContextIndex
 
 
 class Algorithm(ABC):
@@ -33,8 +30,8 @@ class Algorithm(ABC):
     def score(
         self,
         candidates: list[Candidate],
-        corpus_store: CorpusStore,
-        context_index: ContextIndex | None = None,
+        term_freq: TermFrequency,
+        **kwargs: Any,
     ) -> TermExtractionResult:
         """Score every candidate and return a :class:`TermExtractionResult`.
 
@@ -42,9 +39,10 @@ class Algorithm(ABC):
         ----------
         candidates:
             Candidate terms produced by an extractor.
-        corpus_store:
-            A store providing corpus-level statistics.
-        context_index:
-            Optional context index for context-aware scoring.
+        term_freq:
+            Term-level corpus frequency statistics.
+        **kwargs:
+            Additional feature objects required by specific algorithms
+            (e.g. ``containment``, ``context_freq``, ``word_freq``, etc.).
         """
         ...
