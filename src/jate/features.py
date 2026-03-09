@@ -3,8 +3,69 @@
 
 from __future__ import annotations
 
+from collections import defaultdict
+from dataclasses import dataclass, field
+
 from jate.models import Candidate
 from jate.parallel import parallel_map, split_range
+
+
+@dataclass(slots=True)
+class TermFrequency:
+    """Term-level corpus frequency statistics.
+
+    Mirrors Java's ``FrequencyTermBased`` (feature type 0).
+
+    Attributes
+    ----------
+    term2ttf : dict[str, int]
+        Term → total term frequency across corpus.
+    term2fid : dict[str, dict[str, int]]
+        Term → {doc_id → frequency in that document}.
+    corpus_total : int
+        Sum of all TTF values.
+    total_docs : int
+        Total number of documents.
+    """
+
+    term2ttf: dict[str, int] = field(default_factory=dict)
+    term2fid: dict[str, dict[str, int]] = field(default_factory=dict)
+    corpus_total: int = 0
+    total_docs: int = 0
+
+    @classmethod
+    def build(cls, candidates: list[Candidate], total_docs: int) -> TermFrequency:
+        term2ttf: dict[str, int] = defaultdict(int)
+        term2fid: dict[str, dict[str, int]] = defaultdict(dict)
+
+        for cand in candidates:
+            term = cand.normalized_form.lower()
+            for doc_id, positions in cand.doc_positions.items():
+                freq = len(positions)
+                term2ttf[term] += freq
+                term2fid[term][doc_id] = term2fid[term].get(doc_id, 0) + freq
+
+        corpus_total = sum(term2ttf.values())
+        return cls(
+            term2ttf=dict(term2ttf),
+            term2fid=dict(term2fid),
+            corpus_total=corpus_total,
+            total_docs=total_docs,
+        )
+
+    def get_ttf(self, term: str) -> int:
+        return self.term2ttf.get(term.lower(), 0)
+
+    def get_df(self, term: str) -> int:
+        return len(self.term2fid.get(term.lower(), {}))
+
+    def get_ttf_norm(self, term: str) -> float:
+        """Java: getTTFNorm = TTF / (corpusTotal + 1)."""
+        ttf = self.get_ttf(term)
+        return ttf / (self.corpus_total + 1)
+
+    def get_doc_freq_map(self, term: str) -> dict[str, int]:
+        return dict(self.term2fid.get(term.lower(), {}))
 
 
 def _containment_chunk(args: tuple) -> dict[str, list[str]]:
