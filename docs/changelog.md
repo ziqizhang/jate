@@ -16,6 +16,9 @@ Complete rewrite from Java to Python.
 - Export to pandas DataFrame, CSV, JSON
 - spaCy-based NLP backend with Protocol interface for extensibility
 - ACL RD-TEC Mini built-in dataset
+- Sentence-level context — `ContextIndex` provides sentence co-occurrence for Chi-Square and adjacency-based context for NC-Value, aligning with original papers
+- Configurable parallelism via `JATEConfig(max_workers=N)` — parallel co-occurrence computation, containment index building, and batch NLP processing with `nlp.pipe()`
+- Shared containment index builder — computed once and reused across Basic, ComboBasic, CValue, and NCValue algorithms
 
 ### Changed
 
