@@ -51,7 +51,7 @@ The default algorithm. Excels at finding multi-word terms by penalising candidat
 result = jate.extract_corpus(docs, algorithm="ncvalue")
 ```
 
-Improves on C-Value by considering which other terms co-occur with the candidate.
+Improves on C-Value by considering which other terms co-occur with the candidate. When sentence-level position data is available (default with all extractors), NC-Value uses **adjacency-based context** — words immediately before/after term occurrences — as described in the original paper. The context score uses the formula `weight(w) = t(w) / n` where `t(w)` is how many unique terms word `w` appears adjacent to and `n` is the total number of unique terms with context.
 
 ---
 
@@ -139,7 +139,7 @@ Tests whether the co-occurrence of a candidate with frequent reference terms dev
 result = jate.extract_corpus(docs, algorithm="chi_square")
 ```
 
-Requires reference term frequencies, which JATE auto-constructs from the corpus.
+Requires reference term frequencies, which JATE auto-constructs from the corpus. When sentence-level position data is available (default with all extractors), Chi-Square uses **sentence co-occurrence** rather than document co-occurrence, aligning with the original paper (Matsuo & Ishizuka 2003).
 
 ---
 
