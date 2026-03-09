@@ -21,6 +21,7 @@ from jate.algorithms import (
     Weirdness,
 )
 from jate.api import compare, extract, extract_corpus
+from jate.config import JATEConfig
 from jate.benchmark import BenchmarkRunner
 from jate.context import ContextIndex
 from jate.corpus import Corpus
@@ -73,4 +74,6 @@ __all__ = [
     # NLP
     "SpacyBackend",
     "DocumentLoader",
+    # Config
+    "JATEConfig",
 ]
