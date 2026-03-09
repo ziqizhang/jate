@@ -48,43 +48,60 @@ class NGramExtractor(CandidateExtractorBase):
             if not text.strip():
                 continue
 
-            tokens: list[str] = nlp_backend.tokenize(text)
-            lemma_pairs: list[tuple[str, str]] = nlp_backend.lemmatize(text)
-            lemmas: list[str] = [lem for _, lem in lemma_pairs]
+            # Split into sentences and compute document-level char offsets
+            sentences: list[str] = nlp_backend.sentence_split(text)
+            sent_char_offsets: list[int] = []
+            search_from = 0
+            for sent_text in sentences:
+                idx = text.find(sent_text, search_from)
+                if idx == -1:
+                    idx = search_from  # fallback
+                sent_char_offsets.append(idx)
+                search_from = idx + len(sent_text)
 
-            # Compute character offsets for tokens in the original text.
-            token_offsets = compute_token_offsets(text, tokens)
+            for sent_idx, sent_text in enumerate(sentences):
+                if not sent_text.strip():
+                    continue
+                sent_offset = sent_char_offsets[sent_idx]
 
-            for n in range(self._min_n, self._max_n + 1):
-                for i in range(len(tokens) - n + 1):
-                    span_tokens = tokens[i : i + n]
-                    span_lemmas = lemmas[i : i + n]
+                tokens: list[str] = nlp_backend.tokenize(sent_text)
+                lemma_pairs: list[tuple[str, str]] = nlp_backend.lemmatize(sent_text)
+                lemmas: list[str] = [lem for _, lem in lemma_pairs]
 
-                    # Skip n-grams starting or ending with stopwords or punctuation.
-                    if _is_stop_or_punct(span_tokens[0]) or _is_stop_or_punct(span_tokens[-1]):
-                        continue
+                # Compute character offsets for tokens in the sentence text.
+                token_offsets = compute_token_offsets(sent_text, tokens)
 
-                    surface = " ".join(span_tokens)
-                    # Java JATE behaviour: only lemmatise the rightmost word.
-                    if len(span_tokens) == 1:
-                        normalized = span_lemmas[0].lower()
-                    else:
-                        normalized = " ".join(
-                            [t.lower() for t in span_tokens[:-1]] + [span_lemmas[-1].lower()]
-                        )
+                for n in range(self._min_n, self._max_n + 1):
+                    for i in range(len(tokens) - n + 1):
+                        span_tokens = tokens[i : i + n]
+                        span_lemmas = lemmas[i : i + n]
 
-                    doc_start = token_offsets[i][0]
-                    doc_end = token_offsets[i + n - 1][1]
+                        # Skip n-grams starting or ending with stopwords or punctuation.
+                        if _is_stop_or_punct(span_tokens[0]) or _is_stop_or_punct(span_tokens[-1]):
+                            continue
 
-                    if normalized in merged:
-                        merged[normalized].add_position(doc.doc_id, doc_start, doc_end, surface=surface)
-                    else:
-                        cand = Candidate(
-                            surface_form=surface,
-                            normalized_form=normalized,
-                        )
-                        cand.add_position(doc.doc_id, doc_start, doc_end)
-                        merged[normalized] = cand
+                        surface = " ".join(span_tokens)
+                        # Java JATE behaviour: only lemmatise the rightmost word.
+                        if len(span_tokens) == 1:
+                            normalized = span_lemmas[0].lower()
+                        else:
+                            normalized = " ".join(
+                                [t.lower() for t in span_tokens[:-1]] + [span_lemmas[-1].lower()]
+                            )
+
+                        # Character offsets converted to document-level.
+                        doc_start = sent_offset + token_offsets[i][0]
+                        doc_end = sent_offset + token_offsets[i + n - 1][1]
+
+                        if normalized in merged:
+                            merged[normalized].add_position(doc.doc_id, doc_start, doc_end, sentence_idx=sent_idx, surface=surface)
+                        else:
+                            cand = Candidate(
+                                surface_form=surface,
+                                normalized_form=normalized,
+                            )
+                            cand.add_position(doc.doc_id, doc_start, doc_end, sentence_idx=sent_idx)
+                            merged[normalized] = cand
 
         return list(merged.values())
 

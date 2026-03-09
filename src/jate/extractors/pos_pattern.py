@@ -145,73 +145,88 @@ class PosPatternExtractor(CandidateExtractorBase):
             if not text.strip():
                 continue
 
-            tagged: list[tuple[str, str]] = nlp_backend.pos_tag(text)
-            lemmas_pairs: list[tuple[str, str]] = nlp_backend.lemmatize(text)
+            # Split into sentences and compute document-level char offsets
+            sentences: list[str] = nlp_backend.sentence_split(text)
+            sent_char_offsets: list[int] = []
+            search_from = 0
+            for sent_text in sentences:
+                idx = text.find(sent_text, search_from)
+                if idx == -1:
+                    idx = search_from  # fallback
+                sent_char_offsets.append(idx)
+                search_from = idx + len(sent_text)
 
-            # Build a POS string with one tag per token, space-separated,
-            # **with a trailing space** so patterns ending with ``(NOUN )+``
-            # can match the last token.
-            pos_tags: list[str] = [tag for _, tag in tagged]
-            tokens: list[str] = [tok for tok, _ in tagged]
-            lemmas: list[str] = [lem for _, lem in lemmas_pairs]
-            pos_string = " ".join(pos_tags) + " "
-
-            # We need a mapping from character offset in pos_string to token index.
-            # Each tag occupies len(tag)+1 characters (tag + space).
-            tag_char_starts: list[int] = []
-            offset = 0
-            for tag in pos_tags:
-                tag_char_starts.append(offset)
-                offset += len(tag) + 1  # +1 for the space
-
-            # Compute character offsets of tokens in the original text so we
-            # can record them in doc_positions.
-            token_char_offsets: list[tuple[int, int]] = compute_token_offsets(text, tokens)
-
-            for m in self._pattern.finditer(pos_string):
-                start_char = m.start()
-                end_char = m.end()  # exclusive, may point into trailing space
-
-                # Map POS-string char offsets to token indices.
-                tok_start = _char_to_token_index(tag_char_starts, start_char)
-                # end_char-1 because the match includes trailing space
-                tok_end = _char_to_token_index(tag_char_starts, end_char - 1)
-                span_tokens = tokens[tok_start : tok_end + 1]
-                span_lemmas = lemmas[tok_start : tok_end + 1]
-                span_pos = pos_tags[tok_start : tok_end + 1]
-
-                # Strip leading/trailing stopwords.
-                span_tokens, span_lemmas, span_pos, strip_left = _strip_stopwords(span_tokens, span_lemmas, span_pos)
-                if not span_tokens:
+            for sent_idx, sent_text in enumerate(sentences):
+                if not sent_text.strip():
                     continue
+                sent_offset = sent_char_offsets[sent_idx]
 
-                actual_tok_start = tok_start + strip_left
-                actual_tok_end = actual_tok_start + len(span_tokens) - 1
+                tagged: list[tuple[str, str]] = nlp_backend.pos_tag(sent_text)
+                lemmas_pairs: list[tuple[str, str]] = nlp_backend.lemmatize(sent_text)
 
-                surface = " ".join(span_tokens)
-                # Java JATE behaviour: only lemmatise the rightmost word.
-                if len(span_tokens) == 1:
-                    normalized = span_lemmas[0].lower()
-                else:
-                    normalized = " ".join(
-                        [t.lower() for t in span_tokens[:-1]] + [span_lemmas[-1].lower()]
-                    )
-                pos_pat = " ".join(span_pos)
+                # Build a POS string with one tag per token, space-separated,
+                # **with a trailing space** so patterns ending with ``(NOUN )+``
+                # can match the last token.
+                pos_tags: list[str] = [tag for _, tag in tagged]
+                tokens: list[str] = [tok for tok, _ in tagged]
+                lemmas: list[str] = [lem for _, lem in lemmas_pairs]
+                pos_string = " ".join(pos_tags) + " "
 
-                # Character offsets in the original document text.
-                doc_start = token_char_offsets[actual_tok_start][0]
-                doc_end = token_char_offsets[actual_tok_end][1]
+                # We need a mapping from character offset in pos_string to token index.
+                # Each tag occupies len(tag)+1 characters (tag + space).
+                tag_char_starts: list[int] = []
+                offset = 0
+                for tag in pos_tags:
+                    tag_char_starts.append(offset)
+                    offset += len(tag) + 1  # +1 for the space
 
-                if normalized in merged:
-                    merged[normalized].add_position(doc.doc_id, doc_start, doc_end, surface=surface)
-                else:
-                    cand = Candidate(
-                        surface_form=surface,
-                        normalized_form=normalized,
-                        pos_pattern=pos_pat,
-                    )
-                    cand.add_position(doc.doc_id, doc_start, doc_end)
-                    merged[normalized] = cand
+                # Compute character offsets of tokens in the sentence text.
+                token_char_offsets: list[tuple[int, int]] = compute_token_offsets(sent_text, tokens)
+
+                for m in self._pattern.finditer(pos_string):
+                    start_char = m.start()
+                    end_char = m.end()  # exclusive, may point into trailing space
+
+                    # Map POS-string char offsets to token indices.
+                    tok_start = _char_to_token_index(tag_char_starts, start_char)
+                    # end_char-1 because the match includes trailing space
+                    tok_end = _char_to_token_index(tag_char_starts, end_char - 1)
+                    span_tokens = tokens[tok_start : tok_end + 1]
+                    span_lemmas = lemmas[tok_start : tok_end + 1]
+                    span_pos = pos_tags[tok_start : tok_end + 1]
+
+                    # Strip leading/trailing stopwords.
+                    span_tokens, span_lemmas, span_pos, strip_left = _strip_stopwords(span_tokens, span_lemmas, span_pos)
+                    if not span_tokens:
+                        continue
+
+                    actual_tok_start = tok_start + strip_left
+                    actual_tok_end = actual_tok_start + len(span_tokens) - 1
+
+                    surface = " ".join(span_tokens)
+                    # Java JATE behaviour: only lemmatise the rightmost word.
+                    if len(span_tokens) == 1:
+                        normalized = span_lemmas[0].lower()
+                    else:
+                        normalized = " ".join(
+                            [t.lower() for t in span_tokens[:-1]] + [span_lemmas[-1].lower()]
+                        )
+                    pos_pat = " ".join(span_pos)
+
+                    # Character offsets converted to document-level.
+                    doc_start = sent_offset + token_char_offsets[actual_tok_start][0]
+                    doc_end = sent_offset + token_char_offsets[actual_tok_end][1]
+
+                    if normalized in merged:
+                        merged[normalized].add_position(doc.doc_id, doc_start, doc_end, sentence_idx=sent_idx, surface=surface)
+                    else:
+                        cand = Candidate(
+                            surface_form=surface,
+                            normalized_form=normalized,
+                            pos_pattern=pos_pat,
+                        )
+                        cand.add_position(doc.doc_id, doc_start, doc_end, sentence_idx=sent_idx)
+                        merged[normalized] = cand
 
         return list(merged.values())
 
