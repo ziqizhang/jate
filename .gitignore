@@ -47,6 +47,9 @@ CLAUDE.md
 node_modules/
 package-lock.json
 
+# MkDocs
+site/
+
 # Distribution
 *.tar.gz
 *.whl

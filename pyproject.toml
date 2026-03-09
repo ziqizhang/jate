@@ -48,6 +48,13 @@ transformers = "^4.40"
 langchain = "^0.3"
 langgraph = "^0.2"
 
+
+[tool.poetry.group.docs.dependencies]
+mkdocs-material = "^9.7.4"
+mkdocstrings = "^1.0.3"
+mkdocstrings-python = "^2.0.3"
+mike = "^2.1.4"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

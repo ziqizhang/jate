@@ -27,9 +27,10 @@ class TTF(Algorithm):
         for candidate in candidates:
             ttf = corpus_store.get_term_frequency(candidate.normalized_form)
             term = Term(
-                string=candidate.surface_form,
+                string=candidate.normalized_form,
                 score=float(ttf),
                 frequency=ttf,
+                surface_forms=set(candidate.surface_forms),
             )
             result.add(term)
 

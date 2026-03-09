@@ -126,7 +126,7 @@ class PosPatternExtractor(CandidateExtractorBase):
     mapped back to the original tokens to recover surface forms.
     """
 
-    def __init__(self, pattern: str = r"(ADJ )*(NOUN )+") -> None:
+    def __init__(self, pattern: str = r"(ADJ |VERB )*(NOUN )+") -> None:
         self._pattern = re.compile(pattern)
 
     # ------------------------------------------------------------------
@@ -189,7 +189,13 @@ class PosPatternExtractor(CandidateExtractorBase):
                 actual_tok_end = actual_tok_start + len(span_tokens) - 1
 
                 surface = " ".join(span_tokens)
-                normalized = " ".join(span_lemmas).lower()
+                # Java JATE behaviour: only lemmatise the rightmost word.
+                if len(span_tokens) == 1:
+                    normalized = span_lemmas[0].lower()
+                else:
+                    normalized = " ".join(
+                        [t.lower() for t in span_tokens[:-1]] + [span_lemmas[-1].lower()]
+                    )
                 pos_pat = " ".join(span_pos)
 
                 # Character offsets in the original document text.
@@ -197,7 +203,7 @@ class PosPatternExtractor(CandidateExtractorBase):
                 doc_end = token_char_offsets[actual_tok_end][1]
 
                 if normalized in merged:
-                    merged[normalized].add_position(doc.doc_id, doc_start, doc_end)
+                    merged[normalized].add_position(doc.doc_id, doc_start, doc_end, surface=surface)
                 else:
                     cand = Candidate(
                         surface_form=surface,

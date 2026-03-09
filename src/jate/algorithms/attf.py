@@ -32,7 +32,12 @@ class ATTF(Algorithm):
                 s = 0.0
             else:
                 s = ttf / df
-            term = Term(string=candidate.surface_form, score=s, frequency=ttf)
+            term = Term(
+                string=candidate.normalized_form,
+                score=s,
+                frequency=ttf,
+                surface_forms=set(candidate.surface_forms),
+            )
             result.add(term)
 
         return result.sort()

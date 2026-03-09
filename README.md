@@ -1,70 +1,166 @@
 # JATE — Just Automatic Term Extraction
 
-> **JATE is being completely rewritten.** The original Java/Solr library (84+ stars, 10+ algorithms) is being rebuilt from the ground up in Python. The goal: make automatic term extraction as easy as `pip install jate`.
+A Python library for automatic term extraction (ATE) from text corpora. JATE provides 13 classical ATE algorithms, corpus-level statistics, built-in evaluation, and a CLI — all pip-installable with no external services required.
 
-## What's happening?
+> Previously known as "Java Automatic Term Extraction" (84+ stars). The original Java/Solr library is preserved on the [`legacy/java`](https://github.com/ziqizhang/jate/tree/legacy/java) branch.
 
-JATE has been a trusted open-source tool for automatic term extraction since 2014, used by researchers and practitioners across NLP, biomedical text mining, and knowledge engineering. But the Java/Solr dependency made it hard to set up and integrate into modern Python-based NLP workflows.
+## Installation
 
-**We're fixing that.** Over the coming weeks, JATE is being revamped into a modern Python library — lightweight, pip-installable, and designed to work seamlessly with spaCy, pandas, and the broader Python ecosystem.
+```bash
+pip install jate
+```
 
-This rebuild is being developed with the help of **agentic coding tools**, combining human expertise in NLP research with AI-assisted development to accelerate the process.
+Or from source:
 
-> Looking for the original Java version? It's preserved on the [`legacy/java`](https://github.com/ziqizhang/jate/tree/legacy/java) branch.
+```bash
+git clone https://github.com/ziqizhang/jate.git
+cd jate
+pip install .
+```
 
-## Sneak peek
+Requires Python 3.11+ and a spaCy model:
 
-**Dead-simple API:**
+```bash
+python -m spacy download en_core_web_sm
+```
+
+## Quick start
+
+### Single document
 
 ```python
 import jate
 
-# One line — that's it
-terms = jate.extract("Your document text here...")
+# Extract terms from text (default: C-Value + POS pattern extraction)
+result = jate.extract("Your document text here...")
 
-# Corpus-level extraction with any algorithm
-terms = jate.extract_corpus(docs, algorithm="cvalue")
-
-# Compare algorithms side by side
-results = jate.compare(corpus, algorithms=["cvalue", "tfidf", "weirdness"])
+for term in result:
+    print(f"{term.string:30s}  score={term.score:.4f}  surfaces={term.surface_forms}")
 ```
 
-**spaCy integration:**
+### Corpus-level extraction
 
 ```python
-import spacy
-nlp = spacy.load("en_core_web_sm")
-nlp.add_pipe("jate", config={"algorithm": "cvalue"})
+import jate
 
-doc = nlp("Your text here")
-print(doc._.terms)
+# From a list of texts
+result = jate.extract_corpus(
+    ["First document...", "Second document..."],
+    algorithm="tfidf",
+)
+
+# From a directory of text files
+result = jate.extract_corpus("path/to/corpus/", algorithm="cvalue")
+
+# Export results
+df = result.to_dataframe()
+print(result.to_csv())
 ```
 
-**CLI:**
+### Compare algorithms
+
+```python
+import jate
+
+results = jate.compare(
+    ["Doc one...", "Doc two..."],
+    algorithms=["cvalue", "tfidf", "rake", "weirdness"],
+)
+
+for algo_name, result in results.items():
+    print(f"\n{algo_name}: {len(result)} terms")
+    for term in list(result)[:5]:
+        print(f"  {term.string:30s}  {term.score:.4f}")
+```
+
+### Evaluation against a gold standard
+
+```python
+import jate
+
+result = jate.extract_corpus(docs, algorithm="cvalue")
+
+evaluator = jate.Evaluator(gold_terms={"machine learning", "neural network", ...})
+eval_result = evaluator.evaluate(result)
+print(eval_result.summary())
+# P=0.2800  R=0.0644  F1=0.1047  TP=28  FP=72  FN=407  predicted=100  gold=435
+
+# Evaluate top-k
+eval_at_50 = evaluator.evaluate_at_k(result, k=50)
+```
+
+### CLI
 
 ```bash
-jate extract paper.pdf --algorithm cvalue
-jate benchmark --dataset genia --algorithms all
-jate demo  # launches interactive web UI
+# Extract terms from text
+jate extract "Your text here" --algorithm cvalue --top 20
+
+# Extract from a corpus directory
+jate corpus path/to/docs/ --algorithm tfidf --output csv
+
+# Compare algorithms on a corpus
+jate compare path/to/docs/ --algorithms cvalue tfidf rake
+
+# Run benchmark on built-in dataset
+jate benchmark --top 100
 ```
 
-## Planned features
+## Algorithms
 
-- **13+ ATE algorithms** in one library — C-Value, NC-Value, TFIDF, RIDF, RAKE, ChiSquare, Weirdness, TermEx, GlossEx, and more
+| Algorithm | Description | Reference |
+|-----------|-------------|-----------|
+| `tfidf` | TF-IDF at corpus level | — |
+| `cvalue` | Multi-word term extraction via nested term frequency | Frantzi et al. 2000 |
+| `ncvalue` | C-Value extended with context word information | Frantzi et al. 2000 |
+| `basic` | Frequency + containment scoring | Bordea et al. 2013 |
+| `combobasic` | Basic with parent and child containment | Bordea et al. 2013 |
+| `attf` | Average total term frequency (TTF / DF) | — |
+| `ttf` | Raw total term frequency | — |
+| `ridf` | Residual IDF (deviation from Poisson) | Church & Gale 1995 |
+| `rake` | Rapid Automatic Keyword Extraction | Rose et al. 2010 |
+| `chi_square` | Chi-square test for term independence | Matsuo & Ishizuka 2003 |
+| `weirdness` | Target vs reference corpus frequency ratio | Ahmad et al. 1999 |
+| `termex` | Domain pertinence + context + lexical cohesion | Sclano et al. 2007 |
+| `glossex` | Domain specificity via glossary comparison | Park et al. 2002 |
+
+## Candidate extractors
+
+| Extractor | Description |
+|-----------|-------------|
+| `pos_pattern` (default) | Regex over Universal POS tags (e.g. `(ADJ )*(NOUN )+`) |
+| `ngram` | Contiguous token n-grams (configurable min/max n) |
+| `noun_phrase` | spaCy noun chunk detection |
+
+## How it works
+
+1. **Candidate extraction** — identifies potential terms using POS patterns, n-grams, or noun phrases
+2. **Lemmatisation** — normalises candidates to their lemmatised form (e.g. "neural networks" and "neural network" become one entry)
+3. **Corpus statistics** — builds frequency and co-occurrence counts (in-memory or SQLite-backed)
+4. **Scoring** — applies the chosen algorithm to rank candidates
+5. **Output** — returns `TermExtractionResult` with the normalised term, score, and all observed surface forms
+
+Each `Term` in the result contains:
+- `string` — the canonical (lemmatised) form, used for scoring and evaluation
+- `score` — algorithm-assigned score
+- `frequency` — total corpus frequency
+- `surface_forms` — all surface variants observed (e.g. `{"neural network", "neural networks", "Neural Networks"}`)
+
+## Roadmap
+
+- **spaCy pipeline integration** — `nlp.add_pipe("jate")`
+- **Interactive web demo** — Streamlit UI with HuggingFace Spaces deployment
+- **More benchmarks** — ACTER, GENIA, CoastTerm, TermEval datasets
 - **Neural methods** — BERT-based sequence labeling, embedding-based scoring
-- **LLM-augmented extraction** — optional LLM re-ranking and validation of extracted terms
-- **Corpus-level analysis** — SQLite-backed statistics that scale without external services
-- **Built-in benchmarking** — 10 standard datasets (GENIA, ACTER, ACL RD-TEC, CoastTerm, and more) with one-command evaluation
-- **Interactive web demo** — Streamlit UI for trying algorithms, comparing results, and visualizing terms
-- **Multilingual** — works with any spaCy language model
-- **Agentic pipeline** — LangGraph-powered orchestration that automatically selects the best algorithm and parameters for your corpus
-- **Production-ready** — typed, tested, CI/CD, Docker, and published on PyPI
+- **LLM-augmented extraction** — optional LLM re-ranking and validation
+- **Agentic pipeline** — LangGraph-powered orchestration for automatic algorithm selection
+- **Multilingual support** — works with any spaCy language model
+- **Production-ready** — strict typing, >90% test coverage, Docker, PyPI publishing
 
 ## Get involved
 
 JATE is in active development. We'd love your input:
 
-- **Feature requests:** [Open an issue](https://github.com/ziqizhang/jate/issues/new?template=feature_request.yml) — tell us what you need
+- **Feature requests:** [Open an issue](https://github.com/ziqizhang/jate/issues/new?template=feature_request.yml)
 - **Bug reports:** [Report here](https://github.com/ziqizhang/jate/issues/new?template=bug_report.yml)
 - **Star the repo** to follow progress
 

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import math
 
+from jate.algorithms._reference_utils import _match_orders_of_magnitude
 from jate.algorithms.base import Algorithm
 from jate.models import Candidate, Term, TermExtractionResult
 from jate.protocols import CorpusStore
@@ -52,6 +53,13 @@ class TermEx(Algorithm):
         else:
             self._null_prob = 0.1
 
+        # Order-of-magnitude scaling (Java ReferenceBased.matchOrdersOfMagnitude)
+        self._oom_scalar = (
+            _match_orders_of_magnitude(self._word_freq, reference_frequencies, reference_total)
+            if self._word_freq
+            else 1.0
+        )
+
     @property
     def description(self) -> str:
         return "TermEx: domain pertinence + context scoring"
@@ -87,6 +95,7 @@ class TermEx(Algorithm):
                     ref_f_val = self._null_prob * self._ref_total if self._ref_total > 0 else 1.0
                 else:
                     ref_f_val = float(ref_f)
+                ref_f_val *= self._oom_scalar
                 dp_lower += ref_f_val
 
             ref_total = self._ref_total if self._ref_total > 0 else 1
@@ -113,7 +122,12 @@ class TermEx(Algorithm):
 
             s = self._alpha * dp + self._beta * dc + self._zeta * lc
 
-            term = Term(string=candidate.surface_form, score=s, frequency=ttf)
+            term = Term(
+                string=candidate.normalized_form,
+                score=s,
+                frequency=ttf,
+                surface_forms=set(candidate.surface_forms),
+            )
             result.add(term)
 
         return result.sort()

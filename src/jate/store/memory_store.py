@@ -88,9 +88,9 @@ class MemoryCorpusStore:
     # ------------------------------------------------------------------
 
     def get_containing_terms(self, term: str) -> list[str]:
-        """Return terms that contain *term* as a substring (excluding exact match)."""
-        needle = term.lower()
-        return [t for t in self._term_freq if needle in t and t != needle]
+        """Return terms that contain *term* as a whole-word subsequence (excluding exact match)."""
+        padded = f" {term.lower()} "
+        return [t for t in self._term_freq if t != term.lower() and padded in f" {t} "]
 
     def get_term_document_frequency_map(self, term: str) -> dict[str, int]:
         """Per-document frequencies for *term*."""

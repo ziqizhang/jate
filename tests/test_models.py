@@ -155,7 +155,7 @@ class TestTermExtractionResult:
     def test_to_dataframe(self, sample_result: TermExtractionResult) -> None:
         df = sample_result.to_dataframe()
         assert isinstance(df, pd.DataFrame)
-        assert list(df.columns) == ["term", "score", "frequency", "rank"]
+        assert list(df.columns) == ["term", "score", "frequency", "rank", "surface_forms"]
         assert len(df) == 4
 
     def test_to_csv(self, sample_result: TermExtractionResult) -> None:

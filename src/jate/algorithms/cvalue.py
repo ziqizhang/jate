@@ -44,9 +44,10 @@ class CValue(Algorithm):
                 if other.normalized_form == c.normalized_form:
                     continue
                 # Parent must be strictly longer and contain this term
+                # as a whole-word subsequence (space-padded `in` check).
                 if (
                     len(other.normalized_form.split()) > len(c.normalized_form.split())
-                    and c.normalized_form in other.normalized_form
+                    and f" {c.normalized_form} " in f" {other.normalized_form} "
                 ):
                     parents.append(other.normalized_form)
             containment[c.normalized_form] = parents
@@ -70,7 +71,12 @@ class CValue(Algorithm):
                 sum_freq_b = sum(corpus_store.get_term_frequency(pt) for pt in parent_terms)
                 s = log2a * (freq_a - sum_freq_b / p_ta)
 
-            term = Term(string=candidate.surface_form, score=s, frequency=ttf)
+            term = Term(
+                string=candidate.normalized_form,
+                score=s,
+                frequency=ttf,
+                surface_forms=set(candidate.surface_forms),
+            )
             result.add(term)
 
         return result.sort()

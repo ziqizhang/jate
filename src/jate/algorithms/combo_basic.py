@@ -45,9 +45,9 @@ class ComboBasic(Algorithm):
                     continue
                 c_words = len(c.normalized_form.split())
                 o_words = len(other.normalized_form.split())
-                if o_words > c_words and c.normalized_form in other.normalized_form:
+                if o_words > c_words and f" {c.normalized_form} " in f" {other.normalized_form} ":
                     parents.append(other.normalized_form)
-                elif o_words < c_words and other.normalized_form in c.normalized_form:
+                elif o_words < c_words and f" {other.normalized_form} " in f" {c.normalized_form} ":
                     children.append(other.normalized_form)
             parent_map[c.normalized_form] = parents
             child_map[c.normalized_form] = children
@@ -68,7 +68,12 @@ class ComboBasic(Algorithm):
                 etp = float(len(child_map.get(nf, [])))
                 s = word_count * log_f + self._alpha * et + self._beta * etp
 
-            term = Term(string=candidate.surface_form, score=s, frequency=ttf)
+            term = Term(
+                string=candidate.normalized_form,
+                score=s,
+                frequency=ttf,
+                surface_forms=set(candidate.surface_forms),
+            )
             result.add(term)
 
         return result.sort()

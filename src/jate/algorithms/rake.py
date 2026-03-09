@@ -72,9 +72,10 @@ class RAKE(Algorithm):
                 total_score += word_score
 
             term = Term(
-                string=candidate.surface_form,
+                string=candidate.normalized_form,
                 score=total_score,
                 frequency=corpus_store.get_term_frequency(nf),
+                surface_forms=set(candidate.surface_forms),
             )
             result.add(term)
 

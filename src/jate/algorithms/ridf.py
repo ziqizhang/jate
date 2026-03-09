@@ -42,7 +42,12 @@ class RIDF(Algorithm):
             df = corpus_store.get_document_frequency(nf)
 
             if df == 0 or total_docs == 0:
-                result.add(Term(string=candidate.surface_form, score=0.0, frequency=ttf))
+                result.add(Term(
+                    string=candidate.normalized_form,
+                    score=0.0,
+                    frequency=ttf,
+                    surface_forms=set(candidate.surface_forms),
+                ))
                 continue
 
             attf = ttf / total_docs
@@ -59,7 +64,12 @@ class RIDF(Algorithm):
 
             ridf = idf - eidf
 
-            term = Term(string=candidate.surface_form, score=ridf, frequency=ttf)
+            term = Term(
+                string=candidate.normalized_form,
+                score=ridf,
+                frequency=ttf,
+                surface_forms=set(candidate.surface_forms),
+            )
             result.add(term)
 
         return result.sort()

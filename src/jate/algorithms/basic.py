@@ -40,7 +40,7 @@ class Basic(Algorithm):
                     continue
                 if (
                     len(other.normalized_form.split()) > len(c.normalized_form.split())
-                    and c.normalized_form in other.normalized_form
+                    and f" {c.normalized_form} " in f" {other.normalized_form} "
                 ):
                     parents.append(other.normalized_form)
             containment[c.normalized_form] = parents
@@ -60,7 +60,12 @@ class Basic(Algorithm):
                 et = float(len(containment.get(nf, [])))
                 s = word_count * log_f + self._alpha * et
 
-            term = Term(string=candidate.surface_form, score=s, frequency=ttf)
+            term = Term(
+                string=candidate.normalized_form,
+                score=s,
+                frequency=ttf,
+                surface_forms=set(candidate.surface_forms),
+            )
             result.add(term)
 
         return result.sort()

@@ -44,11 +44,14 @@ class NounPhraseExtractor(CandidateExtractorBase):
                     continue
 
                 surface = " ".join(words)
-                # Build normalized form by lemmatizing each token.
-                norm_tokens: list[str] = []
-                for word in words:
-                    norm_tokens.append(lemma_map.get(word, word).lower())
-                normalized = " ".join(norm_tokens)
+                # Java JATE behaviour: only lemmatise the rightmost word.
+                if len(words) == 1:
+                    normalized = lemma_map.get(words[0], words[0]).lower()
+                else:
+                    normalized = " ".join(
+                        [w.lower() for w in words[:-1]]
+                        + [lemma_map.get(words[-1], words[-1]).lower()]
+                    )
 
                 # Find character offset in the document text,
                 # advancing past previously found occurrences.
@@ -61,7 +64,7 @@ class NounPhraseExtractor(CandidateExtractorBase):
                     end = 0
 
                 if normalized in merged:
-                    merged[normalized].add_position(doc.doc_id, start, end)
+                    merged[normalized].add_position(doc.doc_id, start, end, surface=surface)
                 else:
                     cand = Candidate(
                         surface_form=surface,

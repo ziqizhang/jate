@@ -15,9 +15,10 @@ import pandas as pd
 class Term:
     """A scored term extracted from a corpus.
 
-    Mirrors the Java ``JATETerm`` — holds the surface string, its
-    algorithm-assigned score, corpus frequency, optional rank, and an
-    open-ended metadata dict for anything algorithm-specific.
+    ``string`` is the canonical (normalised / lemmatised) form used for
+    scoring and evaluation.  ``surface_forms`` maps back to every
+    surface variant observed in the corpus so downstream consumers can
+    display or highlight original text.
     """
 
     string: str
@@ -25,6 +26,7 @@ class Term:
     frequency: int = 0
     rank: int = 0
     metadata: dict[str, Any] = field(default_factory=dict)
+    surface_forms: set[str] = field(default_factory=set)
 
     # Natural ordering: higher score first, then alphabetical.
     def __lt__(self, other: object) -> bool:
@@ -45,6 +47,9 @@ class Candidate:
     Captures linguistic information gathered during candidate extraction:
     surface form, normalised (lemmatised) form, POS pattern, and the
     positions where the candidate was found across documents.
+
+    ``normalized_form`` is the canonical (lemmatised, lowercased) key.
+    ``surface_forms`` collects every distinct surface variant observed.
     """
 
     surface_form: str
@@ -53,15 +58,22 @@ class Candidate:
     # doc_id -> list of (start, end) character offsets
     doc_positions: dict[str, list[tuple[int, int]]] = field(default_factory=dict)
     total_frequency: int = 0
+    surface_forms: set[str] = field(default_factory=set)
 
     def __post_init__(self) -> None:
         if not self.normalized_form:
             self.normalized_form = self.surface_form.lower()
+        # Ensure the initial surface_form is always in the set.
+        self.surface_forms.add(self.surface_form)
 
-    def add_position(self, doc_id: str, start: int, end: int) -> None:
+    def add_position(
+        self, doc_id: str, start: int, end: int, surface: str = ""
+    ) -> None:
         """Record a new occurrence of this candidate in a document."""
         self.doc_positions.setdefault(doc_id, []).append((start, end))
         self.total_frequency += 1
+        if surface:
+            self.surface_forms.add(surface)
 
     @property
     def document_frequency(self) -> int:
@@ -159,6 +171,7 @@ class TermExtractionResult:
                 "score": t.score,
                 "frequency": t.frequency,
                 "rank": t.rank,
+                "surface_forms": ", ".join(sorted(t.surface_forms)) if t.surface_forms else "",
             }
             for t in self._terms
         ]
@@ -181,6 +194,7 @@ class TermExtractionResult:
                 "score": t.score,
                 "frequency": t.frequency,
                 "rank": t.rank,
+                "surface_forms": sorted(t.surface_forms) if t.surface_forms else [],
                 "metadata": t.metadata,
             }
             for t in self._terms

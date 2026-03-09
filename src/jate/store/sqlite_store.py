@@ -152,10 +152,11 @@ class SQLiteCorpusStore:
     # ------------------------------------------------------------------
 
     def get_containing_terms(self, term: str) -> list[str]:
-        """Return terms that contain *term* as a substring (excluding exact match)."""
-        pattern = f"%{term.lower()}%"
+        """Return terms that contain *term* as a whole-word subsequence (excluding exact match)."""
+        pattern = f"% {term.lower()} %"
         rows = self._connection.execute(
-            "SELECT DISTINCT term FROM term_frequencies " "WHERE term LIKE ? AND term != ?",
+            "SELECT DISTINCT term FROM term_frequencies "
+            "WHERE (' ' || term || ' ') LIKE ? AND term != ?",
             (pattern, term.lower()),
         ).fetchall()
         return [r[0] for r in rows]

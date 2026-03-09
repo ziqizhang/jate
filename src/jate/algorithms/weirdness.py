@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import math
 
+from jate.algorithms._reference_utils import _match_orders_of_magnitude
 from jate.algorithms.base import Algorithm
 from jate.models import Candidate, Term, TermExtractionResult
 from jate.protocols import CorpusStore
@@ -32,6 +33,7 @@ class Weirdness(Algorithm):
         reference_frequencies: dict[str, int],
         reference_total: int,
         word_frequencies: dict[str, int] | None = None,
+        match_oom: bool = True,
     ) -> None:
         self._ref_freq = reference_frequencies
         self._ref_total = reference_total
@@ -43,6 +45,13 @@ class Weirdness(Algorithm):
             self._null_prob = min_freq / reference_total
         else:
             self._null_prob = 0.1
+
+        # Order-of-magnitude scaling (Java ReferenceBased.matchOrdersOfMagnitude)
+        self._oom_scalar = (
+            _match_orders_of_magnitude(self._word_freq, reference_frequencies, reference_total)
+            if match_oom and self._word_freq
+            else 1.0
+        )
 
     @property
     def description(self) -> str:
@@ -78,15 +87,17 @@ class Weirdness(Algorithm):
                     pc_wi = ref_freq / self._ref_total
                 else:
                     pc_wi = self._null_prob
+                pc_wi *= self._oom_scalar
 
                 v = (freq / total_words) / pc_wi
                 sum_wi += math.log(v)
 
             td = sum_wi / t if t > 0 else 0.0
             term = Term(
-                string=candidate.surface_form,
+                string=candidate.normalized_form,
                 score=td,
                 frequency=corpus_store.get_term_frequency(nf),
+                surface_forms=set(candidate.surface_forms),
             )
             result.add(term)
 

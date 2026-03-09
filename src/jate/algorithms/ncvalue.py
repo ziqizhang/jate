@@ -51,7 +51,7 @@ class NCValue(Algorithm):
                 cooc = corpus_store.get_cooccurrences(nf, other.normalized_form)
                 if cooc > 0:
                     ctx_score += cooc
-            context_scores[candidate.surface_form] = ctx_score
+            context_scores[nf] = ctx_score
 
         # Normalise context scores to [0, 1] range
         max_ctx = max(context_scores.values()) if context_scores else 1.0
@@ -60,13 +60,15 @@ class NCValue(Algorithm):
 
         result = TermExtractionResult()
         for candidate in candidates:
-            cv = cvalue_scores.get(candidate.surface_form, 0.0)
-            ctx = context_scores.get(candidate.surface_form, 0.0) / max_ctx
+            nf = candidate.normalized_form
+            cv = cvalue_scores.get(nf, 0.0)
+            ctx = context_scores.get(nf, 0.0) / max_ctx
             s = self._cvalue_weight * cv + self._context_weight * ctx
             term = Term(
-                string=candidate.surface_form,
+                string=nf,
                 score=s,
-                frequency=corpus_store.get_term_frequency(candidate.normalized_form),
+                frequency=corpus_store.get_term_frequency(nf),
+                surface_forms=set(candidate.surface_forms),
             )
             result.add(term)
 

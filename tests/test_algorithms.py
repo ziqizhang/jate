@@ -132,9 +132,10 @@ class TestTFIDF:
         assert len(result) == 4
 
         # Verify one score manually: neural network tf=50, df=5, N=10
-        # score = 50 * log(10/5) = 50 * log(2)
+        # tf_norm = 50 / (1000 + 1), idf = log(10/5) = log(2)
+        # score = tf_norm * idf
         scores = {t.string: t.score for t in result}
-        expected = 50 * math.log(2)
+        expected = (50 / 1001) * math.log(2)
         assert abs(scores["neural network"] - expected) < 1e-9
 
     def test_sorted_descending(self) -> None:

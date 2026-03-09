@@ -65,13 +65,19 @@ class NGramExtractor(CandidateExtractorBase):
                         continue
 
                     surface = " ".join(span_tokens)
-                    normalized = " ".join(span_lemmas).lower()
+                    # Java JATE behaviour: only lemmatise the rightmost word.
+                    if len(span_tokens) == 1:
+                        normalized = span_lemmas[0].lower()
+                    else:
+                        normalized = " ".join(
+                            [t.lower() for t in span_tokens[:-1]] + [span_lemmas[-1].lower()]
+                        )
 
                     doc_start = token_offsets[i][0]
                     doc_end = token_offsets[i + n - 1][1]
 
                     if normalized in merged:
-                        merged[normalized].add_position(doc.doc_id, doc_start, doc_end)
+                        merged[normalized].add_position(doc.doc_id, doc_start, doc_end, surface=surface)
                     else:
                         cand = Candidate(
                             surface_form=surface,

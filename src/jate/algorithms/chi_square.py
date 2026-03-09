@@ -63,7 +63,12 @@ class ChiSquare(Algorithm):
             # n_w: total number of terms in contexts where w appears
             n_w = self._context_term_totals.get(nf, corpus_store.get_term_frequency(nf))
             if n_w == 0:
-                result.add(Term(string=candidate.surface_form, score=0.0, frequency=0))
+                result.add(Term(
+                    string=candidate.normalized_form,
+                    score=0.0,
+                    frequency=0,
+                    surface_forms=set(candidate.surface_forms),
+                ))
                 continue
 
             max_chi_square = self._max_exp_prob
@@ -95,9 +100,10 @@ class ChiSquare(Algorithm):
             s = sum_chi_w - max_chi_square
 
             term = Term(
-                string=candidate.surface_form,
+                string=candidate.normalized_form,
                 score=s,
                 frequency=corpus_store.get_term_frequency(nf),
+                surface_forms=set(candidate.surface_forms),
             )
             result.add(term)
 

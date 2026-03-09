@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import math
 
+from jate.algorithms._reference_utils import _match_orders_of_magnitude
 from jate.algorithms.base import Algorithm
 from jate.models import Candidate, Term, TermExtractionResult
 from jate.protocols import CorpusStore
@@ -47,6 +48,13 @@ class GlossEx(Algorithm):
         else:
             self._null_prob = 0.1
 
+        # Order-of-magnitude scaling (Java ReferenceBased.matchOrdersOfMagnitude)
+        self._oom_scalar = (
+            _match_orders_of_magnitude(self._word_freq, reference_frequencies, reference_total)
+            if self._word_freq
+            else 1.0
+        )
+
     @property
     def description(self) -> str:
         return "GlossEx: domain specificity via glossary comparison"
@@ -82,6 +90,7 @@ class GlossEx(Algorithm):
                     pc_wi = ref_f / self._ref_total
                 else:
                     pc_wi = self._null_prob
+                pc_wi *= self._oom_scalar
 
                 sum_wi += (wf / total_words) / pc_wi
                 sum_fwi += wf
@@ -95,7 +104,12 @@ class GlossEx(Algorithm):
             else:
                 s = self._alpha * td + self._beta * tc
 
-            term = Term(string=candidate.surface_form, score=s, frequency=ttf)
+            term = Term(
+                string=candidate.normalized_form,
+                score=s,
+                frequency=ttf,
+                surface_forms=set(candidate.surface_forms),
+            )
             result.add(term)
 
         return result.sort()
