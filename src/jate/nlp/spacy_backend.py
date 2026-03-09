@@ -46,6 +46,25 @@ class SpacyBackend:
             self._cached_text = text
         return self._cached_doc
 
+    # -- Batch processing -----------------------------------------------------
+
+    def process_batch(self, texts: list[str], batch_size: int = 256) -> list[Doc]:
+        """Process multiple texts efficiently using spaCy's ``nlp.pipe()``.
+
+        Uses spaCy's built-in batching which releases the GIL during
+        C-level parsing, enabling multi-threaded speedup.
+
+        Parameters
+        ----------
+        texts:
+            List of text strings to process.
+        batch_size:
+            Number of texts to buffer (default ``256``).
+        """
+        if not texts:
+            return []
+        return list(self._nlp.pipe(texts, batch_size=batch_size))
+
     # -- NLPBackend protocol methods ------------------------------------------
 
     def tokenize(self, text: str) -> list[str]:

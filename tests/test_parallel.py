@@ -1,11 +1,30 @@
-"""Tests for JATEConfig and parallel_map."""
+"""Tests for JATEConfig, parallel_map, and batch NLP processing."""
 from __future__ import annotations
 
 from jate.config import JATEConfig
+from jate.nlp.spacy_backend import SpacyBackend
 from jate.features import build_child_containment_index, build_containment_index
 from jate.models import Candidate
 from jate.parallel import parallel_map, split_range
 from jate.store.memory_store import MemoryCorpusStore
+
+
+class TestBatchNLP:
+    def test_process_batch(self) -> None:
+        nlp = SpacyBackend("en_core_web_sm")
+        texts = [
+            "Machine learning is great.",
+            "Neural networks are powerful.",
+        ]
+        docs = nlp.process_batch(texts)
+        assert len(docs) == 2
+        assert len(docs[0]) > 0
+        assert len(docs[1]) > 0
+
+    def test_process_batch_empty(self) -> None:
+        nlp = SpacyBackend("en_core_web_sm")
+        docs = nlp.process_batch([])
+        assert docs == []
 
 
 class TestJATEConfig:
