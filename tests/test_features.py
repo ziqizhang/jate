@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import pytest
-from jate.features import ReferenceFrequency, TermFrequency, WordFrequency
+from jate.features import ContextFrequency, ContextWindow, ReferenceFrequency, TermFrequency, WordFrequency
 from jate.models import Candidate, Document
 
 
@@ -97,3 +97,57 @@ class TestReferenceFrequency:
         rf = ReferenceFrequency(word2ttf={"a": 10, "b": 0}, corpus_total=100)
         # null_prob = min of non-zero freqs / total = 10 / 100
         assert rf.null_prob == pytest.approx(0.1)
+
+
+class TestContextFrequency:
+    def _make_data(self):
+        """3 candidates across 2 sentences in 1 doc."""
+        # Sentence 0: "neural network" appears twice, "deep learning" once → ctx2TTF = 3
+        # Sentence 1: "neural network" once, "machine learning" once → ctx2TTF = 2
+        c1 = Candidate(surface_form="neural network", normalized_form="neural network")
+        c1.add_position("doc1", 0, 14, sentence_idx=0)
+        c1.add_position("doc1", 30, 44, sentence_idx=0)
+        c1.add_position("doc1", 100, 114, sentence_idx=1)
+
+        c2 = Candidate(surface_form="deep learning", normalized_form="deep learning")
+        c2.add_position("doc1", 15, 28, sentence_idx=0)
+
+        c3 = Candidate(surface_form="machine learning", normalized_form="machine learning")
+        c3.add_position("doc1", 115, 131, sentence_idx=1)
+
+        return [c1, c2, c3]
+
+    def test_ctx2ttf(self):
+        candidates = self._make_data()
+        cf = ContextFrequency.build(candidates)
+        ctx0 = ContextWindow(doc_id="doc1", sentence_id=0)
+        ctx1 = ContextWindow(doc_id="doc1", sentence_id=1)
+        # Sentence 0: neural network x2 + deep learning x1 = 3
+        assert cf.get_ctx_ttf(ctx0) == 3
+        # Sentence 1: neural network x1 + machine learning x1 = 2
+        assert cf.get_ctx_ttf(ctx1) == 2
+
+    def test_ctx2tfic(self):
+        candidates = self._make_data()
+        cf = ContextFrequency.build(candidates)
+        ctx0 = ContextWindow(doc_id="doc1", sentence_id=0)
+        tfic = cf.get_tfic(ctx0)
+        assert tfic["neural network"] == 2
+        assert tfic["deep learning"] == 1
+
+    def test_term2ctx(self):
+        candidates = self._make_data()
+        cf = ContextFrequency.build(candidates)
+        ctxs = cf.get_contexts("neural network")
+        assert len(ctxs) == 2  # appears in sentence 0 and 1
+
+    def test_n_w_for_chi_square(self):
+        """n_w = sum of ctx2TTF for all contexts containing term w."""
+        candidates = self._make_data()
+        cf = ContextFrequency.build(candidates)
+        # neural network appears in both sentences: n_w = 3 + 2 = 5
+        assert cf.get_n_w("neural network") == 5
+        # deep learning appears only in sentence 0: n_w = 3
+        assert cf.get_n_w("deep learning") == 3
+        # machine learning appears only in sentence 1: n_w = 2
+        assert cf.get_n_w("machine learning") == 2

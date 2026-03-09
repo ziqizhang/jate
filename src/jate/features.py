@@ -5,9 +5,13 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING, NamedTuple
 
 from jate.models import Candidate, Document
 from jate.parallel import parallel_map, split_range
+
+if TYPE_CHECKING:
+    from jate.protocols import NLPBackend
 
 
 @dataclass(slots=True)
@@ -147,6 +151,155 @@ class ReferenceFrequency:
         filtered = {k: v for k, v in wf.word2ttf.items() if v > 0}
         total = sum(filtered.values()) if filtered else 1
         return cls(word2ttf=filtered, corpus_total=total)
+
+
+class ContextWindow(NamedTuple):
+    """Identifies a context (sentence within a document).
+
+    Mirrors Java's ``ContextWindow``. For sentence-level contexts,
+    ``doc_id`` and ``sentence_id`` are set.
+    """
+
+    doc_id: str
+    sentence_id: int = -1
+
+
+@dataclass(slots=True)
+class ContextFrequency:
+    """Context-aware frequency statistics.
+
+    Mirrors Java's ``FrequencyCtxBased`` at sentence granularity.
+
+    Attributes
+    ----------
+    ctx2ttf : dict[ContextWindow, int]
+        Context -> total candidate term occurrences in that context.
+    ctx2tfic : dict[ContextWindow, dict[str, int]]
+        Context -> {term -> frequency in context}.
+    term2ctx : dict[str, set[ContextWindow]]
+        Term -> set of contexts where it appears.
+    adjacent : dict[str, dict[str, int]]
+        Term -> {word -> count} for adjacent words (NC-Value).
+    """
+
+    ctx2ttf: dict[ContextWindow, int] = field(default_factory=dict)
+    ctx2tfic: dict[ContextWindow, dict[str, int]] = field(default_factory=dict)
+    term2ctx: dict[str, set[ContextWindow]] = field(default_factory=dict)
+    adjacent: dict[str, dict[str, int]] = field(default_factory=dict)
+
+    @classmethod
+    def build(
+        cls,
+        candidates: list[Candidate],
+        documents: list[Document] | None = None,
+        nlp_backend: NLPBackend | None = None,
+    ) -> ContextFrequency:
+        ctx2ttf: dict[ContextWindow, int] = defaultdict(int)
+        ctx2tfic: dict[ContextWindow, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+        term2ctx: dict[str, set[ContextWindow]] = defaultdict(set)
+
+        for cand in candidates:
+            term = cand.normalized_form.lower()
+            for doc_id, positions in cand.doc_positions.items():
+                for _start, _end, sent_idx in positions:
+                    if sent_idx < 0:
+                        continue
+                    ctx = ContextWindow(doc_id=doc_id, sentence_id=sent_idx)
+                    ctx2ttf[ctx] += 1
+                    ctx2tfic[ctx][term] += 1
+                    term2ctx[term].add(ctx)
+
+        # Adjacent words (for NC-Value) — same logic as old ContextIndex
+        adjacent: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+        if nlp_backend is not None and documents is not None:
+            from jate.extractors.utils import compute_token_offsets
+
+            doc_map = {doc.doc_id: doc for doc in documents}
+            for cand in candidates:
+                norm = cand.normalized_form.lower()
+                for doc_id, positions in cand.doc_positions.items():
+                    doc = doc_map.get(doc_id)
+                    if doc is None:
+                        continue
+                    text = doc.content
+                    tokens = nlp_backend.tokenize(text)
+                    token_offsets = compute_token_offsets(text, tokens)
+                    for char_start, char_end, _sent_idx in positions:
+                        before_token = None
+                        after_token = None
+                        for i, (t_start, t_end) in enumerate(token_offsets):
+                            if t_end <= char_start:
+                                before_token = tokens[i]
+                            if t_start >= char_end:
+                                after_token = tokens[i]
+                                break
+                        if before_token:
+                            adjacent[norm][before_token.lower()] += 1
+                        if after_token:
+                            adjacent[norm][after_token.lower()] += 1
+
+        return cls(
+            ctx2ttf=dict(ctx2ttf),
+            ctx2tfic={k: dict(v) for k, v in ctx2tfic.items()},
+            term2ctx={k: set(v) for k, v in term2ctx.items()},
+            adjacent={k: dict(v) for k, v in adjacent.items()},
+        )
+
+    def get_ctx_ttf(self, ctx: ContextWindow) -> int:
+        return self.ctx2ttf.get(ctx, 0)
+
+    def get_tfic(self, ctx: ContextWindow) -> dict[str, int]:
+        return dict(self.ctx2tfic.get(ctx, {}))
+
+    def get_contexts(self, term: str) -> set[ContextWindow]:
+        return self.term2ctx.get(term.lower(), set())
+
+    def get_n_w(self, term: str) -> int:
+        """Chi-Square's n_w: sum of TTF across all contexts containing term."""
+        total = 0
+        for ctx in self.get_contexts(term):
+            total += self.ctx2ttf.get(ctx, 0)
+        return total
+
+    def get_adjacent_words(self, term: str) -> dict[str, int]:
+        """Adjacent words for NC-Value."""
+        return self.adjacent.get(term.lower(), {})
+
+    def copy_top_fraction(
+        self, term_freq: TermFrequency, fraction: float = 0.3
+    ) -> ContextFrequency:
+        """Java's FrequencyCtxBasedCopier: filter to top-fraction most frequent terms.
+
+        Returns a new ContextFrequency containing only terms whose TTF
+        is at or above the given percentile threshold.
+        """
+        all_ttfs = sorted(term_freq.term2ttf.values())
+        if not all_ttfs:
+            return ContextFrequency()
+        threshold_idx = int(len(all_ttfs) * (1 - fraction))
+        threshold = all_ttfs[min(threshold_idx, len(all_ttfs) - 1)]
+
+        kept_terms = {t for t, f in term_freq.term2ttf.items() if f >= threshold}
+
+        new_ctx2ttf: dict[ContextWindow, int] = {}
+        new_ctx2tfic: dict[ContextWindow, dict[str, int]] = {}
+        new_term2ctx: dict[str, set[ContextWindow]] = defaultdict(set)
+
+        for ctx, tfic in self.ctx2tfic.items():
+            filtered_tfic = {t: f for t, f in tfic.items() if t in kept_terms}
+            if not filtered_tfic:
+                continue
+            new_ctx2tfic[ctx] = filtered_tfic
+            new_ctx2ttf[ctx] = sum(filtered_tfic.values())
+            for t in filtered_tfic:
+                new_term2ctx[t].add(ctx)
+
+        return ContextFrequency(
+            ctx2ttf=new_ctx2ttf,
+            ctx2tfic=new_ctx2tfic,
+            term2ctx=dict(new_term2ctx),
+            adjacent={},
+        )
 
 
 def _containment_chunk(args: tuple) -> dict[str, list[str]]:
