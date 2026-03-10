@@ -467,9 +467,10 @@ class TestWeirdness:
         result = algo.score(_make_candidates(), tf, ref_freq=ref_freq)
         assert len(result) == 4
 
-        # Verify "network" (single word): score = log(100/1000 / (800/100000))
+        # Verify "network" (single word): score = log(100/1000 / (800/100001))
+        # Uses get_ttf_norm which has +1 denominator matching Java's getTTFNorm
         scores = {t.string: t.score for t in result}
-        expected = math.log((100 / 1000) / (800 / 100000))
+        expected = math.log((100 / 1000) / (800 / 100001))
         assert abs(scores["network"] - expected) < 1e-9
 
     def test_sorted(self) -> None:

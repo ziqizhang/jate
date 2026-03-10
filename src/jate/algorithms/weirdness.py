@@ -81,10 +81,8 @@ class Weirdness(Algorithm):
                     continue
 
                 # Normalised probability in reference corpus
-                ref_f = ref_freq.get_ttf(wi)
-                if ref_f > 0 and ref_total > 0:
-                    pc_wi = ref_f / ref_total
-                else:
+                pc_wi = ref_freq.get_ttf_norm(wi)
+                if pc_wi == 0.0:
                     pc_wi = null_prob
                 pc_wi *= oom_scalar
 

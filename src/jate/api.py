@@ -149,6 +149,7 @@ def _build_features(
     documents: list[Any],
     nlp: SpacyBackend,
     term_freq: TermFrequency,
+    config: JATEConfig | None = None,
 ) -> dict[str, Any]:
     """Lazily build only the feature objects required by *algo*.
 
@@ -193,7 +194,10 @@ def _build_features(
         if word_freq is None:
             word_freq = WordFrequency.build(documents, nlp.tokenize)
             kwargs["word_freq"] = word_freq
-        ref_freq = ReferenceFrequency.from_word_frequency(word_freq)
+        if config and config.reference_frequency_file:
+            ref_freq = ReferenceFrequency.from_file(config.reference_frequency_file)
+        else:
+            ref_freq = ReferenceFrequency.from_word_frequency(word_freq)
         kwargs["ref_freq"] = ref_freq
 
     # --- Chi-Square specific: Cooccurrence + ChiSquareFrequentTerms ---
@@ -271,7 +275,7 @@ def extract(
     term_freq = TermFrequency.build(candidates, total_docs)
 
     algo = _resolve_algorithm(algorithm, **algo_kwargs)
-    score_kwargs = _build_features(algo, candidates, documents, nlp, term_freq)
+    score_kwargs = _build_features(algo, candidates, documents, nlp, term_freq, config)
     result = algo.score(candidates, term_freq, **score_kwargs)
 
     # Apply filters
@@ -351,7 +355,7 @@ def extract_corpus(
     term_freq = TermFrequency.build(candidates, total_docs)
 
     algo = _resolve_algorithm(algorithm, **algo_kwargs)
-    score_kwargs = _build_features(algo, candidates, documents, nlp, term_freq)
+    score_kwargs = _build_features(algo, candidates, documents, nlp, term_freq, config)
     result = algo.score(candidates, term_freq, **score_kwargs)
 
     # Apply filters
@@ -430,7 +434,7 @@ def compare(
     results: dict[str, TermExtractionResult] = {}
     for algo_name in algorithms:
         algo = _resolve_algorithm(algo_name, **kwargs)
-        score_kwargs = _build_features(algo, candidates, documents, nlp, term_freq)
+        score_kwargs = _build_features(algo, candidates, documents, nlp, term_freq, config)
         result = algo.score(candidates, term_freq, **score_kwargs)
         result = result.filter_by_frequency(min_frequency)
         result = result.filter_by_length(min_words=min_words, max_words=max_words)

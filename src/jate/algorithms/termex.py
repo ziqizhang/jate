@@ -89,16 +89,13 @@ class TermEx(Algorithm):
                 dp_upper += wf
                 sum_fwi += wf
 
-                ref_f = ref_freq.get_ttf(wi)
-                if ref_f == 0:
-                    ref_f_val = null_prob * ref_total if ref_total > 0 else 1.0
-                else:
-                    ref_f_val = float(ref_f)
-                ref_f_val *= oom_scalar
-                dp_lower += ref_f_val
+                pc_wi = ref_freq.get_ttf_norm(wi)
+                if pc_wi == 0.0:
+                    pc_wi = null_prob
+                pc_wi *= oom_scalar
+                dp_lower += pc_wi
 
-            ref_total_safe = ref_total if ref_total > 0 else 1
-            dp = (dp_upper / total_words) / (dp_lower / ref_total_safe) if dp_lower > 0 else 0.0
+            dp = (dp_upper / total_words) / dp_lower if dp_lower > 0 else 0.0
 
             # DC: Domain Consensus (entropy over documents)
             dc = 0.0

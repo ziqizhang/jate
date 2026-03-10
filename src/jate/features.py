@@ -147,6 +147,29 @@ class ReferenceFrequency:
         return self.get_ttf(word) / (self.corpus_total + 1)
 
     @classmethod
+    def from_file(cls, path: str) -> ReferenceFrequency:
+        """Load reference frequencies from a file.
+
+        File format (one per line): ``freq term``
+        Terms with frequency < 2 are ignored (matches Java TTFReferenceFeatureFileBuilder).
+        """
+        word2ttf: dict[str, int] = {}
+        with open(path) as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                parts = line.split(None, 1)
+                if len(parts) < 2:
+                    continue
+                freq = int(parts[0])
+                if freq < 2:
+                    continue
+                word2ttf[parts[1].strip().lower()] = freq
+        corpus_total = sum(word2ttf.values())
+        return cls(word2ttf=word2ttf, corpus_total=corpus_total)
+
+    @classmethod
     def from_word_frequency(cls, wf: WordFrequency) -> ReferenceFrequency:
         """Build self-reference from target corpus word frequencies."""
         filtered = {k: v for k, v in wf.word2ttf.items() if v > 0}

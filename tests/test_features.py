@@ -93,6 +93,16 @@ class TestReferenceFrequency:
         assert rf.get_ttf("neural") == 1
         assert rf.corpus_total == 4
 
+    def test_from_file(self, tmp_path):
+        ref_file = tmp_path / "ref_freq.txt"
+        ref_file.write_text("100 neural\n80 network\n1 rare\n50 deep\n")
+        rf = ReferenceFrequency.from_file(str(ref_file))
+        assert rf.get_ttf("neural") == 100
+        assert rf.get_ttf("network") == 80
+        assert rf.get_ttf("deep") == 50
+        assert rf.get_ttf("rare") == 0  # freq < 2 is ignored
+        assert rf.corpus_total == 230  # 100 + 80 + 50
+
     def test_null_prob_excludes_zero(self):
         rf = ReferenceFrequency(word2ttf={"a": 10, "b": 0}, corpus_total=100)
         # null_prob = min of non-zero freqs / total = 10 / 100
