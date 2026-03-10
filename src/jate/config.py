@@ -17,4 +17,4 @@ class JATEConfig:
     """
 
     max_workers: int = 1
-    reference_frequency_file: str | None = None
+    reference_frequency_file: str | list[str] | None = None

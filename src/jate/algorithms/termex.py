@@ -38,10 +38,12 @@ class TermEx(Algorithm):
         alpha: float = 0.33,
         beta: float = 0.33,
         zeta: float = 0.34,
+        match_oom: bool = True,
     ) -> None:
         self._alpha = alpha
         self._beta = beta
         self._zeta = zeta
+        self._match_oom = match_oom
 
     @property
     def description(self) -> str:
@@ -59,16 +61,17 @@ class TermEx(Algorithm):
         if ref_freq is None:
             ref_freq = ReferenceFrequency()
 
-        null_prob = ref_freq.null_prob
-        ref_total = ref_freq.corpus_total
-
-        # Compute OOM scalar
-        if word_freq is not None and ref_freq.word2ttf:
-            oom_scalar = _match_orders_of_magnitude(
-                word_freq.word2ttf, ref_freq.word2ttf, ref_total
-            )
-        else:
-            oom_scalar = 1.0
+        # Pre-compute per-reference data
+        ref_freqs: list[ReferenceFrequency] = kwargs.get("ref_freqs", [ref_freq])
+        ref_data: list[tuple[ReferenceFrequency, float, float]] = []  # (ref, oom_scalar, null_prob)
+        for rf in ref_freqs:
+            if self._match_oom and word_freq is not None and rf.word2ttf:
+                oom = _match_orders_of_magnitude(
+                    word_freq.word2ttf, rf.word2ttf, rf.corpus_total
+                )
+            else:
+                oom = 1.0
+            ref_data.append((rf, oom, rf.null_prob))
 
         total_words = word_freq.corpus_total if word_freq is not None else term_freq.corpus_total
         if total_words == 0:
@@ -90,11 +93,18 @@ class TermEx(Algorithm):
                 dp_upper += wf
                 sum_fwi += wf
 
-                pc_wi = ref_freq.get_ttf_norm(wi)
-                if pc_wi == 0.0:
-                    pc_wi = null_prob
-                pc_wi *= oom_scalar
-                dp_lower += pc_wi
+                # Find best reference for this word (highest normalized prob)
+                best_pc = 0.0
+                for rf, oom, np in ref_data:
+                    pc = rf.get_ttf_norm(wi) * oom
+                    if pc > best_pc:
+                        best_pc = pc
+
+                if best_pc == 0.0:
+                    # Use null_prob from first reference (fallback)
+                    best_pc = ref_data[0][2] * ref_data[0][1]  # null_prob * oom
+
+                dp_lower += best_pc
 
             dp = (dp_upper / total_words) / dp_lower if dp_lower > 0 else 0.0
 

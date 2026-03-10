@@ -509,6 +509,47 @@ class TestTermEx:
         scores = [t.score for t in result]
         assert scores == sorted(scores, reverse=True)
 
+    def test_multi_reference(self) -> None:
+        """TermEx picks best per-word reference from multiple corpora."""
+        # ref1 has higher "neural", ref2 has higher "network"
+        ref1 = ReferenceFrequency(
+            word2ttf={"neural": 100, "network": 50, "deep": 10, "machine": 30, "learning": 40},
+            corpus_total=1000,
+        )
+        ref2 = ReferenceFrequency(
+            word2ttf={"neural": 10, "network": 200, "deep": 5, "machine": 80, "learning": 20},
+            corpus_total=500,
+        )
+        word_freq = WordFrequency(
+            word2ttf={"neural": 70, "network": 100, "deep": 30, "machine": 90, "learning": 85},
+            word2fid={},
+            corpus_total=375,
+        )
+
+        algo = TermEx(match_oom=False)
+        tf = _make_term_freq()
+        candidates = _make_candidates()
+
+        # Multi-ref result
+        result_multi = algo.score(
+            candidates, tf, ref_freq=ref1, ref_freqs=[ref1, ref2], word_freq=word_freq
+        )
+        # Single-ref result (ref1 only)
+        result_single = algo.score(
+            candidates, tf, ref_freq=ref1, word_freq=word_freq
+        )
+
+        scores_multi = {t.string: t.score for t in result_multi}
+        scores_single = {t.string: t.score for t in result_single}
+
+        # Scores should differ because multi-ref picks best per-word
+        assert scores_multi != scores_single
+
+        # Multi-ref should produce valid sorted results
+        assert len(result_multi) == 4
+        multi_scores = [t.score for t in result_multi]
+        assert multi_scores == sorted(multi_scores, reverse=True)
+
 
 # ---------------------------------------------------------------------------
 # GlossEx

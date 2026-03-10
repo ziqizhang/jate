@@ -194,11 +194,23 @@ def _build_features(
         if word_freq is None:
             word_freq = WordFrequency.build(documents, nlp.tokenize)
             kwargs["word_freq"] = word_freq
+
+        # Build list of reference frequencies
+        ref_freqs: list[ReferenceFrequency] = []
         if config and config.reference_frequency_file:
-            ref_freq = ReferenceFrequency.from_file(config.reference_frequency_file)
-        else:
-            ref_freq = ReferenceFrequency.from_word_frequency(word_freq)
-        kwargs["ref_freq"] = ref_freq
+            files = config.reference_frequency_file
+            if isinstance(files, str):
+                files = [files]
+            ref_freqs = [ReferenceFrequency.from_file(f) for f in files]
+
+        if not ref_freqs:
+            # Self-reference fallback
+            ref_freqs = [ReferenceFrequency.from_word_frequency(word_freq)]
+
+        # TermEx gets full list; others get single
+        if isinstance(algo, TermEx):
+            kwargs["ref_freqs"] = ref_freqs
+        kwargs["ref_freq"] = ref_freqs[0]
 
     # --- Chi-Square specific: Cooccurrence + ChiSquareFrequentTerms ---
     if isinstance(algo, _NEEDS_CHI_SQUARE_FEATURES):
