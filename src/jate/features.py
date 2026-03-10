@@ -72,6 +72,17 @@ class TermFrequency:
     def get_doc_freq_map(self, term: str) -> dict[str, int]:
         return dict(self.term2fid.get(term.lower(), {}))
 
+    def get_doc_totals(self) -> dict[str, int]:
+        """Total candidate term occurrences per document.
+
+        Mirrors Java's document-level ``ctx2TTF`` from ``FrequencyCtxDocBased``.
+        """
+        doc_totals: dict[str, int] = defaultdict(int)
+        for doc_freqs in self.term2fid.values():
+            for doc_id, freq in doc_freqs.items():
+                doc_totals[doc_id] += freq
+        return dict(doc_totals)
+
 
 @dataclass(slots=True)
 class WordFrequency:

@@ -75,6 +75,7 @@ class TermEx(Algorithm):
             total_words = 1
 
         result = TermExtractionResult()
+        doc_totals = term_freq.get_doc_totals()
         for candidate in candidates:
             nf = candidate.normalized_form
             elements = nf.split()
@@ -101,16 +102,10 @@ class TermEx(Algorithm):
             dc = 0.0
             doc_freq_map = term_freq.get_doc_freq_map(nf)
             for doc_id, tfid in doc_freq_map.items():
-                # Approximate per-doc total from term_freq
-                # Sum all term frequencies in this doc
-                ttfid = sum(
-                    doc_freqs.get(doc_id, 0)
-                    for doc_freqs in term_freq.term2fid.values()
-                    if doc_id in doc_freqs
-                )
+                ttfid = doc_totals.get(doc_id, 1)
                 if ttfid == 0:
                     ttfid = 1
-                norm = tfid / ttfid if tfid > 0 else 0.0
+                norm = tfid / ttfid
                 if norm > 0:
                     dc += norm * math.log(norm)
             dc = -dc  # negate as in Java

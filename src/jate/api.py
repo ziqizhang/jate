@@ -83,7 +83,7 @@ _EXTRACTOR_NAMES: dict[str, type[CandidateExtractorBase]] = {
 # Which algorithms need which features (beyond term_freq, which all get).
 _NEEDS_CONTAINMENT: tuple[type, ...] = (CValue, Basic, NCValue)
 _NEEDS_CHILD_CONTAINMENT: tuple[type, ...] = (ComboBasic,)
-_NEEDS_CONTEXT_FREQ: tuple[type, ...] = (ChiSquare, NCValue, TermEx)
+_NEEDS_CONTEXT_FREQ: tuple[type, ...] = (ChiSquare, NCValue)
 _NEEDS_WORD_FREQ: tuple[type, ...] = (RAKE, Weirdness, GlossEx, TermEx)
 _NEEDS_REF_FREQ: tuple[type, ...] = (Weirdness, GlossEx, TermEx)
 _NEEDS_CHI_SQUARE_FEATURES: tuple[type, ...] = (ChiSquare,)
