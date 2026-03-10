@@ -6,7 +6,7 @@ Complete rewrite from Java to Python.
 
 ### Added
 
-- 13 ATE algorithms: TFIDF, C-Value, NC-Value, Basic, ComboBasic, ATTF, TTF, RIDF, RAKE, Chi-Square, Weirdness, TermEx, GlossEx
+- 14 ATE algorithms: TFIDF, C-Value, NC-Value, Basic, ComboBasic, ATTF, TTF, RIDF, RAKE, Chi-Square, Weirdness, TermEx, GlossEx, plus ensemble Voting (reciprocal rank fusion)
 - 3 candidate extractors: POS pattern, n-gram, noun phrase
 - Lemmatisation-aware pipeline — normalised forms as canonical keys with surface form tracking
 - In-memory and SQLite-backed corpus statistics stores
@@ -16,9 +16,12 @@ Complete rewrite from Java to Python.
 - Export to pandas DataFrame, CSV, JSON
 - spaCy-based NLP backend with Protocol interface for extensibility
 - ACL RD-TEC Mini built-in dataset
-- Sentence-level context — `ContextIndex` provides sentence co-occurrence for Chi-Square and adjacency-based context for NC-Value, aligning with original papers
+- Feature system mirroring Java JATE: TermFrequency, WordFrequency, ReferenceFrequency, ContextFrequency, ContextWindow, TermComponentIndex, Containment, Cooccurrence, ChiSquareFrequentTerms — all formulas verified line-by-line against the Java source
+- Sentence-level context via ContextFrequency — Chi-Square uses sentence co-occurrence and NC-Value uses adjacency-based context, aligning with original papers
 - Configurable parallelism via `JATEConfig(max_workers=N)` — parallel co-occurrence computation, containment index building, and batch NLP processing with `nlp.pipe()`
-- Shared containment index builder — computed once and reused across Basic, ComboBasic, CValue, and NCValue algorithms
+- External reference corpus support via `JATEConfig(reference_frequency_file=...)` for Weirdness, GlossEx, and TermEx
+- Multiple reference corpora support for TermEx (per-word best selection)
+- Cooccurrence prefiltering via `JATEConfig(prefilter_min_ttf=..., prefilter_min_tcf=...)` to reduce problem space for Chi-Square
 
 ### Changed
 

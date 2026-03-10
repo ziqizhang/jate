@@ -5,13 +5,14 @@ JATE follows a pipeline architecture with pluggable components at each stage.
 ## Pipeline overview
 
 ```
-Documents → NLP Batch Processing → Candidate Extraction → Corpus Statistics → Scoring → Ranked Terms
+Documents → NLP Batch Processing → Candidate Extraction → Feature Building → Scoring → Ranked Terms
                   ↓                       ↓                      ↓                ↓
-            SpacyBackend              Extractor             CorpusStore        Algorithm
-            (nlp.pipe())          (POS/ngram/NP)        (Memory / SQLite)    (13 options)
+            SpacyBackend              Extractor            Feature Classes     Algorithm
+            (nlp.pipe())          (POS/ngram/NP)        (built from candidates)  (14 options)
                                                               ↓
-                                                        ContextIndex
-                                                   (sentence co-occurrence)
+                                                   TermFrequency, WordFrequency,
+                                                   ContextFrequency, Containment,
+                                                   Cooccurrence, ReferenceFrequency, ...
 ```
 
 ### 1. Document ingestion
@@ -32,35 +33,36 @@ A `CandidateExtractor` identifies potential terms from the processed text. Three
 
 Candidates are **merged by normalised form**: the lemmatised, lowercased representation. This means "neural networks" and "neural network" produce a single candidate. All observed surface variants are tracked.
 
-### 4. Corpus statistics
+### 4. Feature building
 
-A `CorpusStore` collects frequency and co-occurrence counts:
+Feature objects are built lazily from candidates — only the features required by the chosen algorithm are constructed. This mirrors the Java JATE feature system:
 
-- **Term frequency** — how many times a term appears across all documents
-- **Document frequency** — how many documents contain the term
-- **Co-occurrence** — how many documents two terms share
-- **Corpus total** — sum of all term frequencies
+| Feature class | Java equivalent | Used by |
+|--------------|-----------------|---------|
+| `TermFrequency` | `FrequencyTermBased` (type 0) | All algorithms |
+| `WordFrequency` | `FrequencyTermBased` (type 1) | RAKE, Weirdness, GlossEx, TermEx |
+| `ReferenceFrequency` | `FrequencyTermBasedFBMaster` | Weirdness, GlossEx, TermEx |
+| `ContextFrequency` | `FrequencyCtxBased` | Chi-Square, NCValue |
+| `TermComponentIndex` | `TermComponentIndex` | RAKE, Containment |
+| `Containment` | `Containment` | CValue, Basic, NCValue, ComboBasic |
+| `Cooccurrence` | `Cooccurrence` | Chi-Square |
+| `ChiSquareFrequentTerms` | `ChiSquareFrequentTerms` | Chi-Square |
 
-Two implementations:
-
-| Store | Use case |
-|-------|----------|
-| `MemoryCorpusStore` | Fast, in-memory, for single sessions |
-| `SQLiteCorpusStore` | Persistent, for large corpora or repeated analysis |
+A `CorpusStore` (`MemoryCorpusStore` or `SQLiteCorpusStore`) is still used during candidate extraction and can be used for legacy workflows, but algorithms now receive feature objects directly.
 
 ### 4b. Sentence-level context
 
-A `ContextIndex` provides sub-document context features used by some algorithms:
+`ContextFrequency` provides sentence-level context features:
 
-- **Sentence co-occurrence** — how often two terms appear in the same sentence (used by Chi-Square)
-- **Context term totals** — number of distinct context terms per sentence (used by Chi-Square)
-- **Adjacent words** — words immediately adjacent to term occurrences (used by NC-Value)
+- **Sentence co-occurrence** — term frequencies per sentence context (used by Chi-Square via Cooccurrence)
+- **Context term totals** — total term frequency per sentence context (used by Chi-Square)
+- **Adjacent words** — words immediately before/after term occurrences (used by NC-Value)
 
-The ContextIndex is built automatically when extractors provide sentence-level position data. It is passed to algorithms as an optional parameter.
+Context features are built automatically from candidate position data when sentence indices are available (default with all extractors).
 
 ### 5. Scoring
 
-An `Algorithm` takes the list of candidates and the corpus store, and produces a `TermExtractionResult` — a sorted list of `Term` objects, each with a score, frequency, and the set of surface forms.
+An `Algorithm` takes the list of candidates, a `TermFrequency` object, and additional feature objects as keyword arguments. It produces a `TermExtractionResult` — a sorted list of `Term` objects, each with a score, frequency, and the set of surface forms.
 
 ### 6. Output
 
@@ -86,7 +88,7 @@ JATE provides three levels of API:
 
 ```python
 # Layer 3: full control
-from jate import Corpus, CValue, PosPatternExtractor
+from jate import Corpus, CValue, PosPatternExtractor, TermFrequency, Containment, TermComponentIndex
 
 corpus = Corpus(db_path="corpus.db")
 corpus.add_directory("papers/")
@@ -94,8 +96,13 @@ corpus.add_directory("papers/")
 extractor = PosPatternExtractor(pattern=r"(ADJ )*(NOUN )+")
 candidates = extractor.extract(corpus.documents, corpus.nlp, corpus.store)
 
+# Build features
+term_freq = TermFrequency.build(candidates, total_docs=len(corpus.documents))
+tci = TermComponentIndex.build(candidates)
+containment = Containment.build(candidates, tci)
+
 algo = CValue()
-result = algo.score(candidates, corpus.store)
+result = algo.score(candidates, term_freq, containment=containment)
 ```
 
 ### Configurable parallelism
@@ -117,7 +124,7 @@ jate/
 ├── api.py               # Layer 1 & 2: extract(), extract_corpus(), compare()
 ├── config.py            # JATEConfig dataclass
 ├── context.py           # ContextIndex (sentence co-occurrence, adjacent words)
-├── features.py          # Shared containment index builders
+├── features.py          # Feature classes (TermFrequency, WordFrequency, ContextFrequency, ...)
 ├── models.py            # Term, Candidate, Document, TermExtractionResult
 ├── parallel.py          # parallel_map, split_range utilities
 ├── protocols.py         # Protocol interfaces
@@ -130,6 +137,7 @@ jate/
 │   ├── tfidf.py
 │   ├── cvalue.py
 │   ├── ncvalue.py
+│   ├── voting.py         # Ensemble voting (reciprocal rank fusion)
 │   └── ...
 ├── extractors/          # Candidate extraction strategies
 │   ├── base.py          # CandidateExtractorBase ABC

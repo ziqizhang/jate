@@ -46,12 +46,13 @@ poetry run pre-commit run --all-files
 ## Adding a new algorithm
 
 1. Create a new file in `src/jate/algorithms/` (e.g. `my_algo.py`)
-2. Subclass `Algorithm` and implement the `score()` method
+2. Subclass `Algorithm` and implement `score(self, candidates, term_freq, **kwargs)` — receive feature objects via kwargs
 3. Add the class to `src/jate/algorithms/__init__.py`
-4. Add a name mapping in `src/jate/api.py` (`_resolve_algorithm`)
-5. Export from `src/jate/__init__.py`
-6. Add tests in `tests/test_algorithms.py`
-7. Document in `docs/guide/algorithms.md`
+4. Add a name mapping in `src/jate/api.py` (`_ALGORITHM_NAMES`)
+5. If the algorithm needs features beyond `TermFrequency`, add it to the appropriate `_NEEDS_*` tuple in `api.py` so features are built lazily
+6. Export from `src/jate/__init__.py`
+7. Add tests in `tests/test_algorithms.py`
+8. Document in `docs/guide/algorithms.md`
 
 ## Reporting issues
 

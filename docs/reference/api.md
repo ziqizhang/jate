@@ -38,9 +38,25 @@ Auto-generated from source docstrings.
 
 ::: jate.corpus.Corpus
 
-## Context
+## Feature Classes
 
-::: jate.context.ContextIndex
+::: jate.features.TermFrequency
+
+::: jate.features.WordFrequency
+
+::: jate.features.ReferenceFrequency
+
+::: jate.features.ContextWindow
+
+::: jate.features.ContextFrequency
+
+::: jate.features.TermComponentIndex
+
+::: jate.features.Containment
+
+::: jate.features.Cooccurrence
+
+::: jate.features.ChiSquareFrequentTerms
 
 ## Algorithms
 
@@ -72,6 +88,8 @@ Auto-generated from source docstrings.
 
 ::: jate.algorithms.glossex.GlossEx
 
+::: jate.algorithms.voting.Voting
+
 ## Extractors
 
 ::: jate.extractors.pos_pattern.PosPatternExtractor
@@ -97,12 +115,6 @@ Auto-generated from source docstrings.
 ::: jate.parallel.parallel_map
 
 ::: jate.parallel.split_range
-
-## Feature Builders
-
-::: jate.features.build_containment_index
-
-::: jate.features.build_child_containment_index
 
 ## Protocols
 

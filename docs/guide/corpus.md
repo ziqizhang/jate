@@ -82,17 +82,21 @@ corpus.nlp         # the NLP backend (SpacyBackend)
 corpus.store       # the CorpusStore (Memory or SQLite)
 ```
 
-The `Corpus` object satisfies the `CorpusStore` protocol, so you can pass it directly to algorithms:
+The `Corpus` object provides access to documents, the NLP backend, and a store for candidate extraction:
 
 ```python
-from jate import CValue, PosPatternExtractor
+from jate import CValue, PosPatternExtractor, TermFrequency, Containment, TermComponentIndex
 
 extractor = PosPatternExtractor()
 candidates = extractor.extract(corpus.documents, corpus.nlp, corpus.store)
-corpus.store.index_candidates(candidates)
+
+# Build features from candidates
+term_freq = TermFrequency.build(candidates, total_docs=len(corpus.documents))
+tci = TermComponentIndex.build(candidates)
+containment = Containment.build(candidates, tci)
 
 algo = CValue()
-result = algo.score(candidates, corpus.store)
+result = algo.score(candidates, term_freq, containment=containment)
 ```
 
 ## Corpus statistics

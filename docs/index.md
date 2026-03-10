@@ -1,10 +1,10 @@
 # JATE — Just Automatic Term Extraction
 
-A Python library for automatic term extraction (ATE) from text corpora. JATE provides 13 classical ATE algorithms, corpus-level statistics, built-in evaluation, and a CLI — all pip-installable with no external services required.
+A Python library for automatic term extraction (ATE) from text corpora. JATE provides 14 ATE algorithms (13 classical + ensemble voting), corpus-level statistics, built-in evaluation, and a CLI — all pip-installable with no external services required.
 
 ## Why JATE?
 
-- **13 algorithms** in one library — from simple frequency-based to sophisticated statistical methods
+- **14 algorithms** in one library — from simple frequency-based to sophisticated statistical methods, plus ensemble voting
 - **No external services** — corpus statistics are computed in-memory or backed by SQLite
 - **Lemmatisation-aware** — "neural networks" and "neural network" are treated as the same term, with all surface variants tracked
 - **Built-in evaluation** — precision, recall, F1 against gold standard term lists

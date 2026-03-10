@@ -1,6 +1,6 @@
 # Algorithms
 
-JATE provides 13 automatic term extraction algorithms. All algorithms implement the same interface: they take a list of candidates and a corpus store, and return a scored, sorted `TermExtractionResult`.
+JATE provides 14 automatic term extraction algorithms (13 classical + ensemble voting). All algorithms implement the same interface: they take a list of candidates and feature objects, and return a scored, sorted `TermExtractionResult`.
 
 ## Choosing an algorithm
 
@@ -181,12 +181,39 @@ result = jate.extract_corpus(docs, algorithm="glossex")
 
 Uses different weight ratios for single-word vs multi-word terms.
 
-## Using algorithms directly
+---
 
-For full control, instantiate algorithm classes directly:
+### Voting
+
+**Ensemble scoring via reciprocal rank fusion.** Combines results from multiple algorithms.
+
+`vote_score(t) = sum(weight_i / (rank_i + 1))` across all constituent results.
 
 ```python
-from jate import CValue, NCValue, MemoryCorpusStore, PosPatternExtractor, SpacyBackend
+results = jate.compare(docs, algorithms=["cvalue", "tfidf", "rake"], voting=True)
+voting_result = results["voting"]
+```
+
+You can also weight algorithms differently:
+
+```python
+results = jate.compare(
+    docs,
+    algorithms=["cvalue", "tfidf", "rake"],
+    voting=True,
+    voting_weights={"cvalue": 2.0, "tfidf": 1.0, "rake": 0.5},
+)
+```
+
+## Using algorithms directly
+
+For full control, instantiate algorithm classes and build features manually:
+
+```python
+from jate import (
+    CValue, NCValue, TermFrequency, Containment, TermComponentIndex,
+    PosPatternExtractor, SpacyBackend, MemoryCorpusStore,
+)
 from jate.nlp import DocumentLoader
 
 # Load documents
@@ -197,11 +224,15 @@ nlp = SpacyBackend()
 store = MemoryCorpusStore()
 extractor = PosPatternExtractor()
 candidates = extractor.extract(docs, nlp, store)
-store.index_candidates(candidates)
 
-# Score with multiple algorithms
+# Build features
+term_freq = TermFrequency.build(candidates, total_docs=len(docs))
+tci = TermComponentIndex.build(candidates)
+containment = Containment.build(candidates, tci)
+
+# Score
 for algo in [CValue(), NCValue()]:
-    result = algo.score(candidates, store)
+    result = algo.score(candidates, term_freq, containment=containment)
     print(f"\n{algo.__class__.__name__}:")
     for term in list(result)[:5]:
         print(f"  {term.string:30s}  {term.score:.4f}")
