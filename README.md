@@ -112,6 +112,97 @@ jate compare path/to/docs/ --algorithms cvalue tfidf rake
 jate benchmark --top 100
 ```
 
+### REST API (thin server)
+
+JATE now ships a thin JSON API server on top of the core extraction API.
+
+Start the server:
+
+```bash
+jate-api
+```
+
+Or with Python module execution:
+
+```bash
+python -m uvicorn jate.server:app --host 0.0.0.0 --port 8000
+```
+
+Extract terms over HTTP:
+
+```bash
+curl --header "Content-Type: application/json" \
+    --request POST \
+    --data '{"text":"text to process","algorithm":"cvalue"}' \
+    http://localhost:8000/jate/api/v1/extract
+```
+
+Health checks:
+
+```bash
+curl http://localhost:8000/health/live
+curl http://localhost:8000/health/ready
+```
+
+### Docker / Containerization
+
+Build the API image from repo root:
+
+```bash
+docker build -t jate-api:latest .
+```
+
+Run the container:
+
+```bash
+docker run --rm -d -p 8000:8000 --name jate-api-test jate-api:latest
+```
+
+Test all endpoints:
+
+```bash
+# Liveness
+curl -s http://localhost:8000/health/live
+
+# Readiness (validates spaCy model availability)
+curl -s http://localhost:8000/health/ready
+
+# Capabilities
+curl -s http://localhost:8000/jate/api/v1/capabilities
+
+# Extract terms
+curl -s -X POST http://localhost:8000/jate/api/v1/extract \
+    -H "Content-Type: application/json" \
+    -d '{"text":"Russia says its consulate in Isfahan, Iran was damaged over the weekend as a result of strikes on the local governor'\''s office.","algorithm":"cvalue","top":6}'
+```
+
+Stop the container:
+
+```bash
+docker stop jate-api-test
+```
+
+Expected extract response shape:
+
+```json
+{
+    "algorithm": "cvalue",
+    "extractor": "pos_pattern",
+    "model": "en_core_web_sm",
+    "top": 6,
+    "terms": [
+        {
+            "rank": 1,
+            "term": "local governors office",
+            "score": 1.6323,
+            "frequency": 1,
+            "surface_forms": ["local governors office"],
+            "metadata": {}
+        }
+    ]
+}
+```
+
 ## Algorithms
 
 | Algorithm | Description | Reference |
