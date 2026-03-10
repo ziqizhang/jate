@@ -18,3 +18,5 @@ class JATEConfig:
 
     max_workers: int = 1
     reference_frequency_file: str | list[str] | None = None
+    prefilter_min_ttf: int = 0
+    prefilter_min_tcf: int = 0

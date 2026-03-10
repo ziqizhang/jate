@@ -254,6 +254,37 @@ class TestCooccurrence:
         assert cooc.get("a", "b") == cooc.get("b", "a")
 
 
+    def test_min_ttf_filtering(self):
+        """Terms below min_ttf should be excluded from co-occurrence."""
+        # neural network: TTF=3, deep learning: TTF=1, machine learning: TTF=1
+        c1 = Candidate(surface_form="neural network", normalized_form="neural network")
+        c1.add_position("doc1", 0, 14, sentence_idx=0)
+        c1.add_position("doc1", 30, 44, sentence_idx=0)
+        c1.add_position("doc1", 100, 114, sentence_idx=1)
+
+        c2 = Candidate(surface_form="deep learning", normalized_form="deep learning")
+        c2.add_position("doc1", 15, 28, sentence_idx=0)
+
+        c3 = Candidate(surface_form="machine learning", normalized_form="machine learning")
+        c3.add_position("doc1", 115, 131, sentence_idx=1)
+
+        cf = ContextFrequency.build([c1, c2, c3])
+        tf = TermFrequency.build([c1, c2, c3], total_docs=1)
+
+        # With min_ttf=2, only "neural network" (TTF=3) passes filter
+        cooc = Cooccurrence.build(cf, cf, term_freq=tf, min_ttf=2)
+        # neural network co-occurs with deep learning (nn is target, dl is ref)
+        assert cooc.get("neural network", "deep learning") == 1
+        # deep learning as TARGET is filtered out (TTF=1 < 2), so no dl->nn pair
+        # But nn->dl pair still exists because nn passes filter
+        # machine learning as TARGET is also filtered (TTF=1 < 2)
+
+        # Without filtering, all pairs exist
+        cooc_all = Cooccurrence.build(cf, cf)
+        assert cooc_all.get("neural network", "deep learning") == 1
+        assert cooc_all.get("neural network", "machine learning") == 1
+
+
 class TestChiSquareFrequentTerms:
     def test_build(self):
         c1 = Candidate(surface_form="neural network", normalized_form="neural network")

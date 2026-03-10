@@ -218,7 +218,12 @@ def _build_features(
             context_freq = ContextFrequency.build(candidates, documents, nlp)
             kwargs["context_freq"] = context_freq
         ref_ctx = context_freq.copy_top_fraction(term_freq, 0.3)
-        cooccurrence = Cooccurrence.build(context_freq, ref_ctx)
+        min_ttf = config.prefilter_min_ttf if config else 0
+        min_tcf = config.prefilter_min_tcf if config else 0
+        cooccurrence = Cooccurrence.build(
+            context_freq, ref_ctx,
+            term_freq=term_freq, min_ttf=min_ttf, min_tcf=min_tcf,
+        )
         chi_square_ft = ChiSquareFrequentTerms.build(ref_ctx, term_freq.corpus_total)
         kwargs["cooccurrence"] = cooccurrence
         kwargs["chi_square_ft"] = chi_square_ft

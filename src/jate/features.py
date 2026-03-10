@@ -439,7 +439,27 @@ class Cooccurrence:
         cls,
         target_ctx: ContextFrequency,
         ref_ctx: ContextFrequency,
+        term_freq: TermFrequency | None = None,
+        min_ttf: int = 0,
+        min_tcf: int = 0,
     ) -> Cooccurrence:
+        """Build co-occurrence matrix from context frequencies.
+
+        Parameters
+        ----------
+        target_ctx : ContextFrequency
+            Context frequencies for target candidate terms.
+        ref_ctx : ContextFrequency
+            Context frequencies for reference terms.
+        term_freq : TermFrequency, optional
+            Required when ``min_ttf > 0`` to filter by total term frequency.
+        min_ttf : int
+            Minimum total term frequency for a target term to be included.
+            Java: ``prefilterMinTTF``. Default 0 (no filtering).
+        min_tcf : int
+            Minimum number of contexts a target term must appear in.
+            Java: ``prefilterMinTCF``. Default 0 (no filtering).
+        """
         matrix: dict[tuple[str, str], int] = defaultdict(int)
 
         # Collect raw directed co-occurrence, then combine
@@ -449,6 +469,15 @@ class Cooccurrence:
             if ref_tfic is None:
                 continue
             for target_term, target_freq in target_tfic.items():
+                # Java: filter target terms by minTTF and minTCF
+                if min_ttf > 0 or min_tcf > 0:
+                    if min_ttf > 0 and term_freq is not None:
+                        if term_freq.get_ttf(target_term) < min_ttf:
+                            continue
+                    if min_tcf > 0:
+                        if len(target_ctx.get_contexts(target_term)) < min_tcf:
+                            continue
+
                 for ref_term, ref_freq in ref_tfic.items():
                     if target_term == ref_term:
                         continue
