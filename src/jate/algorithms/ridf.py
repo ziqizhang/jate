@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import math
-
 from typing import Any
 
 from jate.algorithms.base import Algorithm
@@ -45,12 +44,14 @@ class RIDF(Algorithm):
             df = term_freq.get_df(nf)
 
             if df == 0 or total_docs == 0:
-                result.add(Term(
-                    string=candidate.normalized_form,
-                    score=0.0,
-                    frequency=ttf,
-                    surface_forms=set(candidate.surface_forms),
-                ))
+                result.add(
+                    Term(
+                        string=candidate.normalized_form,
+                        score=0.0,
+                        frequency=ttf,
+                        surface_forms=set(candidate.surface_forms),
+                    )
+                )
                 continue
 
             attf = ttf / total_docs

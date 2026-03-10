@@ -7,8 +7,7 @@ import spacy
 from jate.extractors.ngram import NGramExtractor
 from jate.extractors.noun_phrase import NounPhraseExtractor
 from jate.extractors.pos_pattern import PosPatternExtractor
-from jate.models import Candidate, Document
-from jate.protocols import CorpusStore, NLPBackend
+from jate.models import Document
 
 # ---------------------------------------------------------------------------
 # Simple spaCy-based NLP backend for testing

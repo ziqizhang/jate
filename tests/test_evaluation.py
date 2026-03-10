@@ -2,13 +2,10 @@
 
 from __future__ import annotations
 
-import math
-
 import pytest
 
 from jate.evaluation import EvaluationResult, Evaluator
 from jate.models import Term, TermExtractionResult
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -19,9 +16,7 @@ def _make_result(terms: list[str], scores: list[float] | None = None) -> TermExt
     """Build a TermExtractionResult from a list of term strings."""
     if scores is None:
         scores = [1.0 - i * 0.01 for i in range(len(terms))]
-    return TermExtractionResult(
-        [Term(string=t, score=s) for t, s in zip(terms, scores)]
-    )
+    return TermExtractionResult([Term(string=t, score=s) for t, s in zip(terms, scores)])
 
 
 # ---------------------------------------------------------------------------

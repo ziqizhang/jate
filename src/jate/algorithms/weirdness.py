@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import math
-
 from typing import Any
 
 from jate.algorithms._reference_utils import _match_orders_of_magnitude
@@ -57,9 +56,7 @@ class Weirdness(Algorithm):
 
         # Compute OOM scalar
         if self._match_oom and word_freq is not None and ref_freq.word2ttf:
-            oom_scalar = _match_orders_of_magnitude(
-                word_freq.word2ttf, ref_freq.word2ttf, ref_total
-            )
+            oom_scalar = _match_orders_of_magnitude(word_freq.word2ttf, ref_freq.word2ttf, ref_total)
         else:
             oom_scalar = 1.0
 

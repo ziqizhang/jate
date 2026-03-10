@@ -1,22 +1,27 @@
 from __future__ import annotations
 
 import pytest
+
 from jate.algorithms.voting import Voting
 from jate.models import Term, TermExtractionResult
 
 
 class TestVoting:
     def test_reciprocal_rank_fusion(self):
-        r1 = TermExtractionResult([
-            Term(string="a", score=3.0),
-            Term(string="b", score=2.0),
-            Term(string="c", score=1.0),
-        ])
-        r2 = TermExtractionResult([
-            Term(string="b", score=5.0),
-            Term(string="a", score=3.0),
-            Term(string="c", score=1.0),
-        ])
+        r1 = TermExtractionResult(
+            [
+                Term(string="a", score=3.0),
+                Term(string="b", score=2.0),
+                Term(string="c", score=1.0),
+            ]
+        )
+        r2 = TermExtractionResult(
+            [
+                Term(string="b", score=5.0),
+                Term(string="a", score=3.0),
+                Term(string="c", score=1.0),
+            ]
+        )
         result = Voting.combine([(r1, 1.0), (r2, 1.0)])
         scores = {t.string: t.score for t in result}
         # a: 1/1 * 1.0 + 1/2 * 1.0 = 1.5
@@ -38,24 +43,30 @@ class TestVoting:
         assert len(result) == 0
 
     def test_single_result(self):
-        r1 = TermExtractionResult([
-            Term(string="x", score=10.0),
-            Term(string="y", score=5.0),
-        ])
+        r1 = TermExtractionResult(
+            [
+                Term(string="x", score=10.0),
+                Term(string="y", score=5.0),
+            ]
+        )
         result = Voting.combine([(r1, 1.0)])
         scores = {t.string: t.score for t in result}
         assert scores["x"] == pytest.approx(1.0)
         assert scores["y"] == pytest.approx(0.5)
 
     def test_sorted_descending(self):
-        r1 = TermExtractionResult([
-            Term(string="a", score=3.0),
-            Term(string="b", score=2.0),
-        ])
-        r2 = TermExtractionResult([
-            Term(string="b", score=5.0),
-            Term(string="a", score=3.0),
-        ])
+        r1 = TermExtractionResult(
+            [
+                Term(string="a", score=3.0),
+                Term(string="b", score=2.0),
+            ]
+        )
+        r2 = TermExtractionResult(
+            [
+                Term(string="b", score=5.0),
+                Term(string="a", score=3.0),
+            ]
+        )
         result = Voting.combine([(r1, 1.0), (r2, 1.0)])
         # Both a and b get 1.5, so sorted by score desc then alphabetically
         assert result[0].score >= result[1].score

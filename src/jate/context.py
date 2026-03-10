@@ -56,7 +56,7 @@ class ContextIndex:
         sent_cooc: dict[tuple[str, str], int] = defaultdict(int)
         for terms_in_sent in sentence_groups.values():
             for a, b in combinations(sorted(terms_in_sent), 2):
-                key = tuple(sorted([a, b]))
+                key = (min(a, b), max(a, b))
                 sent_cooc[key] += 1
 
         # Step 3: Context totals
@@ -111,7 +111,7 @@ class ContextIndex:
 
     def get_sentence_cooccurrences(self, term_a: str, term_b: str) -> int:
         """Number of sentences in which both terms appear."""
-        key = tuple(sorted([term_a.lower(), term_b.lower()]))
+        key = (min(term_a.lower(), term_b.lower()), max(term_a.lower(), term_b.lower()))
         return self._sent_cooc.get(key, 0)
 
     def get_context_term_total(self, term: str) -> int:

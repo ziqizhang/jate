@@ -6,10 +6,9 @@ from __future__ import annotations
 import re
 from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, NamedTuple
+from typing import TYPE_CHECKING, Callable, NamedTuple
 
 from jate.models import Candidate, Document
-from jate.parallel import parallel_map, split_range
 
 if TYPE_CHECKING:
     from jate.protocols import NLPBackend
@@ -102,7 +101,7 @@ class WordFrequency:
     def build(
         cls,
         documents: list[Document],
-        tokenize_fn: callable,
+        tokenize_fn: Callable[[str], list[str]],
     ) -> WordFrequency:
         word2ttf: dict[str, int] = defaultdict(int)
         word2fid: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
@@ -300,9 +299,7 @@ class ContextFrequency:
         """Adjacent words for NC-Value."""
         return self.adjacent.get(term.lower(), {})
 
-    def copy_top_fraction(
-        self, term_freq: TermFrequency, fraction: float = 0.3
-    ) -> ContextFrequency:
+    def copy_top_fraction(self, term_freq: TermFrequency, fraction: float = 0.3) -> ContextFrequency:
         """Java's FrequencyCtxBasedCopier: filter to top-fraction most frequent terms.
 
         Returns a new ContextFrequency containing only terms whose TTF
@@ -488,7 +485,7 @@ class Cooccurrence:
         # to avoid double-counting when target_ctx is ref_ctx
         seen: set[tuple[str, str]] = set()
         for (a, b), count in raw.items():
-            key = tuple(sorted([a, b]))
+            key = (min(a, b), max(a, b))
             if key not in seen:
                 seen.add(key)
                 matrix[key] = count
@@ -496,7 +493,7 @@ class Cooccurrence:
         return cls(matrix=dict(matrix))
 
     def get(self, term_a: str, term_b: str) -> int:
-        key = tuple(sorted([term_a.lower(), term_b.lower()]))
+        key = (min(term_a.lower(), term_b.lower()), max(term_a.lower(), term_b.lower()))
         return self.matrix.get(key, 0)
 
     def get_cooccurrences_for(self, term: str) -> dict[str, int]:

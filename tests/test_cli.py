@@ -7,8 +7,6 @@ import sys
 from io import StringIO
 from unittest.mock import patch
 
-import pytest
-
 from jate.cli import main
 
 
@@ -69,7 +67,7 @@ class TestCLIExtract:
             "2",
         )
         # Count data rows (skip header and separator)
-        lines = [l for l in output.strip().split("\n") if l.strip()]
+        lines = [line for line in output.strip().split("\n") if line.strip()]
         # header + separator + data rows
         data_lines = lines[2:]  # skip header and dashes
         assert len(data_lines) <= 2

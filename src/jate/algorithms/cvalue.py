@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import math
-
 from typing import Any
 
 from jate.algorithms.base import Algorithm
@@ -41,7 +40,8 @@ class CValue(Algorithm):
 
         # Build containment if not provided (fallback)
         if containment is None:
-            from jate.features import Containment as _Cont, TermComponentIndex
+            from jate.features import Containment as _Cont
+            from jate.features import TermComponentIndex
 
             tci = TermComponentIndex.build(candidates)
             containment = _Cont.build(candidates, tci)

@@ -1,10 +1,12 @@
 """Verify extractors tag candidates with sentence indices."""
+
 from __future__ import annotations
 
 import pytest
-from jate.extractors.pos_pattern import PosPatternExtractor
+
 from jate.extractors.ngram import NGramExtractor
 from jate.extractors.noun_phrase import NounPhraseExtractor
+from jate.extractors.pos_pattern import PosPatternExtractor
 from jate.models import Document
 from jate.nlp.spacy_backend import SpacyBackend
 from jate.store.memory_store import MemoryCorpusStore
@@ -15,9 +17,7 @@ def nlp() -> SpacyBackend:
     return SpacyBackend("en_core_web_sm")
 
 
-TWO_SENTENCE_DOC = [
-    Document(doc_id="d1", content="Machine learning is important. Neural networks are powerful.")
-]
+TWO_SENTENCE_DOC = [Document(doc_id="d1", content="Machine learning is important. Neural networks are powerful.")]
 
 
 class TestPosPatternSentenceIdx:

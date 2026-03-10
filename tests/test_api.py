@@ -2,13 +2,11 @@
 
 from __future__ import annotations
 
-import tempfile
 from pathlib import Path
 
 import pytest
 
-import jate
-from jate.api import _resolve_algorithm, _resolve_extractor, compare, extract, extract_corpus
+from jate.api import _resolve_extractor, compare, extract, extract_corpus
 from jate.models import TermExtractionResult
 
 # -----------------------------------------------------------------------

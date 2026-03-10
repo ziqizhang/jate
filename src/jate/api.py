@@ -36,9 +36,9 @@ from jate.extractors.noun_phrase import NounPhraseExtractor
 from jate.extractors.pos_pattern import PosPatternExtractor
 from jate.features import (
     ChiSquareFrequentTerms,
-    Cooccurrence,
     Containment,
     ContextFrequency,
+    Cooccurrence,
     ReferenceFrequency,
     TermComponentIndex,
     TermFrequency,
@@ -155,7 +155,6 @@ def _build_features(
 
     Returns a dict of keyword arguments to pass to ``algo.score()``.
     """
-    algo_type = type(algo)
     kwargs: dict[str, Any] = {}
 
     # --- Containment (CValue, Basic, NCValue, ComboBasic) ---
@@ -221,8 +220,11 @@ def _build_features(
         min_ttf = config.prefilter_min_ttf if config else 0
         min_tcf = config.prefilter_min_tcf if config else 0
         cooccurrence = Cooccurrence.build(
-            context_freq, ref_ctx,
-            term_freq=term_freq, min_ttf=min_ttf, min_tcf=min_tcf,
+            context_freq,
+            ref_ctx,
+            term_freq=term_freq,
+            min_ttf=min_ttf,
+            min_tcf=min_tcf,
         )
         chi_square_ft = ChiSquareFrequentTerms.build(ref_ctx, term_freq.corpus_total)
         kwargs["cooccurrence"] = cooccurrence
@@ -476,8 +478,6 @@ def compare(
 
 def _load_sources(sources: list[str] | str) -> list[Any]:
     """Detect input type and load documents accordingly."""
-    from jate.models import Document
-
     if isinstance(sources, str):
         # Single string: check if it's a directory
         p = Path(sources)

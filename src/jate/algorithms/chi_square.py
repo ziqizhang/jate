@@ -5,12 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from jate.algorithms.base import Algorithm
-from jate.features import (
-    ChiSquareFrequentTerms,
-    Cooccurrence,
-    ContextFrequency,
-    TermFrequency,
-)
+from jate.features import ChiSquareFrequentTerms, ContextFrequency, Cooccurrence, TermFrequency
 from jate.models import Candidate, Term, TermExtractionResult
 
 
@@ -73,12 +68,14 @@ class ChiSquare(Algorithm):
             else:
                 n_w = term_freq.get_ttf(nf)
             if n_w == 0:
-                result.add(Term(
-                    string=candidate.normalized_form,
-                    score=0.0,
-                    frequency=0,
-                    surface_forms=set(candidate.surface_forms),
-                ))
+                result.add(
+                    Term(
+                        string=candidate.normalized_form,
+                        score=0.0,
+                        frequency=0,
+                        surface_forms=set(candidate.surface_forms),
+                    )
+                )
                 continue
 
             max_chi_square = max_exp_prob

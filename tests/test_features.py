@@ -1,7 +1,18 @@
 from __future__ import annotations
 
 import pytest
-from jate.features import ChiSquareFrequentTerms, Cooccurrence, Containment, ContextFrequency, ContextWindow, ReferenceFrequency, TermComponentIndex, TermFrequency, WordFrequency
+
+from jate.features import (
+    ChiSquareFrequentTerms,
+    Containment,
+    ContextFrequency,
+    ContextWindow,
+    Cooccurrence,
+    ReferenceFrequency,
+    TermComponentIndex,
+    TermFrequency,
+    WordFrequency,
+)
 from jate.models import Candidate, Document
 
 
@@ -53,6 +64,7 @@ class TestWordFrequency:
             Document(doc_id="d1", content="neural network for deep learning"),
             Document(doc_id="d2", content="neural network analysis"),
         ]
+
         # Simple whitespace tokenizer for testing
         def tokenize(text):
             return text.lower().split()
@@ -253,7 +265,6 @@ class TestCooccurrence:
         cooc = Cooccurrence.build(cf, cf)
         assert cooc.get("a", "b") == cooc.get("b", "a")
 
-
     def test_min_ttf_filtering(self):
         """Terms below min_ttf should be excluded from co-occurrence."""
         # neural network: TTF=3, deep learning: TTF=1, machine learning: TTF=1
@@ -299,9 +310,7 @@ class TestChiSquareFrequentTerms:
         ft = ChiSquareFrequentTerms.build(cf, tf.corpus_total, fraction=1.0)
         assert "neural network" in ft.exp_prob
         assert "deep learning" in ft.exp_prob
-        assert ft.sum_exp_prob == pytest.approx(
-            ft.exp_prob["neural network"] + ft.exp_prob["deep learning"]
-        )
+        assert ft.sum_exp_prob == pytest.approx(ft.exp_prob["neural network"] + ft.exp_prob["deep learning"])
 
     def test_p_g_formula(self):
         """p_g = (sum of TTF in contexts where g appears) / corpus_total."""

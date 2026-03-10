@@ -4,14 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
-from jate.datasets.acl_rdtec import (
-    AclRdtecMini,
-    _load_documents,
-    _load_gold,
-    load_acl_rdtec_mini,
-)
+from jate.datasets.acl_rdtec import AclRdtecMini, _load_documents, _load_gold, load_acl_rdtec_mini
 from jate.datasets.base import Dataset
 from jate.models import Document
 

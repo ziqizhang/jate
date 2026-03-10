@@ -26,19 +26,19 @@ from jate.benchmark import BenchmarkRunner
 from jate.config import JATEConfig
 from jate.context import ContextIndex
 from jate.corpus import Corpus
+from jate.evaluation import EvaluationResult, Evaluator
+from jate.extractors import NGramExtractor, NounPhraseExtractor, PosPatternExtractor
 from jate.features import (
     ChiSquareFrequentTerms,
-    Cooccurrence,
     Containment,
     ContextFrequency,
     ContextWindow,
+    Cooccurrence,
     ReferenceFrequency,
     TermComponentIndex,
     TermFrequency,
     WordFrequency,
 )
-from jate.evaluation import EvaluationResult, Evaluator
-from jate.extractors import NGramExtractor, NounPhraseExtractor, PosPatternExtractor
 from jate.models import Candidate, Document, Term, TermExtractionResult
 from jate.nlp import DocumentLoader, SpacyBackend
 from jate.store import MemoryCorpusStore, SQLiteCorpusStore

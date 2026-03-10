@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from jate.extractors.base import CandidateExtractorBase
 from jate.extractors.pos_pattern import STOPWORDS
 from jate.extractors.utils import batch_process_docs
@@ -40,7 +42,7 @@ class NounPhraseExtractor(CandidateExtractorBase):
     def _extract_from_spacy_docs(
         self,
         valid_docs: list[Document],
-        spacy_docs: list,
+        spacy_docs: list[Any],
         merged: dict[str, Candidate],
     ) -> None:
         for doc, spacy_doc in zip(valid_docs, spacy_docs):
@@ -49,8 +51,7 @@ class NounPhraseExtractor(CandidateExtractorBase):
 
                 # Get noun chunks that fall within this sentence.
                 sent_chunks = [
-                    chunk for chunk in spacy_doc.noun_chunks
-                    if chunk.start >= sent.start and chunk.end <= sent.end
+                    chunk for chunk in spacy_doc.noun_chunks if chunk.start >= sent.start and chunk.end <= sent.end
                 ]
                 lemma_map = {token.text: token.lemma_ for token in sent}
 
@@ -61,8 +62,14 @@ class NounPhraseExtractor(CandidateExtractorBase):
                         continue
 
                     self._process_chunk(
-                        doc, sent_idx, sent_offset, sent.text,
-                        chunk_stripped, lemma_map, sent_search_start, merged,
+                        doc,
+                        sent_idx,
+                        sent_offset,
+                        sent.text,
+                        chunk_stripped,
+                        lemma_map,
+                        sent_search_start,
+                        merged,
                     )
                     # Advance search start past this chunk in the sentence.
                     local_start = sent.text.find(chunk_stripped, sent_search_start)
@@ -107,8 +114,14 @@ class NounPhraseExtractor(CandidateExtractorBase):
                         continue
 
                     self._process_chunk(
-                        doc, sent_idx, sent_offset, sent_text,
-                        chunk_stripped, lemma_map, sent_search_start, merged,
+                        doc,
+                        sent_idx,
+                        sent_offset,
+                        sent_text,
+                        chunk_stripped,
+                        lemma_map,
+                        sent_search_start,
+                        merged,
                     )
                     local_start = sent_text.find(chunk_stripped, sent_search_start)
                     if local_start != -1:
@@ -143,10 +156,7 @@ class NounPhraseExtractor(CandidateExtractorBase):
         if len(words) == 1:
             normalized = lemma_map.get(words[0], words[0]).lower()
         else:
-            normalized = " ".join(
-                [w.lower() for w in words[:-1]]
-                + [lemma_map.get(words[-1], words[-1]).lower()]
-            )
+            normalized = " ".join([w.lower() for w in words[:-1]] + [lemma_map.get(words[-1], words[-1]).lower()])
 
         # Find character offset in the sentence text,
         # advancing past previously found occurrences.

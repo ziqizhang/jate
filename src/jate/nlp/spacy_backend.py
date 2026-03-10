@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 import spacy
 from spacy.language import Language
 from spacy.tokens import Doc

@@ -7,7 +7,6 @@ an NLP backend, and a corpus store behind a simple API.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
 
 from jate.models import Document
 from jate.nlp.document_loader import DocumentLoader

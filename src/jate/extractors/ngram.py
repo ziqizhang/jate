@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from typing import Any
 
 from jate.extractors.base import CandidateExtractorBase
 from jate.extractors.pos_pattern import STOPWORDS
@@ -62,7 +63,7 @@ class NGramExtractor(CandidateExtractorBase):
     def _extract_from_spacy_docs(
         self,
         valid_docs: list[Document],
-        spacy_docs: list,
+        spacy_docs: list[Any],
         merged: dict[str, Candidate],
     ) -> None:
         for doc, spacy_doc in zip(valid_docs, spacy_docs):
@@ -74,8 +75,13 @@ class NGramExtractor(CandidateExtractorBase):
                 token_offsets = compute_token_offsets(sent.text, tokens)
 
                 self._process_sentence(
-                    doc, sent_idx, sent_offset,
-                    tokens, lemmas, token_offsets, merged,
+                    doc,
+                    sent_idx,
+                    sent_offset,
+                    tokens,
+                    lemmas,
+                    token_offsets,
+                    merged,
                 )
 
     # ------------------------------------------------------------------
@@ -112,8 +118,13 @@ class NGramExtractor(CandidateExtractorBase):
                 token_offsets = compute_token_offsets(sent_text, tokens)
 
                 self._process_sentence(
-                    doc, sent_idx, sent_offset,
-                    tokens, lemmas, token_offsets, merged,
+                    doc,
+                    sent_idx,
+                    sent_offset,
+                    tokens,
+                    lemmas,
+                    token_offsets,
+                    merged,
                 )
 
     # ------------------------------------------------------------------
@@ -144,16 +155,16 @@ class NGramExtractor(CandidateExtractorBase):
                 if len(span_tokens) == 1:
                     normalized = span_lemmas[0].lower()
                 else:
-                    normalized = " ".join(
-                        [t.lower() for t in span_tokens[:-1]] + [span_lemmas[-1].lower()]
-                    )
+                    normalized = " ".join([t.lower() for t in span_tokens[:-1]] + [span_lemmas[-1].lower()])
 
                 # Character offsets converted to document-level.
                 doc_start = sent_offset + token_offsets[i][0]
                 doc_end = sent_offset + token_offsets[i + n - 1][1]
 
                 if normalized in merged:
-                    merged[normalized].add_position(doc.doc_id, doc_start, doc_end, sentence_idx=sent_idx, surface=surface)
+                    merged[normalized].add_position(
+                        doc.doc_id, doc_start, doc_end, sentence_idx=sent_idx, surface=surface
+                    )
                 else:
                     cand = Candidate(
                         surface_form=surface,

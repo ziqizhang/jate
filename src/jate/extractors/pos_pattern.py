@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from typing import Any
 
 from jate.extractors.base import CandidateExtractorBase
 from jate.extractors.utils import batch_process_docs, compute_token_offsets
@@ -159,7 +160,7 @@ class PosPatternExtractor(CandidateExtractorBase):
     def _extract_from_spacy_docs(
         self,
         valid_docs: list[Document],
-        spacy_docs: list,
+        spacy_docs: list[Any],
         merged: dict[str, Candidate],
     ) -> None:
         for doc, spacy_doc in zip(valid_docs, spacy_docs):
@@ -171,8 +172,14 @@ class PosPatternExtractor(CandidateExtractorBase):
                 lemmas: list[str] = [token.lemma_ for token in sent]
 
                 self._process_sentence(
-                    doc, sent_idx, sent_offset, sent.text,
-                    tokens, pos_tags, lemmas, merged,
+                    doc,
+                    sent_idx,
+                    sent_offset,
+                    sent.text,
+                    tokens,
+                    pos_tags,
+                    lemmas,
+                    merged,
                 )
 
     # ------------------------------------------------------------------
@@ -211,8 +218,14 @@ class PosPatternExtractor(CandidateExtractorBase):
                 lemmas: list[str] = [lem for _, lem in lemmas_pairs]
 
                 self._process_sentence(
-                    doc, sent_idx, sent_offset, sent_text,
-                    tokens, pos_tags, lemmas, merged,
+                    doc,
+                    sent_idx,
+                    sent_offset,
+                    sent_text,
+                    tokens,
+                    pos_tags,
+                    lemmas,
+                    merged,
                 )
 
     # ------------------------------------------------------------------
@@ -271,9 +284,7 @@ class PosPatternExtractor(CandidateExtractorBase):
             if len(span_tokens) == 1:
                 normalized = span_lemmas[0].lower()
             else:
-                normalized = " ".join(
-                    [t.lower() for t in span_tokens[:-1]] + [span_lemmas[-1].lower()]
-                )
+                normalized = " ".join([t.lower() for t in span_tokens[:-1]] + [span_lemmas[-1].lower()])
             pos_pat = " ".join(span_pos)
 
             # Character offsets converted to document-level.

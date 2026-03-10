@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import math
-
 from typing import Any
 
 from jate.algorithms._reference_utils import _match_orders_of_magnitude
@@ -66,9 +65,7 @@ class TermEx(Algorithm):
         ref_data: list[tuple[ReferenceFrequency, float, float]] = []  # (ref, oom_scalar, null_prob)
         for rf in ref_freqs:
             if self._match_oom and word_freq is not None and rf.word2ttf:
-                oom = _match_orders_of_magnitude(
-                    word_freq.word2ttf, rf.word2ttf, rf.corpus_total
-                )
+                oom = _match_orders_of_magnitude(word_freq.word2ttf, rf.word2ttf, rf.corpus_total)
             else:
                 oom = 1.0
             ref_data.append((rf, oom, rf.null_prob))

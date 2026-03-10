@@ -6,17 +6,6 @@ import math
 
 import pytest
 
-from jate.features import (
-    ChiSquareFrequentTerms,
-    Cooccurrence,
-    Containment,
-    ContextFrequency,
-    ContextWindow,
-    ReferenceFrequency,
-    TermComponentIndex,
-    TermFrequency,
-    WordFrequency,
-)
 from jate.algorithms import (
     ATTF,
     RAKE,
@@ -31,6 +20,17 @@ from jate.algorithms import (
     NCValue,
     TermEx,
     Weirdness,
+)
+from jate.features import (
+    ChiSquareFrequentTerms,
+    Containment,
+    ContextFrequency,
+    ContextWindow,
+    Cooccurrence,
+    ReferenceFrequency,
+    TermComponentIndex,
+    TermFrequency,
+    WordFrequency,
 )
 from jate.models import Candidate, TermExtractionResult
 
@@ -71,7 +71,18 @@ def _make_term_freq() -> TermFrequency:
             "neural network": {"d1": 10, "d2": 10, "d3": 10, "d4": 10, "d5": 10},
             "deep neural network": {"d1": 10, "d2": 10},
             "machine learning": {"d1": 10, "d2": 10, "d3": 10, "d4": 10, "d5": 10, "d6": 10, "d7": 10, "d8": 10},
-            "network": {"d1": 10, "d2": 10, "d3": 10, "d4": 10, "d5": 10, "d6": 10, "d7": 10, "d8": 10, "d9": 10, "d10": 10},
+            "network": {
+                "d1": 10,
+                "d2": 10,
+                "d3": 10,
+                "d4": 10,
+                "d5": 10,
+                "d6": 10,
+                "d7": 10,
+                "d8": 10,
+                "d9": 10,
+                "d10": 10,
+            },
             "neural": {"d1": 10, "d2": 10, "d3": 10, "d4": 10, "d5": 10, "d6": 10, "d7": 10},
             "deep": {"d1": 10, "d2": 10, "d3": 10},
             "machine": {"d1": 10, "d2": 10, "d3": 10, "d4": 10, "d5": 10, "d6": 10, "d7": 10, "d8": 10, "d9": 10},
@@ -298,7 +309,8 @@ class TestComboBasic:
         containment = _make_containment()
         child_containment = containment.reverse()
         result = ComboBasic(alpha=0.75, beta=0.1).score(
-            candidates, tf,
+            candidates,
+            tf,
             containment=containment,
             child_containment=child_containment,
         )
@@ -353,9 +365,11 @@ class TestChiSquareWithContext:
             adjacent={},
         )
 
-        cooc = Cooccurrence(matrix={
-            ("machine learning", "neural network"): 1,
-        })
+        cooc = Cooccurrence(
+            matrix={
+                ("machine learning", "neural network"): 1,
+            }
+        )
 
         chi_ft = ChiSquareFrequentTerms(
             exp_prob={"machine learning": 0.3, "neural network": 0.2},
@@ -405,13 +419,15 @@ class TestRAKE:
             word2fid={},
             corpus_total=375,
         )
-        tci = TermComponentIndex(index={
-            "neural": [("deep neural network", 3), ("neural network", 2)],
-            "network": [("deep neural network", 3), ("neural network", 2)],
-            "deep": [("deep neural network", 3)],
-            "machine": [("machine learning", 2)],
-            "learning": [("machine learning", 2)],
-        })
+        tci = TermComponentIndex(
+            index={
+                "neural": [("deep neural network", 3), ("neural network", 2)],
+                "network": [("deep neural network", 3), ("neural network", 2)],
+                "deep": [("deep neural network", 3)],
+                "machine": [("machine learning", 2)],
+                "learning": [("machine learning", 2)],
+            }
+        )
         algo = RAKE()
         result = algo.score(_make_candidates(), tf, word_freq=word_freq, term_component_index=tci)
         assert len(result) == 4
@@ -531,13 +547,9 @@ class TestTermEx:
         candidates = _make_candidates()
 
         # Multi-ref result
-        result_multi = algo.score(
-            candidates, tf, ref_freq=ref1, ref_freqs=[ref1, ref2], word_freq=word_freq
-        )
+        result_multi = algo.score(candidates, tf, ref_freq=ref1, ref_freqs=[ref1, ref2], word_freq=word_freq)
         # Single-ref result (ref1 only)
-        result_single = algo.score(
-            candidates, tf, ref_freq=ref1, word_freq=word_freq
-        )
+        result_single = algo.score(candidates, tf, ref_freq=ref1, word_freq=word_freq)
 
         scores_multi = {t.string: t.score for t in result_multi}
         scores_single = {t.string: t.score for t in result_single}

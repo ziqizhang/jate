@@ -235,8 +235,6 @@ def _print_result(result: object, output_format: str, top: int | None) -> None:
     if output_format == "csv":
         # Respect --top for csv too
         if top is not None:
-            from jate.models import Term
-
             trimmed = TermExtractionResult(list(result)[:top])
             print(trimmed.to_csv(), end="")
         else:

@@ -8,7 +8,7 @@ import json
 from dataclasses import dataclass, field
 from typing import Any, Iterator
 
-import pandas as pd
+import pandas as pd  # type: ignore[import-untyped]
 
 
 @dataclass(slots=True)
@@ -66,9 +66,7 @@ class Candidate:
         # Ensure the initial surface_form is always in the set.
         self.surface_forms.add(self.surface_form)
 
-    def add_position(
-        self, doc_id: str, start: int, end: int, sentence_idx: int = -1, surface: str = ""
-    ) -> None:
+    def add_position(self, doc_id: str, start: int, end: int, sentence_idx: int = -1, surface: str = "") -> None:
         """Record a new occurrence of this candidate in a document."""
         self.doc_positions.setdefault(doc_id, []).append((start, end, sentence_idx))
         self.total_frequency += 1

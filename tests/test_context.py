@@ -1,7 +1,7 @@
 """Unit tests for ContextIndex."""
+
 from __future__ import annotations
 
-import pytest
 from jate.context import ContextIndex
 from jate.models import Candidate, Document
 from jate.nlp.spacy_backend import SpacyBackend

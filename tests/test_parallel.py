@@ -1,10 +1,11 @@
 """Tests for JATEConfig, parallel_map, and batch NLP processing."""
+
 from __future__ import annotations
 
 from jate.config import JATEConfig
-from jate.nlp.spacy_backend import SpacyBackend
 from jate.features import build_child_containment_index, build_containment_index
 from jate.models import Candidate
+from jate.nlp.spacy_backend import SpacyBackend
 from jate.parallel import parallel_map, split_range
 from jate.store.memory_store import MemoryCorpusStore
 
@@ -125,9 +126,10 @@ class TestParallelCooccurrence:
         store_par = _make_indexed_store(max_workers=2)
         terms = ["neural network", "machine learning", "deep learning", "network"]
         for i, a in enumerate(terms):
-            for b in terms[i + 1:]:
-                assert store_seq.get_cooccurrences(a, b) == store_par.get_cooccurrences(a, b), \
-                    f"Mismatch for ({a}, {b})"
+            for b in terms[i + 1 :]:
+                assert store_seq.get_cooccurrences(a, b) == store_par.get_cooccurrences(
+                    a, b
+                ), f"Mismatch for ({a}, {b})"
 
     def test_known_cooccurrence_values(self) -> None:
         store = _make_indexed_store(max_workers=2)
@@ -189,5 +191,6 @@ class TestParallelCompare:
             scores_par = {t.string: t.score for t in results_par[algo_name]}
             assert scores_seq.keys() == scores_par.keys(), f"{algo_name} term sets differ"
             for term in scores_seq:
-                assert abs(scores_seq[term] - scores_par[term]) < 1e-9, \
-                    f"{algo_name}/{term}: {scores_seq[term]} != {scores_par[term]}"
+                assert (
+                    abs(scores_seq[term] - scores_par[term]) < 1e-9
+                ), f"{algo_name}/{term}: {scores_seq[term]} != {scores_par[term]}"

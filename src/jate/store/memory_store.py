@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from jate.models import Candidate, Document
 from jate.parallel import parallel_map, split_range
 
 
-def _compute_cooc_chunk(args: tuple) -> dict[tuple[str, str], int]:
+def _compute_cooc_chunk(args: tuple[Any, ...]) -> dict[tuple[str, str], int]:
     """Compute co-occurrences for a chunk of the outer loop (must be top-level for pickling)."""
     terms, term_docs, start, end = args
     partial: dict[tuple[str, str], int] = {}
@@ -47,9 +49,7 @@ class MemoryCorpusStore:
     # Candidate indexing
     # ------------------------------------------------------------------
 
-    def index_candidates(
-        self, candidates: list[Candidate], *, max_workers: int = 1
-    ) -> None:
+    def index_candidates(self, candidates: list[Candidate], *, max_workers: int = 1) -> None:
         """Bulk-index candidate frequencies.
 
         Also computes pairwise co-occurrence counts.  When *max_workers* > 1
