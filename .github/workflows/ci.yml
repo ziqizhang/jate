@@ -3,19 +3,9 @@ name: CI
 on:
   pull_request:
     branches: ["master"]
-    paths-ignore:
-      - "docs/**"
-      - "*.md"
-      - ".gitignore"
-      - "LICENSE"
 
   push:
     branches: ["master"]
-    paths-ignore:
-      - "docs/**"
-      - "*.md"
-      - ".gitignore"
-      - "LICENSE"
 
   workflow_dispatch:
 
@@ -93,6 +83,9 @@ jobs:
           poetry config virtualenvs.in-project true
           poetry install --no-interaction --with dev
 
+      - name: Download spaCy model
+        run: poetry run python -m spacy download en_core_web_sm
+
       - name: Run tests
         run: |
           poetry run pytest tests/ \
@@ -135,3 +128,35 @@ jobs:
 
       - name: Run mypy
         run: poetry run mypy src/jate/
+
+  build:
+    name: Build package
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Poetry
+        run: pipx install poetry>=2.0.0
+
+      - name: Build package
+        run: poetry build
+
+      - name: Verify package contents
+        run: |
+          pip install dist/*.whl
+          python -c "import jate; print(jate.__version__)"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7

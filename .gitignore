@@ -41,10 +41,14 @@ Thumbs.db
 # Environment
 .env
 .env.*
+CLAUDE.md
+docs/plans/
 
 # Node (semantic-release)
 node_modules/
-package-lock.json
+
+# MkDocs
+site/
 
 # Distribution
 *.tar.gz
