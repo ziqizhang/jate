@@ -2,17 +2,25 @@
 
 from __future__ import annotations
 
+import os
+from functools import lru_cache
 from typing import Any
 
-import spacy
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
 from jate.api import _ALGORITHM_NAMES, _EXTRACTOR_NAMES, extract
+from jate.nlp.spacy_backend import SpacyBackend
 
 DEFAULT_MODEL = "en_core_web_sm"
 
 app = FastAPI(title="JATE API", version="1.0.0")
+
+
+@lru_cache(maxsize=4)
+def get_cached_backend(model: str) -> SpacyBackend:
+    """Load and cache a spaCy backend per model name."""
+    return SpacyBackend(model)
 
 
 class ExtractRequest(BaseModel):
@@ -60,7 +68,7 @@ def health_live() -> dict[str, str]:
 def health_ready(model: str = DEFAULT_MODEL) -> dict[str, str]:
     """Readiness check validating spaCy model availability."""
     try:
-        spacy.load(model)
+        get_cached_backend(model)
     except OSError as exc:
         raise HTTPException(status_code=503, detail=f"Model not ready: {model}") from exc
     return {"status": "ready", "model": model}
@@ -80,11 +88,13 @@ def capabilities() -> dict[str, list[str] | str]:
 def extract_terms(payload: ExtractRequest) -> ExtractResponse:
     """Extract terms and return ranked JSON results."""
     try:
+        backend = get_cached_backend(payload.model)
         result = extract(
             payload.text,
             algorithm=payload.algorithm,
             extractor=payload.extractor,
             model=payload.model,
+            nlp_backend=backend,
             min_frequency=payload.min_frequency,
             min_words=payload.min_words,
             max_words=payload.max_words,
@@ -92,6 +102,8 @@ def extract_terms(payload: ExtractRequest) -> ExtractResponse:
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except OSError as exc:
+        raise HTTPException(status_code=503, detail=f"Model not ready: {payload.model}") from exc
 
     terms = list(result)
     if payload.top is not None:
@@ -120,4 +132,18 @@ def run() -> None:
     """Run API server."""
     import uvicorn
 
-    uvicorn.run("jate.server:app", host="0.0.0.0", port=8000)
+    host = os.getenv("JATE_API_HOST", "0.0.0.0")
+    port = int(os.getenv("JATE_API_PORT", "8000"))
+    workers = int(os.getenv("JATE_API_WORKERS", "1"))
+    keepalive = int(os.getenv("JATE_API_TIMEOUT_KEEP_ALIVE", "5"))
+
+    # Warm up default model in each worker process.
+    get_cached_backend(DEFAULT_MODEL)
+
+    uvicorn.run(
+        "jate.server:app",
+        host=host,
+        port=port,
+        workers=workers,
+        timeout_keep_alive=keepalive,
+    )

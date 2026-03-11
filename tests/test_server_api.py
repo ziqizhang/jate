@@ -7,7 +7,6 @@ from fastapi.testclient import TestClient
 from jate.models import Term, TermExtractionResult
 from jate.server import app
 
-
 client = TestClient(app)
 
 
@@ -61,3 +60,26 @@ def test_capabilities() -> None:
     data = resp.json()
     assert "cvalue" in data["algorithms"]
     assert "pos_pattern" in data["extractors"]
+
+
+def test_health_ready_model_unavailable(monkeypatch: object) -> None:
+    def _raise_backend(_: str) -> object:
+        raise OSError("missing model")
+
+    monkeypatch.setattr("jate.server.get_cached_backend", _raise_backend)
+
+    resp = client.get("/health/ready")
+    assert resp.status_code == 503
+
+
+def test_extract_model_unavailable(monkeypatch: object) -> None:
+    def _raise_backend(_: str) -> object:
+        raise OSError("missing model")
+
+    monkeypatch.setattr("jate.server.get_cached_backend", _raise_backend)
+
+    resp = client.post(
+        "/jate/api/v1/extract",
+        json={"text": "sample text", "algorithm": "cvalue"},
+    )
+    assert resp.status_code == 503

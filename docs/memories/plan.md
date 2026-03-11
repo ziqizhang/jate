@@ -32,3 +32,5 @@ Add a thin web server that exposes JATE extraction as a JSON endpoint, while sti
 1. POST /jate/api/v1/extract returns ranked JSON terms.
 2. Invalid algorithm/extractor returns non-2xx JSON error.
 3. Dockerized server responds on localhost:8000.
+4. Docker smoke check must run with runtime env vars and validate all endpoints.
+5. Use: `bash scripts/docker_smoke_api.sh`

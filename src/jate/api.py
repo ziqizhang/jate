@@ -244,6 +244,7 @@ def extract(
     algorithm: str = "cvalue",
     model: str = "en_core_web_sm",
     extractor: str = "pos_pattern",
+    nlp_backend: SpacyBackend | None = None,
     config: JATEConfig | None = None,
     min_frequency: int = 1,
     min_words: int = 1,
@@ -262,6 +263,8 @@ def extract(
         spaCy model name.
     extractor:
         Candidate extractor name (``"pos_pattern"``, ``"ngram"``, ``"noun_phrase"``).
+    nlp_backend:
+        Optional preloaded backend. If provided, avoids reloading spaCy per call.
     config:
         Pipeline configuration (controls parallelism). Defaults to sequential.
     min_frequency:
@@ -281,7 +284,7 @@ def extract(
     if config is None:
         config = JATEConfig()
 
-    nlp = SpacyBackend(model)
+    nlp = nlp_backend if nlp_backend is not None else SpacyBackend(model)
     documents = DocumentLoader.load_texts([text])
 
     # Extractors still need a CorpusStore for add_document()

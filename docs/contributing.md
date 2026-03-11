@@ -18,6 +18,26 @@ python -m spacy download en_core_web_sm
 poetry run pytest tests/
 ```
 
+For API/container changes, run Docker smoke checks with runtime env vars:
+
+```bash
+bash scripts/docker_smoke_api.sh
+```
+
+From other directories, or with custom Dockerfile/context:
+
+```bash
+bash scripts/docker_smoke_api.sh /path/to/Dockerfile /path/to/build-context
+```
+
+If port conflicts exist, override host port:
+
+```bash
+JATE_SMOKE_HOST_PORT=18001 bash scripts/docker_smoke_api.sh
+```
+
+This smoke test validates all current API endpoints (`/health/live`, `/health/ready`, `/jate/api/v1/capabilities`, `/jate/api/v1/extract`) and key non-2xx error paths.
+
 ## Code style
 
 JATE uses pre-commit hooks for consistent formatting:
@@ -40,8 +60,9 @@ poetry run pre-commit run --all-files
 2. Make your changes
 3. Add tests for new functionality
 4. Ensure all tests pass: `poetry run pytest`
-5. Ensure code passes linting: `poetry run pre-commit run --all-files`
-6. Submit a PR to `dev`
+5. For API/container changes, ensure smoke checks pass: `bash scripts/docker_smoke_api.sh`
+6. Ensure code passes linting: `poetry run pre-commit run --all-files`
+7. Submit a PR to `dev`
 
 ## Adding a new algorithm
 
