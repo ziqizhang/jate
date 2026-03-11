@@ -14,3 +14,8 @@ tests
 node_modules
 package-lock.json
 package.json
+.github
+tests
+docs
+__pycache__
+*.pyc
