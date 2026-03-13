@@ -247,15 +247,13 @@ Each `Term` in the result contains:
 
 ## Contributing
 
-JATE is in active development and we welcome contributions. Here's how you can get involved:
+Please read the [contributing guide](docs/contributing.md) first for development setup, branch workflow, and agentic coding harness details. JATE is in active development and we welcome contributions. Here's how you can get involved:
 
 - **Browse open issues** — check the [feature roadmap](https://github.com/ziqizhang/jate/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) for planned enhancements
 - **Good first issues** — look for issues labelled [`good first issue`](https://github.com/ziqizhang/jate/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) if you're new to the project
 - **Feature requests** — [open an issue](https://github.com/ziqizhang/jate/issues/new?template=feature_request.yml) to suggest new features
 - **Bug reports** — [report here](https://github.com/ziqizhang/jate/issues/new?template=bug_report.yml)
 - **Star the repo** to follow progress
-
-See [CONTRIBUTING.md](docs/contributing.md) for development setup and guidelines.
 
 ## Background
 
