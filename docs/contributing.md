@@ -12,10 +12,21 @@ poetry install --with dev,docs
 python -m spacy download en_core_web_sm
 ```
 
-## Running tests
+## Running checks
+
+Use the Makefile for all common operations:
 
 ```bash
-poetry run pytest tests/
+make check          # lint + test + typecheck — run after every change
+make lint           # pre-commit (black + isort + flake8)
+make test           # pytest (includes structural and entropy tests)
+make typecheck      # mypy (strict mode)
+```
+
+For API/container changes, also run Docker smoke checks:
+
+```bash
+bash scripts/docker_smoke_api.sh
 ```
 
 ## Code style
@@ -33,26 +44,56 @@ poetry run pre-commit run --all-files
 
 ## Branch workflow
 
-- `master` — release branch (triggers semantic-release)
-- `dev` — development branch (submit PRs here)
+> **Important**: Always target `dev` for pull requests, never `master`.
+
+- `master` — release branch. Pushes to `master` can trigger semantic-release and publish a new version to PyPI (if commits use `fix:` or `feat:` prefixes). Do not submit PRs to `master` unless you intend to cut a release.
+- `dev` — development branch. All feature work, bug fixes, and improvements go here.
 
 1. Fork the repo and create a branch from `dev`
 2. Make your changes
 3. Add tests for new functionality
-4. Ensure all tests pass: `poetry run pytest`
-5. Ensure code passes linting: `poetry run pre-commit run --all-files`
-6. Submit a PR to `dev`
+4. Run `make check` and ensure everything passes
+5. For API/container changes, ensure smoke checks pass: `bash scripts/docker_smoke_api.sh`
+6. Submit a PR to **`dev`**
 
-## Adding a new algorithm
+## Agentic coding harness
 
-1. Create a new file in `src/jate/algorithms/` (e.g. `my_algo.py`)
-2. Subclass `Algorithm` and implement `score(self, candidates, term_freq, **kwargs)` — receive feature objects via kwargs
-3. Add the class to `src/jate/algorithms/__init__.py`
-4. Add a name mapping in `src/jate/api.py` (`_ALGORITHM_NAMES`)
-5. If the algorithm needs features beyond `TermFrequency`, add it to the appropriate `_NEEDS_*` tuple in `api.py` so features are built lazily
-6. Export from `src/jate/__init__.py`
-7. Add tests in `tests/test_algorithms.py`
-8. Document in `docs/guide/algorithms.md`
+This repo uses an **agentic coding harness** — structured infrastructure that helps AI coding agents work productively and safely within the codebase. This follows the principles outlined in OpenAI's [Harness Engineering](https://openai.com/index/harness-engineering/), where agents need clear boundaries, mechanical guardrails, and discoverable context to operate effectively.
+
+### Harness files
+
+The following files form the harness. They **must not be deleted or broken** by contributions. If your changes alter the architecture (e.g., adding a new top-level module, changing module boundaries), you must update these files to reflect the new state:
+
+| File | Purpose |
+|------|---------|
+| `AGENTS.md` | Tier 1 context — project overview, module map, commands, architectural rules. Loaded by AI agents at the start of every session. Keep under 150 lines. |
+| `docs/architecture-agent.md` | Tier 2 context — detailed architecture reference. Module responsibilities, pipeline flow, extension guides. Pulled in by agents when working on cross-module changes. |
+| `tests/test_architecture.py` | Structural tests — enforces module boundary rules via AST import analysis. If you add a new module or change import dependencies, these tests will catch violations. |
+| `tests/test_entropy.py` | Entropy tests — catches codebase decay: duplicate function names, vague TODOs, oversized files, documentation drift. |
+| `Makefile` | Universal command menu. `make check` runs lint + test + typecheck. Agents and humans use the same commands. |
+
+**When to update harness files:**
+
+- **Added a new top-level module** under `src/jate/` → update the module map in `AGENTS.md` and the module responsibilities section in `docs/architecture-agent.md`
+- **Changed module boundaries** (e.g., a new dependency between modules) → update the architectural rules in both docs and, if needed, the allowed/forbidden import lists in `tests/test_architecture.py`
+- **Added a large file** (>500 lines) that is intentional → add it to `KNOWN_LARGE_FILES` in `tests/test_entropy.py`
+
+### Optional: agentic harness toolkit
+
+An optional skill package is available for contributors who use AI coding tools (Claude Code, Cursor, Windsurf, Copilot, etc.). It contains:
+
+- **SKILL.md** — a structured skill definition that teaches your AI agent how to assess, set up, and audit agentic coding harnesses. It covers context engineering (tiered documentation), architectural guardrails (automated enforcement via tests and linters), and entropy management (detecting codebase decay).
+- **harness-engineering-guide.md** — the full reference guide on harness engineering principles and practices.
+
+**Download**: grab `agentic-harness-toolkit.zip` from the [latest release](https://github.com/ziqizhang/jate/releases/latest) assets.
+
+**Deployment**: how you deploy the skill depends on your AI coding tool. In general:
+
+1. Unzip the archive
+2. Place the files in your tool's skill/rules directory (e.g., `.claude/skills/`, `.cursor/rules/`, or wherever your tool loads custom instructions from)
+3. Invoke the skill when you want to assess or audit the harness (e.g., in Claude Code: `/agentic-harness`)
+
+Consult your tool's documentation for the exact location and format it expects for custom skills or instructions.
 
 ## Reporting issues
 

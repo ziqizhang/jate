@@ -21,19 +21,22 @@ packages = [{ include = "jate", from = "src" }]
 
 [tool.poetry.scripts]
 jate = "jate.cli:main"
+jate-api = "jate.server:run"
 
 [tool.poetry.dependencies]
 python = "^3.11"
 spacy = "^3.7"
 pandas = "^2.0"
 numpy = "^1.26"
+fastapi = "^0.121.1"
+uvicorn = "^0.38.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0"
 pytest-cov = "^5.0"
 pre-commit = "^4.0"
 mypy = "^1.10"
-black = "^24.0"
+black = ">=24,<27"
 isort = "^5.13"
 flake8 = "^7.0"
 
