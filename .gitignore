@@ -43,6 +43,7 @@ Thumbs.db
 .env.*
 CLAUDE.md
 docs/plans/
+docs/memories/
 
 # Node (semantic-release)
 node_modules/

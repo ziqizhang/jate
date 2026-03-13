@@ -1,22 +1,21 @@
-# -------- Builder stage --------
-FROM python:3.11-slim AS builder
+ARG PYTHON_VERSION=3.11
 
+FROM python:${PYTHON_VERSION}-slim AS builder
 WORKDIR /app
-
-RUN pip install --upgrade pip
-
-# install package
-RUN pip install jate spacy
-
-# install spaCy model required by README
-RUN python -m spacy download en_core_web_sm
+COPY pyproject.toml README.md ./
+COPY src ./src
+RUN pip install --no-cache-dir --upgrade pip build && \
+    python -m build --wheel --outdir /dist
 
 
-# -------- Runtime stage --------
-FROM python:3.11-slim
-
+FROM python:${PYTHON_VERSION}-slim AS runtime
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 WORKDIR /app
-
-COPY --from=builder /usr/local /usr/local
-
-ENTRYPOINT ["jate"]
+COPY --from=builder /dist/*.whl /tmp/
+RUN pip install --no-cache-dir /tmp/*.whl && \
+    pip install --no-cache-dir \
+    "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl" && \
+    rm -rf /tmp/*.whl
+EXPOSE 8000
+CMD ["uvicorn", "jate.server:app", "--host", "0.0.0.0", "--port", "8000"]

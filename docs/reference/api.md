@@ -2,6 +2,53 @@
 
 Auto-generated from source docstrings.
 
+## REST API (v1)
+
+JATE also provides a thin HTTP server for JSON-based extraction.
+
+### Start server
+
+```bash
+jate-api
+```
+
+### Endpoints
+
+- `POST /jate/api/v1/extract`
+- `GET /jate/api/v1/capabilities`
+- `GET /health/live`
+- `GET /health/ready`
+
+### Example request
+
+```bash
+curl --header "Content-Type: application/json" \
+	--request POST \
+	--data '{"text":"text to process","algorithm":"cvalue"}' \
+	http://localhost:8000/jate/api/v1/extract
+```
+
+### Example response
+
+```json
+{
+	"algorithm": "cvalue",
+	"extractor": "pos_pattern",
+	"model": "en_core_web_sm",
+	"top": 3,
+	"terms": [
+		{
+			"rank": 1,
+			"term": "local governor",
+			"score": 1.0704,
+			"frequency": 1,
+			"surface_forms": [],
+			"metadata": {}
+		}
+	]
+}
+```
+
 ## Public API functions
 
 ::: jate.api.extract
