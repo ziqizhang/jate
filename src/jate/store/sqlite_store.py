@@ -26,8 +26,7 @@ class SQLiteCorpusStore:
 
     def _create_tables(self) -> None:
         with self._connection:
-            self._connection.executescript(
-                """
+            self._connection.executescript("""
                 CREATE TABLE IF NOT EXISTS documents (
                     doc_id   TEXT PRIMARY KEY,
                     content  TEXT,
@@ -45,8 +44,7 @@ class SQLiteCorpusStore:
                     doc_count INTEGER,
                     PRIMARY KEY (term_a, term_b)
                 );
-                """
-            )
+                """)
 
     # ------------------------------------------------------------------
     # Document ingestion
