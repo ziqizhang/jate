@@ -76,6 +76,22 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Evaluate only top-K terms per algorithm",
     )
+    p_bench.add_argument(
+        "--list-datasets",
+        action="store_true",
+        help="List available datasets and exit",
+    )
+    p_bench.add_argument(
+        "-y",
+        "--yes",
+        action="store_true",
+        help="Skip confirmation prompt for large dataset downloads",
+    )
+    p_bench.add_argument(
+        "--force-redownload",
+        action="store_true",
+        help="Force re-download even if dataset is already cached",
+    )
 
     # --- demo --------------------------------------------------------------
     subparsers.add_parser("demo", help="Launch the demo UI")
@@ -199,18 +215,66 @@ def _cmd_compare(args: argparse.Namespace) -> None:
         print(_format_table(result, args.top))
 
 
+_DATASET_INFO: dict[str, tuple[str, str]] = {
+    "acl_rdtec_mini": ("ACL RD-TEC Mini", "3-document test fixture (bundled, no download)"),
+    "acl_rdtec": ("ACL RD-TEC 2.0", "Full ACL RD-TEC 2.0 corpus (~35 MB download)"),
+    "acter": ("ACTER v1.5", "All 4 English domains combined (~50 MB download)"),
+    "acter_corp": ("ACTER v1.5 — Corruption", "Corruption domain only"),
+    "acter_equi": ("ACTER v1.5 — Equitation", "Dressage/equitation domain only"),
+    "acter_htfl": ("ACTER v1.5 — Heart Failure", "Heart failure domain only"),
+    "acter_wind": ("ACTER v1.5 — Wind Energy", "Wind energy domain only"),
+    "coastterm": ("CoastTerm", "Coastal area terminology (~10 MB download)"),
+}
+
+# Datasets that require download and user confirmation
+_LARGE_DATASETS: dict[str, str] = {
+    "acl_rdtec": "~35 MB",
+    "acter": "~50 MB",
+    "acter_corp": "~50 MB",
+    "acter_equi": "~50 MB",
+    "acter_htfl": "~50 MB",
+    "acter_wind": "~50 MB",
+    "coastterm": "~10 MB",
+}
+
+
 def _cmd_benchmark(args: argparse.Namespace) -> None:
     from jate.benchmark import BenchmarkRunner
 
+    # Handle --list-datasets
+    if getattr(args, "list_datasets", False):
+        print("Available datasets:\n")
+        for ds_id, (ds_name, ds_desc) in _DATASET_INFO.items():
+            print(f"  {ds_id:<20s} {ds_name} — {ds_desc}")
+        return
+
     # Resolve dataset
     dataset_name = args.dataset.lower().strip()
-    if dataset_name == "acl_rdtec_mini":
-        from jate.datasets.acl_rdtec import load_acl_rdtec_mini
 
-        documents, gold_terms = load_acl_rdtec_mini()
-    else:
-        print(f"Unknown dataset: {args.dataset!r}. Available: acl_rdtec_mini")
+    if dataset_name not in _DATASET_INFO:
+        print(f"Unknown dataset: {args.dataset!r}.")
+        print("Use --list-datasets to see available datasets.")
         sys.exit(1)
+
+    force_download = getattr(args, "force_redownload", False)
+
+    # Confirmation prompt for large datasets
+    if dataset_name in _LARGE_DATASETS and not getattr(args, "yes", False):
+        size = _LARGE_DATASETS[dataset_name]
+        print(f'Dataset "{dataset_name}" requires downloading {size} from GitHub.')
+        print("Running benchmarks on large datasets may take 10-30 minutes.")
+        try:
+            answer = input("Continue? [y/N]: ").strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            print("\nAborted.")
+            sys.exit(0)
+        if answer not in ("y", "yes"):
+            print("Aborted.")
+            sys.exit(0)
+
+    ds = _resolve_dataset(dataset_name, force_download=force_download)
+    documents = ds.documents
+    gold_terms = ds.gold_terms
 
     algo_list: list[str] | None = None
     if args.algorithms:
@@ -226,6 +290,36 @@ def _cmd_benchmark(args: argparse.Namespace) -> None:
         top_k=args.top,
     )
     runner.print_results(results)
+
+
+def _resolve_dataset(name: str, *, force_download: bool = False) -> object:
+    """Instantiate a dataset loader by name.
+
+    Returns an object satisfying the Dataset protocol.
+    """
+    if name == "acl_rdtec_mini":
+        from jate.datasets.acl_rdtec import AclRdtecMini
+
+        return AclRdtecMini()
+
+    if name == "acl_rdtec":
+        from jate.datasets.acl_rdtec_full import AclRdtecFull
+
+        return AclRdtecFull(force_download=force_download)
+
+    if name.startswith("acter"):
+        from jate.datasets.acter import Acter
+
+        domain = name.removeprefix("acter_") if name != "acter" else None
+        return Acter(domain=domain, force_download=force_download)
+
+    if name == "coastterm":
+        from jate.datasets.coastterm import CoastTerm
+
+        return CoastTerm(force_download=force_download)
+
+    msg = f"Unknown dataset: {name!r}"
+    raise ValueError(msg)
 
 
 def _print_result(result: object, output_format: str, top: int | None) -> None:

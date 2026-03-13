@@ -2,10 +2,17 @@
 
 from __future__ import annotations
 
-from jate.datasets.acl_rdtec import load_acl_rdtec_mini
+from jate.datasets.acl_rdtec import AclRdtecMini, load_acl_rdtec_mini
+from jate.datasets.acl_rdtec_full import AclRdtecFull
+from jate.datasets.acter import Acter
 from jate.datasets.base import Dataset
+from jate.datasets.coastterm import CoastTerm
 
 __all__ = [
+    "AclRdtecFull",
+    "AclRdtecMini",
+    "Acter",
+    "CoastTerm",
     "Dataset",
     "load_acl_rdtec_mini",
 ]
