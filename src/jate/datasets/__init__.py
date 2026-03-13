@@ -7,6 +7,7 @@ from jate.datasets.acl_rdtec_full import AclRdtecFull
 from jate.datasets.acter import Acter
 from jate.datasets.base import Dataset
 from jate.datasets.coastterm import CoastTerm
+from jate.datasets.genia import Genia
 
 __all__ = [
     "AclRdtecFull",
@@ -14,5 +15,6 @@ __all__ = [
     "Acter",
     "CoastTerm",
     "Dataset",
+    "Genia",
     "load_acl_rdtec_mini",
 ]

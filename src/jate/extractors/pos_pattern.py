@@ -163,7 +163,18 @@ class PosPatternExtractor(CandidateExtractorBase):
         spacy_docs: list[Any],
         merged: dict[str, Candidate],
     ) -> None:
-        for doc, spacy_doc in zip(valid_docs, spacy_docs):
+        total = len(valid_docs)
+        report_every = max(1, total // 10)  # report ~10 times
+        for doc_idx, (doc, spacy_doc) in enumerate(zip(valid_docs, spacy_docs)):
+            if total > 100 and doc_idx % report_every == 0 and doc_idx > 0:
+                from datetime import datetime
+
+                ts = datetime.now().strftime("%H:%M:%S")
+                print(
+                    f"[{ts}]   Candidate extraction: {doc_idx}/{total} documents ...",
+                    file=__import__("sys").stderr,
+                    flush=True,
+                )
             for sent_idx, sent in enumerate(spacy_doc.sents):
                 sent_offset = sent.start_char
 

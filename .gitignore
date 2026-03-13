@@ -1,3 +1,6 @@
+# Local data (benchmark datasets, not distributed)
+.data/
+
 # Python
 __pycache__/
 *.py[cod]

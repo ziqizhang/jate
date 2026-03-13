@@ -224,6 +224,10 @@ _DATASET_INFO: dict[str, tuple[str, str]] = {
     "acter_htfl": ("ACTER v1.5 — Heart Failure", "Heart failure domain only"),
     "acter_wind": ("ACTER v1.5 — Wind Energy", "Wind energy domain only"),
     "coastterm": ("CoastTerm", "Coastal area terminology (~10 MB download)"),
+    "genia": (
+        "GENIA 3.02",
+        "Biomedical corpus, 2000 articles (local only, requires .data/ setup)",
+    ),
 }
 
 # Datasets that require download and user confirmation
@@ -259,9 +263,12 @@ def _cmd_benchmark(args: argparse.Namespace) -> None:
     force_download = getattr(args, "force_redownload", False)
 
     # Confirmation prompt for large datasets
-    if dataset_name in _LARGE_DATASETS and not getattr(args, "yes", False):
-        size = _LARGE_DATASETS[dataset_name]
-        print(f'Dataset "{dataset_name}" requires downloading {size} from GitHub.')
+    if dataset_name != "acl_rdtec_mini" and not getattr(args, "yes", False):
+        if dataset_name in _LARGE_DATASETS:
+            size = _LARGE_DATASETS[dataset_name]
+            print(f'Dataset "{dataset_name}" requires downloading {size} from GitHub.')
+        else:
+            print(f'Dataset "{dataset_name}" is loaded from local files.')
         print("Running benchmarks on large datasets may take 10-30 minutes.")
         try:
             answer = input("Continue? [y/N]: ").strip().lower()
@@ -317,6 +324,11 @@ def _resolve_dataset(name: str, *, force_download: bool = False) -> object:
         from jate.datasets.coastterm import CoastTerm
 
         return CoastTerm(force_download=force_download)
+
+    if name == "genia":
+        from jate.datasets.genia import Genia
+
+        return Genia()
 
     msg = f"Unknown dataset: {name!r}"
     raise ValueError(msg)
