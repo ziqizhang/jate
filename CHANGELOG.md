@@ -1,3 +1,15 @@
+# [3.1.0](https://github.com/ziqizhang/jate/compare/v3.0.0...v3.1.0) (2026-03-13)
+
+
+### Bug Fixes
+
+* resolve poetry.lock merge conflict with dev ([979aa94](https://github.com/ziqizhang/jate/commit/979aa94ffeef3bccdcbe2df241283baa61f83e0d))
+
+
+### Features
+
+* add official Docker image for JATE ([2040021](https://github.com/ziqizhang/jate/commit/204002162506966874e7c1363f8683214488efa7))
+
 # 3.0.0 (2026-03-10)
 
 

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jate"
-version = "3.0.0"
+version = "3.1.0"
 description = "Just Automatic Term Extraction — the definitive Python library for automatic term extraction"
 authors = ["Ziqi Zhang <z.zhang@sheffield.ac.uk>"]
 license = "Apache-2.0"
