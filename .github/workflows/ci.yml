@@ -17,6 +17,35 @@ env:
   PYTHON_VERSION: "3.11"
 
 jobs:
+  docker-smoke-test-change-detection:
+    name: Detect docker and server related changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      docker_smoke: ${{ steps.filter.outputs.docker_smoke }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Filter changed files
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          base: dev
+          filters: |
+            docker_smoke:
+              - "Dockerfile"
+              - ".dockerignore"
+              - "scripts/docker_smoke_api.sh"
+              - "src/jate/server.py"
+              - "src/jate/api.py"
+              - "pyproject.toml"
+              - "poetry.lock"
+              - ".github/workflows/ci.yml"
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
@@ -160,3 +189,17 @@ jobs:
           name: dist
           path: dist/
           retention-days: 7
+
+  docker-smoke:
+    name: Docker Smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [docker-smoke-test-change-detection]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.docker-smoke-test-change-detection.outputs.docker_smoke == 'true' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Run Docker API smoke checks
+        run: bash scripts/docker_smoke_api.sh
