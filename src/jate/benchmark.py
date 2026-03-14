@@ -68,27 +68,6 @@ class _ProgressNlpWrapper:
         return results
 
 
-def _build_features_with_progress(
-    algo: Any,
-    candidates: list[Any],
-    documents: list[Any],
-    nlp: Any,
-    term_freq: Any,
-    config: Any,
-) -> dict[str, Any]:
-    """Wrap _build_features to report which features are being computed."""
-    from jate.api import _build_features
-
-    t_feat = time.time()
-    _log("    Building features ...")
-    kwargs = _build_features(algo, candidates, documents, nlp, term_freq, config)
-    for key in kwargs:
-        label = _FEATURE_LABELS.get(key, key)
-        _log(f"      Built: {label}")
-    _log(f"    Features ready in {time.time() - t_feat:.1f}s")
-    return kwargs
-
-
 class BenchmarkRunner:
     """Run multiple algorithms on a dataset and evaluate the results."""
 
@@ -136,7 +115,7 @@ class BenchmarkRunner:
         dict[str, EvaluationResult]
             Mapping of algorithm name to its evaluation result.
         """
-        from jate.api import _resolve_algorithm, _resolve_extractor
+        from jate.api import FeatureCache, _resolve_algorithm, _resolve_extractor
         from jate.config import JATEConfig
         from jate.features import TermFrequency
         from jate.nlp.spacy_backend import SpacyBackend
@@ -211,17 +190,24 @@ class BenchmarkRunner:
         term_freq = TermFrequency.build(candidates, len(documents))
         _log(f"  {len(term_freq.term2ttf)} unique terms across {len(documents)} documents")
 
+        # Build all features once for all algorithms
+        algo_instances = {name: _resolve_algorithm(name, **algo_kwargs) for name in algorithms}
+        _log(f"Building features for {len(algorithms)} algorithm(s) ...")
+        t_feat = time.time()
+        feature_cache = FeatureCache.build_for_algorithms(
+            list(algo_instances.values()), candidates, documents, nlp, term_freq, config
+        )
+        _log(f"  Features built in {time.time() - t_feat:.1f}s")
+
         evaluator = Evaluator(gold_terms)
         eval_mode = f"top-{top_k}" if top_k else "all candidates"
-        _log(f"Evaluating {len(algorithms)} algorithm(s) against " f"{len(gold_terms)} gold terms ({eval_mode})")
+        _log(f"Scoring {len(algorithms)} algorithm(s) against " f"{len(gold_terms)} gold terms ({eval_mode})")
         results: dict[str, EvaluationResult] = {}
 
         for i, algo_name in enumerate(algorithms, 1):
             t_algo = time.time()
-            _log(f"  [{i}/{len(algorithms)}] Running {algo_name} ...")
-            algo = _resolve_algorithm(algo_name, **algo_kwargs)
-            score_kwargs = _build_features_with_progress(algo, candidates, documents, nlp, term_freq, config)
-            _log(f"    Scoring {len(candidates)} candidates ...")
+            algo = algo_instances[algo_name]
+            score_kwargs = feature_cache.get_features(algo)
             result = algo.score(candidates, term_freq, **score_kwargs)
             result = result.filter_by_frequency(min_frequency)
             # Assign ranks
@@ -234,9 +220,9 @@ class BenchmarkRunner:
                 ev = evaluator.evaluate(result)
             results[algo_name] = ev
             _log(
-                f"  [{i}/{len(algorithms)}] {algo_name} done in "
-                f"{time.time() - t_algo:.1f}s — "
-                f"P={ev.precision:.4f} R={ev.recall:.4f} F1={ev.f1:.4f}"
+                f"  [{i}/{len(algorithms)}] {algo_name} — "
+                f"P={ev.precision:.4f} R={ev.recall:.4f} F1={ev.f1:.4f} "
+                f"({time.time() - t_algo:.1f}s)"
             )
 
         _log(f"Benchmark complete in {time.time() - t0:.1f}s\n")

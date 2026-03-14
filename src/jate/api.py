@@ -143,6 +143,125 @@ def _resolve_extractor(name: str, **kwargs: Any) -> CandidateExtractorBase:
 # -----------------------------------------------------------------------
 
 
+class FeatureCache:
+    """Pre-computed feature cache shared across multiple algorithm runs.
+
+    Build once with :meth:`build_for_algorithms`, then call
+    :meth:`get_features` per algorithm for a zero-cost lookup.
+    """
+
+    def __init__(self) -> None:
+        self.containment: Containment | None = None
+        self.child_containment: Containment | None = None
+        self.context_freq: ContextFrequency | None = None
+        self.word_freq: WordFrequency | None = None
+        self.tci: TermComponentIndex | None = None
+        self.ref_freqs: list[ReferenceFrequency] | None = None
+        self.cooccurrence: Cooccurrence | None = None
+        self.chi_square_ft: ChiSquareFrequentTerms | None = None
+
+    @classmethod
+    def build_for_algorithms(
+        cls,
+        algorithms: list[Algorithm],
+        candidates: list[Candidate],
+        documents: list[Any],
+        nlp: SpacyBackend,
+        term_freq: TermFrequency,
+        config: JATEConfig | None = None,
+    ) -> FeatureCache:
+        """Build all features needed by the union of *algorithms*, once."""
+        cache = cls()
+
+        needs_containment = any(isinstance(a, _NEEDS_CONTAINMENT + _NEEDS_CHILD_CONTAINMENT) for a in algorithms)
+        needs_child = any(isinstance(a, _NEEDS_CHILD_CONTAINMENT) for a in algorithms)
+        needs_ctx = any(isinstance(a, _NEEDS_CONTEXT_FREQ + _NEEDS_CHI_SQUARE_FEATURES) for a in algorithms)
+        needs_word = any(isinstance(a, _NEEDS_WORD_FREQ) for a in algorithms)
+        needs_tci = any(isinstance(a, _NEEDS_TCI) for a in algorithms)
+        needs_ref = any(isinstance(a, _NEEDS_REF_FREQ) for a in algorithms)
+        needs_chi = any(isinstance(a, _NEEDS_CHI_SQUARE_FEATURES) for a in algorithms)
+
+        if needs_containment or needs_tci:
+            cache.tci = TermComponentIndex.build(candidates)
+
+        if needs_containment:
+            cache.containment = Containment.build(candidates, cache.tci)
+
+        if needs_child:
+            if cache.containment is None:
+                if cache.tci is None:
+                    cache.tci = TermComponentIndex.build(candidates)
+                cache.containment = Containment.build(candidates, cache.tci)
+            cache.child_containment = cache.containment.reverse()
+
+        if needs_ctx:
+            cache.context_freq = ContextFrequency.build(candidates, documents, nlp)
+
+        if needs_word or needs_ref:
+            cache.word_freq = WordFrequency.build(documents, nlp.tokenize)
+
+        if needs_ref:
+            ref_freqs: list[ReferenceFrequency] = []
+            if config and config.reference_frequency_file:
+                files = config.reference_frequency_file
+                if isinstance(files, str):
+                    files = [files]
+                ref_freqs = [ReferenceFrequency.from_file(f) for f in files]
+            if not ref_freqs:
+                ref_freqs = [ReferenceFrequency.from_word_frequency(cache.word_freq)]
+            cache.ref_freqs = ref_freqs
+
+        if needs_chi:
+            if cache.context_freq is None:
+                cache.context_freq = ContextFrequency.build(candidates, documents, nlp)
+            ref_ctx = cache.context_freq.copy_top_fraction(term_freq, 0.3)
+            min_ttf = config.prefilter_min_ttf if config else 0
+            min_tcf = config.prefilter_min_tcf if config else 0
+            cache.cooccurrence = Cooccurrence.build(
+                cache.context_freq,
+                ref_ctx,
+                term_freq=term_freq,
+                min_ttf=min_ttf,
+                min_tcf=min_tcf,
+            )
+            cache.chi_square_ft = ChiSquareFrequentTerms.build(ref_ctx, term_freq.corpus_total)
+
+        return cache
+
+    def get_features(self, algo: Algorithm) -> dict[str, Any]:
+        """Return the kwargs needed by *algo* from the pre-built cache."""
+        kwargs: dict[str, Any] = {}
+
+        if isinstance(algo, _NEEDS_CONTAINMENT + _NEEDS_CHILD_CONTAINMENT):
+            kwargs["containment"] = self.containment
+
+        if isinstance(algo, _NEEDS_CHILD_CONTAINMENT):
+            kwargs["child_containment"] = self.child_containment
+
+        if isinstance(algo, _NEEDS_CONTEXT_FREQ) or isinstance(algo, _NEEDS_CHI_SQUARE_FEATURES):
+            kwargs["context_freq"] = self.context_freq
+
+        if isinstance(algo, _NEEDS_WORD_FREQ):
+            kwargs["word_freq"] = self.word_freq
+
+        if isinstance(algo, _NEEDS_TCI):
+            kwargs["term_component_index"] = self.tci
+
+        if isinstance(algo, _NEEDS_REF_FREQ):
+            if self.word_freq is not None:
+                kwargs["word_freq"] = self.word_freq
+            if self.ref_freqs:
+                kwargs["ref_freq"] = self.ref_freqs[0]
+                if isinstance(algo, TermEx):
+                    kwargs["ref_freqs"] = self.ref_freqs
+
+        if isinstance(algo, _NEEDS_CHI_SQUARE_FEATURES):
+            kwargs["cooccurrence"] = self.cooccurrence
+            kwargs["chi_square_ft"] = self.chi_square_ft
+
+        return kwargs
+
+
 def _build_features(
     algo: Algorithm,
     candidates: list[Candidate],
@@ -151,86 +270,12 @@ def _build_features(
     term_freq: TermFrequency,
     config: JATEConfig | None = None,
 ) -> dict[str, Any]:
-    """Lazily build only the feature objects required by *algo*.
+    """Build features for a single algorithm (no caching).
 
-    Returns a dict of keyword arguments to pass to ``algo.score()``.
+    For multi-algorithm runs, use :class:`FeatureCache` instead.
     """
-    kwargs: dict[str, Any] = {}
-
-    # --- Containment (CValue, Basic, NCValue, ComboBasic) ---
-    containment: Containment | None = None
-    if isinstance(algo, _NEEDS_CONTAINMENT + _NEEDS_CHILD_CONTAINMENT):
-        tci = TermComponentIndex.build(candidates)
-        containment = Containment.build(candidates, tci)
-        kwargs["containment"] = containment
-
-    if isinstance(algo, _NEEDS_CHILD_CONTAINMENT):
-        if containment is None:
-            tci = TermComponentIndex.build(candidates)
-            containment = Containment.build(candidates, tci)
-            kwargs["containment"] = containment
-        kwargs["child_containment"] = containment.reverse()
-
-    # --- ContextFrequency (ChiSquare, NCValue, TermEx) ---
-    context_freq: ContextFrequency | None = None
-    if isinstance(algo, _NEEDS_CONTEXT_FREQ) or isinstance(algo, _NEEDS_CHI_SQUARE_FEATURES):
-        context_freq = ContextFrequency.build(candidates, documents, nlp)
-        kwargs["context_freq"] = context_freq
-
-    # --- WordFrequency (RAKE, Weirdness, GlossEx, TermEx) ---
-    word_freq: WordFrequency | None = None
-    if isinstance(algo, _NEEDS_WORD_FREQ):
-        word_freq = WordFrequency.build(documents, nlp.tokenize)
-        kwargs["word_freq"] = word_freq
-
-    # --- TermComponentIndex (RAKE) ---
-    if isinstance(algo, _NEEDS_TCI):
-        tci_for_rake = TermComponentIndex.build(candidates)
-        kwargs["term_component_index"] = tci_for_rake
-
-    # --- ReferenceFrequency (Weirdness, GlossEx, TermEx) ---
-    if isinstance(algo, _NEEDS_REF_FREQ):
-        if word_freq is None:
-            word_freq = WordFrequency.build(documents, nlp.tokenize)
-            kwargs["word_freq"] = word_freq
-
-        # Build list of reference frequencies
-        ref_freqs: list[ReferenceFrequency] = []
-        if config and config.reference_frequency_file:
-            files = config.reference_frequency_file
-            if isinstance(files, str):
-                files = [files]
-            ref_freqs = [ReferenceFrequency.from_file(f) for f in files]
-
-        if not ref_freqs:
-            # Self-reference fallback
-            ref_freqs = [ReferenceFrequency.from_word_frequency(word_freq)]
-
-        # TermEx gets full list; others get single
-        if isinstance(algo, TermEx):
-            kwargs["ref_freqs"] = ref_freqs
-        kwargs["ref_freq"] = ref_freqs[0]
-
-    # --- Chi-Square specific: Cooccurrence + ChiSquareFrequentTerms ---
-    if isinstance(algo, _NEEDS_CHI_SQUARE_FEATURES):
-        if context_freq is None:
-            context_freq = ContextFrequency.build(candidates, documents, nlp)
-            kwargs["context_freq"] = context_freq
-        ref_ctx = context_freq.copy_top_fraction(term_freq, 0.3)
-        min_ttf = config.prefilter_min_ttf if config else 0
-        min_tcf = config.prefilter_min_tcf if config else 0
-        cooccurrence = Cooccurrence.build(
-            context_freq,
-            ref_ctx,
-            term_freq=term_freq,
-            min_ttf=min_ttf,
-            min_tcf=min_tcf,
-        )
-        chi_square_ft = ChiSquareFrequentTerms.build(ref_ctx, term_freq.corpus_total)
-        kwargs["cooccurrence"] = cooccurrence
-        kwargs["chi_square_ft"] = chi_square_ft
-
-    return kwargs
+    cache = FeatureCache.build_for_algorithms([algo], candidates, documents, nlp, term_freq, config)
+    return cache.get_features(algo)
 
 
 # -----------------------------------------------------------------------
@@ -453,10 +498,16 @@ def compare(
     total_docs = len(documents)
     term_freq = TermFrequency.build(candidates, total_docs)
 
+    # Build all features once for the union of all algorithms
+    algo_instances = {name: _resolve_algorithm(name, **kwargs) for name in algorithms}
+    feature_cache = FeatureCache.build_for_algorithms(
+        list(algo_instances.values()), candidates, documents, nlp, term_freq, config
+    )
+
     results: dict[str, TermExtractionResult] = {}
     for algo_name in algorithms:
-        algo = _resolve_algorithm(algo_name, **kwargs)
-        score_kwargs = _build_features(algo, candidates, documents, nlp, term_freq, config)
+        algo = algo_instances[algo_name]
+        score_kwargs = feature_cache.get_features(algo)
         result = algo.score(candidates, term_freq, **score_kwargs)
         result = result.filter_by_frequency(min_frequency)
         result = result.filter_by_length(min_words=min_words, max_words=max_words)
