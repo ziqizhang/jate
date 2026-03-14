@@ -1,3 +1,21 @@
+# [3.2.0](https://github.com/ziqizhang/jate/compare/v3.1.0...v3.2.0) (2026-03-14)
+
+
+### Bug Fixes
+
+* add configurable POS pattern presets including PROPN support ([23c1938](https://github.com/ziqizhang/jate/commit/23c19380d73c90c68acc37aa907d40a8d0282724))
+* build features once for multi-algorithm runs ([d0b5841](https://github.com/ziqizhang/jate/commit/d0b5841f2488d15fee1907ad435ee73d6e1b8437))
+* fix CI test failures and drop Python 3.11 from CI matrix ([058cc9c](https://github.com/ziqizhang/jate/commit/058cc9c76b7f06ae8be0ba25e79ec9efd7455669))
+* optimise chi-square scoring with sparse co-occurrence lookups ([16ccf06](https://github.com/ziqizhang/jate/commit/16ccf06c557f8ea1f8764ec194b30bf2f2d1a806))
+* optimise context frequency computation and fix dataset loaders ([fce1cb8](https://github.com/ziqizhang/jate/commit/fce1cb8803585af9b6d14724609fde8b2079114f))
+* resolve harness audit findings (mypy, dead code, registry refactor) ([f1a7358](https://github.com/ziqizhang/jate/commit/f1a7358ca8e74882e79d3955887980581785ab37))
+* skip unnecessary co-occurrence computation and add benchmark progress logging ([982ca3a](https://github.com/ziqizhang/jate/commit/982ca3a0203338868a51bab13b09e9e8ca644769))
+
+
+### Features
+
+* add benchmark dataset infrastructure for ACL RD-TEC, ACTER, CoastTerm ([#67](https://github.com/ziqizhang/jate/issues/67)) ([ef3039a](https://github.com/ziqizhang/jate/commit/ef3039a5140ddc53a9099e8c966b6bf105355be5))
+
 # [3.1.0](https://github.com/ziqizhang/jate/compare/v3.0.0...v3.1.0) (2026-03-13)
 
 
