@@ -65,15 +65,17 @@ class CoastTerm:
     def _load(self) -> None:
         data_dir = self._ensure_downloaded()
 
-        # Load corpus documents from data/ directory
-        data_subdir = data_dir / "data"
-        if not data_subdir.is_dir():
-            # Fallback: look for txt files in root
-            data_subdir = data_dir
+        # Load corpus documents — text files are in data/human/sents_tokenized/
+        texts_dir = data_dir / "data" / "human" / "sents_tokenized"
+        if not texts_dir.is_dir():
+            # Fallback: try data/ directly, then root
+            texts_dir = data_dir / "data"
+            if not texts_dir.is_dir():
+                texts_dir = data_dir
 
-        txt_files = sorted(data_subdir.glob("*.txt"))
+        txt_files = sorted(texts_dir.rglob("*.txt"))
         if not txt_files:
-            msg = f"No .txt corpus files found in {data_subdir}"
+            msg = f"No .txt corpus files found in {texts_dir}"
             raise FileNotFoundError(msg)
 
         documents: list[Document] = []

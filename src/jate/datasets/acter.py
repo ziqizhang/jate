@@ -75,7 +75,7 @@ class Acter:
     def _ensure_downloaded(self) -> Path:
         if self._dir is not None:
             return self._dir
-        return download_dataset(_DATASET_NAME, _REPO_URL, force=self._force_download)
+        return download_dataset(_DATASET_NAME, _REPO_URL, branch="master", force=self._force_download)
 
     def _load(self) -> None:
         data_dir = self._ensure_downloaded()
@@ -90,10 +90,15 @@ class Acter:
                 msg = f"Domain directory not found: {domain_dir}"
                 raise FileNotFoundError(msg)
 
-            # Load corpus texts
-            texts_dir = domain_dir / "texts" / "annotated"
+            # Load corpus texts — structure: annotated/texts_tokenised/*.txt
+            # or annotated/texts/*.txt
+            texts_dir = domain_dir / "annotated" / "texts_tokenised"
             if not texts_dir.is_dir():
-                # Fallback: try texts/ directly
+                texts_dir = domain_dir / "annotated" / "texts"
+            if not texts_dir.is_dir():
+                # Legacy fallback
+                texts_dir = domain_dir / "texts" / "annotated"
+            if not texts_dir.is_dir():
                 texts_dir = domain_dir / "texts"
 
             if texts_dir.is_dir():
@@ -103,8 +108,11 @@ class Acter:
                         doc_id = f"{domain}_{txt_path.stem}"
                         all_docs.append(Document(doc_id=doc_id, content=content))
 
-            # Load gold terms from annotations/
-            ann_dir = domain_dir / "annotations"
+            # Load gold terms from unique annotation lists
+            # Structure: annotated/annotations/unique_annotation_lists/*_terms.tsv
+            ann_dir = domain_dir / "annotated" / "annotations" / "unique_annotation_lists"
+            if not ann_dir.is_dir():
+                ann_dir = domain_dir / "annotations"
             if ann_dir.is_dir():
                 terms = _load_acter_terms(ann_dir)
                 all_terms.update(terms)
@@ -114,42 +122,33 @@ class Acter:
 
 
 def _load_acter_terms(ann_dir: Path) -> set[str]:
-    """Load unique gold terms from ACTER annotation files.
+    """Load unique gold terms from ACTER annotation list files.
 
-    Looks for files containing sequential annotations with unique terms.
-    Typically files with names like ``*_seq.ann`` or term list files.
+    Reads ``*_terms.tsv`` files (without named entities variant).
+    Format: ``term<TAB>category`` where category is Specific_Term,
+    Common_Term, or OOD_Term. We include Specific_Term and Common_Term.
     """
     terms: set[str] = set()
+    valid_categories = {"Specific_Term", "Common_Term"}
 
-    # Look for unique term list files first (common patterns in ACTER)
-    # Priority: files with "unique" or "sequential" in the name
-    candidates: list[Path] = []
+    # Find the terms TSV (without named entities)
+    term_files = sorted(ann_dir.glob("*_terms.tsv"))
+    # Prefer files without "nes" (named entities) in the name
+    term_files = [f for f in term_files if "_nes" not in f.name] or term_files
 
-    for pattern in ["*unique*", "*seq*", "*.ann", "*.txt", "*.tsv"]:
-        candidates.extend(ann_dir.glob(pattern))
-
-    if not candidates:
-        # Fallback: any file in the annotations directory
-        candidates = list(ann_dir.iterdir())
-
-    # Deduplicate
-    seen_paths: set[Path] = set()
-    for path in candidates:
-        if path.is_file() and path not in seen_paths:
-            seen_paths.add(path)
-            try:
-                text = path.read_text(encoding="utf-8")
-            except (UnicodeDecodeError, OSError):
+    for path in term_files:
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, OSError):
+            continue
+        for line in text.splitlines():
+            line = line.strip()
+            if not line or line.startswith("#"):
                 continue
-            for line in text.splitlines():
-                term = line.strip()
-                # Skip empty lines, comments, and header-like lines
-                if not term or term.startswith("#"):
-                    continue
-                # If TSV, take the first column
-                if "\t" in term:
-                    term = term.split("\t")[0].strip()
-                if term:
-                    terms.add(term.lower())
+            parts = line.split("\t")
+            term = parts[0].strip()
+            category = parts[1].strip() if len(parts) > 1 else ""
+            if term and (not category or category in valid_categories):
+                terms.add(term.lower())
 
     return terms

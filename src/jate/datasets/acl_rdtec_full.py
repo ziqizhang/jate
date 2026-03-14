@@ -50,7 +50,7 @@ class AclRdtecFull:
     def _ensure_downloaded(self) -> Path:
         if self._dir is not None:
             return self._dir
-        return download_dataset(_DATASET_NAME, _REPO_URL, force=self._force_download)
+        return download_dataset(_DATASET_NAME, _REPO_URL, branch="master", force=self._force_download)
 
     def _load(self) -> None:
         data_dir = self._ensure_downloaded()

@@ -187,6 +187,98 @@ class ReferenceFrequency:
         return cls(word2ttf=filtered, corpus_total=total)
 
 
+def _build_adjacent_words(
+    candidates: list[Candidate],
+    documents: list[Document],
+    nlp_backend: NLPBackend,
+) -> dict[str, dict[str, int]]:
+    """Compute adjacent words for all candidates, optimised for large corpora.
+
+    Restructured to iterate by document (outer) rather than by candidate,
+    so each document is tokenized exactly once.
+    """
+    import os
+    from concurrent.futures import ProcessPoolExecutor
+
+    from jate.extractors.utils import compute_token_offsets
+
+    # Step 1: Group all candidate positions by document.
+    # doc_id -> list of (normalized_form, char_start, char_end)
+    doc_positions: dict[str, list[tuple[str, int, int]]] = defaultdict(list)
+    for cand in candidates:
+        norm = cand.normalized_form.lower()
+        for doc_id, positions in cand.doc_positions.items():
+            for char_start, char_end, _sent_idx in positions:
+                doc_positions[doc_id].append((norm, char_start, char_end))
+
+    # Step 2: Pre-tokenize all documents that have candidate positions.
+    doc_map = {doc.doc_id: doc.content for doc in documents}
+    doc_token_cache: dict[str, tuple[list[str], list[tuple[int, int]]]] = {}
+    for doc_id in doc_positions:
+        text = doc_map.get(doc_id)
+        if text is None:
+            continue
+        tokens = nlp_backend.tokenize(text)
+        offsets = compute_token_offsets(text, tokens)
+        doc_token_cache[doc_id] = (tokens, offsets)
+
+    # Step 3: Compute adjacent words per document.
+    # Parallelise across documents using multiple processes.
+    max_workers = min(os.cpu_count() or 1, len(doc_token_cache))
+
+    if max_workers > 1 and len(doc_token_cache) > 10:
+        # Prepare serializable chunks for parallel processing
+        chunks: list[tuple[str, list[str], list[tuple[int, int]], list[tuple[str, int, int]]]] = []
+        for doc_id, (tokens, offsets) in doc_token_cache.items():
+            chunks.append((doc_id, tokens, offsets, doc_positions[doc_id]))
+
+        with ProcessPoolExecutor(max_workers=max_workers) as pool:
+            partial_results = list(pool.map(_adjacent_for_doc, chunks))
+
+        adjacent: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+        for partial in partial_results:
+            for term, words in partial.items():
+                for word, count in words.items():
+                    adjacent[term][word] += count
+    else:
+        adjacent = defaultdict(lambda: defaultdict(int))
+        for doc_id, (tokens, offsets) in doc_token_cache.items():
+            partial = _adjacent_for_doc((doc_id, tokens, offsets, doc_positions[doc_id]))
+            for term, words in partial.items():
+                for word, count in words.items():
+                    adjacent[term][word] += count
+
+    return {k: dict(v) for k, v in adjacent.items()}
+
+
+def _adjacent_for_doc(
+    args: tuple[str, list[str], list[tuple[int, int]], list[tuple[str, int, int]]],
+) -> dict[str, dict[str, int]]:
+    """Compute adjacent words for all candidate positions in one document.
+
+    Must be a top-level function for pickling with ProcessPoolExecutor.
+    """
+    _doc_id, tokens, token_offsets, positions = args
+    adjacent: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+
+    for norm, char_start, char_end in positions:
+        before_token = None
+        after_token = None
+        for i, (t_start, t_end) in enumerate(token_offsets):
+            if t_end <= char_start:
+                before_token = tokens[i]
+            if t_start >= char_end:
+                after_token = tokens[i]
+                break
+        if before_token:
+            adjacent[norm][before_token.lower()] += 1
+        if after_token:
+            adjacent[norm][after_token.lower()] += 1
+
+    # Convert inner defaultdicts to plain dicts for pickling
+    return {k: dict(v) for k, v in adjacent.items()}
+
+
 class ContextWindow(NamedTuple):
     """Identifies a context (sentence within a document).
 
@@ -246,31 +338,7 @@ class ContextFrequency:
         # Adjacent words (for NC-Value) — same logic as old ContextIndex
         adjacent: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
         if nlp_backend is not None and documents is not None:
-            from jate.extractors.utils import compute_token_offsets
-
-            doc_map = {doc.doc_id: doc for doc in documents}
-            for cand in candidates:
-                norm = cand.normalized_form.lower()
-                for doc_id, positions in cand.doc_positions.items():
-                    doc = doc_map.get(doc_id)
-                    if doc is None:
-                        continue
-                    text = doc.content
-                    tokens = nlp_backend.tokenize(text)
-                    token_offsets = compute_token_offsets(text, tokens)
-                    for char_start, char_end, _sent_idx in positions:
-                        before_token = None
-                        after_token = None
-                        for i, (t_start, t_end) in enumerate(token_offsets):
-                            if t_end <= char_start:
-                                before_token = tokens[i]
-                            if t_start >= char_end:
-                                after_token = tokens[i]
-                                break
-                        if before_token:
-                            adjacent[norm][before_token.lower()] += 1
-                        if after_token:
-                            adjacent[norm][after_token.lower()] += 1
+            adjacent = _build_adjacent_words(candidates, documents, nlp_backend)
 
         return cls(
             ctx2ttf=dict(ctx2ttf),
