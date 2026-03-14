@@ -49,11 +49,25 @@ class MemoryCorpusStore:
     # Candidate indexing
     # ------------------------------------------------------------------
 
-    def index_candidates(self, candidates: list[Candidate], *, max_workers: int = 1) -> None:
+    def index_candidates(
+        self,
+        candidates: list[Candidate],
+        *,
+        max_workers: int = 1,
+        compute_cooccurrences: bool = True,
+    ) -> None:
         """Bulk-index candidate frequencies.
 
-        Also computes pairwise co-occurrence counts.  When *max_workers* > 1
-        the co-occurrence computation is parallelized across processes.
+        Parameters
+        ----------
+        candidates:
+            Candidates to index.
+        max_workers:
+            Number of parallel workers for co-occurrence computation.
+            Values > 1 use ``ProcessPoolExecutor``.
+        compute_cooccurrences:
+            If *False*, skip the O(n²) pairwise co-occurrence computation.
+            Only algorithms that use store-level co-occurrences need this.
         """
         term_docs: dict[str, set[str]] = {}
 
@@ -63,6 +77,9 @@ class MemoryCorpusStore:
                 freq = len(positions)
                 self._term_freq.setdefault(term, {})[doc_id] = freq
                 term_docs.setdefault(term, set()).add(doc_id)
+
+        if not compute_cooccurrences:
+            return
 
         # Compute co-occurrences
         terms = sorted(term_docs.keys())

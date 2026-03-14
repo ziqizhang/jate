@@ -1,0 +1,49 @@
+# ACL RD-TEC POS patterns for computational linguistics terminology.
+# Ported from Java JATE 2.0 (testdata/solr-testbed/ACLRDTEC/conf/aclrdtec.patterns).
+# Reference: QasemiZadeh & Handschuh (2014), COLING Workshop on Computational Terminology.
+#
+# Tag type: Universal POS (spaCy pos_)
+#
+# Translated from Penn Treebank tags:
+#   NN/NNS -> NOUN, NNP -> PROPN, JJ -> ADJ, VBN -> VERB, VBG -> VERB,
+#   IN -> ADP, TO -> PART, CC -> CCONJ
+#
+# These are enumerated patterns (not a single regex) — each line is a pattern.
+
+# Unigrams
+(NOUN )
+(PROPN )
+
+# Bigrams
+(NOUN )(NOUN )
+(ADJ )(NOUN )
+(VERB )(NOUN )
+(NOUN )(VERB )
+(PROPN )(NOUN )
+(PROPN )(PROPN )
+(ADJ )(NOUN )
+
+# Trigrams
+(ADJ )(NOUN )(NOUN )
+(PROPN )(PROPN )(PROPN )
+(VERB )(NOUN )(NOUN )
+(ADJ )(NOUN )(PROPN )
+(ADJ )(NOUN )(VERB )
+(NOUN )(NOUN )(NOUN )
+(NOUN )(PART )(NOUN )
+(PROPN )(PROPN )(NOUN )
+(ADJ )(PROPN )(PROPN )
+(PROPN )(NOUN )(NOUN )
+
+# 4-grams
+(ADJ )(ADJ )(NOUN )(NOUN )
+(NOUN )(NOUN )(CCONJ )(NOUN )
+(PROPN )(ADJ )(NOUN )(NOUN )
+(PROPN )(PROPN )(NOUN )(NOUN )
+(ADJ )(NOUN )(NOUN )(VERB )
+(ADJ )(ADJ )(NOUN )(VERB )
+(ADJ )(VERB )(NOUN )(NOUN )
+
+# 5-grams
+(ADJ )(ADJ )(ADJ )(NOUN )(NOUN )
+(ADJ )(ADJ )(NOUN )(NOUN )(NOUN )

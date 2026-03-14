@@ -1,0 +1,21 @@
+name: PR Issue Reference
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  check-issue-reference:
+    name: Check issue reference
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify PR body references an issue
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          if echo "$PR_BODY" | grep -qP '#\d+'; then
+            echo "PR body references an issue."
+          else
+            echo "::error::PR body must reference at least one issue (e.g., #67, Resolves #67, Fixes #42)."
+            exit 1
+          fi
