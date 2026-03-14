@@ -241,6 +241,19 @@ Each `Term` in the result contains:
 - `frequency` — total corpus frequency
 - `surface_forms` — all surface variants observed (e.g. `{"neural network", "neural networks", "Neural Networks"}`)
 
+## Benchmarks
+
+JATE is evaluated on 5 standard ATE datasets using P@K (precision at top-K ranked terms). Best algorithm per dataset at P@100:
+
+| Dataset | Domain | Docs | Gold terms | Best P@100 | Algorithm |
+|---------|--------|------|-----------|------------|-----------|
+| GENIA | Biomedical | 2,000 | 35,298 | 0.79 | attf |
+| ACL RD-TEC 2.0 | Comp. linguistics | 1,758 | 5,031 | 0.73 | ttf |
+| ACTER v1.5 | Multi-domain | 241 | 5,329 | 0.61 | basic |
+| CoastTerm | Coastal science | 2,004 | 4,316 | 0.59 | combobasic |
+
+Full results with P@100 through P@10,000 for all 13 algorithms, methodology notes, and comparison with published baselines: **[benchmark results](docs/benchmark-results.md)**.
+
 ## Contributing
 
 Please read the [contributing guide](docs/contributing.md) first for development setup, branch workflow, and agentic coding harness details. JATE is in active development and we welcome contributions. Here's how you can get involved:
