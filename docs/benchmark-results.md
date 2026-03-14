@@ -27,6 +27,28 @@ JATE v3 (Python) results are **lower than JATE 2.0** (Java) on the same datasets
 
 The remaining gap is dominated by **tokenisation differences** — biomedical text is heavy with hyphenated compounds, parenthetical expressions, and alphanumeric identifiers that spaCy's general-purpose tokeniser splits differently from Solr's domain-tuned analysis chain.
 
+#### Breakdown of missing GENIA gold terms
+
+Of the ~20,000 gold terms not found in JATE v3 candidates:
+
+| Category | Count | % of missing |
+|----------|-------|-------------|
+| Contains hyphens (e.g., `NF-kappa`, `T-cell`) | 12,837 | 50% |
+| Contains digits (e.g., `interleukin-2`, `CD28`) | 9,315 | 36% |
+| Contains parentheses | 3,109 | 12% |
+| Any special character | 19,546 | **76%** |
+| Pure alphabetic only | 6,074 | 24% |
+
+The issue is not matching — it is that **candidates are never generated** for hyphenated terms. spaCy splits `NF-kappa` into three tokens (`NF`, `-`, `kappa`) and the `-` receives a PUNCT tag, which breaks the POS pattern. Stripping punctuation from the gold standard does not help because the extraction step already missed these terms:
+
+| Evaluation mode | GENIA gold coverage |
+|----------------|-------------------|
+| Raw gold vs raw candidates | 42.7% |
+| Punctuation-stripped gold vs stripped candidates | 48.7% |
+| Java JATE 2.0 (estimated) | ~65%+ |
+
+Closing this gap requires tokeniser-level changes (e.g., merging hyphenated tokens before POS tagging, or using a biomedical spaCy model like `en_core_sci_sm` that handles domain compounds natively).
+
 ### Published baselines for comparison
 
 **GENIA** (Zhang, Gao & Ciravegna, LREC 2016 — JATE 2.0 Java):
