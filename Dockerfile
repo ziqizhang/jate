@@ -19,3 +19,4 @@ RUN pip install --no-cache-dir /tmp/*.whl && \
     rm -rf /tmp/*.whl
 EXPOSE 8000
 CMD ["uvicorn", "jate.server:app", "--host", "0.0.0.0", "--port", "8000"]
+
