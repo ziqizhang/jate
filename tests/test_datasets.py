@@ -159,9 +159,12 @@ class TestDownloadDataset:
 class TestAclRdtecFullProtocol:
     """AclRdtecFull satisfies the Dataset protocol."""
 
-    def test_satisfies_protocol(self):
+    def test_has_protocol_attributes(self):
         ds = AclRdtecFull(directory="/fake/path")
-        assert isinstance(ds, Dataset)
+        # Check protocol attributes exist without triggering lazy load
+        # Check protocol attributes exist on the class without triggering lazy load
+        cls = type(ds)
+        assert all(hasattr(cls, a) for a in ("name", "documents", "gold_terms"))
 
     def test_name(self):
         ds = AclRdtecFull(directory="/fake/path")
@@ -171,9 +174,11 @@ class TestAclRdtecFullProtocol:
 class TestActerProtocol:
     """Acter satisfies the Dataset protocol."""
 
-    def test_satisfies_protocol(self):
+    def test_has_protocol_attributes(self):
         ds = Acter(directory="/fake/path")
-        assert isinstance(ds, Dataset)
+        # Check protocol attributes exist on the class without triggering lazy load
+        cls = type(ds)
+        assert all(hasattr(cls, a) for a in ("name", "documents", "gold_terms"))
 
     def test_name_all_domains(self):
         ds = Acter(directory="/fake/path")
@@ -192,9 +197,11 @@ class TestActerProtocol:
 class TestCoastTermProtocol:
     """CoastTerm satisfies the Dataset protocol."""
 
-    def test_satisfies_protocol(self):
+    def test_has_protocol_attributes(self):
         ds = CoastTerm(directory="/fake/path")
-        assert isinstance(ds, Dataset)
+        # Check protocol attributes exist on the class without triggering lazy load
+        cls = type(ds)
+        assert all(hasattr(cls, a) for a in ("name", "documents", "gold_terms"))
 
     def test_name(self):
         ds = CoastTerm(directory="/fake/path")
