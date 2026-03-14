@@ -73,7 +73,7 @@ for algo_name, result in results.items():
         print(f"  {term.string:30s}  {term.score:.4f}")
 ```
 
-For large corpora, internal pipeline steps (NLP processing, feature building, co-occurrence computation) use multi-threading and multi-processing automatically.
+For large corpora, NLP processing (spaCy) uses multi-threaded C-level batching, and feature building (adjacent word computation) uses multi-process parallelism automatically.
 
 ### Evaluation against a gold standard
 
