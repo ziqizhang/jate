@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+import pytest
 from fastapi.testclient import TestClient
 
 from jate.models import Term, TermExtractionResult
-from jate.server import app
+from jate.server import DEFAULT_MODEL, app
 
 client = TestClient(app)
 
@@ -83,3 +84,31 @@ def test_extract_model_unavailable(monkeypatch: object) -> None:
         json={"text": "sample text", "algorithm": "cvalue"},
     )
     assert resp.status_code == 503
+
+
+def test_startup_warms_default_model(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[str] = []
+
+    def _fake_backend(model: str) -> object:
+        calls.append(model)
+        return object()
+
+    monkeypatch.setattr("jate.server.get_cached_backend", _fake_backend)
+
+    with TestClient(app) as local_client:
+        resp = local_client.get("/health/live")
+        assert resp.status_code == 200
+
+    assert DEFAULT_MODEL in calls
+
+
+def test_startup_warmup_fail_open(monkeypatch: pytest.MonkeyPatch) -> None:
+    def _raise_backend(_: str) -> object:
+        raise OSError("missing model")
+
+    monkeypatch.setattr("jate.server.get_cached_backend", _raise_backend)
+
+    # Startup should not fail even if warmup cannot load the model.
+    with TestClient(app) as local_client:
+        resp = local_client.get("/health/live")
+        assert resp.status_code == 200

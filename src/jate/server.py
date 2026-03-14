@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import os
+from contextlib import asynccontextmanager
 from functools import lru_cache
-from typing import Any
+from typing import Any, AsyncIterator
 
 try:
     from fastapi import FastAPI, HTTPException
@@ -19,7 +20,19 @@ from jate.nlp.spacy_backend import SpacyBackend
 
 DEFAULT_MODEL = "en_core_web_sm"
 
-app = FastAPI(title="JATE API", version="1.0.0")
+
+@asynccontextmanager
+async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    """Warm up the default model in each worker process at startup."""
+    try:
+        get_cached_backend(DEFAULT_MODEL)
+    except OSError:
+        # Keep startup non-fatal; readiness endpoint reports model availability.
+        pass
+    yield
+
+
+app = FastAPI(title="JATE API", version="1.0.0", lifespan=lifespan)
 
 
 @lru_cache(maxsize=4)
@@ -141,9 +154,6 @@ def run() -> None:
     port = int(os.getenv("JATE_API_PORT", "8000"))
     workers = int(os.getenv("JATE_API_WORKERS", "1"))
     keepalive = int(os.getenv("JATE_API_TIMEOUT_KEEP_ALIVE", "5"))
-
-    # Warm up default model in each worker process.
-    get_cached_backend(DEFAULT_MODEL)
 
     uvicorn.run(
         "jate.server:app",
