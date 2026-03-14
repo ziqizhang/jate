@@ -164,3 +164,146 @@ All dataclasses use `slots=True` for memory efficiency:
 1. Create `src/jate/store/my_store.py`, implement the `CorpusStore` protocol
 2. Export from `src/jate/store/__init__.py`
 3. Add tests in `tests/test_store.py`
+
+## Logging
+
+### Principle
+
+Any pipeline step that processes documents or candidates in bulk must emit timestamped progress to stderr so that performance degradation is visible — not just syntactic failures, but operations that take unexpectedly long.
+
+Without logging, a function that takes 5 minutes looks identical to one that takes 5 seconds. We discovered this the hard way: `ContextFrequency.build()` silently re-tokenised every document per candidate (O(candidates × documents)), turning a 2-minute pipeline into a 60-minute one with no visible signal.
+
+### Pattern
+
+Use timestamped log lines to stderr with immediate flush:
+
+```python
+import sys
+from datetime import datetime
+
+def _log(msg: str) -> None:
+    ts = datetime.now().strftime("%H:%M:%S")
+    print(f"[{ts}] {msg}", file=sys.stderr, flush=True)
+```
+
+### What to log
+
+- **NLP processing**: batch number, documents processed, elapsed time
+- **Candidate extraction**: progress every ~10% of documents
+- **Feature building**: which feature, elapsed time
+- **Algorithm scoring**: per-algorithm elapsed time, P/R/F1 if evaluating
+- **Downloads**: file size, progress, cache hits
+
+### What NOT to log
+
+- Per-document or per-sentence detail (too noisy)
+- Anything to stdout (reserved for results)
+- Debug-level internals (use Python `logging` module if needed)
+
+### Example output
+
+```
+[14:32:05] Loading spaCy model 'en_core_web_sm' ...
+[14:32:06] Extracting candidates from 2000 documents (extractor=pos_pattern) ...
+[14:32:06]   NLP batch 1/8: processing documents 1-256 of 2000 ...
+[14:32:45]   NLP batch 8/8: processing documents 1793-2000 of 2000 ...
+[14:32:53]   Extracted 36355 candidates in 47.2s
+[14:32:53] Building features for 13 algorithm(s) ...
+[14:35:10]   Features built in 137.5s
+[14:35:10] Scoring 13 algorithm(s) ...
+[14:35:11]   [1/13] tfidf — P=0.6560 (0.6s)
+```
+
+## Efficiency
+
+### Principle
+
+JATE processes corpora with thousands of documents and tens of thousands of candidate terms. Any addition to the pipeline must consider:
+
+1. **Build once, share across algorithms** — use `FeatureCache`, not per-algorithm feature building
+2. **Avoid redundant computation** — cache tokenisation, pre-compute shared data structures
+3. **Parallelise CPU-bound work** — use `parallel.py::parallel_map` or `ProcessPoolExecutor`
+4. **Prefer sparse over dense iteration** — iterate only over data that exists, not all possible pairs
+
+### FeatureCache (build once, share)
+
+When running multiple algorithms, `FeatureCache` (in `api.py`) builds all features needed by the union of selected algorithms exactly once:
+
+```python
+from jate.api import FeatureCache, _resolve_algorithm
+
+algos = [_resolve_algorithm(name) for name in algorithm_names]
+cache = FeatureCache.build_for_algorithms(algos, candidates, documents, nlp, term_freq, config)
+
+for algo in algos:
+    kwargs = cache.get_features(algo)  # zero-cost lookup
+    result = algo.score(candidates, term_freq, **kwargs)
+```
+
+The `_FEATURE_NEEDS` registry in `api.py` maps feature names to the algorithm types that require them. When adding a new algorithm that needs existing features, register it there. When adding a new feature type, add it to both `FeatureCache.build_for_algorithms()` and `get_features()`.
+
+### Avoiding redundant computation
+
+**Bad** — tokenises the same document thousands of times:
+```python
+for candidate in candidates:              # 30,000 iterations
+    for doc_id in candidate.doc_positions: # multiple docs each
+        tokens = nlp.tokenize(doc.content) # REDUNDANT
+```
+
+**Good** — tokenise once, reuse:
+```python
+token_cache = {doc.doc_id: nlp.tokenize(doc.content) for doc in documents}
+for candidate in candidates:
+    for doc_id in candidate.doc_positions:
+        tokens = token_cache[doc_id]       # O(1) lookup
+```
+
+### Parallelism pattern
+
+For CPU-bound work that can be split by document or by chunk:
+
+```python
+import os
+from concurrent.futures import ProcessPoolExecutor
+
+max_workers = os.cpu_count() or 1
+
+# Split work into per-document chunks
+chunks = [(doc_id, data) for doc_id, data in work_items.items()]
+
+with ProcessPoolExecutor(max_workers=max_workers) as pool:
+    partial_results = list(pool.map(process_one_chunk, chunks))
+
+# Merge partial results
+for partial in partial_results:
+    merged.update(partial)
+```
+
+The worker function must be a **top-level function** (not a lambda or nested function) for pickling. See `features.py::_adjacent_for_doc` for the pattern.
+
+### Sparse vs dense iteration
+
+**Bad** — O(candidates × frequent_terms) even when most pairs have zero co-occurrence:
+```python
+for candidate in candidates:
+    for g_term in frequent_terms:
+        freq = cooccurrence.get(candidate, g_term)  # usually 0
+```
+
+**Good** — O(actual co-occurrences per candidate):
+```python
+for candidate in candidates:
+    coocs = cooccurrence.get_cooccurrences_for(candidate)  # sparse
+    for g_term, freq in coocs.items():
+        ...  # only non-zero entries
+```
+
+### Performance lessons learned
+
+| Issue | Root cause | Fix | Speedup |
+|-------|-----------|-----|---------|
+| Co-occurrence indexing | O(n²) pairwise set intersections computed even when unused | `compute_cooccurrences=False` flag | 800x |
+| Context frequency | Re-tokenised every document per candidate | Pre-tokenise once + parallel per-document | 21x |
+| Chi-square scoring | Dense iteration over all frequent terms per candidate | Sparse co-occurrence lookup with inverted index | 1,420x |
+| Feature rebuilding | Features rebuilt per algorithm instead of shared | `FeatureCache` builds once for all algorithms | 2.2x |

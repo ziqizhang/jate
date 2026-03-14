@@ -76,6 +76,8 @@ The following files form the harness. They **must not be deleted or broken** by 
 
 - **Added a new top-level module** under `src/jate/` → update the module map in `AGENTS.md` and the module responsibilities section in `docs/architecture-agent.md`
 - **Changed module boundaries** (e.g., a new dependency between modules) → update the architectural rules in both docs and, if needed, the allowed/forbidden import lists in `tests/test_architecture.py`
+- **Added a new feature builder or algorithm** → register it in `api.py::_FEATURE_NEEDS` and ensure `FeatureCache` handles it. New features must be built once and shared, never per-algorithm.
+- **Added a pipeline step that processes documents/candidates in bulk** → add timestamped progress logging to stderr (see `docs/architecture-agent.md` § Logging). Consider parallelism for CPU-bound work (see § Efficiency).
 - **Added a large file** (>500 lines) that is intentional → add it to `KNOWN_LARGE_FILES` in `tests/test_entropy.py`
 
 ### Optional: agentic harness toolkit
