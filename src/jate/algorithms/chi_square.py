@@ -58,10 +58,25 @@ class ChiSquare(Algorithm):
             sum_exp_prob = 0.0
             max_exp_prob = 0.0
 
+        # Pre-build per-candidate co-occurrence lookups (sparse).
+        # Instead of iterating all frequent_terms for each candidate,
+        # only iterate terms that actually co-occur.
+        cooc_by_candidate: dict[str, dict[str, int]] = {}
+        if cooccurrence is not None:
+            freq_term_set = set(frequent_terms)
+            for candidate in candidates:
+                nf = candidate.normalized_form.lower()
+                coocs = cooccurrence.get_cooccurrences_for(nf)
+                # Filter to only frequent terms
+                filtered = {g: c for g, c in coocs.items() if g in freq_term_set and c > 0}
+                if filtered:
+                    cooc_by_candidate[nf] = filtered
+
         result = TermExtractionResult()
 
         for candidate in candidates:
             nf = candidate.normalized_form
+            nf_lower = nf.lower()
             # n_w: total number of terms in contexts where w appears
             if context_freq is not None:
                 n_w = context_freq.get_n_w(nf)
@@ -83,13 +98,11 @@ class ChiSquare(Algorithm):
             # Baseline: assume all co-occurrences are zero
             sum_chi_w = n_w * sum_exp_prob
 
-            # Adjust for actual co-occurrences
-            for g_term, p_g in frequent_terms.items():
-                if cooccurrence is not None:
-                    freq_wg = cooccurrence.get(nf, g_term)
-                else:
-                    freq_wg = 0
-                if freq_wg == 0:
+            # Adjust only for terms that actually co-occur (sparse iteration)
+            candidate_coocs = cooc_by_candidate.get(nf_lower, {})
+            for g_term, freq_wg in candidate_coocs.items():
+                p_g = frequent_terms.get(g_term)
+                if p_g is None:
                     continue
 
                 nw_pg = n_w * p_g

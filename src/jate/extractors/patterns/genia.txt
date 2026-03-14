@@ -1,0 +1,18 @@
+# GENIA POS patterns for biomedical term extraction.
+# Ported from Java JATE 2.0 (testdata/solr-testbed/GENIA/conf/genia.patterns).
+# Original source: http://users.cs.cf.ac.uk/I.Spasic/flexiterm/
+#
+# Tag type: Universal POS (spaCy pos_)
+#
+# Translated from Penn Treebank tags:
+#   NN/NNS -> NOUN, NNP -> PROPN, JJ -> ADJ, IN -> ADP
+#
+# Multiple patterns are combined with | (OR) into a single regex.
+# Each line is a separate pattern (blank lines and # comments ignored).
+# All patterns are applied to a space-separated POS string with trailing space.
+
+# Basic NP: (ADJ|NOUN|PROPN)+ (NOUN|PROPN)
+(ADJ |NOUN |PROPN )*(NOUN |PROPN )
+
+# NP with optional preposition: (ADJ|NOUN|PROPN)* ADP? (ADJ|NOUN|PROPN)* (NOUN|PROPN)
+(ADJ |NOUN |PROPN )*ADP (ADJ |NOUN |PROPN )*(NOUN |PROPN )
