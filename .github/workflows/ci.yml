@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies
         run: |
           poetry config virtualenvs.in-project true
-          poetry install --no-interaction --with dev
+          poetry install --no-interaction --with dev --extras server
 
       - name: Run black check
         run: poetry run black --check src/ tests/
@@ -81,7 +81,7 @@ jobs:
       - name: Install dependencies
         run: |
           poetry config virtualenvs.in-project true
-          poetry install --no-interaction --with dev
+          poetry install --no-interaction --with dev --extras server
 
       - name: Download spaCy model
         run: poetry run python -m spacy download en_core_web_sm
@@ -124,7 +124,7 @@ jobs:
       - name: Install dependencies
         run: |
           poetry config virtualenvs.in-project true
-          poetry install --no-interaction --with dev
+          poetry install --no-interaction --with dev --extras server
 
       - name: Run mypy
         run: poetry run mypy src/jate/

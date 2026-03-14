@@ -6,8 +6,13 @@ import os
 from functools import lru_cache
 from typing import Any
 
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
+try:
+    from fastapi import FastAPI, HTTPException
+    from pydantic import BaseModel, Field
+except ImportError as exc:  # pragma: no cover - exercised only when extras missing
+    raise ImportError(
+        "Server dependencies are optional. Install with `pip install jate[server]` to use jate.server."
+    ) from exc
 
 from jate.api import _ALGORITHM_NAMES, _EXTRACTOR_NAMES, extract
 from jate.nlp.spacy_backend import SpacyBackend

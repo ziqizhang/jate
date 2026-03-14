@@ -8,6 +8,12 @@ JATE also provides a thin HTTP server for JSON-based extraction.
 
 ### Start server
 
+Install server dependencies first:
+
+```bash
+pip install "jate[server]"
+```
+
 ```bash
 jate-api
 ```

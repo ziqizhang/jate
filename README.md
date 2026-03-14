@@ -116,6 +116,12 @@ jate benchmark --top 100
 
 JATE now ships a thin JSON API server on top of the core extraction API.
 
+Install server dependencies:
+
+```bash
+pip install "jate[server]"
+```
+
 Start the server:
 
 ```bash
