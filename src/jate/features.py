@@ -8,6 +8,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Callable, NamedTuple
 
+from jate.config import _CHI_SQUARE_TOP_FRACTION
 from jate.models import Candidate, Document
 
 if TYPE_CHECKING:
@@ -367,7 +368,9 @@ class ContextFrequency:
         """Adjacent words for NC-Value."""
         return self.adjacent.get(term.lower(), {})
 
-    def copy_top_fraction(self, term_freq: TermFrequency, fraction: float = 0.3) -> ContextFrequency:
+    def copy_top_fraction(
+        self, term_freq: TermFrequency, fraction: float = _CHI_SQUARE_TOP_FRACTION
+    ) -> ContextFrequency:
         """Java's FrequencyCtxBasedCopier: filter to top-fraction most frequent terms.
 
         Returns a new ContextFrequency containing only terms whose TTF
@@ -446,7 +449,6 @@ class Containment:
         cls,
         candidates: list[Candidate],
         term_component_index: TermComponentIndex,
-        max_workers: int = 1,
     ) -> Containment:
         term2parents: dict[str, set[str]] = {}
         all_terms = {c.normalized_form.lower() for c in candidates}
@@ -626,11 +628,12 @@ def build_containment_index(
     """Build parent containment index: term -> [longer terms containing it].
 
     Backward-compatible wrapper around Containment.build().
+    The *max_workers* parameter is accepted for backward compatibility but ignored.
     """
     if not candidates:
         return {}
     tci = TermComponentIndex.build(candidates)
-    cont = Containment.build(candidates, tci, max_workers=max_workers)
+    cont = Containment.build(candidates, tci)
     return {term: list(parents) for term, parents in cont.term2parents.items()}
 
 
@@ -641,10 +644,11 @@ def build_child_containment_index(
     """Build child containment index: term -> [shorter terms contained in it].
 
     Backward-compatible wrapper around Containment.build() + reverse().
+    The *max_workers* parameter is accepted for backward compatibility but ignored.
     """
     if not candidates:
         return {}
     tci = TermComponentIndex.build(candidates)
-    cont = Containment.build(candidates, tci, max_workers=max_workers)
+    cont = Containment.build(candidates, tci)
     rev = cont.reverse()
     return {term: list(children) for term, children in rev.term2parents.items()}

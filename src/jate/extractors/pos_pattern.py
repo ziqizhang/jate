@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -165,7 +166,6 @@ class PosPatternExtractor(CandidateExtractorBase):
     def __init__(self, pattern: str = "default") -> None:
         resolved = self._resolve_pattern(pattern)
         self._pattern = re.compile(resolved)
-        self._pattern_name = pattern
 
     @staticmethod
     def _resolve_pattern(pattern: str) -> str:
@@ -221,8 +221,6 @@ class PosPatternExtractor(CandidateExtractorBase):
         report_every = max(1, total // 10)  # report ~10 times
         for doc_idx, (doc, spacy_doc) in enumerate(zip(valid_docs, spacy_docs)):
             if total > 100 and doc_idx % report_every == 0 and doc_idx > 0:
-                from datetime import datetime
-
                 ts = datetime.now().strftime("%H:%M:%S")
                 print(
                     f"[{ts}]   Candidate extraction: {doc_idx}/{total} documents ...",

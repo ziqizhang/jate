@@ -6,6 +6,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from typing import Any
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -105,7 +106,11 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def _format_table(result: object, top: int | None = None) -> str:
-    """Format a TermExtractionResult as an aligned text table."""
+    """Format a TermExtractionResult as an aligned text table.
+
+    Note: benchmark.format_results_table formats EvaluationResult (precision/recall/F1);
+    this formats TermExtractionResult (ranked terms). Different data structures, not duplicates.
+    """
     from jate.models import TermExtractionResult
 
     assert isinstance(result, TermExtractionResult)
@@ -305,7 +310,7 @@ def _cmd_benchmark(args: argparse.Namespace) -> None:
     runner.print_results(results)
 
 
-def _resolve_dataset(name: str, *, force_download: bool = False) -> object:
+def _resolve_dataset(name: str, *, force_download: bool = False) -> Any:
     """Instantiate a dataset loader by name.
 
     Returns an object satisfying the Dataset protocol.

@@ -29,7 +29,7 @@ from jate.algorithms import (
     Voting,
     Weirdness,
 )
-from jate.config import JATEConfig
+from jate.config import _CHI_SQUARE_TOP_FRACTION, JATEConfig
 from jate.extractors.base import CandidateExtractorBase
 from jate.extractors.ngram import NGramExtractor
 from jate.extractors.noun_phrase import NounPhraseExtractor
@@ -81,13 +81,20 @@ _EXTRACTOR_NAMES: dict[str, type[CandidateExtractorBase]] = {
 }
 
 # Which algorithms need which features (beyond term_freq, which all get).
-_NEEDS_CONTAINMENT: tuple[type, ...] = (CValue, Basic, NCValue)
-_NEEDS_CHILD_CONTAINMENT: tuple[type, ...] = (ComboBasic,)
-_NEEDS_CONTEXT_FREQ: tuple[type, ...] = (ChiSquare, NCValue)
-_NEEDS_WORD_FREQ: tuple[type, ...] = (RAKE, Weirdness, GlossEx, TermEx)
-_NEEDS_REF_FREQ: tuple[type, ...] = (Weirdness, GlossEx, TermEx)
-_NEEDS_CHI_SQUARE_FEATURES: tuple[type, ...] = (ChiSquare,)
-_NEEDS_TCI: tuple[type, ...] = (RAKE,)
+_FEATURE_NEEDS: dict[str, tuple[type, ...]] = {
+    "containment": (CValue, Basic, NCValue),
+    "child_containment": (ComboBasic,),
+    "context_freq": (ChiSquare, NCValue),
+    "word_freq": (RAKE, Weirdness, GlossEx, TermEx),
+    "ref_freq": (Weirdness, GlossEx, TermEx),
+    "chi_square_features": (ChiSquare,),
+    "tci": (RAKE,),
+}
+
+
+def _needs(algo: Algorithm, feature: str) -> bool:
+    """Check whether *algo* requires a given feature."""
+    return isinstance(algo, _FEATURE_NEEDS.get(feature, ()))
 
 
 def _available_algorithm_names() -> str:
@@ -173,18 +180,19 @@ class FeatureCache:
         """Build all features needed by the union of *algorithms*, once."""
         cache = cls()
 
-        needs_containment = any(isinstance(a, _NEEDS_CONTAINMENT + _NEEDS_CHILD_CONTAINMENT) for a in algorithms)
-        needs_child = any(isinstance(a, _NEEDS_CHILD_CONTAINMENT) for a in algorithms)
-        needs_ctx = any(isinstance(a, _NEEDS_CONTEXT_FREQ + _NEEDS_CHI_SQUARE_FEATURES) for a in algorithms)
-        needs_word = any(isinstance(a, _NEEDS_WORD_FREQ) for a in algorithms)
-        needs_tci = any(isinstance(a, _NEEDS_TCI) for a in algorithms)
-        needs_ref = any(isinstance(a, _NEEDS_REF_FREQ) for a in algorithms)
-        needs_chi = any(isinstance(a, _NEEDS_CHI_SQUARE_FEATURES) for a in algorithms)
+        needs_containment = any(_needs(a, "containment") or _needs(a, "child_containment") for a in algorithms)
+        needs_child = any(_needs(a, "child_containment") for a in algorithms)
+        needs_ctx = any(_needs(a, "context_freq") or _needs(a, "chi_square_features") for a in algorithms)
+        needs_word = any(_needs(a, "word_freq") for a in algorithms)
+        needs_tci = any(_needs(a, "tci") for a in algorithms)
+        needs_ref = any(_needs(a, "ref_freq") for a in algorithms)
+        needs_chi = any(_needs(a, "chi_square_features") for a in algorithms)
 
         if needs_containment or needs_tci:
             cache.tci = TermComponentIndex.build(candidates)
 
         if needs_containment:
+            assert cache.tci is not None
             cache.containment = Containment.build(candidates, cache.tci)
 
         if needs_child:
@@ -208,13 +216,14 @@ class FeatureCache:
                     files = [files]
                 ref_freqs = [ReferenceFrequency.from_file(f) for f in files]
             if not ref_freqs:
+                assert cache.word_freq is not None
                 ref_freqs = [ReferenceFrequency.from_word_frequency(cache.word_freq)]
             cache.ref_freqs = ref_freqs
 
         if needs_chi:
             if cache.context_freq is None:
                 cache.context_freq = ContextFrequency.build(candidates, documents, nlp)
-            ref_ctx = cache.context_freq.copy_top_fraction(term_freq, 0.3)
+            ref_ctx = cache.context_freq.copy_top_fraction(term_freq, _CHI_SQUARE_TOP_FRACTION)
             min_ttf = config.prefilter_min_ttf if config else 0
             min_tcf = config.prefilter_min_tcf if config else 0
             cache.cooccurrence = Cooccurrence.build(
@@ -232,22 +241,22 @@ class FeatureCache:
         """Return the kwargs needed by *algo* from the pre-built cache."""
         kwargs: dict[str, Any] = {}
 
-        if isinstance(algo, _NEEDS_CONTAINMENT + _NEEDS_CHILD_CONTAINMENT):
+        if _needs(algo, "containment") or _needs(algo, "child_containment"):
             kwargs["containment"] = self.containment
 
-        if isinstance(algo, _NEEDS_CHILD_CONTAINMENT):
+        if _needs(algo, "child_containment"):
             kwargs["child_containment"] = self.child_containment
 
-        if isinstance(algo, _NEEDS_CONTEXT_FREQ) or isinstance(algo, _NEEDS_CHI_SQUARE_FEATURES):
+        if _needs(algo, "context_freq") or _needs(algo, "chi_square_features"):
             kwargs["context_freq"] = self.context_freq
 
-        if isinstance(algo, _NEEDS_WORD_FREQ):
+        if _needs(algo, "word_freq"):
             kwargs["word_freq"] = self.word_freq
 
-        if isinstance(algo, _NEEDS_TCI):
+        if _needs(algo, "tci"):
             kwargs["term_component_index"] = self.tci
 
-        if isinstance(algo, _NEEDS_REF_FREQ):
+        if _needs(algo, "ref_freq"):
             if self.word_freq is not None:
                 kwargs["word_freq"] = self.word_freq
             if self.ref_freqs:
@@ -255,7 +264,7 @@ class FeatureCache:
                 if isinstance(algo, TermEx):
                     kwargs["ref_freqs"] = self.ref_freqs
 
-        if isinstance(algo, _NEEDS_CHI_SQUARE_FEATURES):
+        if _needs(algo, "chi_square_features"):
             kwargs["cooccurrence"] = self.cooccurrence
             kwargs["chi_square_ft"] = self.chi_square_ft
 

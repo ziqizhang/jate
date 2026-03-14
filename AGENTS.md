@@ -27,9 +27,11 @@ make clean          # remove generated files
 src/jate/
 ├── algorithms/     # 14 scoring algorithms (base.py + one file per algo)
 ├── extractors/     # Candidate extractors (pos_pattern, ngram, noun_phrase)
+│   └── patterns/   # POS pattern presets (default, genia, acl_rdtec)
 ├── nlp/            # spaCy backend, document loader
 ├── store/          # Corpus storage (memory, sqlite)
-├── datasets/       # Built-in evaluation datasets (ACL RD-TEC)
+├── datasets/       # Built-in evaluation datasets (GENIA, ACL RD-TEC, ACTER, CoastTerm)
+│   └── reference/  # Reference frequency files (BNC)
 ├── api.py          # Public API — extract() orchestrates the full pipeline
 ├── cli.py          # CLI entry point (jate command)
 ├── server.py       # REST API (FastAPI, jate-api command)

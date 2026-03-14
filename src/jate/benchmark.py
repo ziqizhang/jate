@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import sys
 import time
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -14,8 +15,6 @@ from jate.models import Document
 
 def _log(msg: str) -> None:
     """Print a timestamped progress message to stderr and flush immediately."""
-    from datetime import datetime
-
     ts = datetime.now().strftime("%H:%M:%S")
     print(f"[{ts}] {msg}", file=sys.stderr, flush=True)
 
@@ -52,7 +51,8 @@ class _ProgressNlpWrapper:
     def process_batch(self, texts: list[str], batch_size: int = 256) -> list[Any]:
         if len(texts) <= batch_size:
             _log(f"  NLP batch 1/1: processing {len(texts)} documents ...")
-            return self._nlp.process_batch(texts, batch_size=batch_size)
+            result: list[Any] = self._nlp.process_batch(texts, batch_size=batch_size)
+            return result
 
         results: list[Any] = []
         total_batches = (len(texts) + batch_size - 1) // batch_size
@@ -150,14 +150,7 @@ class BenchmarkRunner:
         _log(f"  spaCy uses multi-threaded processing within each batch " f"(batch_size=256, {cpu_count} CPUs)")
 
         # Wrap NLP backend for progress reporting
-        nlp = _ProgressNlpWrapper(nlp)
-
-        # Determine if any algorithm needs store-level co-occurrences.
-        # Currently no algorithm reads store.get_cooccurrences() in the
-        # benchmark pipeline — co-occurrence features are built separately
-        # in _build_features via ContextFrequency. Skip the O(n²) computation
-        # unless explicitly needed in the future.
-        needs_cooc = False
+        nlp_wrapped: Any = _ProgressNlpWrapper(nlp)
 
         _log(
             f"Extracting candidates from {len(documents)} documents " f"(extractor={extractor}, pattern={pattern}) ..."
@@ -165,21 +158,9 @@ class BenchmarkRunner:
         t_extract = time.time()
         store = MemoryCorpusStore()
         ext = _resolve_extractor(extractor, pattern=pattern)
-        candidates = ext.extract(documents, nlp, store)
+        candidates = ext.extract(documents, nlp_wrapped, store)
         t_index = time.time()
-        if needs_cooc:
-            _log(f"  Indexing candidates with co-occurrence computation " f"(max_workers={cpu_count}) ...")
-            store.index_candidates(
-                candidates,
-                max_workers=cpu_count,
-                compute_cooccurrences=True,
-            )
-        else:
-            _log("  Indexing candidates (co-occurrences skipped — not needed) ...")
-            store.index_candidates(
-                candidates,
-                compute_cooccurrences=False,
-            )
+        store.index_candidates(candidates, compute_cooccurrences=False)
         _log(
             f"  Extracted {len(candidates)} candidates in "
             f"{time.time() - t_extract:.1f}s "
@@ -195,7 +176,7 @@ class BenchmarkRunner:
         _log(f"Building features for {len(algorithms)} algorithm(s) ...")
         t_feat = time.time()
         feature_cache = FeatureCache.build_for_algorithms(
-            list(algo_instances.values()), candidates, documents, nlp, term_freq, config
+            list(algo_instances.values()), candidates, documents, nlp_wrapped, term_freq, config
         )
         _log(f"  Features built in {time.time() - t_feat:.1f}s")
 
@@ -235,6 +216,9 @@ class BenchmarkRunner:
 
 def format_results_table(results: dict[str, EvaluationResult]) -> str:
     """Format evaluation results as an aligned text table.
+
+    Note: cli._format_table formats TermExtractionResult (terms); this formats
+    EvaluationResult (precision/recall/F1). Different data structures, not duplicates.
 
     Returns
     -------
