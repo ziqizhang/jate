@@ -99,6 +99,7 @@ class BenchmarkRunner:
         algorithms: list[str] | None = None,
         *,
         extractor: str = "pos_pattern",
+        pattern: str = "default",
         model: str = "en_core_web_sm",
         top_k: int | None = None,
         min_frequency: int = 1,
@@ -179,10 +180,12 @@ class BenchmarkRunner:
         # unless explicitly needed in the future.
         needs_cooc = False
 
-        _log(f"Extracting candidates from {len(documents)} documents " f"(extractor={extractor}) ...")
+        _log(
+            f"Extracting candidates from {len(documents)} documents " f"(extractor={extractor}, pattern={pattern}) ..."
+        )
         t_extract = time.time()
         store = MemoryCorpusStore()
-        ext = _resolve_extractor(extractor)
+        ext = _resolve_extractor(extractor, pattern=pattern)
         candidates = ext.extract(documents, nlp, store)
         t_index = time.time()
         if needs_cooc:

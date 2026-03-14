@@ -66,6 +66,11 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Candidate extractor (default: pos_pattern)",
     )
     p_bench.add_argument(
+        "--pattern",
+        default="default",
+        help="POS pattern preset (default, genia, acl_rdtec) or regex string",
+    )
+    p_bench.add_argument(
         "--model",
         default="en_core_web_sm",
         help="spaCy model (default: en_core_web_sm)",
@@ -293,6 +298,7 @@ def _cmd_benchmark(args: argparse.Namespace) -> None:
         gold_terms,
         algorithms=algo_list,
         extractor=args.extractor,
+        pattern=getattr(args, "pattern", "default"),
         model=args.model,
         top_k=args.top,
     )

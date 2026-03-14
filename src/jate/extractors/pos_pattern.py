@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from pathlib import Path
 from typing import Any
 
 from jate.extractors.base import CandidateExtractorBase
@@ -119,16 +120,69 @@ STOPWORDS: frozenset[str] = frozenset(
 )
 
 
+# Built-in pattern presets (loaded from files in patterns/ directory).
+_PATTERNS_DIR = Path(__file__).resolve().parent / "patterns"
+
+_PRESET_NAMES = {
+    "default": "default.txt",
+    "genia": "genia.txt",
+    "acl_rdtec": "acl_rdtec.txt",
+}
+
+
+def _load_patterns_file(path: Path) -> str:
+    """Load patterns from a file and combine into a single regex.
+
+    Each non-empty, non-comment line is a pattern. Multiple patterns
+    are joined with ``|`` (OR).
+    """
+    patterns: list[str] = []
+    for line in path.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        patterns.append(line)
+    if not patterns:
+        return r"(ADJ |NOUN |PROPN )*(NOUN |PROPN )"
+    return "|".join(patterns)
+
+
 class PosPatternExtractor(CandidateExtractorBase):
     """Extract candidate terms by matching regex patterns over POS-tag sequences.
 
     The *pattern* is a regular expression applied to a space-separated string
     of Universal POS tags (e.g. ``"ADJ NOUN NOUN"``).  Matching spans are
     mapped back to the original tokens to recover surface forms.
+
+    Parameters
+    ----------
+    pattern:
+        A regex string applied to POS-tag sequences, OR a preset name
+        (``"default"``, ``"genia"``, ``"acl_rdtec"``), OR a path to a
+        patterns file.
     """
 
-    def __init__(self, pattern: str = r"(ADJ |VERB )*(NOUN )+") -> None:
-        self._pattern = re.compile(pattern)
+    def __init__(self, pattern: str = "default") -> None:
+        resolved = self._resolve_pattern(pattern)
+        self._pattern = re.compile(resolved)
+        self._pattern_name = pattern
+
+    @staticmethod
+    def _resolve_pattern(pattern: str) -> str:
+        """Resolve a pattern string to a compiled regex."""
+        # Check if it's a preset name
+        if pattern in _PRESET_NAMES:
+            path = _PATTERNS_DIR / _PRESET_NAMES[pattern]
+            if path.exists():
+                return _load_patterns_file(path)
+
+        # Check if it's a file path
+        path = Path(pattern)
+        if path.is_file():
+            return _load_patterns_file(path)
+
+        # Treat as raw regex
+        return pattern
 
     # ------------------------------------------------------------------
 
