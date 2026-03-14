@@ -17,7 +17,7 @@ def test_health_live() -> None:
     assert resp.json()["status"] == "ok"
 
 
-def test_extract_returns_ranked_json(monkeypatch: object) -> None:
+def test_extract_returns_ranked_json(monkeypatch: pytest.MonkeyPatch) -> None:
     def _fake_extract(*args: object, **kwargs: object) -> TermExtractionResult:
         _ = (args, kwargs)
         return TermExtractionResult(
@@ -63,7 +63,7 @@ def test_capabilities() -> None:
     assert "pos_pattern" in data["extractors"]
 
 
-def test_health_ready_model_unavailable(monkeypatch: object) -> None:
+def test_health_ready_model_unavailable(monkeypatch: pytest.MonkeyPatch) -> None:
     def _raise_backend(_: str) -> object:
         raise OSError("missing model")
 
@@ -73,7 +73,7 @@ def test_health_ready_model_unavailable(monkeypatch: object) -> None:
     assert resp.status_code == 503
 
 
-def test_extract_model_unavailable(monkeypatch: object) -> None:
+def test_extract_model_unavailable(monkeypatch: pytest.MonkeyPatch) -> None:
     def _raise_backend(_: str) -> object:
         raise OSError("missing model")
 
