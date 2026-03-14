@@ -1,8 +1,8 @@
 # JATE — Just Automatic Term Extraction
 
-A Python library for automatic term extraction (ATE) from text corpora. JATE provides 14 ATE algorithms (13 classical + ensemble voting), corpus-level statistics, built-in evaluation, and a CLI — all pip-installable with no external services required.
+A Python library for automatic term extraction (ATE) from text corpora. JATE provides 13 classical ATE algorithms, corpus-level statistics, built-in evaluation, and a CLI — all pip-installable with no external services required.
 
-**JATE v3.0.0** is a complete rewrite of the original [Java JATE](https://github.com/ziqizhang/jate/tree/legacy/java) library (84+ GitHub stars), which was built on Apache Solr and used in academic and industry settings for over a decade. The Python version preserves all 13 classical algorithms from the Java codebase — with every formula verified line-by-line against the original source — while removing the Solr dependency in favour of a self-contained, pip-installable package. The original Java library is preserved on the [`legacy/java`](https://github.com/ziqizhang/jate/tree/legacy/java) branch.
+**JATE v3.0.0** is a complete rewrite of the original [Java JATE](https://github.com/ziqizhang/jate/tree/legacy/java) library (84+ GitHub stars), which was built on Apache Solr and used in academic and industry settings for over a decade. The Python version preserves all 13 classical algorithms from the Java codebase — with every formula verified line-by-line against the original source — while removing the Solr dependency in favour of a self-contained, pip-installable package. It also adds ensemble voting via reciprocal rank fusion when comparing multiple algorithms. The original Java library is preserved on the [`legacy/java`](https://github.com/ziqizhang/jate/tree/legacy/java) branch.
 
 ## Installation
 
@@ -73,12 +73,7 @@ for algo_name, result in results.items():
         print(f"  {term.string:30s}  {term.score:.4f}")
 ```
 
-For large corpora, speed up with parallel processing:
-
-```python
-config = jate.JATEConfig(max_workers=4)
-results = jate.compare(docs, algorithms=["cvalue", "tfidf", "rake"], config=config)
-```
+For large corpora, internal pipeline steps (NLP processing, feature building, co-occurrence computation) use multi-threading and multi-processing automatically.
 
 ### Evaluation against a gold standard
 
@@ -87,7 +82,7 @@ import jate
 
 result = jate.extract_corpus(docs, algorithm="cvalue")
 
-evaluator = jate.Evaluator(gold_terms={"machine learning", "neural network", ...})
+evaluator = jate.Evaluator({"machine learning", "neural network", ...})
 eval_result = evaluator.evaluate(result)
 print(eval_result.summary())
 # P=0.2800  R=0.0644  F1=0.1047  TP=28  FP=72  FN=407  predicted=100  gold=435
@@ -108,8 +103,8 @@ jate corpus path/to/docs/ --algorithm tfidf --output csv
 # Compare algorithms on a corpus
 jate compare path/to/docs/ --algorithms cvalue tfidf rake
 
-# Run benchmark on built-in dataset
-jate benchmark --top 100
+# Run benchmark on built-in dataset (use --list-datasets to see all options)
+jate benchmark --dataset acl_rdtec_mini --top 100
 ```
 
 ### REST API (thin server)
@@ -220,13 +215,14 @@ Expected extract response shape:
 | `weirdness` | Target vs reference corpus frequency ratio | Ahmad et al. 1999 |
 | `termex` | Domain pertinence + context + lexical cohesion | Sclano et al. 2007 |
 | `glossex` | Domain specificity via glossary comparison | Park et al. 2002 |
-| `voting` | Ensemble via reciprocal rank fusion | — |
+
+Multi-algorithm comparison is available via `jate.compare()`, which also supports ensemble voting via reciprocal rank fusion (`voting=True`).
 
 ## Candidate extractors
 
 | Extractor | Description |
 |-----------|-------------|
-| `pos_pattern` (default) | Regex over Universal POS tags (e.g. `(ADJ )*(NOUN )+`) |
+| `pos_pattern` (default) | Regex over Universal POS tags (default: `(ADJ\|NOUN\|PROPN)*(NOUN\|PROPN)`, configurable via pattern presets) |
 | `ngram` | Contiguous token n-grams (configurable min/max n) |
 | `noun_phrase` | spaCy noun chunk detection |
 
