@@ -498,6 +498,8 @@ class Cooccurrence:
     """
 
     matrix: dict[tuple[str, str], int] = field(default_factory=dict)
+    # Inverted index: term -> {co-occurring_term: count}
+    _index: dict[str, dict[str, int]] = field(default_factory=dict, repr=False)
 
     @classmethod
     def build(
@@ -558,7 +560,17 @@ class Cooccurrence:
                 seen.add(key)
                 matrix[key] = count
 
-        return cls(matrix=dict(matrix))
+        inst = cls(matrix=dict(matrix))
+        inst._build_index()
+        return inst
+
+    def _build_index(self) -> None:
+        """Build inverted index for O(1) per-term lookups."""
+        idx: dict[str, dict[str, int]] = defaultdict(dict)
+        for (a, b), count in self.matrix.items():
+            idx[a][b] = count
+            idx[b][a] = count
+        self._index = dict(idx)
 
     def get(self, term_a: str, term_b: str) -> int:
         key = (min(term_a.lower(), term_b.lower()), max(term_a.lower(), term_b.lower()))
@@ -566,14 +578,7 @@ class Cooccurrence:
 
     def get_cooccurrences_for(self, term: str) -> dict[str, int]:
         """All co-occurring terms and their counts for a given term."""
-        t = term.lower()
-        result: dict[str, int] = {}
-        for (a, b), count in self.matrix.items():
-            if a == t:
-                result[b] = count
-            elif b == t:
-                result[a] = count
-        return result
+        return dict(self._index.get(term.lower(), {}))
 
 
 @dataclass(slots=True)
