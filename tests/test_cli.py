@@ -47,7 +47,7 @@ class TestCLIExtract:
             "extract",
             "Machine learning is a branch of artificial intelligence. Machine learning uses algorithms.",
             "--algorithm",
-            "tfidf",
+            "cvalue",
             "--output",
             "json",
         )

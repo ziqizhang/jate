@@ -28,8 +28,8 @@ python = "^3.11"
 spacy = "^3.7"
 pandas = "^2.0"
 numpy = "^1.26"
-fastapi = "^0.121.1"
-uvicorn = "^0.38.0"
+fastapi = { version = "^0.121.1", optional = true }
+uvicorn = { version = "^0.38.0", optional = true }
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0"
@@ -57,6 +57,9 @@ mkdocs-material = "^9.7.4"
 mkdocstrings = "^1.0.3"
 mkdocstrings-python = "^2.0.3"
 mike = "^2.1.4"
+
+[tool.poetry.extras]
+server = ["fastapi", "uvicorn"]
 
 [build-system]
 requires = ["poetry-core"]

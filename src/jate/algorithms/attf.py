@@ -2,14 +2,15 @@
 
 from __future__ import annotations
 
+import warnings
 from typing import Any
 
-from jate.algorithms.base import Algorithm
+from jate.algorithms.base import ATERanker, OutputCapabilities
 from jate.features import TermFrequency
 from jate.models import Candidate, Term, TermExtractionResult
 
 
-class ATTF(Algorithm):
+class ATTF(ATERanker):
     """Average Total Term Frequency.
 
     ``score = ttf / df`` where *ttf* is total term frequency in corpus and
@@ -20,7 +21,18 @@ class ATTF(Algorithm):
     def description(self) -> str:
         return "Average Total Term Frequency: ttf / df"
 
-    def score(
+    def output_capabilities(self) -> OutputCapabilities:
+        return OutputCapabilities(produces_scores=True, produces_ranking=True, requires_corpus=True)
+
+    def doc_level_compatibility(self, term_freq: TermFrequency, **kwargs: Any) -> None:
+        if term_freq.total_docs <= 1:
+            warnings.warn(
+                "ATTF degrades to TTF on a single document (DF=1 for all terms). "
+                "Results will be equivalent to the TTF algorithm.",
+                stacklevel=3,
+            )
+
+    def _score(
         self,
         candidates: list[Candidate],
         term_freq: TermFrequency,

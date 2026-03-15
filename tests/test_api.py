@@ -55,10 +55,11 @@ class TestExtract:
             kw in s for s in term_strings for kw in ("learning", "network", "intelligence")
         ), f"Expected relevant terms, got: {term_strings}"
 
-    def test_extract_with_algorithm_tfidf(self) -> None:
-        result = extract(TEXT_ML, algorithm="tfidf")
-        assert isinstance(result, TermExtractionResult)
-        assert len(result) > 0
+    def test_extract_with_algorithm_tfidf_single_doc_raises(self) -> None:
+        from jate.algorithms.base import AlgorithmIncompatibleError
+
+        with pytest.raises(AlgorithmIncompatibleError):
+            extract(TEXT_ML, algorithm="tfidf")
 
     def test_extract_returns_sorted(self) -> None:
         result = extract(TEXT_ML)
@@ -124,9 +125,8 @@ class TestExtractCorpus:
 
 class TestCompare:
     def test_compare_default_algorithms(self) -> None:
-        results = compare(TEXT_ML)
+        results = compare(TEXT_ML, algorithms=["cvalue", "rake", "ridf", "basic"])
         assert isinstance(results, dict)
-        assert "tfidf" in results
         assert "cvalue" in results
         assert "rake" in results
         assert "ridf" in results
@@ -135,8 +135,8 @@ class TestCompare:
             assert isinstance(res, TermExtractionResult), f"{name} not a TermExtractionResult"
 
     def test_compare_specific_algorithms(self) -> None:
-        results = compare(TEXT_ML, algorithms=["tfidf", "basic", "ttf"])
-        assert set(results.keys()) == {"tfidf", "basic", "ttf"}
+        results = compare(TEXT_ML, algorithms=["basic", "ttf", "cvalue"])
+        assert set(results.keys()) == {"basic", "ttf", "cvalue"}
         for res in results.values():
             assert len(res) > 0
 
@@ -190,12 +190,21 @@ _ALL_ALGORITHM_NAMES = [
 
 
 class TestAllAlgorithms:
+    # TF-IDF raises AlgorithmIncompatibleError on single-doc input
+    _SINGLE_DOC_INCOMPATIBLE = {"tfidf"}
+
     @pytest.mark.parametrize("algo_name", _ALL_ALGORITHM_NAMES)
     def test_algorithm_runs_without_crash(self, algo_name: str) -> None:
-        result = extract(TEXT_ML, algorithm=algo_name, min_frequency=1)
-        assert isinstance(result, TermExtractionResult)
-        # Just check it doesn't crash and returns something
-        assert len(result) >= 0
+        if algo_name in self._SINGLE_DOC_INCOMPATIBLE:
+            from jate.algorithms.base import AlgorithmIncompatibleError
+
+            with pytest.raises(AlgorithmIncompatibleError):
+                extract(TEXT_ML, algorithm=algo_name, min_frequency=1)
+        else:
+            result = extract(TEXT_ML, algorithm=algo_name, min_frequency=1)
+            assert isinstance(result, TermExtractionResult)
+            # Just check it doesn't crash and returns something
+            assert len(result) >= 0
 
 
 # -----------------------------------------------------------------------

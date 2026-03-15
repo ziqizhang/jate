@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from jate.algorithms.attf import ATTF
-from jate.algorithms.base import Algorithm
+from jate.algorithms.base import Algorithm, AlgorithmIncompatibleError, ATERanker, ATETagger, OutputCapabilities
 from jate.algorithms.basic import Basic
 from jate.algorithms.chi_square import ChiSquare
 from jate.algorithms.combo_basic import ComboBasic
@@ -20,6 +20,10 @@ from jate.algorithms.weirdness import Weirdness
 
 __all__ = [
     "Algorithm",
+    "AlgorithmIncompatibleError",
+    "ATERanker",
+    "ATETagger",
+    "OutputCapabilities",
     "ATTF",
     "Basic",
     "ChiSquare",

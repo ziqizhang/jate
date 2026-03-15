@@ -19,6 +19,7 @@ from jate.algorithms import (
     TFIDF,
     TTF,
     Algorithm,
+    AlgorithmIncompatibleError,
     Basic,
     ChiSquare,
     ComboBasic,
@@ -517,7 +518,16 @@ def compare(
     for algo_name in algorithms:
         algo = algo_instances[algo_name]
         score_kwargs = feature_cache.get_features(algo)
-        result = algo.score(candidates, term_freq, **score_kwargs)
+        try:
+            result = algo.score(candidates, term_freq, **score_kwargs)
+        except AlgorithmIncompatibleError as e:
+            import warnings
+
+            warnings.warn(
+                f"Skipping {algo_name}: {e}",
+                stacklevel=2,
+            )
+            continue
         result = result.filter_by_frequency(min_frequency)
         result = result.filter_by_length(min_words=min_words, max_words=max_words)
         for i, term in enumerate(result):

@@ -163,3 +163,92 @@ class TestDocFreshness:
         assert arch_doc.exists(), (
             "docs/architecture-agent.md not found. " "This is the Tier 2 architecture reference for agents."
         )
+
+
+class TestAlgorithmAbstraction:
+    """Verify the ATERanker/ATETagger abstraction is correctly applied."""
+
+    def test_all_algorithms_are_ranker_or_tagger(self):
+        """Every Algorithm subclass in algorithms/ must be ATERanker or ATETagger."""
+        algo_dir = SRC_ROOT / "algorithms"
+        # Collect all class names defined in algorithm files and their bases
+        exclude = {"Algorithm", "ATERanker", "ATETagger"}
+        violations = []
+
+        for py_file in _python_files(algo_dir):
+            try:
+                tree = ast.parse(py_file.read_text(), filename=str(py_file))
+            except SyntaxError:
+                continue
+            for node in ast.walk(tree):
+                if not isinstance(node, ast.ClassDef):
+                    continue
+                if node.name in exclude:
+                    continue
+                # Check if any base is Algorithm (directly or indirectly)
+                base_names = []
+                for base in node.bases:
+                    if isinstance(base, ast.Name):
+                        base_names.append(base.id)
+                    elif isinstance(base, ast.Attribute):
+                        base_names.append(base.attr)
+                # Only check classes that inherit from Algorithm, ATERanker, or ATETagger
+                algo_bases = {"Algorithm", "ATERanker", "ATETagger"}
+                if not any(b in algo_bases for b in base_names):
+                    continue
+                # Must be ATERanker or ATETagger, not raw Algorithm
+                if not any(b in {"ATERanker", "ATETagger"} for b in base_names):
+                    violations.append(
+                        f"  {py_file.relative_to(SRC_ROOT)}: {node.name} "
+                        f"inherits from Algorithm directly instead of ATERanker/ATETagger"
+                    )
+
+        assert not violations, "All Algorithm subclasses must use ATERanker or ATETagger:\n" + "\n".join(violations)
+
+    def test_all_algorithms_have_output_capabilities(self):
+        """Every registered algorithm must return an OutputCapabilities instance."""
+        from jate.algorithms.base import OutputCapabilities
+        from jate.api import _ALGORITHM_NAMES
+
+        for name, cls in _ALGORITHM_NAMES.items():
+            algo = cls()
+            caps = algo.output_capabilities()
+            assert isinstance(caps, OutputCapabilities), (
+                f"Algorithm {name!r} ({cls.__name__}).output_capabilities() "
+                f"returned {type(caps).__name__}, expected OutputCapabilities"
+            )
+
+    def test_tfidf_raises_on_single_doc(self):
+        """TF-IDF must raise AlgorithmIncompatibleError on a single-document corpus."""
+        from jate.algorithms.base import AlgorithmIncompatibleError
+        from jate.algorithms.tfidf import TFIDF
+        from jate.features import TermFrequency
+        from jate.models import Candidate
+
+        tf = TermFrequency(
+            term2ttf={"test": 5},
+            term2fid={"test": {"doc1": 5}},
+            corpus_total=5,
+            total_docs=1,
+        )
+        candidates = [Candidate(surface_form="test")]
+        tfidf = TFIDF()
+        with pytest.raises(AlgorithmIncompatibleError):
+            tfidf.score(candidates, tf)
+
+    def test_attf_warns_on_single_doc(self):
+        """ATTF must emit a warning on a single-document corpus."""
+        from jate.algorithms.attf import ATTF
+        from jate.features import TermFrequency
+        from jate.models import Candidate
+
+        tf = TermFrequency(
+            term2ttf={"test": 5},
+            term2fid={"test": {"doc1": 5}},
+            corpus_total=5,
+            total_docs=1,
+        )
+        candidates = [Candidate(surface_form="test")]
+        attf = ATTF()
+        with pytest.warns(UserWarning, match="ATTF degrades to TTF"):
+            attf.score(candidates, tf)

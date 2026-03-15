@@ -172,13 +172,13 @@ class TestParallelCompare:
         text = "Machine learning and neural networks are used in deep learning research. Neural network architectures improve machine learning models."
         results_seq = compare(
             [text],
-            algorithms=["tfidf", "cvalue", "basic", "ttf"],
+            algorithms=["cvalue", "basic", "ttf"],
             config=JATEConfig(),
             min_frequency=1,
         )
         results_par = compare(
             [text],
-            algorithms=["tfidf", "cvalue", "basic", "ttf"],
+            algorithms=["cvalue", "basic", "ttf"],
             config=JATEConfig(),
             min_frequency=1,
         )

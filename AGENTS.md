@@ -1,6 +1,6 @@
 # JATE — Just Automatic Term Extraction
 
-Python library for automatic term extraction (ATE). 14 algorithms (13 classical + ensemble voting), corpus-level statistics, evaluation, CLI, and REST API. Built on spaCy.
+Python library for automatic term extraction (ATE). 13 classical scoring algorithms, corpus-level statistics, evaluation, CLI, and REST API. Built on spaCy.
 
 ## Key Paths
 
@@ -25,7 +25,7 @@ make clean          # remove generated files
 
 ```
 src/jate/
-├── algorithms/     # 14 scoring algorithms (base.py + one file per algo)
+├── algorithms/     # 13 scoring algorithms (ATERanker subclasses in base.py + one file per algo)
 ├── extractors/     # Candidate extractors (pos_pattern, ngram, noun_phrase)
 │   └── patterns/   # POS pattern presets (default, genia, acl_rdtec)
 ├── nlp/            # spaCy backend, document loader
@@ -56,7 +56,7 @@ src/jate/
 6. **Features are built once**: When running multiple algorithms, use `FeatureCache` (in `api.py`) to build all features once for the union of algorithms. Never rebuild the same feature per algorithm. See: `api.py::FeatureCache`, `compare()`.
 7. **Pipeline steps must log progress**: Any operation that processes documents or candidates in bulk must emit timestamped progress to stderr. Use the `_log()` pattern from `benchmark.py`. See: `docs/architecture-agent.md` § Logging.
 8. **Data-intensive operations must consider parallelism**: Feature builders, candidate extraction, and scoring that iterate over large datasets should use `parallel.py::parallel_map` or `ProcessPoolExecutor` for CPU-bound work. Pre-tokenise/pre-compute shared data before parallel dispatch. See: `docs/architecture-agent.md` § Efficiency.
-9. **New algorithms**: Subclass `Algorithm`, add to `algorithms/__init__.py`, register in `api.py::_FEATURE_NEEDS`. See `docs/contributing.md`.
+9. **New algorithms**: Subclass `ATERanker` (corpus-level) or `ATETagger` (document-level), implement `output_capabilities()` and `_score()`/`tag()`. Add to `algorithms/__init__.py`, register in `api.py::_FEATURE_NEEDS`. Enforced by: `tests/test_architecture.py::TestAlgorithmAbstraction`.
 
 ## Conventions
 
@@ -68,6 +68,7 @@ src/jate/
 
 ## Common Pitfalls
 
+- TF-IDF raises `AlgorithmIncompatibleError` on single documents (IDF = 0). Use cvalue or basic instead.
 - spaCy model must be installed separately: `python -m spacy download en_core_web_sm`
 - `features.py` is the largest file (577 lines) — read selectively, not in full
 - `api.py::extract()` is the main entry point — start here when understanding the pipeline
