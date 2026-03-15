@@ -2,10 +2,70 @@
 
 from __future__ import annotations
 
+import os
+import sys
+import time
+from datetime import datetime
+from pathlib import Path
 from typing import Any
 
 from jate.evaluation import EvaluationResult, Evaluator
 from jate.models import Document
+
+
+def _log(msg: str) -> None:
+    """Print a timestamped progress message to stderr and flush immediately."""
+    ts = datetime.now().strftime("%H:%M:%S")
+    print(f"[{ts}] {msg}", file=sys.stderr, flush=True)
+
+
+# Bundled BNC reference frequency file.
+_BNC_REF_PATH = Path(__file__).resolve().parent / "datasets" / "reference" / "bnc_unifrqs.normal"
+
+# Algorithms that require a reference corpus.
+_REF_ALGORITHMS = frozenset({"weirdness", "glossex", "termex"})
+
+# Feature names for progress reporting.
+_FEATURE_LABELS: dict[str, str] = {
+    "containment": "containment (nested term frequencies)",
+    "child_containment": "child containment (reverse nesting)",
+    "context_freq": "context frequency (sentence co-occurrence)",
+    "word_freq": "word frequency (token-level counts)",
+    "term_component_index": "term component index (word-level decomposition)",
+    "ref_freq": "reference frequency (BNC corpus comparison)",
+    "ref_freqs": "reference frequencies (multi-corpus comparison)",
+    "cooccurrence": "co-occurrence matrix",
+    "chi_square_freq_terms": "chi-square frequent terms",
+}
+
+
+class _ProgressNlpWrapper:
+    """Wrapper around SpacyBackend that reports batch progress."""
+
+    def __init__(self, nlp: Any) -> None:
+        self._nlp = nlp
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._nlp, name)
+
+    def process_batch(self, texts: list[str], batch_size: int = 256) -> list[Any]:
+        if len(texts) <= batch_size:
+            _log(f"  NLP batch 1/1: processing {len(texts)} documents ...")
+            result: list[Any] = self._nlp.process_batch(texts, batch_size=batch_size)
+            return result
+
+        results: list[Any] = []
+        total_batches = (len(texts) + batch_size - 1) // batch_size
+        for batch_idx in range(0, len(texts), batch_size):
+            batch_num = batch_idx // batch_size + 1
+            batch = texts[batch_idx : batch_idx + batch_size]
+            _log(
+                f"  NLP batch {batch_num}/{total_batches}: "
+                f"processing documents {batch_idx + 1}-{batch_idx + len(batch)} "
+                f"of {len(texts)} ..."
+            )
+            results.extend(self._nlp.process_batch(batch, batch_size=batch_size))
+        return results
 
 
 class BenchmarkRunner:
@@ -18,9 +78,11 @@ class BenchmarkRunner:
         algorithms: list[str] | None = None,
         *,
         extractor: str = "pos_pattern",
+        pattern: str = "default",
         model: str = "en_core_web_sm",
         top_k: int | None = None,
         min_frequency: int = 1,
+        reference_frequency_file: str | None = None,
         **algo_kwargs: Any,
     ) -> dict[str, EvaluationResult]:
         """Run algorithms against *documents* and evaluate against *gold_terms*.
@@ -41,6 +103,10 @@ class BenchmarkRunner:
             If set, evaluate only the top-K terms per algorithm.
         min_frequency:
             Minimum term frequency filter.
+        reference_frequency_file:
+            Path to a reference frequency file. If *None*, uses the bundled
+            BNC frequency list. If that is also missing, falls back to
+            self-reference (with a warning).
         **algo_kwargs:
             Extra kwargs forwarded to each algorithm constructor.
 
@@ -49,7 +115,8 @@ class BenchmarkRunner:
         dict[str, EvaluationResult]
             Mapping of algorithm name to its evaluation result.
         """
-        from jate.api import _build_features, _resolve_algorithm, _resolve_extractor
+        from jate.api import FeatureCache, _resolve_algorithm, _resolve_extractor
+        from jate.config import JATEConfig
         from jate.features import TermFrequency
         from jate.nlp.spacy_backend import SpacyBackend
         from jate.store.memory_store import MemoryCorpusStore
@@ -57,35 +124,89 @@ class BenchmarkRunner:
         if algorithms is None:
             algorithms = ["tfidf", "cvalue", "rake", "ridf", "basic"]
 
-        # Shared NLP pipeline and candidate extraction
-        nlp = SpacyBackend(model)
-        store = MemoryCorpusStore()
-        ext = _resolve_extractor(extractor)
-        candidates = ext.extract(documents, nlp, store)
-        store.index_candidates(candidates)
+        # Resolve reference frequency file for algorithms that need it
+        needs_ref = bool(_REF_ALGORITHMS & set(algorithms))
+        ref_path = reference_frequency_file
+        if ref_path is None and needs_ref:
+            if _BNC_REF_PATH.exists():
+                ref_path = str(_BNC_REF_PATH)
+                _log(f"Using bundled BNC reference corpus: {_BNC_REF_PATH.name}")
+            else:
+                _log(
+                    "WARNING: No reference frequency file found. "
+                    "Algorithms requiring a reference corpus (weirdness, glossex, termex) "
+                    "will fall back to self-reference, which produces weaker results. "
+                    f"Expected: {_BNC_REF_PATH}"
+                )
 
-        # Build shared term frequency
-        total_docs = len(documents)
-        term_freq = TermFrequency.build(candidates, total_docs)
+        config = JATEConfig(reference_frequency_file=ref_path) if ref_path else None
+
+        cpu_count = os.cpu_count() or 1
+        t0 = time.time()
+
+        _log(f"System: {cpu_count} CPUs available")
+        _log(f"Loading spaCy model '{model}' ...")
+        nlp = SpacyBackend(model)
+        _log(f"  spaCy uses multi-threaded processing within each batch " f"(batch_size=256, {cpu_count} CPUs)")
+
+        # Wrap NLP backend for progress reporting
+        nlp_wrapped: Any = _ProgressNlpWrapper(nlp)
+
+        _log(
+            f"Extracting candidates from {len(documents)} documents " f"(extractor={extractor}, pattern={pattern}) ..."
+        )
+        t_extract = time.time()
+        store = MemoryCorpusStore()
+        ext = _resolve_extractor(extractor, pattern=pattern)
+        candidates = ext.extract(documents, nlp_wrapped, store)
+        t_index = time.time()
+        store.index_candidates(candidates, compute_cooccurrences=False)
+        _log(
+            f"  Extracted {len(candidates)} candidates in "
+            f"{time.time() - t_extract:.1f}s "
+            f"(indexing: {time.time() - t_index:.1f}s)"
+        )
+
+        _log("Building term frequencies ...")
+        term_freq = TermFrequency.build(candidates, len(documents))
+        _log(f"  {len(term_freq.term2ttf)} unique terms across {len(documents)} documents")
+
+        # Build all features once for all algorithms
+        algo_instances = {name: _resolve_algorithm(name, **algo_kwargs) for name in algorithms}
+        _log(f"Building features for {len(algorithms)} algorithm(s) ...")
+        t_feat = time.time()
+        feature_cache = FeatureCache.build_for_algorithms(
+            list(algo_instances.values()), candidates, documents, nlp_wrapped, term_freq, config
+        )
+        _log(f"  Features built in {time.time() - t_feat:.1f}s")
 
         evaluator = Evaluator(gold_terms)
+        eval_mode = f"top-{top_k}" if top_k else "all candidates"
+        _log(f"Scoring {len(algorithms)} algorithm(s) against " f"{len(gold_terms)} gold terms ({eval_mode})")
         results: dict[str, EvaluationResult] = {}
 
-        for algo_name in algorithms:
-            algo = _resolve_algorithm(algo_name, **algo_kwargs)
-            score_kwargs = _build_features(algo, candidates, documents, nlp, term_freq)
+        for i, algo_name in enumerate(algorithms, 1):
+            t_algo = time.time()
+            algo = algo_instances[algo_name]
+            score_kwargs = feature_cache.get_features(algo)
             result = algo.score(candidates, term_freq, **score_kwargs)
             result = result.filter_by_frequency(min_frequency)
             # Assign ranks
-            for i, term in enumerate(result):
-                term.rank = i + 1
+            for j, term in enumerate(result):
+                term.rank = j + 1
 
             if top_k is not None:
                 ev = evaluator.evaluate_at_k(result, top_k)
             else:
                 ev = evaluator.evaluate(result)
             results[algo_name] = ev
+            _log(
+                f"  [{i}/{len(algorithms)}] {algo_name} — "
+                f"P={ev.precision:.4f} R={ev.recall:.4f} F1={ev.f1:.4f} "
+                f"({time.time() - t_algo:.1f}s)"
+            )
 
+        _log(f"Benchmark complete in {time.time() - t0:.1f}s\n")
         return results
 
     def print_results(self, results: dict[str, EvaluationResult]) -> None:
@@ -95,6 +216,9 @@ class BenchmarkRunner:
 
 def format_results_table(results: dict[str, EvaluationResult]) -> str:
     """Format evaluation results as an aligned text table.
+
+    Note: cli._format_table formats TermExtractionResult (terms); this formats
+    EvaluationResult (precision/recall/F1). Different data structures, not duplicates.
 
     Returns
     -------

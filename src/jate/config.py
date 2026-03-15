@@ -4,6 +4,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+# Fraction of highest-frequency terms used to build the chi-square reference
+# context (Java: FrequencyCtxBasedCopier top-fraction parameter).
+_CHI_SQUARE_TOP_FRACTION: float = 0.3
+
 
 @dataclass
 class JATEConfig:

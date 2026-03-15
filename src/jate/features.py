@@ -8,6 +8,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Callable, NamedTuple
 
+from jate.config import _CHI_SQUARE_TOP_FRACTION
 from jate.models import Candidate, Document
 
 if TYPE_CHECKING:
@@ -187,6 +188,98 @@ class ReferenceFrequency:
         return cls(word2ttf=filtered, corpus_total=total)
 
 
+def _build_adjacent_words(
+    candidates: list[Candidate],
+    documents: list[Document],
+    nlp_backend: NLPBackend,
+) -> dict[str, dict[str, int]]:
+    """Compute adjacent words for all candidates, optimised for large corpora.
+
+    Restructured to iterate by document (outer) rather than by candidate,
+    so each document is tokenized exactly once.
+    """
+    import os
+    from concurrent.futures import ProcessPoolExecutor
+
+    from jate.extractors.utils import compute_token_offsets
+
+    # Step 1: Group all candidate positions by document.
+    # doc_id -> list of (normalized_form, char_start, char_end)
+    doc_positions: dict[str, list[tuple[str, int, int]]] = defaultdict(list)
+    for cand in candidates:
+        norm = cand.normalized_form.lower()
+        for doc_id, positions in cand.doc_positions.items():
+            for char_start, char_end, _sent_idx in positions:
+                doc_positions[doc_id].append((norm, char_start, char_end))
+
+    # Step 2: Pre-tokenize all documents that have candidate positions.
+    doc_map = {doc.doc_id: doc.content for doc in documents}
+    doc_token_cache: dict[str, tuple[list[str], list[tuple[int, int]]]] = {}
+    for doc_id in doc_positions:
+        text = doc_map.get(doc_id)
+        if text is None:
+            continue
+        tokens = nlp_backend.tokenize(text)
+        offsets = compute_token_offsets(text, tokens)
+        doc_token_cache[doc_id] = (tokens, offsets)
+
+    # Step 3: Compute adjacent words per document.
+    # Parallelise across documents using multiple processes.
+    max_workers = min(os.cpu_count() or 1, len(doc_token_cache))
+
+    if max_workers > 1 and len(doc_token_cache) > 10:
+        # Prepare serializable chunks for parallel processing
+        chunks: list[tuple[str, list[str], list[tuple[int, int]], list[tuple[str, int, int]]]] = []
+        for doc_id, (tokens, offsets) in doc_token_cache.items():
+            chunks.append((doc_id, tokens, offsets, doc_positions[doc_id]))
+
+        with ProcessPoolExecutor(max_workers=max_workers) as pool:
+            partial_results = list(pool.map(_adjacent_for_doc, chunks))
+
+        adjacent: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+        for partial in partial_results:
+            for term, words in partial.items():
+                for word, count in words.items():
+                    adjacent[term][word] += count
+    else:
+        adjacent = defaultdict(lambda: defaultdict(int))
+        for doc_id, (tokens, offsets) in doc_token_cache.items():
+            partial = _adjacent_for_doc((doc_id, tokens, offsets, doc_positions[doc_id]))
+            for term, words in partial.items():
+                for word, count in words.items():
+                    adjacent[term][word] += count
+
+    return {k: dict(v) for k, v in adjacent.items()}
+
+
+def _adjacent_for_doc(
+    args: tuple[str, list[str], list[tuple[int, int]], list[tuple[str, int, int]]],
+) -> dict[str, dict[str, int]]:
+    """Compute adjacent words for all candidate positions in one document.
+
+    Must be a top-level function for pickling with ProcessPoolExecutor.
+    """
+    _doc_id, tokens, token_offsets, positions = args
+    adjacent: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+
+    for norm, char_start, char_end in positions:
+        before_token = None
+        after_token = None
+        for i, (t_start, t_end) in enumerate(token_offsets):
+            if t_end <= char_start:
+                before_token = tokens[i]
+            if t_start >= char_end:
+                after_token = tokens[i]
+                break
+        if before_token:
+            adjacent[norm][before_token.lower()] += 1
+        if after_token:
+            adjacent[norm][after_token.lower()] += 1
+
+    # Convert inner defaultdicts to plain dicts for pickling
+    return {k: dict(v) for k, v in adjacent.items()}
+
+
 class ContextWindow(NamedTuple):
     """Identifies a context (sentence within a document).
 
@@ -246,31 +339,7 @@ class ContextFrequency:
         # Adjacent words (for NC-Value) — same logic as old ContextIndex
         adjacent: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
         if nlp_backend is not None and documents is not None:
-            from jate.extractors.utils import compute_token_offsets
-
-            doc_map = {doc.doc_id: doc for doc in documents}
-            for cand in candidates:
-                norm = cand.normalized_form.lower()
-                for doc_id, positions in cand.doc_positions.items():
-                    doc = doc_map.get(doc_id)
-                    if doc is None:
-                        continue
-                    text = doc.content
-                    tokens = nlp_backend.tokenize(text)
-                    token_offsets = compute_token_offsets(text, tokens)
-                    for char_start, char_end, _sent_idx in positions:
-                        before_token = None
-                        after_token = None
-                        for i, (t_start, t_end) in enumerate(token_offsets):
-                            if t_end <= char_start:
-                                before_token = tokens[i]
-                            if t_start >= char_end:
-                                after_token = tokens[i]
-                                break
-                        if before_token:
-                            adjacent[norm][before_token.lower()] += 1
-                        if after_token:
-                            adjacent[norm][after_token.lower()] += 1
+            adjacent = _build_adjacent_words(candidates, documents, nlp_backend)
 
         return cls(
             ctx2ttf=dict(ctx2ttf),
@@ -299,7 +368,9 @@ class ContextFrequency:
         """Adjacent words for NC-Value."""
         return self.adjacent.get(term.lower(), {})
 
-    def copy_top_fraction(self, term_freq: TermFrequency, fraction: float = 0.3) -> ContextFrequency:
+    def copy_top_fraction(
+        self, term_freq: TermFrequency, fraction: float = _CHI_SQUARE_TOP_FRACTION
+    ) -> ContextFrequency:
         """Java's FrequencyCtxBasedCopier: filter to top-fraction most frequent terms.
 
         Returns a new ContextFrequency containing only terms whose TTF
@@ -378,7 +449,6 @@ class Containment:
         cls,
         candidates: list[Candidate],
         term_component_index: TermComponentIndex,
-        max_workers: int = 1,
     ) -> Containment:
         term2parents: dict[str, set[str]] = {}
         all_terms = {c.normalized_form.lower() for c in candidates}
@@ -430,6 +500,8 @@ class Cooccurrence:
     """
 
     matrix: dict[tuple[str, str], int] = field(default_factory=dict)
+    # Inverted index: term -> {co-occurring_term: count}
+    _index: dict[str, dict[str, int]] = field(default_factory=dict, repr=False)
 
     @classmethod
     def build(
@@ -490,7 +562,17 @@ class Cooccurrence:
                 seen.add(key)
                 matrix[key] = count
 
-        return cls(matrix=dict(matrix))
+        inst = cls(matrix=dict(matrix))
+        inst._build_index()
+        return inst
+
+    def _build_index(self) -> None:
+        """Build inverted index for O(1) per-term lookups."""
+        idx: dict[str, dict[str, int]] = defaultdict(dict)
+        for (a, b), count in self.matrix.items():
+            idx[a][b] = count
+            idx[b][a] = count
+        self._index = dict(idx)
 
     def get(self, term_a: str, term_b: str) -> int:
         key = (min(term_a.lower(), term_b.lower()), max(term_a.lower(), term_b.lower()))
@@ -498,14 +580,7 @@ class Cooccurrence:
 
     def get_cooccurrences_for(self, term: str) -> dict[str, int]:
         """All co-occurring terms and their counts for a given term."""
-        t = term.lower()
-        result: dict[str, int] = {}
-        for (a, b), count in self.matrix.items():
-            if a == t:
-                result[b] = count
-            elif b == t:
-                result[a] = count
-        return result
+        return dict(self._index.get(term.lower(), {}))
 
 
 @dataclass(slots=True)
@@ -553,11 +628,12 @@ def build_containment_index(
     """Build parent containment index: term -> [longer terms containing it].
 
     Backward-compatible wrapper around Containment.build().
+    The *max_workers* parameter is accepted for backward compatibility but ignored.
     """
     if not candidates:
         return {}
     tci = TermComponentIndex.build(candidates)
-    cont = Containment.build(candidates, tci, max_workers=max_workers)
+    cont = Containment.build(candidates, tci)
     return {term: list(parents) for term, parents in cont.term2parents.items()}
 
 
@@ -568,10 +644,11 @@ def build_child_containment_index(
     """Build child containment index: term -> [shorter terms contained in it].
 
     Backward-compatible wrapper around Containment.build() + reverse().
+    The *max_workers* parameter is accepted for backward compatibility but ignored.
     """
     if not candidates:
         return {}
     tci = TermComponentIndex.build(candidates)
-    cont = Containment.build(candidates, tci, max_workers=max_workers)
+    cont = Containment.build(candidates, tci)
     rev = cont.reverse()
     return {term: list(children) for term, children in rev.term2parents.items()}

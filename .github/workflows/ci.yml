@@ -2,10 +2,10 @@ name: CI
 
 on:
   pull_request:
-    branches: ["master"]
+    branches: ["master", "dev"]
 
   push:
-    branches: ["master"]
+    branches: ["master", "dev"]
 
   workflow_dispatch:
 
@@ -84,7 +84,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.11", "3.12"]
+        python-version: ["3.12"]
 
     steps:
       - name: Checkout code

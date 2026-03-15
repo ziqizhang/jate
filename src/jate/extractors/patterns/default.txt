@@ -1,0 +1,9 @@
+# Default POS pattern for general-purpose term extraction.
+# Matches sequences of adjectives/nouns/proper nouns ending in a noun.
+#
+# Tag type: Universal POS (spaCy pos_)
+#
+# This is a general-purpose pattern. For domain-specific extraction,
+# use genia.txt (biomedical) or acl_rdtec.txt (computational linguistics).
+
+(ADJ |NOUN |PROPN )*(NOUN |PROPN )
