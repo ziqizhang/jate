@@ -105,14 +105,68 @@ class ATERanker(Algorithm):
 
 
 class ATETagger(Algorithm):
-    """Base class for tagging-based ATE algorithms.
+    """Base class for tagging-based ATE algorithms (document-level).
 
-    Subclasses implement :meth:`tag` for document-level extraction.
+    Subclasses implement :meth:`tag` for per-document extraction.
+    The ``tag()`` method receives a spaCy ``Doc`` (or similar) and returns
+    a :class:`TermExtractionResult` with ``spans`` populated on each
+    :class:`Term`.
+
+    Contract for implementors
+    -------------------------
+    - ``tag(doc)`` must return a ``TermExtractionResult`` where each ``Term``
+      has ``spans`` populated with ``TermSpan`` entries (doc_id, start, end).
+    - ``label`` on each ``Term`` should be set if the tagger classifies terms
+      (e.g., ``"Specific_Term"``, ``"Common_Term"``).
+    - ``score`` on each ``Term`` may be set to model confidence if available.
+    - ``output_capabilities()`` should accurately reflect what the tagger
+      produces. Override the default if the tagger also produces scores.
+
+    Example skeleton::
+
+        class MyBertTagger(ATETagger):
+            def __init__(self, model_path: str):
+                self._model = load_model(model_path)
+
+            def tag(self, doc) -> TermExtractionResult:
+                # doc is a spaCy Doc with tokens already processed
+                spans = self._model.predict(doc)
+                result = TermExtractionResult()
+                for span in spans:
+                    term = Term(
+                        string=span.text.lower(),
+                        spans=[TermSpan(doc_id=doc._.doc_id, start=span.start_char, end=span.end_char)],
+                        label=span.label_,
+                        score=span.score,
+                    )
+                    result.add(term)
+                return result
+
+            def output_capabilities(self) -> OutputCapabilities:
+                return OutputCapabilities(
+                    produces_scores=True,
+                    produces_offsets=True,
+                    produces_labels=True,
+                )
     """
 
     @abstractmethod
     def tag(self, doc: Any) -> TermExtractionResult:
-        """Tag a document and return extraction results."""
+        """Extract terms from a single document.
+
+        Parameters
+        ----------
+        doc:
+            A spaCy ``Doc`` object (or compatible). The NLP processing
+            (tokenisation, POS tagging, etc.) is already done.
+
+        Returns
+        -------
+        TermExtractionResult
+            Extracted terms with ``spans`` populated. Each ``Term`` should
+            have at least ``string``, ``spans``, and optionally ``label``
+            and ``score``.
+        """
         ...
 
     def score(
