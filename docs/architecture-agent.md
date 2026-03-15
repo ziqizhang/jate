@@ -35,7 +35,12 @@ Entry points:
 
 ### `algorithms/` — Pure Scorers
 
-Each algorithm subclasses `Algorithm` (in `base.py`) and implements `score(candidates, term_freq, **kwargs)`.
+Algorithms follow a two-tier abstraction:
+
+- **`ATERanker`** (corpus-level): subclass and implement `_score(candidates, term_freq, **kwargs)`. All 13 current algorithms are rankers. Each declares `output_capabilities()` and optionally overrides `doc_level_compatibility()` to warn or raise when used on single documents (e.g., TF-IDF raises because IDF=0 on one document).
+- **`ATETagger`** (document-level, future): subclass and implement `tag(doc)`. For transformer-based / NER-style methods that process one document at a time.
+
+Both inherit from `Algorithm` (in `base.py`). Structural tests enforce that every algorithm in `algorithms/` subclasses one of these two.
 
 Algorithms receive pre-computed feature objects via kwargs. They must NOT:
 - Perform I/O (no file access, no network)

@@ -11,12 +11,16 @@ from jate.algorithms import (
     TFIDF,
     TTF,
     Algorithm,
+    AlgorithmIncompatibleError,
+    ATERanker,
+    ATETagger,
     Basic,
     ChiSquare,
     ComboBasic,
     CValue,
     GlossEx,
     NCValue,
+    OutputCapabilities,
     TermEx,
     Voting,
     Weirdness,
@@ -39,7 +43,7 @@ from jate.features import (
     TermFrequency,
     WordFrequency,
 )
-from jate.models import Candidate, Document, Term, TermExtractionResult
+from jate.models import Candidate, Document, Term, TermExtractionResult, TermSpan
 from jate.nlp import DocumentLoader, SpacyBackend
 from jate.store import MemoryCorpusStore, SQLiteCorpusStore
 
@@ -50,11 +54,16 @@ __all__ = [
     "compare",
     # Models
     "Term",
+    "TermSpan",
     "Candidate",
     "Document",
     "TermExtractionResult",
     # Algorithms
     "Algorithm",
+    "AlgorithmIncompatibleError",
+    "ATERanker",
+    "ATETagger",
+    "OutputCapabilities",
     "TFIDF",
     "CValue",
     "NCValue",

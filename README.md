@@ -1,6 +1,6 @@
 # JATE — Just Automatic Term Extraction
 
-A Python library for automatic term extraction (ATE) from text corpora. JATE provides 14 ATE algorithms (13 classical + ensemble voting), corpus-level statistics, built-in evaluation, and a CLI — all pip-installable with no external services required.
+A Python library for automatic term extraction (ATE) from text corpora. JATE provides 13 classical ATE algorithms, corpus-level statistics, built-in evaluation, and a CLI — all pip-installable with no external services required.
 
 **JATE v3.0.0** is a complete rewrite of the original [Java JATE](https://github.com/ziqizhang/jate/tree/legacy/java) library (84+ GitHub stars), which was built on Apache Solr and used in academic and industry settings for over a decade. The Python version preserves all 13 classical algorithms from the Java codebase — with every formula verified line-by-line against the original source — while removing the Solr dependency in favour of a self-contained, pip-installable package. The original Java library is preserved on the [`legacy/java`](https://github.com/ziqizhang/jate/tree/legacy/java) branch.
 
