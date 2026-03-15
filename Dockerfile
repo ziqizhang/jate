@@ -20,4 +20,3 @@ RUN pip install --no-cache-dir /tmp/*.whl && \
     rm -rf /tmp/*.whl
 EXPOSE 8000
 CMD ["jate"]
-
