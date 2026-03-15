@@ -80,9 +80,23 @@ class ATERanker(Algorithm):
     def doc_level_compatibility(self, term_freq: TermFrequency, **kwargs: Any) -> None:
         """Check whether the algorithm is compatible with the input data.
 
-        Subclasses may override to warn or raise
-        :class:`AlgorithmIncompatibleError`.
+        The base implementation warns when running on a single document,
+        since all ATERanker algorithms are designed for corpus-level
+        extraction and produce weaker results on single documents.
+
+        Subclasses may override to add stronger warnings or raise
+        :class:`AlgorithmIncompatibleError` (e.g., TF-IDF).
         """
+        if term_freq.total_docs <= 1:
+            import warnings
+
+            warnings.warn(
+                f"{self.name} is a corpus-level ranking algorithm. "
+                "Running on a single document will produce weaker results "
+                "than corpus-level extraction via extract_corpus(). "
+                "Consider using multiple documents for meaningful rankings.",
+                stacklevel=3,
+            )
 
     def score(
         self,

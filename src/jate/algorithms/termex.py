@@ -53,6 +53,7 @@ class TermEx(ATERanker):
         return OutputCapabilities(produces_scores=True, produces_ranking=True, requires_corpus=True)
 
     def doc_level_compatibility(self, term_freq: TermFrequency, **kwargs: Any) -> None:
+        super().doc_level_compatibility(term_freq, **kwargs)
         if kwargs.get("ref_freq") is None:
             warnings.warn(
                 f"{self.name} without a reference corpus falls back to self-reference, "

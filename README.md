@@ -266,6 +266,42 @@ Each `Term` in the result contains:
 - `frequency` — total corpus frequency
 - `surface_forms` — all surface variants observed (e.g. `{"neural network", "neural networks", "Neural Networks"}`)
 
+## spaCy Integration
+
+JATE can be used as a native spaCy pipeline component, reusing the NLP processing already done by spaCy (no double computation):
+
+```python
+import spacy
+import jate
+
+nlp = spacy.load("en_core_web_sm")
+nlp.add_pipe("jate", config={"algorithm": "cvalue"})
+
+doc = nlp("Machine learning and neural networks improve deep learning models.")
+
+for term in doc._.terms:
+    surface = doc.text[term.spans[0].start:term.spans[0].end] if term.spans else ""
+    print(f"{term.string:30s}  score={term.score:.4f}  at {surface!r}")
+```
+
+Configuration options:
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `algorithm` | `"cvalue"` | Any of the 13 algorithms |
+| `pattern` | `"default"` | POS pattern preset (`default`, `genia`, `acl_rdtec`) |
+| `min_frequency` | `1` | Minimum term frequency |
+| `min_words` | `1` | Minimum words per term |
+| `max_words` | `None` | Maximum words per term |
+| `reference_frequency_file` | `None` | Path to reference corpus (for weirdness, glossex, termex) |
+
+**Important notes:**
+- One algorithm per pipeline (for multi-algorithm comparison, use `jate.compare()`)
+- All algorithms will warn about single-document mode — they are corpus-level methods designed for multi-document extraction. Results on single documents are functional but weaker.
+- TF-IDF will return empty results on single documents (IDF = 0).
+
+Try the demo: `python examples/spacy_demo.py`
+
 ## Benchmarks
 
 JATE is evaluated on 5 standard ATE datasets using P@K (precision at top-K ranked terms). Best algorithm per dataset at P@100:

@@ -47,6 +47,12 @@ from jate.models import Candidate, Document, Term, TermExtractionResult, TermSpa
 from jate.nlp import DocumentLoader, SpacyBackend
 from jate.store import MemoryCorpusStore, SQLiteCorpusStore
 
+# Register spaCy component factory (if spaCy is available)
+try:
+    import jate.spacy_component  # noqa: F401
+except ImportError:
+    pass
+
 __all__ = [
     # Public API functions
     "extract",

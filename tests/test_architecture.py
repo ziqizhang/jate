@@ -237,7 +237,7 @@ class TestAlgorithmAbstraction:
             tfidf.score(candidates, tf)
 
     def test_attf_warns_on_single_doc(self):
-        """ATTF must emit a warning on a single-document corpus."""
+        """ATTF must emit base corpus-level warning and specific degradation warning."""
         from jate.algorithms.attf import ATTF
         from jate.features import TermFrequency
         from jate.models import Candidate
@@ -250,5 +250,8 @@ class TestAlgorithmAbstraction:
         )
         candidates = [Candidate(surface_form="test")]
         attf = ATTF()
-        with pytest.warns(UserWarning, match="ATTF degrades to TTF"):
+        with pytest.warns(UserWarning) as warnings:
             attf.score(candidates, tf)
+        messages = [str(w.message) for w in warnings]
+        assert any("corpus-level ranking algorithm" in m for m in messages)
+        assert any("degrades to TTF" in m for m in messages)
