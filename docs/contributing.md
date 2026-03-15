@@ -26,7 +26,7 @@ make typecheck      # mypy (strict mode)
 For API/container changes, also run Docker smoke checks:
 
 ```bash
-bash scripts/docker_smoke_api.sh
+bash scripts/docker_smoke_test.sh
 ```
 
 ## Code style
@@ -53,7 +53,7 @@ poetry run pre-commit run --all-files
 2. Make your changes
 3. Add tests for new functionality
 4. Run `make check` and ensure everything passes
-5. For API/container changes, ensure smoke checks pass: `bash scripts/docker_smoke_api.sh`
+5. For API/container changes, ensure smoke checks pass: `bash scripts/docker_smoke_test.sh`
 6. Submit a PR to **`dev`** — the PR body **must** reference at least one issue (e.g., `Resolves #67`, `Fixes #42`, or `Related to #10`). CI will reject PRs without an issue reference.
 
 ## Agentic coding harness

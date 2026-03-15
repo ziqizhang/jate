@@ -116,6 +116,12 @@ jate benchmark --top 100
 
 JATE now ships a thin JSON API server on top of the core extraction API.
 
+Install server dependencies:
+
+```bash
+pip install "jate[server]"
+```
+
 Start the server:
 
 ```bash
@@ -146,19 +152,32 @@ curl http://localhost:8000/health/ready
 
 ### Docker / Containerization
 
-Build the API image from repo root:
+Build the image from repo root:
 
 ```bash
-docker build -t jate-api:latest .
+docker build -t jate:latest .
 ```
 
-Run the container:
+Run modes:
 
 ```bash
-docker run --rm -d -p 8000:8000 --name jate-api-test jate-api:latest
+# 1) CLI mode (default)
+docker run --rm jate:latest jate extract "local post office" --algorithm cvalue --top 20
+
+# Corpus mode with local volume mount (recommended for local files)
+docker run --rm -v "/path/to/local/folder:/data" jate:latest \
+    jate corpus /data --algorithm cvalue --top 20
+
+# 2) API mode (explicit)
+docker run --rm -d -p 8000:8000 --name jate-api-test jate:latest jate-api
+
+# 3) Interactive mode with local corpus volume
+docker run -it --rm -v "$(pwd)/path/to/docs:/data" jate:latest sh
+# inside container:
+# jate corpus /data --algorithm tfidf --output csv
 ```
 
-Test all endpoints:
+Test API endpoints (when running API mode):
 
 ```bash
 # Liveness
@@ -176,10 +195,16 @@ curl -s -X POST http://localhost:8000/jate/api/v1/extract \
     -d '{"text":"Russia says its consulate in Isfahan, Iran was damaged over the weekend as a result of strikes on the local governor'\''s office.","algorithm":"cvalue","top":6}'
 ```
 
-Stop the container:
+Stop API mode container:
 
 ```bash
 docker stop jate-api-test
+```
+
+Run dual-mode Docker smoke checks (CLI + API) with one build:
+
+```bash
+bash scripts/docker_smoke_test.sh
 ```
 
 Expected extract response shape:
