@@ -5,12 +5,12 @@ from __future__ import annotations
 import math
 from typing import Any
 
-from jate.algorithms.base import Algorithm
+from jate.algorithms.base import ATERanker, OutputCapabilities
 from jate.features import Containment, TermFrequency
 from jate.models import Candidate, Term, TermExtractionResult
 
 
-class ComboBasic(Algorithm):
+class ComboBasic(ATERanker):
     """Combination of Basic scores with parent and child containment.
 
     ``ComboBasic(t) = |t| * log(f(t)) + alpha * e_t + beta * e'_t``
@@ -28,7 +28,10 @@ class ComboBasic(Algorithm):
     def description(self) -> str:
         return "ComboBasic: Basic with parent and child containment"
 
-    def score(
+    def output_capabilities(self) -> OutputCapabilities:
+        return OutputCapabilities(produces_scores=True, produces_ranking=True, requires_corpus=True)
+
+    def _score(
         self,
         candidates: list[Candidate],
         term_freq: TermFrequency,

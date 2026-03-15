@@ -3,15 +3,16 @@
 from __future__ import annotations
 
 import math
+import warnings
 from typing import Any
 
 from jate.algorithms._reference_utils import _match_orders_of_magnitude
-from jate.algorithms.base import Algorithm
+from jate.algorithms.base import ATERanker, OutputCapabilities
 from jate.features import ReferenceFrequency, TermFrequency, WordFrequency
 from jate.models import Candidate, Term, TermExtractionResult
 
 
-class TermEx(Algorithm):
+class TermEx(ATERanker):
     """TermEx: domain pertinence + context scoring.
 
     See Sclano et al. (2007), *TermExtractor: a Web application to learn the
@@ -48,7 +49,19 @@ class TermEx(Algorithm):
     def description(self) -> str:
         return "TermEx: domain pertinence + context scoring"
 
-    def score(
+    def output_capabilities(self) -> OutputCapabilities:
+        return OutputCapabilities(produces_scores=True, produces_ranking=True, requires_corpus=True)
+
+    def doc_level_compatibility(self, term_freq: TermFrequency, **kwargs: Any) -> None:
+        if kwargs.get("ref_freq") is None:
+            warnings.warn(
+                f"{self.name} without a reference corpus falls back to self-reference, "
+                "producing near-identical scores for all terms. "
+                "Provide a reference frequency file via JATEConfig for meaningful results.",
+                stacklevel=3,
+            )
+
+    def _score(
         self,
         candidates: list[Candidate],
         term_freq: TermFrequency,

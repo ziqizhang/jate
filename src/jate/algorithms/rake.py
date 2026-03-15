@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from jate.algorithms.base import Algorithm
+from jate.algorithms.base import ATERanker, OutputCapabilities
 from jate.features import TermComponentIndex, TermFrequency, WordFrequency
 from jate.models import Candidate, Term, TermExtractionResult
 
 
-class RAKE(Algorithm):
+class RAKE(ATERanker):
     """Rapid Automatic Keyword Extraction.
 
     See Rose et al. (2010), *Automatic Keyword Extraction from Individual
@@ -33,7 +33,10 @@ class RAKE(Algorithm):
     def description(self) -> str:
         return "RAKE: Rapid Automatic Keyword Extraction"
 
-    def score(
+    def output_capabilities(self) -> OutputCapabilities:
+        return OutputCapabilities(produces_scores=True, produces_ranking=True, requires_corpus=True)
+
+    def _score(
         self,
         candidates: list[Candidate],
         term_freq: TermFrequency,

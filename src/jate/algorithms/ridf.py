@@ -5,12 +5,12 @@ from __future__ import annotations
 import math
 from typing import Any
 
-from jate.algorithms.base import Algorithm
+from jate.algorithms.base import ATERanker, OutputCapabilities
 from jate.features import TermFrequency
 from jate.models import Candidate, Term, TermExtractionResult
 
 
-class RIDF(Algorithm):
+class RIDF(ATERanker):
     """Residual IDF.
 
     See Church & Gale (1995), *Inverse Document Frequency (IDF): A Measure
@@ -29,7 +29,10 @@ class RIDF(Algorithm):
     def description(self) -> str:
         return "Residual IDF: deviation from Poisson model"
 
-    def score(
+    def output_capabilities(self) -> OutputCapabilities:
+        return OutputCapabilities(produces_scores=True, produces_ranking=True, requires_corpus=True)
+
+    def _score(
         self,
         candidates: list[Candidate],
         term_freq: TermFrequency,

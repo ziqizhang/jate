@@ -5,12 +5,12 @@ from __future__ import annotations
 import math
 from typing import Any
 
-from jate.algorithms.base import Algorithm
+from jate.algorithms.base import ATERanker, OutputCapabilities
 from jate.features import Containment, TermFrequency
 from jate.models import Candidate, Term, TermExtractionResult
 
 
-class Basic(Algorithm):
+class Basic(ATERanker):
     """Baseline method from Bordea, Buitelaar & Polajnar (2013).
 
     ``Basic(t) = |t| * log(f(t)) + alpha * e_t``
@@ -27,7 +27,10 @@ class Basic(Algorithm):
     def description(self) -> str:
         return "Basic term scoring (Bordea et al. 2013)"
 
-    def score(
+    def output_capabilities(self) -> OutputCapabilities:
+        return OutputCapabilities(produces_scores=True, produces_ranking=True, requires_corpus=True)
+
+    def _score(
         self,
         candidates: list[Candidate],
         term_freq: TermFrequency,

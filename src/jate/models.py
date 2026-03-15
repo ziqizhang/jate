@@ -12,6 +12,16 @@ import pandas as pd  # type: ignore[import-untyped]
 
 
 @dataclass(slots=True)
+class TermSpan:
+    """A specific occurrence of a term in a document."""
+
+    doc_id: str
+    start: int
+    end: int
+    sentence_idx: int = -1
+
+
+@dataclass(slots=True)
 class Term:
     """A scored term extracted from a corpus.
 
@@ -27,6 +37,8 @@ class Term:
     rank: int = 0
     metadata: dict[str, Any] = field(default_factory=dict)
     surface_forms: set[str] = field(default_factory=set)
+    spans: list[TermSpan] = field(default_factory=list)
+    label: str | None = None
 
     # Natural ordering: higher score first, then alphabetical.
     def __lt__(self, other: object) -> bool:
