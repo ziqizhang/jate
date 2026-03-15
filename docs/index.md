@@ -11,7 +11,7 @@ A Python library for automatic term extraction (ATE) from text corpora. JATE pro
 - **Multiple extraction strategies** — POS pattern matching, n-grams, or noun phrase chunking
 - **Export anywhere** — pandas DataFrame, CSV, JSON
 - **Sentence-level context** — Chi-Square and NC-Value use sentence co-occurrence and adjacency as described in the original papers
-- **Configurable parallelism** — speed up large corpora with `JATEConfig(max_workers=N)`
+- **Automatic parallelism** — NLP processing and feature building use multi-threading and multi-processing for large corpora
 - **CLI included** — extract, compare, and benchmark from the command line
 
 ## At a glance

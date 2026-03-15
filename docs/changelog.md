@@ -18,7 +18,7 @@ Complete rewrite from Java to Python.
 - ACL RD-TEC Mini built-in dataset
 - Feature system mirroring Java JATE: TermFrequency, WordFrequency, ReferenceFrequency, ContextFrequency, ContextWindow, TermComponentIndex, Containment, Cooccurrence, ChiSquareFrequentTerms — all formulas verified line-by-line against the Java source
 - Sentence-level context via ContextFrequency — Chi-Square uses sentence co-occurrence and NC-Value uses adjacency-based context, aligning with original papers
-- Configurable parallelism via `JATEConfig(max_workers=N)` — parallel co-occurrence computation, containment index building, and batch NLP processing with `nlp.pipe()`
+- Automatic parallelism — multi-threaded NLP processing via spaCy `nlp.pipe()` and multi-process feature building for large corpora
 - External reference corpus support via `JATEConfig(reference_frequency_file=...)` for Weirdness, GlossEx, and TermEx
 - Multiple reference corpora support for TermEx (per-word best selection)
 - Cooccurrence prefiltering via `JATEConfig(prefilter_min_ttf=..., prefilter_min_tcf=...)` to reduce problem space for Chi-Square

@@ -43,7 +43,8 @@ src/jate/
 ├── evaluation.py   # Precision/recall against gold standard
 ├── benchmark.py    # Built-in benchmarking harness
 ├── parallel.py     # Parallel processing utilities
-└── protocols.py    # Protocol definitions (structural typing)
+├── protocols.py    # Protocol definitions (structural typing)
+└── spacy_component.py  # spaCy pipeline component (Language.factory "jate")
 ```
 
 ## Architectural Rules

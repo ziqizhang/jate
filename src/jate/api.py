@@ -321,7 +321,7 @@ def extract(
     nlp_backend:
         Optional preloaded backend. If provided, avoids reloading spaCy per call.
     config:
-        Pipeline configuration (controls parallelism). Defaults to sequential.
+        Pipeline configuration (reference corpus, prefilter thresholds).
     min_frequency:
         Minimum term frequency to include.
     min_words:
@@ -395,7 +395,7 @@ def extract_corpus(
     db_path:
         If given, uses SQLiteCorpusStore for persistence.
     config:
-        Pipeline configuration (controls parallelism). Defaults to sequential.
+        Pipeline configuration (reference corpus, prefilter thresholds).
     min_frequency:
         Minimum term frequency to include.
     min_words:
@@ -474,7 +474,7 @@ def compare(
     extractor:
         Candidate extractor name.
     config:
-        Pipeline configuration (controls parallelism). Defaults to sequential.
+        Pipeline configuration (reference corpus, prefilter thresholds).
     voting:
         If ``True``, also include a ``"voting"`` key in the results with
         a reciprocal-rank-fusion ensemble of all algorithm results.

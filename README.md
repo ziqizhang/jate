@@ -2,7 +2,7 @@
 
 A Python library for automatic term extraction (ATE) from text corpora. JATE provides 13 classical ATE algorithms, corpus-level statistics, built-in evaluation, and a CLI — all pip-installable with no external services required.
 
-**JATE v3.0.0** is a complete rewrite of the original [Java JATE](https://github.com/ziqizhang/jate/tree/legacy/java) library (84+ GitHub stars), which was built on Apache Solr and used in academic and industry settings for over a decade. The Python version preserves all 13 classical algorithms from the Java codebase — with every formula verified line-by-line against the original source — while removing the Solr dependency in favour of a self-contained, pip-installable package. The original Java library is preserved on the [`legacy/java`](https://github.com/ziqizhang/jate/tree/legacy/java) branch.
+**JATE v3.0.0** is a complete rewrite of the original [Java JATE](https://github.com/ziqizhang/jate/tree/legacy/java) library (84+ GitHub stars), which was built on Apache Solr and used in academic and industry settings for over a decade. The Python version preserves all 13 classical algorithms from the Java codebase — with every formula verified line-by-line against the original source — while removing the Solr dependency in favour of a self-contained, pip-installable package. It also adds ensemble voting via reciprocal rank fusion when comparing multiple algorithms. The original Java library is preserved on the [`legacy/java`](https://github.com/ziqizhang/jate/tree/legacy/java) branch.
 
 ## Installation
 
@@ -73,12 +73,7 @@ for algo_name, result in results.items():
         print(f"  {term.string:30s}  {term.score:.4f}")
 ```
 
-For large corpora, speed up with parallel processing:
-
-```python
-config = jate.JATEConfig(max_workers=4)
-results = jate.compare(docs, algorithms=["cvalue", "tfidf", "rake"], config=config)
-```
+For large corpora, NLP processing (spaCy) uses multi-threaded C-level batching, and feature building (adjacent word computation) uses multi-process parallelism automatically.
 
 ### Evaluation against a gold standard
 
@@ -87,7 +82,7 @@ import jate
 
 result = jate.extract_corpus(docs, algorithm="cvalue")
 
-evaluator = jate.Evaluator(gold_terms={"machine learning", "neural network", ...})
+evaluator = jate.Evaluator({"machine learning", "neural network", ...})
 eval_result = evaluator.evaluate(result)
 print(eval_result.summary())
 # P=0.2800  R=0.0644  F1=0.1047  TP=28  FP=72  FN=407  predicted=100  gold=435
@@ -108,8 +103,8 @@ jate corpus path/to/docs/ --algorithm tfidf --output csv
 # Compare algorithms on a corpus
 jate compare path/to/docs/ --algorithms cvalue tfidf rake
 
-# Run benchmark on built-in dataset
-jate benchmark --top 100
+# Run benchmark on built-in dataset (use --list-datasets to see all options)
+jate benchmark --dataset acl_rdtec_mini --top 100
 ```
 
 ### REST API (thin server)
@@ -245,13 +240,14 @@ Expected extract response shape:
 | `weirdness` | Target vs reference corpus frequency ratio | Ahmad et al. 1999 |
 | `termex` | Domain pertinence + context + lexical cohesion | Sclano et al. 2007 |
 | `glossex` | Domain specificity via glossary comparison | Park et al. 2002 |
-| `voting` | Ensemble via reciprocal rank fusion | — |
+
+Multi-algorithm comparison is available via `jate.compare()`, which also supports ensemble voting via reciprocal rank fusion (`voting=True`).
 
 ## Candidate extractors
 
 | Extractor | Description |
 |-----------|-------------|
-| `pos_pattern` (default) | Regex over Universal POS tags (e.g. `(ADJ )*(NOUN )+`) |
+| `pos_pattern` (default) | Regex over Universal POS tags (default: `(ADJ\|NOUN\|PROPN)*(NOUN\|PROPN)`, configurable via pattern presets) |
 | `ngram` | Contiguous token n-grams (configurable min/max n) |
 | `noun_phrase` | spaCy noun chunk detection |
 
@@ -269,6 +265,55 @@ Each `Term` in the result contains:
 - `score` — algorithm-assigned score
 - `frequency` — total corpus frequency
 - `surface_forms` — all surface variants observed (e.g. `{"neural network", "neural networks", "Neural Networks"}`)
+
+## spaCy Integration
+
+JATE can be used as a native spaCy pipeline component, reusing the NLP processing already done by spaCy (no double computation):
+
+```python
+import spacy
+import jate
+
+nlp = spacy.load("en_core_web_sm")
+nlp.add_pipe("jate", config={"algorithm": "cvalue"})
+
+doc = nlp("Machine learning and neural networks improve deep learning models.")
+
+for term in doc._.terms:
+    surface = doc.text[term.spans[0].start:term.spans[0].end] if term.spans else ""
+    print(f"{term.string:30s}  score={term.score:.4f}  at {surface!r}")
+```
+
+Configuration options:
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `algorithm` | `"cvalue"` | Any of the 13 algorithms |
+| `pattern` | `"default"` | POS pattern preset (`default`, `genia`, `acl_rdtec`) |
+| `min_frequency` | `1` | Minimum term frequency |
+| `min_words` | `1` | Minimum words per term |
+| `max_words` | `None` | Maximum words per term |
+| `reference_frequency_file` | `None` | Path to reference corpus (for weirdness, glossex, termex) |
+
+**Important notes:**
+- One algorithm per pipeline (for multi-algorithm comparison, use `jate.compare()`)
+- All algorithms will warn about single-document mode — they are corpus-level methods designed for multi-document extraction. Results on single documents are functional but weaker.
+- TF-IDF will return empty results on single documents (IDF = 0).
+
+Try the demo: `python examples/spacy_demo.py`
+
+## Benchmarks
+
+JATE is evaluated on 5 standard ATE datasets using P@K (precision at top-K ranked terms). Best algorithm per dataset at P@100:
+
+| Dataset | Domain | Docs | Gold terms | Best P@100 | Algorithm |
+|---------|--------|------|-----------|------------|-----------|
+| GENIA | Biomedical | 2,000 | 35,298 | 0.79 | attf |
+| ACL RD-TEC 2.0 | Comp. linguistics | 1,758 | 5,031 | 0.73 | ttf |
+| ACTER v1.5 | Multi-domain | 241 | 5,329 | 0.61 | basic |
+| CoastTerm | Coastal science | 2,004 | 4,316 | 0.59 | combobasic |
+
+Full results with P@100 through P@10,000 for all 13 algorithms, methodology notes, and comparison with published baselines: **[benchmark results](docs/benchmark-results.md)**.
 
 ## Contributing
 

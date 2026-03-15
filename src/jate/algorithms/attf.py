@@ -25,10 +25,11 @@ class ATTF(ATERanker):
         return OutputCapabilities(produces_scores=True, produces_ranking=True, requires_corpus=True)
 
     def doc_level_compatibility(self, term_freq: TermFrequency, **kwargs: Any) -> None:
+        super().doc_level_compatibility(term_freq, **kwargs)
         if term_freq.total_docs <= 1:
             warnings.warn(
-                "ATTF degrades to TTF on a single document (DF=1 for all terms). "
-                "Results will be equivalent to the TTF algorithm.",
+                "ATTF additionally degrades to TTF on a single document "
+                "(DF=1 for all terms). Results will be equivalent to TTF.",
                 stacklevel=3,
             )
 
