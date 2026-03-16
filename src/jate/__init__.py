@@ -25,6 +25,12 @@ from jate.algorithms import (
     Voting,
     Weirdness,
 )
+
+# Neural taggers (optional — requires jate[neural])
+try:
+    from jate.algorithms.bert_tagger import BertTagger, RoBERTaTagger, XLMRTagger
+except ImportError:
+    pass
 from jate.api import compare, extract, extract_corpus
 from jate.benchmark import BenchmarkRunner
 from jate.config import JATEConfig
@@ -69,8 +75,11 @@ __all__ = [
     "AlgorithmIncompatibleError",
     "ATERanker",
     "ATETagger",
+    "BertTagger",
     "OutputCapabilities",
+    "RoBERTaTagger",
     "TFIDF",
+    "XLMRTagger",
     "CValue",
     "NCValue",
     "ATTF",
