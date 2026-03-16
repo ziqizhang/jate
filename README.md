@@ -243,6 +243,29 @@ Expected extract response shape:
 
 Multi-algorithm comparison is available via `jate.compare()`, which also supports ensemble voting via reciprocal rank fusion (`voting=True`).
 
+### Neural taggers (optional)
+
+JATE also supports transformer-based term taggers that extract terms per-document using BIO sequence labelling. Install with `pip install "jate[neural]"`.
+
+| Tagger | Description | Reference |
+|--------|-------------|-----------|
+| `xlmr-tagger` | XLM-RoBERTa token classifier, multilingual (100 languages) | Lang et al. 2021 |
+| `roberta-tagger` | RoBERTa token classifier, English only, faster | — |
+
+```python
+from jate.algorithms.bert_tagger import XLMRTagger
+
+tagger = XLMRTagger()  # auto-downloads from HuggingFace on first use
+result = tagger.tag("Corruption in public procurement is a major challenge.")
+
+for term in result:
+    print(f"{term.string:30s}  confidence={term.score:.4f}")
+```
+
+Pre-trained model: [ziqizhang2026/jate-ate-xlmr](https://huggingface.co/ziqizhang2026/jate-ate-xlmr) (trained on ACTER). Train your own: `python examples/train_bert_tagger.ipynb` on Google Colab.
+
+Try the demo: `python examples/tagger_demo.py`
+
 ## Candidate extractors
 
 | Extractor | Description |

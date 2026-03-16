@@ -25,7 +25,7 @@ make clean          # remove generated files
 
 ```
 src/jate/
-├── algorithms/     # 13 scoring algorithms (ATERanker subclasses in base.py + one file per algo)
+├── algorithms/     # 13 rankers (ATERanker) + neural taggers (ATETagger, optional jate[neural])
 ├── extractors/     # Candidate extractors (pos_pattern, ngram, noun_phrase)
 │   └── patterns/   # POS pattern presets (default, genia, acl_rdtec)
 ├── nlp/            # spaCy backend, document loader
