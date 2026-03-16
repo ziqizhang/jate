@@ -173,9 +173,17 @@ def run_dataset(ds_name, ds_loader, nlp, config, results_all):
                 t_tag = time.time()
                 # Tag each document and collect all terms
                 all_terms: set[str] = set()
+                n_docs = len(documents)
+                report_every = max(1, n_docs // 10)
                 with warnings.catch_warnings():
                     warnings.filterwarnings("ignore", category=UserWarning)
-                    for doc in documents:
+                    for doc_idx, doc in enumerate(documents):
+                        if doc_idx > 0 and doc_idx % report_every == 0:
+                            elapsed = time.time() - t_tag
+                            _log(
+                                f"    Tagging: {doc_idx}/{n_docs} documents "
+                                f"({elapsed:.1f}s, {len(all_terms)} terms so far)"
+                            )
                         result = tagger.tag(doc.content)
                         for term in result:
                             all_terms.add(term.string.lower())
