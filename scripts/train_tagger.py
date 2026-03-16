@@ -352,7 +352,7 @@ def main():
 
     training_args = TrainingArguments(
         output_dir=str(output_dir / "checkpoints"),
-        evaluation_strategy="epoch" if eval_tokenized else "no",
+        eval_strategy="epoch" if eval_tokenized else "no",
         save_strategy="epoch",
         learning_rate=args.learning_rate,
         per_device_train_batch_size=args.batch_size,
