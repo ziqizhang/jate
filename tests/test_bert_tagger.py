@@ -120,9 +120,13 @@ class TestTagMethod:
         return tagger
 
     def test_basic_extraction(self):
+        # Per-subtoken format: B starts a term, I continues it
         fake_entities = [
-            {"entity_group": "TERM", "start": 0, "end": 16, "score": 0.95, "word": "Machine learning"},
-            {"entity_group": "TERM", "start": 21, "end": 36, "score": 0.88, "word": "neural networks"},
+            {"entity": "B", "start": 0, "end": 7, "score": 0.95},
+            {"entity": "I", "start": 8, "end": 16, "score": 0.92},
+            {"entity": "O", "start": 17, "end": 20, "score": 0.99},
+            {"entity": "B", "start": 21, "end": 27, "score": 0.88},
+            {"entity": "I", "start": 28, "end": 36, "score": 0.90},
         ]
         tagger = self._make_tagger_with_mock(fake_entities)
 
@@ -140,15 +144,18 @@ class TestTagMethod:
 
     def test_deduplication(self):
         """Same normalised term appearing twice -> one Term with two spans."""
+        #                        0   4    9        18 21
+        text = "Term is repeated. A term appears."
         fake_entities = [
-            {"entity_group": "TERM", "start": 0, "end": 4, "score": 0.9, "word": "Term"},
-            {"entity_group": "TERM", "start": 20, "end": 24, "score": 0.85, "word": "term"},
+            {"entity": "B", "start": 0, "end": 4, "score": 0.9},
+            {"entity": "O", "start": 5, "end": 17, "score": 0.99},
+            {"entity": "B", "start": 20, "end": 24, "score": 0.85},
         ]
         tagger = self._make_tagger_with_mock(fake_entities)
 
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            result = tagger.tag("Term is repeated. A term appears again.")
+            result = tagger.tag(text)
 
         terms = list(result)
         assert len(terms) == 1
@@ -160,8 +167,9 @@ class TestTagMethod:
 
     def test_surface_forms_collected(self):
         fake_entities = [
-            {"entity_group": "TERM", "start": 0, "end": 3, "score": 0.9, "word": "NLP"},
-            {"entity_group": "TERM", "start": 13, "end": 16, "score": 0.85, "word": "nlp"},
+            {"entity": "B", "start": 0, "end": 3, "score": 0.9},
+            {"entity": "O", "start": 4, "end": 12, "score": 0.99},
+            {"entity": "B", "start": 13, "end": 16, "score": 0.85},
         ]
         tagger = self._make_tagger_with_mock(fake_entities)
 
@@ -185,7 +193,7 @@ class TestTagMethod:
 
     def test_string_input(self):
         fake_entities = [
-            {"entity_group": "TERM", "start": 0, "end": 4, "score": 0.9, "word": "test"},
+            {"entity": "B", "start": 0, "end": 4, "score": 0.9},
         ]
         tagger = self._make_tagger_with_mock(fake_entities)
 
@@ -199,7 +207,7 @@ class TestTagMethod:
 
     def test_doc_with_text_attribute(self):
         fake_entities = [
-            {"entity_group": "TERM", "start": 0, "end": 4, "score": 0.9, "word": "test"},
+            {"entity": "B", "start": 0, "end": 4, "score": 0.9},
         ]
         tagger = self._make_tagger_with_mock(fake_entities)
 
@@ -218,7 +226,7 @@ class TestTagMethod:
 
     def test_emits_warning(self):
         fake_entities = [
-            {"entity_group": "TERM", "start": 0, "end": 4, "score": 0.9, "word": "test"},
+            {"entity": "B", "start": 0, "end": 4, "score": 0.9},
         ]
         tagger = self._make_tagger_with_mock(fake_entities)
 
@@ -231,7 +239,7 @@ class TestTagMethod:
 
     def test_span_offsets_correct(self):
         fake_entities = [
-            {"entity_group": "TERM", "start": 5, "end": 12, "score": 0.9, "word": "machine"},
+            {"entity": "B", "start": 5, "end": 12, "score": 0.9},
         ]
         tagger = self._make_tagger_with_mock(fake_entities)
 
@@ -242,6 +250,24 @@ class TestTagMethod:
         terms = list(result)
         assert terms[0].spans[0].start == 5
         assert terms[0].spans[0].end == 12
+
+    def test_subword_merging(self):
+        """B followed by I tokens should merge into one span."""
+        fake_entities = [
+            {"entity": "B", "start": 0, "end": 6, "score": 0.9},
+            {"entity": "I", "start": 6, "end": 10, "score": 0.85},
+        ]
+        tagger = self._make_tagger_with_mock(fake_entities)
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            result = tagger.tag("Corruption is bad.")
+
+        terms = list(result)
+        assert len(terms) == 1
+        assert terms[0].string == "corruption"
+        assert terms[0].spans[0].start == 0
+        assert terms[0].spans[0].end == 10
 
 
 # ---------------------------------------------------------------------------

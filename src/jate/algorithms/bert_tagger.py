@@ -8,6 +8,71 @@ from jate.algorithms.base import ATETagger, OutputCapabilities
 from jate.models import Term, TermExtractionResult, TermSpan
 
 
+def _group_bio_spans(predictions: list[dict], text: str) -> list[tuple[str, int, int, float]]:
+    """Group raw per-subtoken BIO predictions into term spans.
+
+    Merges subword tokens (## prefixes) and consecutive B-I sequences
+    into complete term spans with character offsets.
+
+    Returns list of (surface_text, start_char, end_char, avg_score).
+    """
+    spans: list[tuple[str, int, int, float]] = []
+    current_start: int | None = None
+    current_end: int = 0
+    current_scores: list[float] = []
+
+    for pred in predictions:
+        # Map label — handle both "B" and "LABEL_1" style outputs
+        entity = pred.get("entity", "")
+        if isinstance(entity, str):
+            if entity in ("B", "LABEL_1", "B-TERM"):
+                label = "B"
+            elif entity in ("I", "LABEL_2", "I-TERM"):
+                label = "I"
+            else:
+                label = "O"
+        else:
+            label = "O"
+
+        score = pred.get("score", 0.0)
+        start = pred.get("start", 0)
+        end = pred.get("end", 0)
+
+        if label == "B":
+            # Save previous span if exists
+            if current_start is not None:
+                surface = text[current_start:current_end].strip()
+                if surface:
+                    avg_score = sum(current_scores) / len(current_scores)
+                    spans.append((surface, current_start, current_end, avg_score))
+            # Start new span
+            current_start = start
+            current_end = end
+            current_scores = [score]
+        elif label == "I" and current_start is not None:
+            # Continue current span
+            current_end = end
+            current_scores.append(score)
+        else:
+            # O label — save previous span if exists
+            if current_start is not None:
+                surface = text[current_start:current_end].strip()
+                if surface:
+                    avg_score = sum(current_scores) / len(current_scores)
+                    spans.append((surface, current_start, current_end, avg_score))
+                current_start = None
+                current_scores = []
+
+    # Don't forget the last span
+    if current_start is not None:
+        surface = text[current_start:current_end].strip()
+        if surface:
+            avg_score = sum(current_scores) / len(current_scores)
+            spans.append((surface, current_start, current_end, avg_score))
+
+    return spans
+
+
 def _ensure_transformers() -> Any:
     """Check that transformers is installed."""
     try:
@@ -63,7 +128,7 @@ class BertTagger(ATETagger):
             self._pipeline = transformers.pipeline(
                 "token-classification",
                 model=self._model_name,
-                aggregation_strategy="simple",
+                aggregation_strategy="none",
                 device=self._device,
             )
         return self._pipeline
@@ -94,29 +159,29 @@ class BertTagger(ATETagger):
         if not text.strip():
             return TermExtractionResult()
 
-        # Run HuggingFace pipeline
-        entities = pipe(text)
+        # Run HuggingFace pipeline (returns per-subtoken predictions)
+        raw_predictions = pipe(text)
 
-        # Group into Terms with spans, deduplicating by normalised form
+        # Group B-I sequences into term spans, merging subword tokens
+        term_spans = _group_bio_spans(raw_predictions, text)
+
+        # Deduplicate by normalised form
         term_map: dict[str, Term] = {}
-        for entity in entities:
-            surface = text[entity["start"] : entity["end"]]
+        for surface, start, end, score in term_spans:
             normalised = surface.lower().strip()
             if not normalised:
                 continue
 
             span = TermSpan(
                 doc_id=doc_id,
-                start=entity["start"],
-                end=entity["end"],
+                start=start,
+                end=end,
             )
-            score = entity.get("score", 0.0)
 
             if normalised in term_map:
                 term_map[normalised].spans.append(span)
                 term_map[normalised].frequency += 1
                 term_map[normalised].surface_forms.add(surface)
-                # Keep highest confidence score
                 if score > term_map[normalised].score:
                     term_map[normalised].score = score
             else:
