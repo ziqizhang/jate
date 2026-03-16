@@ -87,9 +87,9 @@ class TestTaggerProperties:
 
     def test_default_models(self):
         xlmr = XLMRTagger()
-        assert xlmr._model_name == "ziqizhang/jate-ate-xlmr"
+        assert xlmr._model_name == "ziqizhang2026/jate-ate-xlmr"
         roberta = RoBERTaTagger()
-        assert roberta._model_name == "ziqizhang/jate-ate-roberta"
+        assert roberta._model_name == "ziqizhang2026/jate-ate-roberta"
 
 
 # ---------------------------------------------------------------------------

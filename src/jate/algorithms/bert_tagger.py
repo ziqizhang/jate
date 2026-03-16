@@ -39,16 +39,35 @@ def _group_bio_spans(predictions: list[dict], text: str) -> list[tuple[str, int,
         end = pred.get("end", 0)
 
         if label == "B":
-            # Save previous span if exists
-            if current_start is not None:
-                surface = text[current_start:current_end].strip()
-                if surface:
-                    avg_score = sum(current_scores) / len(current_scores)
-                    spans.append((surface, current_start, current_end, avg_score))
-            # Start new span
-            current_start = start
-            current_end = end
-            current_scores = [score]
+            # Check if this B is a subword continuation of the current span.
+            # If the current span is active and there's no whitespace between
+            # the previous end and this start, it's a subword of the same word
+            # (e.g., "Cor" + "rup" + "tion" for "Corruption") — treat as I.
+            is_subword = (
+                current_start is not None
+                and start <= current_end  # adjacent or overlapping
+                or (
+                    current_start is not None
+                    and start > current_end
+                    and text[current_end:start].strip() == ""
+                    and len(text[current_end:start]) <= 1
+                )
+            )
+            if is_subword:
+                # Treat as continuation
+                current_end = end
+                current_scores.append(score)
+            else:
+                # Save previous span if exists
+                if current_start is not None:
+                    surface = text[current_start:current_end].strip()
+                    if surface:
+                        avg_score = sum(current_scores) / len(current_scores)
+                        spans.append((surface, current_start, current_end, avg_score))
+                # Start new span
+                current_start = start
+                current_end = end
+                current_scores = [score]
         elif label == "I" and current_start is not None:
             # Continue current span
             current_end = end
@@ -213,10 +232,10 @@ class XLMRTagger(BertTagger):
     Multilingual model supporting 100 languages. Based on Lang et al. (2021),
     "Transforming Term Extraction", Findings of ACL.
 
-    Default model: ziqizhang/jate-ate-xlmr (trained on ACTER).
+    Default model: ziqizhang2026/jate-ate-xlmr (trained on ACTER).
     """
 
-    def __init__(self, model: str = "ziqizhang/jate-ate-xlmr", *, device: int = -1) -> None:
+    def __init__(self, model: str = "ziqizhang2026/jate-ate-xlmr", *, device: int = -1) -> None:
         super().__init__(model, device=device)
 
 
@@ -225,8 +244,8 @@ class RoBERTaTagger(BertTagger):
 
     English-only model with faster inference than XLM-R.
 
-    Default model: ziqizhang/jate-ate-roberta (trained on ACTER).
+    Default model: ziqizhang2026/jate-ate-roberta (trained on ACTER).
     """
 
-    def __init__(self, model: str = "ziqizhang/jate-ate-roberta", *, device: int = -1) -> None:
+    def __init__(self, model: str = "ziqizhang2026/jate-ate-roberta", *, device: int = -1) -> None:
         super().__init__(model, device=device)

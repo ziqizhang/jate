@@ -24,7 +24,7 @@ TSV format: one token per line, tab-separated (token\\tBIO_label).
 Blank lines separate sentences. Labels: B, I, O.
 
 After training, upload to HuggingFace Hub:
-    huggingface-cli upload ziqizhang/jate-ate-xlmr ./models/jate-ate-xlmr
+    huggingface-cli upload ziqizhang2026/jate-ate-xlmr ./models/jate-ate-xlmr
 
 Requires: pip install transformers torch datasets seqeval
   (or: pip install "jate[neural]")
@@ -405,7 +405,7 @@ def main():
     print(f'  tagger = BertTagger("{save_dir}")', file=sys.stderr)
     print('  result = tagger.tag("Your text here")', file=sys.stderr)
     print("\nTo upload to HuggingFace Hub:", file=sys.stderr)
-    print(f"  huggingface-cli upload ziqizhang/jate-ate-xlmr {save_dir}", file=sys.stderr)
+    print(f"  huggingface-cli upload ziqizhang2026/jate-ate-xlmr {save_dir}", file=sys.stderr)
 
 
 if __name__ == "__main__":

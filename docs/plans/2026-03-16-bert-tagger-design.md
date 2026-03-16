@@ -79,7 +79,7 @@ python scripts/train_tagger.py \
 
 **After training**, user uploads:
 ```bash
-huggingface-cli upload ziqizhang/jate-ate-xlmr ./models/jate-ate-xlmr
+huggingface-cli upload ziqizhang2026/jate-ate-xlmr ./models/jate-ate-xlmr
 ```
 
 ## ATETagger implementation
@@ -114,12 +114,12 @@ class BertTagger(ATETagger):
 
 class XLMRTagger(BertTagger):
     """XLM-RoBERTa tagger (Lang et al. 2021). Multilingual."""
-    def __init__(self, model="ziqizhang/jate-ate-xlmr"):
+    def __init__(self, model="ziqizhang2026/jate-ate-xlmr"):
         super().__init__(model)
 
 class RoBERTaTagger(BertTagger):
     """RoBERTa tagger. English only, faster."""
-    def __init__(self, model="ziqizhang/jate-ate-roberta"):
+    def __init__(self, model="ziqizhang2026/jate-ate-roberta"):
         super().__init__(model)
 ```
 
@@ -187,7 +187,7 @@ Detects tagger vs ranker from algorithm name, calls `tag(doc)` directly.
 
 ## Model distribution
 
-- Pre-trained model hosted at `ziqizhang/jate-ate-xlmr` on HuggingFace Hub
+- Pre-trained model hosted at `ziqizhang2026/jate-ate-xlmr` on HuggingFace Hub
 - Downloaded on demand on first `tag()` call to `~/.cache/huggingface/`
 - No impact on `pip install jate` size
 - Training done on Google Colab (free T4 GPU, ~1 hour for ACTER)
