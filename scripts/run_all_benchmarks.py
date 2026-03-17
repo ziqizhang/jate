@@ -321,7 +321,7 @@ def main():
 
             traceback.print_exc()
 
-    output_path = Path(__file__).resolve().parents[1] / "docs" / "benchmark-results.md"
+    output_path = Path(__file__).resolve().parents[1] / "docs" / "benchmark-raw-results.md"
     write_markdown(results_all, output_path)
     _log("Done!")
 
