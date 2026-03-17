@@ -8,7 +8,7 @@ from jate.algorithms.base import ATETagger, OutputCapabilities
 from jate.models import Term, TermExtractionResult, TermSpan
 
 
-def _group_bio_spans(predictions: list[dict], text: str) -> list[tuple[str, int, int, float]]:
+def _group_bio_spans(predictions: list[dict[str, Any]], text: str) -> list[tuple[str, int, int, float]]:
     """Group raw per-subtoken BIO predictions into term spans.
 
     Merges subword tokens (## prefixes) and consecutive B-I sequences
