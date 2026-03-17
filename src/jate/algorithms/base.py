@@ -183,6 +183,20 @@ class ATETagger(Algorithm):
         """
         ...
 
+    def corpus_level_warning(self) -> str | None:
+        """Return a warning about corpus-level attributes not available from taggers.
+
+        Called by the pipeline when tagger results are returned.
+        Subclasses may override to customise the warning.
+        """
+        return (
+            f"{self.name} is a document-level tagger. "
+            "Term frequency reflects single-document counts only (not corpus-level). "
+            "Score reflects model confidence, not statistical termhood. "
+            "Rank is not meaningful (terms are not ranked). "
+            "For corpus-level statistics, use an ATERanker with extract_corpus()."
+        )
+
     def score(
         self,
         candidates: list[Candidate],

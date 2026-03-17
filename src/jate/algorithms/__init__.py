@@ -18,6 +18,12 @@ from jate.algorithms.ttf import TTF
 from jate.algorithms.voting import Voting
 from jate.algorithms.weirdness import Weirdness
 
+# Neural taggers (optional — requires jate[neural])
+try:
+    from jate.algorithms.bert_tagger import BertTagger, RoBERTaTagger, XLMRTagger
+except ImportError:
+    pass
+
 __all__ = [
     "Algorithm",
     "AlgorithmIncompatibleError",
@@ -26,6 +32,7 @@ __all__ = [
     "OutputCapabilities",
     "ATTF",
     "Basic",
+    "BertTagger",
     "ChiSquare",
     "ComboBasic",
     "CValue",
@@ -33,9 +40,11 @@ __all__ = [
     "NCValue",
     "RAKE",
     "RIDF",
+    "RoBERTaTagger",
     "TermEx",
     "TFIDF",
     "TTF",
     "Voting",
     "Weirdness",
+    "XLMRTagger",
 ]

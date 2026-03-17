@@ -114,7 +114,7 @@ class JATEComponent:
     def __call__(self, doc: Doc) -> Doc:
         """Process a spaCy Doc and attach extracted terms to doc._.terms."""
         from jate.algorithms.base import AlgorithmIncompatibleError
-        from jate.api import _build_features, _resolve_algorithm, _resolve_extractor
+        from jate.api import _build_features, _is_tagger, _resolve_algorithm, _resolve_extractor, _resolve_tagger
         from jate.config import JATEConfig
         from jate.features import TermFrequency
         from jate.models import Document, TermSpan
@@ -123,6 +123,17 @@ class JATEComponent:
         # Handle empty documents
         if not doc.text.strip():
             doc._.terms = []
+            return doc
+
+        # Tagger path: bypass candidate extraction and scoring pipeline
+        if _is_tagger(self._algorithm):
+            tagger = _resolve_tagger(self._algorithm)
+            result = tagger.tag(doc)
+            result = result.filter_by_frequency(self._min_frequency)
+            result = result.filter_by_length(min_words=self._min_words, max_words=self._max_words)
+            for i, term in enumerate(result):
+                term.rank = i + 1
+            doc._.terms = list(result)
             return doc
 
         # Build a JATE Document from the spaCy Doc

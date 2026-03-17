@@ -20,6 +20,7 @@ from jate.algorithms import (
     TTF,
     Algorithm,
     AlgorithmIncompatibleError,
+    ATETagger,
     Basic,
     ChiSquare,
     ComboBasic,
@@ -45,7 +46,7 @@ from jate.features import (
     TermFrequency,
     WordFrequency,
 )
-from jate.models import Candidate, TermExtractionResult
+from jate.models import Candidate, Term, TermExtractionResult
 from jate.nlp.document_loader import DocumentLoader
 from jate.nlp.spacy_backend import SpacyBackend
 
@@ -98,8 +99,39 @@ def _needs(algo: Algorithm, feature: str) -> bool:
     return isinstance(algo, _FEATURE_NEEDS.get(feature, ()))
 
 
+_TAGGER_NAMES: set[str] = {"xlmr-tagger", "roberta-tagger"}
+
+
+def _is_tagger(name: str) -> bool:
+    """Check if an algorithm name refers to a tagger (not a ranker)."""
+    return name.lower().strip() in _TAGGER_NAMES
+
+
+def _resolve_tagger(name: str, **kwargs: Any) -> ATETagger:
+    """Resolve a tagger name to an instance. Lazy imports to avoid requiring transformers."""
+    from jate.algorithms.bert_tagger import RoBERTaTagger, XLMRTagger
+
+    _tagger_classes: dict[str, type[ATETagger]] = {
+        "xlmr-tagger": XLMRTagger,
+        "roberta-tagger": RoBERTaTagger,
+    }
+
+    key = name.lower().strip()
+    if key not in _tagger_classes:
+        raise ValueError(f"Unknown tagger {name!r}. Available: {', '.join(sorted(_tagger_classes))}")
+    cls = _tagger_classes[key]
+
+    # Filter kwargs to only those accepted by the constructor.
+    import inspect
+
+    sig = inspect.signature(cls)
+    valid_params = set(sig.parameters.keys()) - {"self"}
+    filtered = {k: v for k, v in kwargs.items() if k in valid_params}
+    return cls(**filtered)
+
+
 def _available_algorithm_names() -> str:
-    return ", ".join(sorted(_ALGORITHM_NAMES.keys()))
+    return ", ".join(sorted(list(_ALGORITHM_NAMES.keys()) + sorted(_TAGGER_NAMES)))
 
 
 def _available_extractor_names() -> str:
@@ -336,6 +368,17 @@ def extract(
     TermExtractionResult
         Scored and sorted terms.
     """
+    if _is_tagger(algorithm):
+        nlp_obj = nlp_backend if nlp_backend is not None else SpacyBackend(model)
+        doc = nlp_obj.process(text)
+        tagger = _resolve_tagger(algorithm, **algo_kwargs)
+        result = tagger.tag(doc)
+        result = result.filter_by_frequency(min_frequency)
+        result = result.filter_by_length(min_words=min_words, max_words=max_words)
+        for i, term in enumerate(result):
+            term.rank = i + 1
+        return result
+
     if config is None:
         config = JATEConfig()
 
@@ -410,6 +453,34 @@ def extract_corpus(
     TermExtractionResult
         Scored and sorted terms.
     """
+    if _is_tagger(algorithm):
+        nlp_obj = SpacyBackend(model)
+        documents = _load_sources(sources)
+        tagger = _resolve_tagger(algorithm, **algo_kwargs)
+
+        # Process each document with the tagger and merge results
+        merged_terms: dict[str, Term] = {}
+        for doc_obj in documents:
+            spacy_doc = nlp_obj.process(doc_obj.content)
+            doc_result = tagger.tag(spacy_doc)
+            for term in doc_result:
+                key = term.string
+                if key in merged_terms:
+                    merged_terms[key].spans.extend(term.spans)
+                    merged_terms[key].frequency += term.frequency
+                    merged_terms[key].surface_forms.update(term.surface_forms)
+                    if term.score > merged_terms[key].score:
+                        merged_terms[key].score = term.score
+                else:
+                    merged_terms[key] = term
+
+        result = TermExtractionResult(list(merged_terms.values()))
+        result = result.filter_by_frequency(min_frequency)
+        result = result.filter_by_length(min_words=min_words, max_words=max_words)
+        for i, term in enumerate(result):
+            term.rank = i + 1
+        return result
+
     if config is None:
         config = JATEConfig()
 
@@ -499,40 +570,71 @@ def compare(
     nlp = SpacyBackend(model)
     documents = _load_sources(sources)
 
-    # Extractors still need a CorpusStore for add_document()
-    store = MemoryCorpusStore()
-    ext = _resolve_extractor(extractor)
-    candidates = ext.extract(documents, nlp, store)
-
-    # Build features from candidates and documents
-    total_docs = len(documents)
-    term_freq = TermFrequency.build(candidates, total_docs)
-
-    # Build all features once for the union of all algorithms
-    algo_instances = {name: _resolve_algorithm(name, **kwargs) for name in algorithms}
-    feature_cache = FeatureCache.build_for_algorithms(
-        list(algo_instances.values()), candidates, documents, nlp, term_freq, config
-    )
+    # Split algorithms into taggers and rankers
+    tagger_names = [a for a in algorithms if _is_tagger(a)]
+    ranker_names = [a for a in algorithms if not _is_tagger(a)]
 
     results: dict[str, TermExtractionResult] = {}
-    for algo_name in algorithms:
-        algo = algo_instances[algo_name]
-        score_kwargs = feature_cache.get_features(algo)
-        try:
-            result = algo.score(candidates, term_freq, **score_kwargs)
-        except AlgorithmIncompatibleError as e:
-            import warnings
 
-            warnings.warn(
-                f"Skipping {algo_name}: {e}",
-                stacklevel=2,
-            )
-            continue
+    # Handle taggers: process each document with tag()
+    for tagger_name in tagger_names:
+        tagger = _resolve_tagger(tagger_name, **kwargs)
+        merged_terms: dict[str, Term] = {}
+        for doc_obj in documents:
+            spacy_doc = nlp.process(doc_obj.content)
+            doc_result = tagger.tag(spacy_doc)
+            for term in doc_result:
+                key = term.string
+                if key in merged_terms:
+                    merged_terms[key].spans.extend(term.spans)
+                    merged_terms[key].frequency += term.frequency
+                    merged_terms[key].surface_forms.update(term.surface_forms)
+                    if term.score > merged_terms[key].score:
+                        merged_terms[key].score = term.score
+                else:
+                    merged_terms[key] = term
+        result = TermExtractionResult(list(merged_terms.values()))
         result = result.filter_by_frequency(min_frequency)
         result = result.filter_by_length(min_words=min_words, max_words=max_words)
         for i, term in enumerate(result):
             term.rank = i + 1
-        results[algo_name] = result
+        results[tagger_name] = result
+
+    # Handle rankers: use the standard pipeline
+    if ranker_names:
+        # Extractors still need a CorpusStore for add_document()
+        store = MemoryCorpusStore()
+        ext = _resolve_extractor(extractor)
+        candidates = ext.extract(documents, nlp, store)
+
+        # Build features from candidates and documents
+        total_docs = len(documents)
+        term_freq = TermFrequency.build(candidates, total_docs)
+
+        # Build all features once for the union of all ranker algorithms
+        algo_instances = {name: _resolve_algorithm(name, **kwargs) for name in ranker_names}
+        feature_cache = FeatureCache.build_for_algorithms(
+            list(algo_instances.values()), candidates, documents, nlp, term_freq, config
+        )
+
+        for algo_name in ranker_names:
+            algo = algo_instances[algo_name]
+            score_kwargs = feature_cache.get_features(algo)
+            try:
+                result = algo.score(candidates, term_freq, **score_kwargs)
+            except AlgorithmIncompatibleError as e:
+                import warnings
+
+                warnings.warn(
+                    f"Skipping {algo_name}: {e}",
+                    stacklevel=2,
+                )
+                continue
+            result = result.filter_by_frequency(min_frequency)
+            result = result.filter_by_length(min_words=min_words, max_words=max_words)
+            for i, term in enumerate(result):
+                term.rank = i + 1
+            results[algo_name] = result
 
     if voting:
         weights = voting_weights or {}
