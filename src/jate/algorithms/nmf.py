@@ -98,10 +98,13 @@ class NMFRanker(ATERanker):
             return TermExtractionResult()
 
         # Run NMF decomposition: A ≈ WH
+        # Use coordinate descent solver — faster than multiplicative updates
+        # on large sparse matrices
         nmf = NMF(
             n_components=k,
             init="nndsvda",  # good default for sparse data
-            max_iter=300,
+            solver="cd",  # coordinate descent, faster for sparse
+            max_iter=200,
             random_state=42,
         )
         nmf.fit_transform(A)  # document-topic matrix (m × k)
