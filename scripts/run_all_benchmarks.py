@@ -37,6 +37,7 @@ ALL_RANKERS = [
     "weirdness",
     "glossex",
     "termex",
+    "nmf",
 ]
 
 # Taggers (optional — requires jate[neural])
@@ -114,7 +115,11 @@ def run_dataset(ds_name, ds_loader, nlp, config, results_all):
     for algo_name in ALL_RANKERS:
         _log(f"  Running {algo_name} ...")
         try:
-            algo = _resolve_algorithm(algo_name)
+            # NMF: use top_n_per_topic=None in benchmarks to score all candidates
+            if algo_name == "nmf":
+                algo = _resolve_algorithm(algo_name, top_n_per_topic=None)
+            else:
+                algo = _resolve_algorithm(algo_name)
 
             t_feat = time.time()
             score_kwargs = _build_features(algo, candidates, documents, nlp, term_freq, config)
