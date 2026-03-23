@@ -10,6 +10,7 @@ from jate.algorithms.combo_basic import ComboBasic
 from jate.algorithms.cvalue import CValue
 from jate.algorithms.glossex import GlossEx
 from jate.algorithms.ncvalue import NCValue
+from jate.algorithms.nmf import NMFRanker
 from jate.algorithms.rake import RAKE
 from jate.algorithms.ridf import RIDF
 from jate.algorithms.termex import TermEx
@@ -38,6 +39,7 @@ __all__ = [
     "CValue",
     "GlossEx",
     "NCValue",
+    "NMFRanker",
     "RAKE",
     "RIDF",
     "RoBERTaTagger",
