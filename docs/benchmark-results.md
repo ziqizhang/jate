@@ -241,6 +241,39 @@ Best algorithm at each P@K cutoff per dataset:
 
 ---
 
+## NMF ranker (ATERanker)
+
+NMF applies Non-negative Matrix Factorization to the document-candidate frequency matrix to discover latent topics, then scores candidates by their maximum weight across topics. Unsupervised, no training data needed, CPU-only. Based on Section 3.1 of Nugumanova et al. (2022/2024).
+
+Parameters: `n_topics=20`, `top_n_per_topic=None` (all candidates scored).
+
+| Dataset | P@100 | P@500 | P@1,000 | P@5,000 | P@10,000 | Score time |
+|---------|-------|-------|---------|---------|----------|------------|
+| acl_rdtec_mini | 0.2700 | 0.1860 | 0.1630 | — | — | 1.8s |
+| genia | 0.7000 | 0.7120 | 0.7020 | 0.5882 | 0.5068 | 3.6s |
+
+**Observations:**
+- **Competitive on GENIA**: P@100=0.70 — below the best rankers (attf 0.79, ridf 0.77) but above tfidf (0.61) and chi_square (0.57). Consistent performance across all K values.
+- **Fast**: 3.6s on GENIA (2000 docs × 36,355 candidates). Requires scikit-learn but no GPU.
+- **No features needed**: Unlike other rankers, NMF builds its own matrix from `term_freq` — no containment, context frequency, or reference corpus.
+
+### Differences from the paper
+
+Our implementation adapts the paper's approach for integration with JATE's pipeline:
+
+| Aspect | Nugumanova et al. (2022) | Our implementation |
+|--------|--------------------------|-------------------|
+| Matrix columns | Single words (unigrams, bigrams, trigrams extracted from corpus) | JATE multi-word candidates from POS pattern extractor |
+| Matrix weighting | Raw frequency | Raw frequency (aligned) |
+| NMF algorithm | Tested 5 variants × 4 initialisations | sklearn default (coordinate descent, NNDSVDA init) |
+| Term extraction | Top-T per topic, varied both K and T | Top-T per topic (default T=50) or score all candidates |
+| Parameters tuned | K and T optimised per dataset | K=20, T=None (default, not tuned) |
+| Evaluation | ACTER (TermEval 2020) | GENIA, acl_rdtec_mini (partial, full benchmark pending) |
+
+The performance gap from the paper's reported results (second only to supervised methods on ACTER) is likely due to: (1) different candidate extraction (multi-word POS candidates vs n-grams), (2) no per-dataset parameter tuning, and (3) using one NMF variant instead of selecting the best from 20 combinations.
+
+---
+
 ## Neural tagger: XLM-R (ATETagger)
 
 The XLM-R tagger ([ziqizhang2026/jate-ate-xlmr](https://huggingface.co/ziqizhang2026/jate-ate-xlmr)) is a transformer token classifier fine-tuned on ACTER using BIO sequence labelling. It operates per-document (no corpus-level statistics) and is evaluated with set-based P/R/F1 — not P@K, since taggers do not produce rankings.
