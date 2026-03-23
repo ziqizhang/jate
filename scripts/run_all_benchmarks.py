@@ -24,6 +24,7 @@ from jate.nlp.spacy_backend import SpacyBackend  # noqa: E402
 from jate.store.memory_store import MemoryCorpusStore  # noqa: E402
 
 ALL_RANKERS = [
+    "nmf",  # run first — NMF is sensitive to memory pressure from other algorithms
     "tfidf",
     "cvalue",
     "ncvalue",
@@ -37,7 +38,6 @@ ALL_RANKERS = [
     "weirdness",
     "glossex",
     "termex",
-    "nmf",
 ]
 
 # Taggers (optional — requires jate[neural])
