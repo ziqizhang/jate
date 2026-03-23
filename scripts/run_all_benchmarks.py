@@ -170,7 +170,11 @@ def run_dataset(ds_name, ds_loader, nlp, config, results_all):
             )
 
     # --- Tagger evaluation (per-document, no shared features) ---
-    if ALL_TAGGERS:
+    # Skip tagger on large datasets — ~1.7s per document on CPU
+    _TAGGER_MAX_DOCS = 500
+    if ALL_TAGGERS and len(documents) > _TAGGER_MAX_DOCS:
+        _log(f"  Skipping taggers ({len(documents)} docs > {_TAGGER_MAX_DOCS} threshold, too slow on CPU)")
+    elif ALL_TAGGERS:
         _log(f"  Running {len(ALL_TAGGERS)} tagger(s) ...")
         import warnings
 
