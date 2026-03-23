@@ -122,7 +122,11 @@ def run_dataset(ds_name, ds_loader, nlp, config, results_all):
                 algo = _resolve_algorithm(algo_name)
 
             t_feat = time.time()
-            score_kwargs = _build_features(algo, candidates, documents, nlp, term_freq, config)
+            # NMF doesn't need pre-built features — skip _build_features
+            if algo_name == "nmf":
+                score_kwargs = {}
+            else:
+                score_kwargs = _build_features(algo, candidates, documents, nlp, term_freq, config)
             feat_time = time.time() - t_feat
 
             t_score = time.time()
