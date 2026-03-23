@@ -53,10 +53,12 @@ from jate.models import Candidate, Document, Term, TermExtractionResult, TermSpa
 from jate.nlp import DocumentLoader, SpacyBackend
 from jate.store import MemoryCorpusStore, SQLiteCorpusStore
 
-# Register spaCy component factory (if spaCy is available)
+# Register spaCy component factory (if spaCy is available and compatible).
+# Catches broad Exception because spaCy + pydantic v2 can conflict on some
+# Python versions (e.g., ConfigSchemaNlp validation errors on 3.11).
 try:
     import jate.spacy_component  # noqa: F401
-except ImportError:
+except Exception:
     pass
 
 __all__ = [
