@@ -1,6 +1,6 @@
 # JATE — Just Automatic Term Extraction
 
-Python library for automatic term extraction (ATE). 13 classical scoring algorithms, corpus-level statistics, evaluation, CLI, and REST API. Built on spaCy.
+Python library for automatic term extraction (ATE). 14 classical scoring algorithms, corpus-level statistics, evaluation, CLI, and REST API. Built on spaCy.
 
 ## Key Paths
 
@@ -25,7 +25,7 @@ make clean          # remove generated files
 
 ```
 src/jate/
-├── algorithms/     # 13 rankers (ATERanker) + neural taggers (ATETagger, optional jate[neural])
+├── algorithms/     # 14 rankers (ATERanker) + neural taggers (ATETagger, optional jate[neural])
 ├── extractors/     # Candidate extractors (pos_pattern, ngram, noun_phrase)
 │   └── patterns/   # POS pattern presets (default, genia, acl_rdtec)
 ├── nlp/            # spaCy backend, document loader
@@ -72,7 +72,7 @@ src/jate/
 
 - TF-IDF raises `AlgorithmIncompatibleError` on single documents (IDF = 0). Use cvalue or basic instead.
 - spaCy model must be installed separately: `python -m spacy download en_core_web_sm`
-- `features.py` is the largest file (577 lines) — read selectively, not in full
+- `features.py` is the largest file (~650 lines) — read selectively, not in full
 - `api.py::extract()` is the main entry point — start here when understanding the pipeline
 - Never tokenise the same document twice in a loop — cache tokenisation results (see `features.py::_build_adjacent_words` for the pattern)
 - Avoid O(n²) iterations over candidates/terms — use sparse lookups (see `chi_square.py` for the pattern)

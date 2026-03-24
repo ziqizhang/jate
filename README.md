@@ -4,9 +4,34 @@
 
 # JATE — Just Automatic Term Extraction
 
-A Python library for automatic term extraction (ATE) from text corpora. JATE provides 13 classical ATE algorithms, corpus-level statistics, built-in evaluation, and a CLI — all pip-installable with no external services required.
+A Python library for automatic term extraction (ATE) from text corpora. JATE provides 14 classical ATE algorithms, corpus-level statistics, built-in evaluation, and a CLI — all pip-installable with no external services required.
 
-**JATE v3.0.0** is a complete rewrite of the original [Java JATE](https://github.com/ziqizhang/jate/tree/legacy/java) library (84+ GitHub stars), which was built on Apache Solr and used in academic and industry settings for over a decade. The Python version preserves all 13 classical algorithms from the Java codebase — with every formula verified line-by-line against the original source — while removing the Solr dependency in favour of a self-contained, pip-installable package. It also adds ensemble voting via reciprocal rank fusion when comparing multiple algorithms. The original Java library is preserved on the [`legacy/java`](https://github.com/ziqizhang/jate/tree/legacy/java) branch.
+**JATE v3** is a complete rewrite of the original [Java JATE](https://github.com/ziqizhang/jate/tree/legacy/java) library (84+ GitHub stars), which was built on Apache Solr and used in academic and industry settings for over a decade. The Python version preserves all 13 original classical algorithms from the Java codebase — with every formula verified line-by-line against the original source — while removing the Solr dependency in favour of a self-contained, pip-installable package. It also adds ensemble voting via reciprocal rank fusion when comparing multiple algorithms. The original Java library is preserved on the [`legacy/java`](https://github.com/ziqizhang/jate/tree/legacy/java) branch.
+
+## Sneak Peek
+
+### Try it now — no installation needed
+
+**[Launch the live demo on Hugging Face Spaces](https://huggingface.co/spaces/ziqizhang2026/jate-demo)** — paste any text, pick from 14 algorithms, and see extracted terms instantly in your browser.
+
+<p align="center">
+  <a href="https://huggingface.co/spaces/ziqizhang2026/jate-demo">
+    <img src="docs/assets/demo-huggingface.png" alt="JATE online demo on Hugging Face Spaces" width="700">
+  </a>
+</p>
+
+### Clone the repo for full features locally
+
+The local UI gives you everything the online demo has and more — corpus-level extraction across entire directories, multi-algorithm comparison with a shared NLP pipeline, real-time progress streaming, and full CSV/JSON export. All processing happens on your machine, so there are no size limits and your data stays private.
+
+```bash
+pip install "jate[server]"
+jate ui
+```
+
+<p align="center">
+  <img src="docs/assets/ui-corpus-results.png" alt="JATE local UI — side-by-side multi-algorithm corpus comparison" width="700">
+</p>
 
 ## Installation
 
@@ -244,6 +269,7 @@ Expected extract response shape:
 | `weirdness` | Target vs reference corpus frequency ratio | Ahmad et al. 1999 |
 | `termex` | Domain pertinence + context + lexical cohesion | Sclano et al. 2007 |
 | `glossex` | Domain specificity via glossary comparison | Park et al. 2002 |
+| `nmf` | Topic modelling via Non-negative Matrix Factorisation | — |
 
 Multi-algorithm comparison is available via `jate.compare()`, which also supports ensemble voting via reciprocal rank fusion (`voting=True`).
 
@@ -331,29 +357,25 @@ Try the demo: `python examples/spacy_demo.py`
 
 ## Local UI
 
-Launch the full-featured browser UI:
+The local UI (`jate ui`) opens at http://localhost:8080 with two modes:
 
-```bash
-pip install "jate[server]"
-jate ui
-```
+**Extract** — paste text or upload a file, select from 14 algorithms with per-algorithm tuning parameters, view results as a ranked table or as highlighted text, and export to CSV/JSON.
 
-Opens at http://localhost:8080 with sidebar navigation:
+<p align="center">
+  <img src="docs/assets/ui-extract-results.png" alt="JATE Extract — results table with 14 algorithms" width="700">
+</p>
 
-- **Extract** — paste text or upload a file, select algorithm and parameters, view results table or highlighted text, export CSV/JSON
-- **Corpus** — point to a directory of .txt files, select multiple algorithms (shared NLP pipeline for speed), real-time progress via SSE, side-by-side results, export per algorithm
+**Corpus** — point to a directory of .txt files, select multiple algorithms at once (the shared NLP pipeline makes multi-algorithm runs significantly faster than running them separately), watch real-time progress via Server-Sent Events, and compare results side-by-side.
 
-Or via Docker:
+Or run via Docker:
 
 ```bash
 docker run --rm -p 8080:8080 jate:latest jate ui
 ```
 
-Try the online demo: [huggingface.co/spaces/ziqizhang2026/jate-demo](https://huggingface.co/spaces/ziqizhang2026/jate-demo)
-
 ## Benchmarks
 
-JATE is evaluated on 5 standard ATE datasets using P@K (precision at top-K ranked terms). Best algorithm per dataset at P@100:
+JATE is evaluated on 4 standard ATE datasets using P@K (precision at top-K ranked terms). Best algorithm per dataset at P@100:
 
 | Dataset | Domain | Docs | Gold terms | Best P@100 | Algorithm |
 |---------|--------|------|-----------|------------|-----------|
