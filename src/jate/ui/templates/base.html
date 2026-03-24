@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JATE — Term Extraction</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/htmx.min.js"></script>
+    <script src="https://unpkg.com/htmx-ext-sse@2.2.2/sse.js"></script>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <img src="/static/jate-logo.png" alt="JATE — Term Extraction" style="max-width:160px; height:auto;">
+            </div>
+            <ul class="sidebar-nav">
+                <li>
+                    <a href="/extract"
+                       class="{% block active_extract %}{% endblock %}">
+                        Extract
+                    </a>
+                </li>
+                <li>
+                    <a href="/corpus"
+                       class="{% block active_corpus %}{% endblock %}">
+                        Corpus
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                JATE &mdash; Just Automatic Term Extraction
+            </div>
+        </aside>
+        <main class="main">
+            {% block content %}
+            {{ content | safe }}
+            {% endblock %}
+        </main>
+    </div>
+</body>
+</html>

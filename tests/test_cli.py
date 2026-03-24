@@ -170,10 +170,14 @@ class TestCLICompare:
         assert "TFIDF" in output
 
 
-class TestCLIDemo:
-    def test_demo_placeholder(self) -> None:
-        output = _run_cli("demo")
-        assert "Demo UI not yet available" in output
+class TestCLIUI:
+    def test_ui_subparser_registered(self) -> None:
+        """Verify the 'ui' subparser appears in the main help output."""
+        from jate.cli import _build_parser
+
+        parser = _build_parser()
+        help_text = parser.format_help()
+        assert "ui" in help_text
 
 
 class TestCLINoCommand:

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/jate-logo.png" alt="JATE — Term Extraction" width="300">
+</p>
+
 # JATE — Just Automatic Term Extraction
 
 A Python library for automatic term extraction (ATE) from text corpora. JATE provides 13 classical ATE algorithms, corpus-level statistics, built-in evaluation, and a CLI — all pip-installable with no external services required.
@@ -324,6 +328,28 @@ Configuration options:
 - TF-IDF will return empty results on single documents (IDF = 0).
 
 Try the demo: `python examples/spacy_demo.py`
+
+## Local UI
+
+Launch the full-featured browser UI:
+
+```bash
+pip install "jate[server]"
+jate ui
+```
+
+Opens at http://localhost:8080 with sidebar navigation:
+
+- **Extract** — paste text or upload a file, select algorithm and parameters, view results table or highlighted text, export CSV/JSON
+- **Corpus** — point to a directory of .txt files, select multiple algorithms (shared NLP pipeline for speed), real-time progress via SSE, side-by-side results, export per algorithm
+
+Or via Docker:
+
+```bash
+docker run --rm -p 8080:8080 jate:latest jate ui
+```
+
+Try the online demo: [huggingface.co/spaces/ziqizhang2026/jate-demo](https://huggingface.co/spaces/ziqizhang2026/jate-demo)
 
 ## Benchmarks
 

@@ -99,8 +99,10 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Force re-download even if dataset is already cached",
     )
 
-    # --- demo --------------------------------------------------------------
-    subparsers.add_parser("demo", help="Launch the demo UI")
+    # --- ui ----------------------------------------------------------------
+    p_ui = subparsers.add_parser("ui", help="Launch the local web UI")
+    p_ui.add_argument("--host", default="127.0.0.1", help="Host to bind (default: 127.0.0.1)")
+    p_ui.add_argument("--port", type=int, default=8080, help="Port to bind (default: 8080)")
 
     return parser
 
@@ -148,8 +150,13 @@ def main() -> None:
         parser.print_help()
         return
 
-    if args.command == "demo":
-        print("Demo UI not yet available. Coming soon!")
+    if args.command == "ui":
+        import webbrowser
+
+        import uvicorn
+
+        webbrowser.open(f"http://{args.host}:{args.port}")
+        uvicorn.run("jate.ui.app:app", host=args.host, port=args.port)
         return
 
     if args.command == "extract":

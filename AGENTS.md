@@ -44,7 +44,8 @@ src/jate/
 ├── benchmark.py    # Built-in benchmarking harness
 ├── parallel.py     # Parallel processing utilities
 ├── protocols.py    # Protocol definitions (structural typing)
-└── spacy_component.py  # spaCy pipeline component (Language.factory "jate")
+├── spacy_component.py  # spaCy pipeline component (Language.factory "jate")
+└── ui/             # Local web UI (FastAPI + HTMX, launched via jate ui)
 ```
 
 ## Architectural Rules
