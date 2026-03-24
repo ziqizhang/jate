@@ -1,3 +1,40 @@
+# [3.3.0](https://github.com/ziqizhang/jate/compare/v3.2.0...v3.3.0) (2026-03-24)
+
+
+### Bug Fixes
+
+* add neural extras to pyproject.toml (transformers, torch, datasets, seqeval) ([3bd7ed0](https://github.com/ziqizhang/jate/commit/3bd7ed0d5286e08e496f555cd3520b1bf2dce79f))
+* add progress logging for tagger evaluation in benchmark script ([d6d7663](https://github.com/ziqizhang/jate/commit/d6d7663bcdecdc0ef35932fa66ea0ba7b73e05c8))
+* add type parameters to dict in _group_bio_spans for mypy ([c884971](https://github.com/ziqizhang/jate/commit/c88497126daf3e4f701c4994bb12d5c4eb9c6cc1))
+* implement custom BIO span grouping instead of HF aggregation_strategy ([d1392c7](https://github.com/ziqizhang/jate/commit/d1392c790fffe5152eea08a2c6270e2c15a98851))
+* install jate from GitHub in Colab notebook, not PyPI ([f6534c1](https://github.com/ziqizhang/jate/commit/f6534c1921c4054f8bee62fa05a0e1ae3f5970ff))
+* point Colab notebook at feature branch for testing ([952ced2](https://github.com/ziqizhang/jate/commit/952ced21a7ae6fd179c7615bfcc2d837f9404c85))
+* regenerate poetry.lock after adding neural extras ([80f96c1](https://github.com/ziqizhang/jate/commit/80f96c15421bd862e94944242a43ecafec9ac0fb))
+* relax version pins to support numpy 2.x and latest transformers/torch ([4e45c75](https://github.com/ziqizhang/jate/commit/4e45c751731fd4ea3b379ee29582d9a30fdecda7))
+* remove dead max_workers config and correct parallelism claims ([69f1818](https://github.com/ziqizhang/jate/commit/69f1818a8061e6c4cb7e6394dfbdb7e8ffb87f8e))
+* remove extra trailing blank lines in Dockerfile and .dockerignore ([a4c864d](https://github.com/ziqizhang/jate/commit/a4c864d8c22e0b24a55b29b0f7f66dd9eeecf8a7))
+* rename evaluation_strategy to eval_strategy for transformers 5.x ([505c32d](https://github.com/ziqizhang/jate/commit/505c32de85853f3164944709cf0b19b06d41eba4))
+* rename tokenizer to processing_class for transformers 5.x Trainer ([44138b5](https://github.com/ziqizhang/jate/commit/44138b54731eb4ce3b123d453724d2bbe7386982))
+* resolve CI failures — version test, python-multipart dep, mypy types ([7bb3d9f](https://github.com/ziqizhang/jate/commit/7bb3d9f90542c53c304ec4e3696909c8000da00e))
+* resolve Docker Smoke CI failure (Python 3.11 + spaCy/pydantic conflict) ([41a49ef](https://github.com/ziqizhang/jate/commit/41a49efba3cd51d78f782f9bc5a47a2fe91c1dc5))
+* update HuggingFace model paths to ziqizhang2026 and fix subword merging ([7cf30f1](https://github.com/ziqizhang/jate/commit/7cf30f154f6f5a6496a551981c16aff61e53f0e2))
+* upgrade numpy before jate install in Colab to avoid binary incompatibility ([7f7f8a1](https://github.com/ziqizhang/jate/commit/7f7f8a1a6493a5c9ca8c6bb957a66e76e69d6fe3))
+* use --no-deps install to avoid numpy conflicts in Colab ([05e934d](https://github.com/ziqizhang/jate/commit/05e934d52bc792799d9e3ea7438cf0d9dad9f34a))
+
+
+### Features
+
+* add ATERanker/ATETagger abstraction with capabilities and compatibility checks ([#89](https://github.com/ziqizhang/jate/issues/89)) ([0911240](https://github.com/ziqizhang/jate/commit/0911240e3948a5a295f6f6a0b8e96f8c46575cfa))
+* add BERT tagger demo script ([#92](https://github.com/ziqizhang/jate/issues/92)) ([d8bcfbf](https://github.com/ziqizhang/jate/commit/d8bcfbf4753f0266d1c1fcd17fd95e9b46248ce5))
+* add Colab notebook for training BERT ATE tagger ([#92](https://github.com/ziqizhang/jate/issues/92) P1.1) ([022be3e](https://github.com/ziqizhang/jate/commit/022be3edc437c4201c9f6094bacf63b59d943213))
+* add local web UI with Extract and Corpus pages ([#66](https://github.com/ziqizhang/jate/issues/66)) ([5fcbbd4](https://github.com/ziqizhang/jate/commit/5fcbbd425ce7276a8cae49bd06c7df8549efcb74))
+* add NMF ranker and web demo design ([#66](https://github.com/ziqizhang/jate/issues/66), [#92](https://github.com/ziqizhang/jate/issues/92) P2.3) ([7d41076](https://github.com/ziqizhang/jate/commit/7d41076b65225e0c117d0db7edcb55c441693626))
+* add spaCy pipeline integration with nlp.add_pipe('jate') ([#65](https://github.com/ziqizhang/jate/issues/65)) ([e15aede](https://github.com/ziqizhang/jate/commit/e15aede56a445d9a1a088006f6abb8b239c1ca6f))
+* add tagger to benchmarks, update docs and notebook install link ([#92](https://github.com/ziqizhang/jate/issues/92)) ([240462d](https://github.com/ziqizhang/jate/commit/240462d3c45b04e7ce7d6c6865dde5d504cf92f8))
+* add training script for transformer ATE tagger ([#92](https://github.com/ziqizhang/jate/issues/92) P1.1) ([e17f22c](https://github.com/ziqizhang/jate/commit/e17f22cf56c6a7c640e32795d5cfc33722be8dda))
+* add transformer token classification tagger infrastructure ([#92](https://github.com/ziqizhang/jate/issues/92) P1.1) ([0e33b54](https://github.com/ziqizhang/jate/commit/0e33b541af9f8e8e8e3b8623f9e2b80fb216f157))
+* scaffold evaluation routing and pipeline contracts ([#89](https://github.com/ziqizhang/jate/issues/89)) ([3a2ac41](https://github.com/ziqizhang/jate/commit/3a2ac412548f1566043b66e148deca94f45f216f))
+
 # [3.2.0](https://github.com/ziqizhang/jate/compare/v3.1.0...v3.2.0) (2026-03-14)
 
 
