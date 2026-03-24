@@ -15,12 +15,16 @@ class JATEConfig:
 
     Parameters
     ----------
-    max_workers:
-        Maximum number of worker processes for parallel computation.
-        1 = sequential (no overhead). N > 1 = use ProcessPoolExecutor.
+    reference_frequency_file:
+        Path(s) to reference frequency files for algorithms that compare
+        target vs reference corpus (weirdness, glossex, termex). If not
+        provided, falls back to self-reference.
+    prefilter_min_ttf:
+        Minimum total term frequency for chi-square prefiltering.
+    prefilter_min_tcf:
+        Minimum term context frequency for chi-square prefiltering.
     """
 
-    max_workers: int = 1
     reference_frequency_file: str | list[str] | None = None
     prefilter_min_ttf: int = 0
     prefilter_min_tcf: int = 0

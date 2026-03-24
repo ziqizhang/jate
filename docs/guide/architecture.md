@@ -105,16 +105,13 @@ algo = CValue()
 result = algo.score(candidates, term_freq, containment=containment)
 ```
 
-### Configurable parallelism
+### Automatic parallelism
 
-CPU-intensive stages (co-occurrence computation, containment index building) support parallel execution via `ProcessPoolExecutor`. Users opt in with `JATEConfig(max_workers=N)`. Default is sequential (`max_workers=1`) — no overhead.
+CPU-intensive stages use parallelism automatically:
 
-```python
-config = jate.JATEConfig(max_workers=4)
-result = jate.extract_corpus(docs, algorithm="cvalue", config=config)
-```
-
-NLP processing uses spaCy's `nlp.pipe()` for efficient batching, which releases the GIL during C-level parsing.
+- **NLP processing** — spaCy's `nlp.pipe()` uses multi-threaded C-level batching (releases the GIL)
+- **Feature building** — adjacent word computation uses `ProcessPoolExecutor` across all available CPUs
+- **Feature caching** — `FeatureCache` builds all features once for multiple algorithms (see `api.py`)
 
 ## Module map
 

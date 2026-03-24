@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block active_extract %}active{% endblock %}
+
+{% block content %}
+<h2>Extract Terms</h2>
+<p class="text-muted">Paste text or upload a file, choose an algorithm, and extract terms.</p>
+
+<form id="extract-form" enctype="multipart/form-data">
+    <!-- Input mode toggle -->
+    <div class="form-group">
+        <div style="display:flex; gap:8px; margin-bottom:12px;">
+            <button type="button" class="btn btn-primary" id="btn-paste" onclick="setInputMode('paste')">Paste Text</button>
+            <button type="button" class="btn btn-secondary" id="btn-file" onclick="setInputMode('file')">Upload File</button>
+        </div>
+
+        <div id="input-paste">
+            <label for="text">Text</label>
+            <textarea id="text" name="text" rows="8"
+                      placeholder="Paste your text here..."></textarea>
+        </div>
+
+        <div id="input-file" style="display:none;">
+            <label for="file">File (.txt, .pdf)</label>
+            <input type="file" name="file" id="file" accept=".txt,.pdf,.md,.csv"
+                   style="padding:8px; background:var(--input-bg); border:1px solid var(--border); border-radius:var(--radius); color:var(--text); width:100%;">
+        </div>
+    </div>
+
+    <!-- Options row -->
+    <div class="form-row">
+        <div class="form-group">
+            <label for="algorithm">Algorithm</label>
+            <select name="algorithm" id="algorithm"
+                    onchange="htmx.ajax('GET', '/api/algo-params/' + this.value, '#algo-params')">
+                {% for key, algo in algorithms.items() %}
+                <option value="{{ key }}" {% if key == selected_algo %}selected{% endif %}>
+                    {{ algo.name }}
+                    {% if algo.type == 'tagger' %}(tagger){% endif %}
+                    {% if algo.needs_reference %}(ref){% endif %}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="pattern">POS Pattern</label>
+            <select name="pattern" id="pattern">
+                <option value="default" selected>Default</option>
+                <option value="genia">GENIA</option>
+                <option value="acl_rdtec">ACL RD-TEC</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="min_frequency">Min Frequency</label>
+            <input type="number" name="min_frequency" id="min_frequency" value="1" min="1" step="1">
+        </div>
+        <div class="form-group">
+            <label for="top_n">Top N</label>
+            <input type="number" name="top_n" id="top_n" value="50" min="1" max="1000" step="1">
+        </div>
+    </div>
+
+    <!-- Advanced / algorithm-specific params -->
+    <div class="collapsible" id="advanced-section">
+        <button type="button" class="collapsible-toggle" onclick="this.parentElement.classList.toggle('open')">
+            Advanced Parameters
+        </button>
+        <div class="collapsible-body">
+            <div id="algo-params">
+                <!-- Loaded dynamically via HTMX when algorithm changes -->
+                <p class="text-muted">No additional parameters for this algorithm.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Extract button -->
+    <div style="margin-top:8px;">
+        <button type="submit" class="btn btn-primary"
+                hx-post="/extract/run"
+                hx-target="#results"
+                hx-indicator="#loading"
+                hx-encoding="multipart/form-data"
+                hx-include="#extract-form"
+                hx-disabled-elt="this">
+            Extract Terms
+        </button>
+        <span id="loading" class="htmx-indicator" style="margin-left:12px; color:var(--text-muted);">
+            Extracting...
+        </span>
+    </div>
+</form>
+
+<!-- Results area -->
+<div id="results" class="mt-3">
+    <!-- HTMX will load _results_table.html here -->
+</div>
+
+<script>
+function setInputMode(mode) {
+    var pasteDiv = document.getElementById('input-paste');
+    var fileDiv = document.getElementById('input-file');
+    var btnPaste = document.getElementById('btn-paste');
+    var btnFile = document.getElementById('btn-file');
+
+    if (mode === 'paste') {
+        pasteDiv.style.display = '';
+        fileDiv.style.display = 'none';
+        btnPaste.className = 'btn btn-primary';
+        btnFile.className = 'btn btn-secondary';
+    } else {
+        pasteDiv.style.display = 'none';
+        fileDiv.style.display = '';
+        btnPaste.className = 'btn btn-secondary';
+        btnFile.className = 'btn btn-primary';
+    }
+}
+
+// Load algo params for the default algorithm on page load.
+document.addEventListener('DOMContentLoaded', function() {
+    var algo = document.getElementById('algorithm').value;
+    htmx.ajax('GET', '/api/algo-params/' + algo, '#algo-params');
+});
+</script>
+{% endblock %}

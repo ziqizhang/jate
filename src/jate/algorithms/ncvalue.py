@@ -4,13 +4,13 @@ from __future__ import annotations
 
 from typing import Any
 
-from jate.algorithms.base import Algorithm
+from jate.algorithms.base import ATERanker, OutputCapabilities
 from jate.algorithms.cvalue import CValue
 from jate.features import Containment, ContextFrequency, TermFrequency
 from jate.models import Candidate, Term, TermExtractionResult
 
 
-class NCValue(Algorithm):
+class NCValue(ATERanker):
     """NC-Value: extends C-Value with context word information.
 
     ``NC-Value(t) = cvalue_weight * CValue(t) + context_weight * context_score(t)``
@@ -31,7 +31,10 @@ class NCValue(Algorithm):
     def description(self) -> str:
         return "NC-Value: C-Value extended with context words"
 
-    def score(
+    def output_capabilities(self) -> OutputCapabilities:
+        return OutputCapabilities(produces_scores=True, produces_ranking=True, requires_corpus=True)
+
+    def _score(
         self,
         candidates: list[Candidate],
         term_freq: TermFrequency,

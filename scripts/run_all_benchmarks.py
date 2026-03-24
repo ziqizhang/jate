@@ -23,7 +23,7 @@ from jate.features import TermFrequency  # noqa: E402
 from jate.nlp.spacy_backend import SpacyBackend  # noqa: E402
 from jate.store.memory_store import MemoryCorpusStore  # noqa: E402
 
-ALL_ALGORITHMS = [
+ALL_RANKERS = [
     "tfidf",
     "cvalue",
     "ncvalue",
@@ -37,7 +37,17 @@ ALL_ALGORITHMS = [
     "weirdness",
     "glossex",
     "termex",
+    "nmf",
 ]
+
+# Taggers (optional — requires jate[neural])
+ALL_TAGGERS: list[str] = []
+try:
+    from jate.api import _resolve_tagger  # noqa: E402
+
+    ALL_TAGGERS = ["xlmr-tagger"]
+except ImportError:
+    pass
 
 K_VALUES = [100, 500, 1000, 5000, 10000]
 
@@ -102,10 +112,14 @@ def run_dataset(ds_name, ds_loader, nlp, config, results_all):
     _log(f"  P@K cutoffs: {applicable_ks} (max candidates: {len(candidates)})")
 
     ds_results = []
-    for algo_name in ALL_ALGORITHMS:
+    for algo_name in ALL_RANKERS:
         _log(f"  Running {algo_name} ...")
         try:
-            algo = _resolve_algorithm(algo_name)
+            # NMF: use top_n_per_topic=None in benchmarks to score all candidates
+            if algo_name == "nmf":
+                algo = _resolve_algorithm(algo_name, top_n_per_topic=None)
+            else:
+                algo = _resolve_algorithm(algo_name)
 
             t_feat = time.time()
             score_kwargs = _build_features(algo, candidates, documents, nlp, term_freq, config)
@@ -150,6 +164,72 @@ def run_dataset(ds_name, ds_loader, nlp, config, results_all):
                     "error": str(e),
                 }
             )
+
+    # --- Tagger evaluation (per-document, no shared features) ---
+    if ALL_TAGGERS:
+        _log(f"  Running {len(ALL_TAGGERS)} tagger(s) ...")
+        import warnings
+
+        for tagger_name in ALL_TAGGERS:
+            _log(f"  Running {tagger_name} (tagger) ...")
+            try:
+                tagger = _resolve_tagger(tagger_name)
+
+                t_tag = time.time()
+                # Tag each document and collect all terms
+                all_terms: set[str] = set()
+                n_docs = len(documents)
+                report_every = max(1, n_docs // 10)
+                with warnings.catch_warnings():
+                    warnings.filterwarnings("ignore", category=UserWarning)
+                    for doc_idx, doc in enumerate(documents):
+                        if doc_idx > 0 and doc_idx % report_every == 0:
+                            elapsed = time.time() - t_tag
+                            _log(
+                                f"    Tagging: {doc_idx}/{n_docs} documents "
+                                f"({elapsed:.1f}s, {len(all_terms)} terms so far)"
+                            )
+                        result = tagger.tag(doc.content)
+                        for term in result:
+                            all_terms.add(term.string.lower())
+                tag_time = time.time() - t_tag
+
+                # Set-based P/R/F1 (the universal metric for taggers)
+                tp = all_terms & evaluator.gold_terms
+                n_tp = len(tp)
+                n_pred = len(all_terms)
+                n_gold = len(evaluator.gold_terms)
+                precision = n_tp / n_pred if n_pred > 0 else 0.0
+                recall = n_tp / n_gold if n_gold > 0 else 0.0
+                f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
+
+                ds_results.append(
+                    {
+                        "algorithm": tagger_name,
+                        "p_at_k": {},  # taggers don't produce rankings
+                        "set_p": precision,
+                        "set_r": recall,
+                        "set_f1": f1,
+                        "score_time": tag_time,
+                        "feat_time": 0,
+                        "error": None,
+                    }
+                )
+                _log(f"    P={precision:.4f} R={recall:.4f} F1={f1:.4f} ({tag_time:.1f}s, {n_pred} terms)")
+            except Exception as e:
+                _log(f"    ERROR: {e}")
+                import traceback
+
+                traceback.print_exc(file=sys.stderr)
+                ds_results.append(
+                    {
+                        "algorithm": tagger_name,
+                        "p_at_k": {},
+                        "score_time": 0,
+                        "feat_time": 0,
+                        "error": str(e),
+                    }
+                )
 
     total_ds_time = time.time() - t_ds
     _log(f"  Dataset total: {total_ds_time:.1f}s")
@@ -203,6 +283,14 @@ def write_markdown(results_all, output_path):
             if r["error"]:
                 cells = " | ".join("—" for _ in ks)
                 lines.append(f"| {r['algorithm']} | {cells} | {r['error']} |")
+            elif "set_f1" in r:
+                # Tagger: show set-based P/R/F1 instead of P@K
+                cells = " | ".join("—" for _ in ks)
+                lines.append(
+                    f"| {r['algorithm']} (tagger) | {cells} | "
+                    f"P={r['set_p']:.4f} R={r['set_r']:.4f} F1={r['set_f1']:.4f} "
+                    f"({r['score_time']:.1f}s) |"
+                )
             else:
                 cells = " | ".join(f"{r['p_at_k'].get(k, 0):.4f}" if k in r["p_at_k"] else "—" for k in ks)
                 lines.append(f"| {r['algorithm']} | {cells} | {r['score_time']:.2f}s |")
@@ -238,7 +326,7 @@ def main():
 
             traceback.print_exc()
 
-    output_path = Path(__file__).resolve().parents[1] / "docs" / "benchmark-results.md"
+    output_path = Path(__file__).resolve().parents[1] / "docs" / "benchmark-raw-results.md"
     write_markdown(results_all, output_path)
     _log("Done!")
 

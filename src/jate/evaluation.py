@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from jate.algorithms.base import OutputCapabilities
 from jate.models import TermExtractionResult
 
 
@@ -83,6 +84,55 @@ class Evaluator:
         """
         predicted = {t.string.lower() for t in list(result)[:k]}
         return self._compute(predicted)
+
+    def evaluate_auto(
+        self,
+        result: TermExtractionResult,
+        capabilities: OutputCapabilities,
+        k_values: list[int] | None = None,
+    ) -> dict[str, EvaluationResult | dict[int, EvaluationResult]]:
+        """Auto-select evaluation metrics based on algorithm capabilities.
+
+        Returns a dict with metric results keyed by metric name:
+
+        - ``"set_based"`` — always included (P/R/F1 over full result set)
+        - ``"p_at_k"`` — dict of {k: EvaluationResult}, only if
+          ``capabilities.produces_ranking`` is True
+        - ``"token_level"`` — only if ``capabilities.produces_offsets``
+          is True (not yet implemented; raises NotImplementedError)
+
+        Parameters
+        ----------
+        result:
+            The extraction result to evaluate.
+        capabilities:
+            Output capabilities of the algorithm that produced the result.
+        k_values:
+            K cutoffs for P@K evaluation. Defaults to [100, 500, 1000].
+        """
+        metrics: dict[str, EvaluationResult | dict[int, EvaluationResult]] = {}
+
+        # Set-based P/R/F1 — universal, always computed
+        metrics["set_based"] = self.evaluate(result)
+
+        # P@K — only meaningful for rankers that produce a ranked output
+        if capabilities.produces_ranking:
+            if k_values is None:
+                k_values = [100, 500, 1000]
+            p_at_k: dict[int, EvaluationResult] = {}
+            for k in k_values:
+                p_at_k[k] = self.evaluate_at_k(result, k)
+            metrics["p_at_k"] = p_at_k
+
+        # Token-level — only meaningful for taggers with offsets
+        if capabilities.produces_offsets:
+            raise NotImplementedError(
+                "Token-level evaluation (span-based P/R/F1 against IOB "
+                "annotations) is not yet implemented. It will be added "
+                "when the first ATETagger is integrated."
+            )
+
+        return metrics
 
     # ------------------------------------------------------------------
     # Internal

@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+
+{% block active_corpus %}active{% endblock %}
+
+{% block content %}
+<h2>Corpus Mode</h2>
+<p class="text-muted">Process a directory of .txt files with multiple algorithms. Shared NLP pipeline makes multi-algorithm runs faster.</p>
+
+<form id="corpus-form">
+    <!-- Directory input -->
+    <div class="form-group">
+        <label for="directory">Corpus Directory</label>
+        <div style="display:flex; gap:8px;">
+            <input type="text" name="directory" id="directory"
+                   placeholder="/path/to/corpus/directory" style="flex:1;">
+            <button type="button" class="btn btn-secondary"
+                    hx-post="/corpus/scan"
+                    hx-target="#file-scan"
+                    hx-include="#directory">
+                Scan
+            </button>
+        </div>
+    </div>
+
+    <!-- File scan results area -->
+    <div id="file-scan" class="mb-2"></div>
+
+    <!-- Algorithm chip selector -->
+    <div class="form-group">
+        <label>Algorithms</label>
+        <p class="text-muted" style="margin-bottom:8px; font-size:0.82rem;">
+            Select multiple algorithms &mdash; shared NLP pipeline makes multi-algorithm runs faster
+        </p>
+        <div class="chip-container">
+            {% for algo_name, algo_info in algorithms.items() %}
+            <label class="chip" data-algo="{{ algo_name }}">
+                <input type="checkbox" name="algorithms" value="{{ algo_name }}"
+                       onchange="toggleChip(this)">
+                <span class="chip-label">{{ algo_info.name }}</span>
+                {% if algo_info.type == 'tagger' %}
+                <span class="chip-badge chip-badge-tagger">tagger</span>
+                {% endif %}
+                {% if algo_info.needs_reference %}
+                <span class="chip-badge chip-badge-ref">ref</span>
+                {% endif %}
+                <span class="chip-check">&#10003;</span>
+            </label>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Options row -->
+    <div class="form-row">
+        <div class="form-group">
+            <label for="top_n">Top N</label>
+            <input type="number" name="top_n" id="top_n" value="20" min="1" max="1000" step="1">
+        </div>
+        <div class="form-group">
+            <label for="min_frequency">Min Frequency</label>
+            <input type="number" name="min_frequency" id="min_frequency" value="2" min="1" step="1">
+        </div>
+        <div class="form-group">
+            <label for="pattern">POS Pattern</label>
+            <select name="pattern" id="pattern">
+                <option value="default" selected>Default</option>
+                <option value="genia">GENIA</option>
+                <option value="acl_rdtec">ACL RD-TEC</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Advanced parameters (collapsible) -->
+    <div class="collapsible" id="advanced-section">
+        <button type="button" class="collapsible-toggle"
+                onclick="this.parentElement.classList.toggle('open')">
+            Advanced Parameters
+        </button>
+        <div class="collapsible-body">
+            <div id="algo-params-corpus">
+                <p class="text-muted">Select algorithms above to see their parameters.</p>
+            </div>
+            <!-- Reference frequency file (shown when any selected algo needs it) -->
+            <div id="ref-file-section" style="display:none;">
+                <div class="form-group">
+                    <label for="reference_frequency_file">Reference Frequency File</label>
+                    <input type="text" name="reference_frequency_file"
+                           id="reference_frequency_file"
+                           placeholder="/path/to/reference_freq.txt">
+                    <small class="text-muted">
+                        Path to a reference corpus frequency file. If blank, self-reference is used.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Run button -->
+    <div style="margin-top:8px;">
+        <button type="button" class="btn btn-primary" id="run-btn"
+                onclick="startCorpusRun()">
+            Run Extraction
+        </button>
+        <span id="loading" class="htmx-indicator" style="margin-left:12px; color:var(--text-muted);">
+            Starting...
+        </span>
+    </div>
+</form>
+
+<!-- Progress area -->
+<div id="progress" class="mt-3"></div>
+
+<!-- Results area -->
+<div id="results" class="mt-3"></div>
+
+<script>
+// Registry data for building per-algo param forms.
+var algoRegistry = {{ algorithms | tojson }};
+
+function toggleChip(checkbox) {
+    var chip = checkbox.parentElement;
+    chip.classList.toggle('chip-selected', checkbox.checked);
+    updateAlgoParams();
+}
+
+function updateAlgoParams() {
+    var container = document.getElementById('algo-params-corpus');
+    var refSection = document.getElementById('ref-file-section');
+    var checked = document.querySelectorAll('.chip-container input[type="checkbox"]:checked');
+
+    if (checked.length === 0) {
+        container.innerHTML = '<p class="text-muted">Select algorithms above to see their parameters.</p>';
+        refSection.style.display = 'none';
+        return;
+    }
+
+    var html = '';
+    var needsRef = false;
+
+    checked.forEach(function(cb) {
+        var algoName = cb.value;
+        var info = algoRegistry[algoName];
+        if (!info) return;
+
+        if (info.needs_reference) needsRef = true;
+
+        var params = info.params || {};
+        var paramKeys = Object.keys(params);
+        if (paramKeys.length === 0) return;
+
+        html += '<div class="algo-param-group">';
+        html += '<h4 style="color:var(--primary); font-size:0.85rem; margin:12px 0 8px;">' + info.name + '</h4>';
+
+        paramKeys.forEach(function(pName) {
+            var p = params[pName];
+            var fieldName = 'algo_param_' + algoName + '_' + pName;
+
+            if (p.type === 'bool') {
+                html += '<div class="form-group">';
+                html += '<label style="display:flex; align-items:center; gap:8px; cursor:pointer;">';
+                html += '<input type="checkbox" name="' + fieldName + '" value="true"';
+                if (p['default']) html += ' checked';
+                html += ' style="width:auto;"> ' + p.label;
+                html += '</label></div>';
+            } else if (p.type === 'float' || p.type === 'int') {
+                html += '<div class="form-group">';
+                html += '<label for="' + fieldName + '">' + p.label + '</label>';
+                html += '<input type="number" name="' + fieldName + '" id="' + fieldName + '"';
+                html += ' value="' + p['default'] + '"';
+                if (p.min !== undefined) html += ' min="' + p.min + '"';
+                if (p.max !== undefined) html += ' max="' + p.max + '"';
+                if (p.step !== undefined) html += ' step="' + p.step + '"';
+                html += '></div>';
+            }
+        });
+
+        html += '</div>';
+    });
+
+    if (!html) {
+        html = '<p class="text-muted">No additional parameters for selected algorithms.</p>';
+    }
+
+    container.innerHTML = html;
+    refSection.style.display = needsRef ? '' : 'none';
+}
+
+function startCorpusRun() {
+    var checked = document.querySelectorAll('.chip-container input[type="checkbox"]:checked');
+    if (checked.length === 0) {
+        document.getElementById('progress').innerHTML =
+            '<div class="error-banner">Please select at least one algorithm.</div>';
+        return;
+    }
+
+    var dir = document.getElementById('directory').value.trim();
+    if (!dir) {
+        document.getElementById('progress').innerHTML =
+            '<div class="error-banner">Please enter a directory path.</div>';
+        return;
+    }
+
+    // Disable the Run button while processing.
+    var runBtn = document.getElementById('run-btn');
+    runBtn.disabled = true;
+    runBtn.textContent = 'Processing...';
+
+    // Submit the form via HTMX.
+    htmx.ajax('POST', '/corpus/run', {
+        target: '#progress',
+        source: document.getElementById('corpus-form'),
+        swap: 'innerHTML'
+    }).catch(function() {
+        // Re-enable button if the request itself fails (network error, etc.).
+        runBtn.disabled = false;
+        runBtn.textContent = 'Run Extraction';
+    });
+}
+</script>
+{% endblock %}

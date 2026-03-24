@@ -1,0 +1,77 @@
+<!-- Status bar -->
+<div class="status-bar">
+    <span class="status-dot"></span>
+    <span>{{ total_terms }} terms</span>
+    <span>&middot;</span>
+    <span>{{ algorithm }}</span>
+    <span>&middot;</span>
+    <span>{{ elapsed }}s</span>
+    <span style="margin-left:auto; display:flex; gap:8px;">
+        <a href="/extract/export/csv" class="btn btn-secondary" style="padding:4px 12px; font-size:0.8rem; text-decoration:none;">CSV</a>
+        <a href="/extract/export/json" class="btn btn-secondary" style="padding:4px 12px; font-size:0.8rem; text-decoration:none;">JSON</a>
+    </span>
+</div>
+
+<!-- View toggle -->
+<div style="display:flex; gap:8px; margin-bottom:12px;">
+    <button type="button" class="btn btn-primary" id="btn-table-view"
+            onclick="toggleView('table')">Table</button>
+    <button type="button" class="btn btn-secondary" id="btn-highlight-view"
+            onclick="toggleView('highlight')">Highlighted Text</button>
+</div>
+
+<!-- Table view -->
+<div id="view-table">
+{% if terms %}
+<table>
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Term</th>
+            <th>Score</th>
+            <th>Frequency</th>
+            <th>Surface Forms</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for term in terms %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ term.string }}</td>
+            <td>{{ "%.4f"|format(term.score) }}</td>
+            <td>{{ term.frequency }}</td>
+            <td class="text-muted" style="font-size:0.82rem;">{{ term.surface_forms|join(", ") }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="text-muted">No terms extracted.</p>
+{% endif %}
+</div>
+
+<!-- Highlighted text view -->
+<div id="view-highlight" style="display:none;">
+    <div style="background:var(--input-bg); border:1px solid var(--border); border-radius:var(--radius); padding:16px; line-height:1.8; white-space:pre-wrap; font-size:0.9rem;">{{ highlighted_text | safe }}</div>
+</div>
+
+<script>
+function toggleView(mode) {
+    var tableDiv = document.getElementById('view-table');
+    var highlightDiv = document.getElementById('view-highlight');
+    var btnTable = document.getElementById('btn-table-view');
+    var btnHighlight = document.getElementById('btn-highlight-view');
+
+    if (mode === 'table') {
+        tableDiv.style.display = '';
+        highlightDiv.style.display = 'none';
+        btnTable.className = 'btn btn-primary';
+        btnHighlight.className = 'btn btn-secondary';
+    } else {
+        tableDiv.style.display = 'none';
+        highlightDiv.style.display = '';
+        btnTable.className = 'btn btn-secondary';
+        btnHighlight.className = 'btn btn-primary';
+    }
+}
+</script>

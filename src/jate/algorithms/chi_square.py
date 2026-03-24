@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from jate.algorithms.base import Algorithm
+from jate.algorithms.base import ATERanker, OutputCapabilities
 from jate.features import ChiSquareFrequentTerms, ContextFrequency, Cooccurrence, TermFrequency
 from jate.models import Candidate, Term, TermExtractionResult
 
 
-class ChiSquare(Algorithm):
+class ChiSquare(ATERanker):
     """Chi-square test for term independence.
 
     See Matsuo & Ishizuka (2003), *Keyword Extraction from a Single Document
@@ -38,7 +38,10 @@ class ChiSquare(Algorithm):
     def description(self) -> str:
         return "Chi-Square test for term independence"
 
-    def score(
+    def output_capabilities(self) -> OutputCapabilities:
+        return OutputCapabilities(produces_scores=True, produces_ranking=True, requires_corpus=True)
+
+    def _score(
         self,
         candidates: list[Candidate],
         term_freq: TermFrequency,

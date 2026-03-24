@@ -5,12 +5,12 @@ from __future__ import annotations
 import math
 from typing import Any
 
-from jate.algorithms.base import Algorithm
+from jate.algorithms.base import ATERanker, OutputCapabilities
 from jate.features import Containment, TermFrequency
 from jate.models import Candidate, Term, TermExtractionResult
 
 
-class CValue(Algorithm):
+class CValue(ATERanker):
     """C-Value algorithm for multi-word term extraction.
 
     See Frantzi et al. 2000, *Automatic recognition of multi-word terms:
@@ -30,7 +30,10 @@ class CValue(Algorithm):
     def description(self) -> str:
         return "C-Value for multi-word term extraction"
 
-    def score(
+    def output_capabilities(self) -> OutputCapabilities:
+        return OutputCapabilities(produces_scores=True, produces_ranking=True, requires_corpus=True)
+
+    def _score(
         self,
         candidates: list[Candidate],
         term_freq: TermFrequency,

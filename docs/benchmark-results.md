@@ -238,3 +238,26 @@ Best algorithm at each P@K cutoff per dataset:
 - **termex/weirdness** improve with larger K values and are competitive on coastterm, where the BNC reference is a good domain contrast.
 - **rake** consistently underperforms at small K — it is designed for document-level keyword extraction, not corpus-level term extraction.
 - **glossex** shows poor precision at small K across all datasets, suggesting a calibration issue in the top-ranked terms.
+
+---
+
+## Neural tagger: XLM-R (ATETagger)
+
+The XLM-R tagger ([ziqizhang2026/jate-ate-xlmr](https://huggingface.co/ziqizhang2026/jate-ate-xlmr)) is a transformer token classifier fine-tuned on ACTER using BIO sequence labelling. It operates per-document (no corpus-level statistics) and is evaluated with set-based P/R/F1 — not P@K, since taggers do not produce rankings.
+
+Trained on 3 ACTER domains (corruption, equitation, wind energy), evaluated on held-out domain (heart failure) and cross-domain on all datasets.
+
+| Dataset | Precision | Recall | F1 | Time | Notes |
+|---------|-----------|--------|------|------|-------|
+| acl_rdtec_mini | 0.2059 | 0.0161 | 0.0299 | 9s | 3 documents, too small for meaningful results |
+| genia | 0.3736 | 0.2291 | 0.2840 | 1,505s | Biomedical domain, cross-domain from ACTER training |
+| acl_rdtec | 0.2297 | 0.0590 | 0.0939 | 767s | Computational linguistics, cross-domain |
+| acter | 0.4904 | 0.2550 | 0.3356 | 192s | In-domain (trained on 3/4 ACTER domains) |
+| coastterm | 0.2650 | 0.1362 | 0.1800 | 272s | Coastal science, cross-domain |
+
+**Observations:**
+- **Best on in-domain data (ACTER)**: F1=0.34, matching TermEval 2020 range (NYU Termolator F1=0.306, TALN-LS2N F1=0.467)
+- **Cross-domain performance drops significantly**: F1 drops to 0.09-0.28 on other datasets, confirming that domain-specific fine-tuning matters
+- **High precision, low recall**: The model is conservative — when it predicts a term, it's usually correct, but it misses many terms
+- **Slow on CPU**: ~0.75s per document on CPU. GPU recommended for large corpora
+- **Complementary to rankers**: The tagger finds different terms than statistical rankers — ensembling (issue #92 P1.3) could combine their strengths

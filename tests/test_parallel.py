@@ -31,11 +31,8 @@ class TestBatchNLP:
 class TestJATEConfig:
     def test_defaults(self) -> None:
         config = JATEConfig()
-        assert config.max_workers == 1
-
-    def test_custom_workers(self) -> None:
-        config = JATEConfig(max_workers=4)
-        assert config.max_workers == 4
+        assert config.reference_frequency_file is None
+        assert config.prefilter_min_ttf == 0
 
 
 def _double(x: int) -> int:
@@ -175,14 +172,14 @@ class TestParallelCompare:
         text = "Machine learning and neural networks are used in deep learning research. Neural network architectures improve machine learning models."
         results_seq = compare(
             [text],
-            algorithms=["tfidf", "cvalue", "basic", "ttf"],
-            config=JATEConfig(max_workers=1),
+            algorithms=["cvalue", "basic", "ttf"],
+            config=JATEConfig(),
             min_frequency=1,
         )
         results_par = compare(
             [text],
-            algorithms=["tfidf", "cvalue", "basic", "ttf"],
-            config=JATEConfig(max_workers=2),
+            algorithms=["cvalue", "basic", "ttf"],
+            config=JATEConfig(),
             min_frequency=1,
         )
         assert set(results_seq.keys()) == set(results_par.keys())

@@ -5,12 +5,12 @@ from __future__ import annotations
 import math
 from typing import Any
 
-from jate.algorithms.base import Algorithm
+from jate.algorithms.base import AlgorithmIncompatibleError, ATERanker, OutputCapabilities
 from jate.features import TermFrequency
 from jate.models import Candidate, Term, TermExtractionResult
 
 
-class TFIDF(Algorithm):
+class TFIDF(ATERanker):
     """TF-IDF modified to work at corpus level (matches Java JATE).
 
     ``tf_norm = TTF / (corpus_total + 1)`` is the normalised term frequency and
@@ -22,7 +22,19 @@ class TFIDF(Algorithm):
     def description(self) -> str:
         return "TF-IDF at corpus level: score = tf_norm * log(N / df)"
 
-    def score(
+    def output_capabilities(self) -> OutputCapabilities:
+        return OutputCapabilities(produces_scores=True, produces_ranking=True, requires_corpus=True)
+
+    def doc_level_compatibility(self, term_freq: TermFrequency, **kwargs: Any) -> None:
+        if term_freq.total_docs <= 1:
+            raise AlgorithmIncompatibleError(
+                "TF-IDF produces all-zero scores on a single document "
+                "(IDF = log(1/1) = 0 for all terms). "
+                "Use extract_corpus() with multiple documents, "
+                "or choose a different algorithm (e.g., cvalue, rake)."
+            )
+
+    def _score(
         self,
         candidates: list[Candidate],
         term_freq: TermFrequency,
