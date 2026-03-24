@@ -256,7 +256,7 @@ Trained on 3 ACTER domains (corruption, equitation, wind energy), evaluated on h
 | coastterm | 0.2650 | 0.1362 | 0.1800 | 272s | Coastal science, cross-domain |
 
 **Observations:**
-- **Best on in-domain data (ACTER)**: F1=0.34, matching TermEval 2020 range (NYU Termolator F1=0.31, TALN-LS2N F1=0.47)
+- **Best on in-domain data (ACTER)**: F1=0.34, matching TermEval 2020 range (NYU Termolator F1=0.306, TALN-LS2N F1=0.467)
 - **Cross-domain performance drops significantly**: F1 drops to 0.09-0.28 on other datasets, confirming that domain-specific fine-tuning matters
 - **High precision, low recall**: The model is conservative — when it predicts a term, it's usually correct, but it misses many terms
 - **Slow on CPU**: ~0.75s per document on CPU. GPU recommended for large corpora

@@ -1,0 +1,64 @@
+<!-- Overall status bar -->
+<div class="status-bar">
+    <span class="status-dot"></span>
+    <span>{{ stats.n_algorithms }} algorithm{{ 's' if stats.n_algorithms != 1 else '' }}</span>
+    <span>&middot;</span>
+    <span>{{ stats.n_documents }} document{{ 's' if stats.n_documents != 1 else '' }}</span>
+    {% if stats.n_candidates %}
+    <span>&middot;</span>
+    <span>{{ stats.n_candidates }} candidates</span>
+    {% endif %}
+    <span>&middot;</span>
+    <span>{{ elapsed }}s total</span>
+</div>
+
+{% if results %}
+<div class="corpus-results-grid">
+    {% for algo_name, terms in results.items() %}
+    <div class="corpus-result-column">
+        <div class="corpus-result-header">
+            <h3>{{ algo_name }}</h3>
+            <span class="text-muted" style="font-size:0.82rem;">
+                {{ full_counts[algo_name] }} total &middot; showing top {{ terms | length }}
+            </span>
+            <span style="display:flex; gap:4px; margin-left:auto;">
+                <a href="/corpus/export/{{ job_id }}/{{ algo_name }}/csv"
+                   class="btn btn-secondary" style="padding:2px 10px; font-size:0.78rem; text-decoration:none;">
+                    CSV
+                </a>
+                <a href="/corpus/export/{{ job_id }}/{{ algo_name }}/json"
+                   class="btn btn-secondary" style="padding:2px 10px; font-size:0.78rem; text-decoration:none;">
+                    JSON
+                </a>
+            </span>
+        </div>
+        {% if terms %}
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Term</th>
+                    <th>Score</th>
+                    <th>Freq</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for term in terms %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ term.string }}</td>
+                    <td>{{ "%.4f" | format(term.score) }}</td>
+                    <td>{{ term.frequency }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-muted">No terms extracted.</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="text-muted">No results.</p>
+{% endif %}

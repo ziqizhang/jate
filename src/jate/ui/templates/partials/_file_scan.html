@@ -1,0 +1,44 @@
+<div class="file-scan-results">
+    {% if valid_files %}
+    <div class="scan-summary">
+        <span class="scan-stat scan-stat-ok">
+            {{ valid_files | length }} .txt file{{ 's' if valid_files | length != 1 else '' }}
+        </span>
+        <span class="scan-stat scan-stat-size">
+            {{ "%.1f" | format(total_size / 1024) }} KB total
+        </span>
+        {% if large_files %}
+        <span class="scan-stat scan-stat-warn">
+            {{ large_files | length }} file{{ 's' if large_files | length != 1 else '' }} &gt; 1 MB
+        </span>
+        {% endif %}
+        {% if skipped_files %}
+        <span class="scan-stat scan-stat-skip">
+            {{ skipped_files | length }} non-.txt skipped
+        </span>
+        {% endif %}
+    </div>
+
+    <details class="file-details">
+        <summary class="text-muted" style="cursor:pointer; font-size:0.85rem; margin-top:8px;">
+            Show file list
+        </summary>
+        <div class="file-list">
+            {% for name, size in valid_files %}
+            <div class="file-item{% if size > 1048576 %} file-item-large{% endif %}">
+                <span>{{ name }}</span>
+                <span class="text-muted">{{ "%.1f" | format(size / 1024) }} KB</span>
+            </div>
+            {% endfor %}
+            {% for name in skipped_files %}
+            <div class="file-item file-item-skipped">
+                <span>{{ name }}</span>
+                <span class="text-muted">skipped</span>
+            </div>
+            {% endfor %}
+        </div>
+    </details>
+    {% else %}
+    <div class="error-banner">No .txt files found in this directory.</div>
+    {% endif %}
+</div>

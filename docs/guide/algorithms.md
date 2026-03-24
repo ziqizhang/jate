@@ -1,6 +1,6 @@
 # Algorithms
 
-JATE provides 14 automatic term extraction algorithms (13 classical + ensemble voting). All algorithms implement the same interface: they take a list of candidates and feature objects, and return a scored, sorted `TermExtractionResult`.
+JATE provides 15 automatic term extraction algorithms (14 classical + ensemble voting). All algorithms implement the same interface: they take a list of candidates and feature objects, and return a scored, sorted `TermExtractionResult`.
 
 ## Choosing an algorithm
 
@@ -12,6 +12,7 @@ JATE provides 14 automatic term extraction algorithms (13 classical + ensemble v
 | Comparison against a reference corpus | `weirdness`, `termex`, or `glossex` |
 | Statistical independence testing | `chi_square` |
 | Terms that deviate from expected distribution | `ridf` |
+| Unsupervised topic-based term discovery | `nmf` |
 
 ## Algorithm reference
 
@@ -180,6 +181,18 @@ result = jate.extract_corpus(docs, algorithm="glossex")
 ```
 
 Uses different weight ratios for single-word vs multi-word terms.
+
+---
+
+### NMF
+
+**Non-negative Matrix Factorisation for unsupervised term extraction.** Decomposes a document-candidate frequency matrix into topic components via NMF, then extracts the top-scoring candidates per topic.
+
+```python
+result = jate.extract_corpus(docs, algorithm="nmf")
+```
+
+Parameters: `n_topics` (default: 20), `top_n_per_topic` (default: 50). Good for discovering thematic terminology clusters without supervision.
 
 ---
 

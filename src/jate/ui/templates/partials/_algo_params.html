@@ -1,0 +1,38 @@
+{% if params or needs_reference %}
+
+{% for name, p in params.items() %}
+<div class="form-group">
+    {% if p.type == "bool" %}
+    <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+        <input type="checkbox" name="algo_param_{{ name }}" value="true"
+               {% if p.default %}checked{% endif %}
+               style="width:auto;">
+        {{ p.label }}
+    </label>
+    {% elif p.type == "float" %}
+    <label for="algo_param_{{ name }}">{{ p.label }}</label>
+    <input type="number" name="algo_param_{{ name }}" id="algo_param_{{ name }}"
+           value="{{ p.default }}"
+           min="{{ p.get('min', 0) }}" max="{{ p.get('max', 1) }}" step="{{ p.get('step', 0.01) }}">
+    {% elif p.type == "int" %}
+    <label for="algo_param_{{ name }}">{{ p.label }}</label>
+    <input type="number" name="algo_param_{{ name }}" id="algo_param_{{ name }}"
+           value="{{ p.default }}"
+           min="{{ p.get('min', 1) }}" max="{{ p.get('max', 1000) }}" step="{{ p.get('step', 1) }}">
+    {% endif %}
+</div>
+{% endfor %}
+
+{% if needs_reference %}
+<div class="form-group">
+    <label for="algo_param_reference_frequency_file">Reference Frequency File</label>
+    <input type="text" name="algo_param_reference_frequency_file"
+           id="algo_param_reference_frequency_file"
+           placeholder="/path/to/reference_freq.txt">
+    <small class="text-muted">Path to a reference corpus frequency file. If blank, self-reference is used.</small>
+</div>
+{% endif %}
+
+{% else %}
+<p class="text-muted">No additional parameters for this algorithm.</p>
+{% endif %}

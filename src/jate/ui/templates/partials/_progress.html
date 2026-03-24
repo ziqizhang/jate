@@ -1,0 +1,84 @@
+<div id="progress-container">
+    <div class="progress-header">
+        <span id="progress-label">Processing...</span>
+        <span id="elapsed">0s</span>
+    </div>
+    <div class="progress-bar">
+        <div class="progress-fill" id="progress-bar" style="width: 0%"></div>
+    </div>
+    <div class="progress-pct" id="progress-pct">0%</div>
+    <div class="log-area" id="log-area"></div>
+</div>
+
+<script>
+(function() {
+    var evtSource = new EventSource("/corpus/progress/{{ job_id }}");
+    var startTime = Date.now();
+
+    var timer = setInterval(function() {
+        var elapsed = Math.floor((Date.now() - startTime) / 1000);
+        var el = document.getElementById("elapsed");
+        if (el) el.textContent = elapsed + "s";
+    }, 1000);
+
+    evtSource.onmessage = function(event) {
+        var data = JSON.parse(event.data);
+
+        // Update progress bar.
+        var bar = document.getElementById("progress-bar");
+        if (bar) bar.style.width = data.progress + "%";
+
+        var pct = document.getElementById("progress-pct");
+        if (pct) pct.textContent = data.progress + "%";
+
+        // Append log messages.
+        var logArea = document.getElementById("log-area");
+        if (logArea && data.messages) {
+            for (var i = 0; i < data.messages.length; i++) {
+                var line = document.createElement("div");
+                line.className = "log-line";
+                line.textContent = data.messages[i];
+                logArea.appendChild(line);
+                logArea.scrollTop = logArea.scrollHeight;
+            }
+        }
+
+        // Handle completion.
+        if (data.done) {
+            evtSource.close();
+            clearInterval(timer);
+
+            // Re-enable the Run button now that processing is complete.
+            var runBtn = document.getElementById("run-btn");
+            if (runBtn) {
+                runBtn.disabled = false;
+                runBtn.textContent = "Run Extraction";
+            }
+
+            if (data.error) {
+                var container = document.getElementById("progress-container");
+                if (container) {
+                    container.innerHTML =
+                        '<div class="error-banner">Error: ' + data.error + '</div>';
+                }
+            } else {
+                var label = document.getElementById("progress-label");
+                if (label) label.textContent = "Complete!";
+                // Fetch results into the results area.
+                htmx.ajax('GET', '/corpus/results/{{ job_id }}', '#results');
+            }
+        }
+    };
+
+    evtSource.onerror = function() {
+        evtSource.close();
+        clearInterval(timer);
+        // Re-enable the Run button if the SSE connection drops unexpectedly.
+        var runBtn = document.getElementById("run-btn");
+        if (runBtn) {
+            runBtn.disabled = false;
+            runBtn.textContent = "Run Extraction";
+        }
+    };
+})();
+</script>
