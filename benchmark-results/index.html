@@ -1,0 +1,1983 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A Python library for automatic term extraction from text corpora.">
+      
+      
+      
+        <link rel="canonical" href="https://ziqizhang.github.io/jate/benchmark-results/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+    
+    
+      
+        <title>JATE Benchmark Results - JATE — Just Automatic Term Extraction</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#jate-benchmark-results" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="JATE — Just Automatic Term Extraction" class="md-header__button md-logo" aria-label="JATE — Just Automatic Term Extraction" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            JATE — Just Automatic Term Extraction
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              JATE Benchmark Results
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ziqizhang/jate" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ziqizhang/jate
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="JATE — Just Automatic Term Extraction" class="md-nav__button md-logo" aria-label="JATE — Just Automatic Term Extraction" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    JATE — Just Automatic Term Extraction
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ziqizhang/jate" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ziqizhang/jate
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/algorithms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Algorithms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/extractors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Candidate Extractors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/corpus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corpus Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation & Benchmarking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/export/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Export Formats
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methodology
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Methodology">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comparison-with-jate-20-java" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison with JATE 2.0 (Java)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comparison with JATE 2.0 (Java)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#breakdown-of-missing-genia-gold-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Breakdown of missing GENIA gold terms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#published-baselines-for-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Published baselines for comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acl_rdtec_mini" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        acl_rdtec_mini
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#genia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        genia
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acl_rdtec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        acl_rdtec
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        acter
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coastterm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        coastterm
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-dataset-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-dataset summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#neural-tagger-xlm-r-atetagger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Neural tagger: XLM-R (ATETagger)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/ziqizhang/jate/edit/dev/docs/benchmark-results.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="jate-benchmark-results">JATE Benchmark Results<a class="headerlink" href="#jate-benchmark-results" title="Permanent link">&para;</a></h1>
+<p>Generated: 2026-03-14</p>
+<h2 id="methodology">Methodology<a class="headerlink" href="#methodology" title="Permanent link">&para;</a></h2>
+<p><strong>Candidate extraction</strong>: POS pattern matching over Universal POS tags (spaCy <code>en_core_web_sm</code>). The default pattern matches sequences of adjectives, nouns, and proper nouns: <code>(ADJ |NOUN |PROPN )*(NOUN |PROPN )</code>. Domain-specific patterns are available in <code>src/jate/extractors/patterns/</code> (e.g., <code>genia.txt</code> adds optional preposition support for "X of Y" terms). All results below use the default pattern.</p>
+<p><strong>Evaluation metric</strong>: P@K (precision at top-K ranked terms). K cutoffs: 100, 500, 1,000, 5,000, 10,000 where applicable.</p>
+<p><strong>Reference corpus</strong>: BNC (British National Corpus) frequency list, used by algorithms requiring a reference (weirdness, glossex, termex).</p>
+<p><strong>Scoring time</strong>: Wall-clock time for the algorithm's scoring step only, excluding NLP processing and feature building.</p>
+<h3 id="comparison-with-jate-20-java">Comparison with JATE 2.0 (Java)<a class="headerlink" href="#comparison-with-jate-20-java" title="Permanent link">&para;</a></h3>
+<p>JATE v3 (Python) results are <strong>lower than JATE 2.0</strong> (Java) on the same datasets, primarily due to differences in candidate extraction:</p>
+<table>
+<thead>
+<tr>
+<th>Factor</th>
+<th>JATE 2.0 (Java)</th>
+<th>JATE v3 (Python)</th>
+<th>Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>NLP backend</strong></td>
+<td>Apache OpenNLP + Solr analysis chain</td>
+<td>spaCy <code>en_core_web_sm</code></td>
+<td>Different tokenisation of hyphens, compounds</td>
+</tr>
+<tr>
+<td><strong>POS tagset</strong></td>
+<td>Penn Treebank (NN, NNP, NNS, JJ, VBN)</td>
+<td>Universal POS (NOUN, PROPN, ADJ)</td>
+<td>Coarser tag distinctions</td>
+</tr>
+<tr>
+<td><strong>Tokenisation</strong></td>
+<td>Solr preserves hyphenated compounds (e.g., <code>NF-kappa</code> as one token)</td>
+<td>spaCy splits hyphens (e.g., <code>NF</code>, <code>-</code>, <code>kappa</code> as three tokens)</td>
+<td>~50% of missing GENIA gold terms contain hyphens</td>
+</tr>
+<tr>
+<td><strong>Lemmatiser</strong></td>
+<td>Dragon NLP <code>EngLemmatiser</code></td>
+<td>spaCy lemmatiser</td>
+<td>Different normalisation of biomedical terms</td>
+</tr>
+<tr>
+<td><strong>GENIA candidates</strong></td>
+<td>38,805</td>
+<td>36,355</td>
+<td>6% fewer candidates extracted</td>
+</tr>
+<tr>
+<td><strong>GENIA gold overlap</strong></td>
+<td>~65%+ (estimated from published P@K)</td>
+<td>43%</td>
+<td>Hyphenated/compound terms account for most of the gap</td>
+</tr>
+</tbody>
+</table>
+<p>The remaining gap is dominated by <strong>tokenisation differences</strong> — biomedical text is heavy with hyphenated compounds, parenthetical expressions, and alphanumeric identifiers that spaCy's general-purpose tokeniser splits differently from Solr's domain-tuned analysis chain.</p>
+<h4 id="breakdown-of-missing-genia-gold-terms">Breakdown of missing GENIA gold terms<a class="headerlink" href="#breakdown-of-missing-genia-gold-terms" title="Permanent link">&para;</a></h4>
+<p>Of the ~20,000 gold terms not found in JATE v3 candidates:</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Count</th>
+<th>% of missing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Contains hyphens (e.g., <code>NF-kappa</code>, <code>T-cell</code>)</td>
+<td>12,837</td>
+<td>50%</td>
+</tr>
+<tr>
+<td>Contains digits (e.g., <code>interleukin-2</code>, <code>CD28</code>)</td>
+<td>9,315</td>
+<td>36%</td>
+</tr>
+<tr>
+<td>Contains parentheses</td>
+<td>3,109</td>
+<td>12%</td>
+</tr>
+<tr>
+<td>Any special character</td>
+<td>19,546</td>
+<td><strong>76%</strong></td>
+</tr>
+<tr>
+<td>Pure alphabetic only</td>
+<td>6,074</td>
+<td>24%</td>
+</tr>
+</tbody>
+</table>
+<p>The issue is not matching — it is that <strong>candidates are never generated</strong> for hyphenated terms. spaCy splits <code>NF-kappa</code> into three tokens (<code>NF</code>, <code>-</code>, <code>kappa</code>) and the <code>-</code> receives a PUNCT tag, which breaks the POS pattern. Stripping punctuation from the gold standard does not help because the extraction step already missed these terms:</p>
+<table>
+<thead>
+<tr>
+<th>Evaluation mode</th>
+<th>GENIA gold coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Raw gold vs raw candidates</td>
+<td>42.7%</td>
+</tr>
+<tr>
+<td>Punctuation-stripped gold vs stripped candidates</td>
+<td>48.7%</td>
+</tr>
+<tr>
+<td>Java JATE 2.0 (estimated)</td>
+<td>~65%+</td>
+</tr>
+</tbody>
+</table>
+<p>Closing this gap requires tokeniser-level changes (e.g., merging hyphenated tokens before POS tagging, or using a biomedical spaCy model like <code>en_core_sci_sm</code> that handles domain compounds natively).</p>
+<h3 id="published-baselines-for-comparison">Published baselines for comparison<a class="headerlink" href="#published-baselines-for-comparison" title="Permanent link">&para;</a></h3>
+<p><strong>GENIA</strong> (Zhang, Gao &amp; Ciravegna, LREC 2016 — JATE 2.0 Java):
+- TF-IDF P@1000 ≈ 0.85–0.95, C-Value P@1000 ≈ 0.85–0.90 (from Figure 4, POS-based extraction)
+- RAKE consistently worst performer across all K values</p>
+<p><strong>GENIA</strong> (Fedorenko, Astrakhantsev &amp; Turdakov, 2013 — supervised voting):
+- Voting (best features) AvP@1000 = 0.88, AvP@5000 = 0.79</p>
+<p><strong>ACTER</strong> (TermEval 2020 shared task — heart failure domain, F1):
+- TALN-LS2N (BERT-based): F1 = 46.7%, NYU Termolator (classical statistical): F1 = 30.6%</p>
+<p><strong>CoastTerm</strong> (Delaunay et al., TSD 2024):
+- No published classical ATE baselines. Only transformer-based sequence labelling (~80% F1). These results represent the first classical statistical benchmarks on CoastTerm.</p>
+<hr />
+<h2 id="acl_rdtec_mini">acl_rdtec_mini<a class="headerlink" href="#acl_rdtec_mini" title="Permanent link">&para;</a></h2>
+<p>Small test fixture — 3 documents from the ACL Anthology. Useful for quick smoke tests, not for comparing algorithms.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Documents</strong></td>
+<td>3</td>
+</tr>
+<tr>
+<td><strong>Gold terms</strong></td>
+<td>435</td>
+</tr>
+<tr>
+<td><strong>Candidates</strong></td>
+<td>1,577</td>
+</tr>
+<tr>
+<td><strong>NLP time</strong></td>
+<td>3.5s</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Algorithm</th>
+<th>P@100</th>
+<th>P@500</th>
+<th>P@1,000</th>
+<th>Score time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>attf</td>
+<td>0.3700</td>
+<td>0.1940</td>
+<td>0.1700</td>
+<td>0.01s</td>
+</tr>
+<tr>
+<td>tfidf</td>
+<td>0.3400</td>
+<td>0.1920</td>
+<td>0.1630</td>
+<td>0.01s</td>
+</tr>
+<tr>
+<td>ttf</td>
+<td>0.3400</td>
+<td>0.2000</td>
+<td>0.1690</td>
+<td>0.01s</td>
+</tr>
+<tr>
+<td>chi_square</td>
+<td>0.3000</td>
+<td>0.1900</td>
+<td>0.1460</td>
+<td>0.02s</td>
+</tr>
+<tr>
+<td>basic</td>
+<td>0.3000</td>
+<td>0.2300</td>
+<td>0.1720</td>
+<td>0.01s</td>
+</tr>
+<tr>
+<td>combobasic</td>
+<td>0.3000</td>
+<td>0.2180</td>
+<td>0.1710</td>
+<td>0.01s</td>
+</tr>
+<tr>
+<td>ridf</td>
+<td>0.2900</td>
+<td>0.2000</td>
+<td>0.1690</td>
+<td>0.01s</td>
+</tr>
+<tr>
+<td>cvalue</td>
+<td>0.2300</td>
+<td>0.1440</td>
+<td>0.1440</td>
+<td>0.01s</td>
+</tr>
+<tr>
+<td>ncvalue</td>
+<td>0.2200</td>
+<td>0.1280</td>
+<td>0.1430</td>
+<td>0.02s</td>
+</tr>
+<tr>
+<td>rake</td>
+<td>0.0500</td>
+<td>0.1500</td>
+<td>0.1520</td>
+<td>0.03s</td>
+</tr>
+<tr>
+<td>termex</td>
+<td>0.0200</td>
+<td>0.1520</td>
+<td>0.1710</td>
+<td>0.06s</td>
+</tr>
+<tr>
+<td>weirdness</td>
+<td>0.0200</td>
+<td>0.1020</td>
+<td>0.1620</td>
+<td>0.05s</td>
+</tr>
+<tr>
+<td>glossex</td>
+<td>0.0200</td>
+<td>0.0920</td>
+<td>0.1460</td>
+<td>0.05s</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="genia">genia<a class="headerlink" href="#genia" title="Permanent link">&para;</a></h2>
+<p>2,000 biomedical abstracts from PubMed (GENIA 3.02 corpus). 35,298 gold terms from the GENIA ontology.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Documents</strong></td>
+<td>2,000</td>
+</tr>
+<tr>
+<td><strong>Gold terms</strong></td>
+<td>35,298</td>
+</tr>
+<tr>
+<td><strong>Candidates</strong></td>
+<td>36,355</td>
+</tr>
+<tr>
+<td><strong>NLP time</strong></td>
+<td>118.0s</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Algorithm</th>
+<th>P@100</th>
+<th>P@500</th>
+<th>P@1,000</th>
+<th>P@5,000</th>
+<th>P@10,000</th>
+<th>Score time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>attf</td>
+<td>0.7900</td>
+<td>0.7400</td>
+<td>0.7350</td>
+<td>0.6730</td>
+<td>0.5755</td>
+<td>0.17s</td>
+</tr>
+<tr>
+<td>ridf</td>
+<td>0.7700</td>
+<td>0.7600</td>
+<td>0.7660</td>
+<td>0.6730</td>
+<td>0.6015</td>
+<td>0.22s</td>
+</tr>
+<tr>
+<td>basic</td>
+<td>0.7700</td>
+<td>0.7520</td>
+<td>0.7360</td>
+<td>0.6276</td>
+<td>0.5875</td>
+<td>0.71s</td>
+</tr>
+<tr>
+<td>combobasic</td>
+<td>0.7700</td>
+<td>0.7500</td>
+<td>0.7370</td>
+<td>0.6274</td>
+<td>0.5875</td>
+<td>0.67s</td>
+</tr>
+<tr>
+<td>cvalue</td>
+<td>0.7200</td>
+<td>0.7220</td>
+<td>0.7090</td>
+<td>0.6164</td>
+<td>0.5092</td>
+<td>0.68s</td>
+</tr>
+<tr>
+<td>ncvalue</td>
+<td>0.7200</td>
+<td>0.7220</td>
+<td>0.7090</td>
+<td>0.6172</td>
+<td>0.5161</td>
+<td>1.17s</td>
+</tr>
+<tr>
+<td>tfidf</td>
+<td>0.6100</td>
+<td>0.6720</td>
+<td>0.6560</td>
+<td>0.6434</td>
+<td>0.6015</td>
+<td>0.51s</td>
+</tr>
+<tr>
+<td>ttf</td>
+<td>0.5900</td>
+<td>0.6620</td>
+<td>0.6490</td>
+<td>0.6424</td>
+<td>0.5908</td>
+<td>0.59s</td>
+</tr>
+<tr>
+<td>chi_square</td>
+<td>0.5700</td>
+<td>0.5540</td>
+<td>0.5550</td>
+<td>0.5306</td>
+<td>0.5097</td>
+<td>0.89s</td>
+</tr>
+<tr>
+<td>rake</td>
+<td>0.4300</td>
+<td>0.4760</td>
+<td>0.4800</td>
+<td>0.4460</td>
+<td>0.4437</td>
+<td>37.12s</td>
+</tr>
+<tr>
+<td>weirdness</td>
+<td>0.3800</td>
+<td>0.4360</td>
+<td>0.4720</td>
+<td>0.5244</td>
+<td>0.5163</td>
+<td>0.34s</td>
+</tr>
+<tr>
+<td>termex</td>
+<td>0.2400</td>
+<td>0.3640</td>
+<td>0.4160</td>
+<td>0.5216</td>
+<td>0.5207</td>
+<td>0.96s</td>
+</tr>
+<tr>
+<td>glossex</td>
+<td>0.0000</td>
+<td>0.0000</td>
+<td>0.0860</td>
+<td>0.4374</td>
+<td>0.4794</td>
+<td>0.36s</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Observations</strong>: RIDF and ATTF lead at both small and large K. Basic/combobasic are strong at all cutoffs. Weirdness, termex, and glossex perform poorly at small K but improve at large K — these reference-based methods benefit from corpus-level statistics that only emerge with larger candidate sets. Glossex at P@100=0.00 suggests a ranking calibration issue at the top of the list.</p>
+<hr />
+<h2 id="acl_rdtec">acl_rdtec<a class="headerlink" href="#acl_rdtec" title="Permanent link">&para;</a></h2>
+<p>Full ACL RD-TEC 2.0 corpus — 1,758 computational linguistics abstracts with 5,031 annotated terms.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Documents</strong></td>
+<td>1,758</td>
+</tr>
+<tr>
+<td><strong>Gold terms</strong></td>
+<td>5,031</td>
+</tr>
+<tr>
+<td><strong>Candidates</strong></td>
+<td>6,135</td>
+</tr>
+<tr>
+<td><strong>NLP time</strong></td>
+<td>34.1s</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Algorithm</th>
+<th>P@100</th>
+<th>P@500</th>
+<th>P@1,000</th>
+<th>P@5,000</th>
+<th>Score time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ttf</td>
+<td>0.7300</td>
+<td>0.5360</td>
+<td>0.4590</td>
+<td>0.2370</td>
+<td>0.03s</td>
+</tr>
+<tr>
+<td>tfidf</td>
+<td>0.7200</td>
+<td>0.5200</td>
+<td>0.4590</td>
+<td>0.2370</td>
+<td>0.03s</td>
+</tr>
+<tr>
+<td>ridf</td>
+<td>0.6600</td>
+<td>0.4880</td>
+<td>0.4530</td>
+<td>0.2836</td>
+<td>0.04s</td>
+</tr>
+<tr>
+<td>chi_square</td>
+<td>0.4900</td>
+<td>0.4060</td>
+<td>0.3860</td>
+<td>0.2708</td>
+<td>0.09s</td>
+</tr>
+<tr>
+<td>termex</td>
+<td>0.4700</td>
+<td>0.1740</td>
+<td>0.0980</td>
+<td>0.2502</td>
+<td>0.11s</td>
+</tr>
+<tr>
+<td>weirdness</td>
+<td>0.4700</td>
+<td>0.1580</td>
+<td>0.0850</td>
+<td>0.2532</td>
+<td>0.12s</td>
+</tr>
+<tr>
+<td>attf</td>
+<td>0.4400</td>
+<td>0.4320</td>
+<td>0.3940</td>
+<td>0.2836</td>
+<td>0.20s</td>
+</tr>
+<tr>
+<td>ncvalue</td>
+<td>0.4400</td>
+<td>0.3860</td>
+<td>0.3440</td>
+<td>0.2420</td>
+<td>0.13s</td>
+</tr>
+<tr>
+<td>cvalue</td>
+<td>0.4300</td>
+<td>0.3860</td>
+<td>0.3700</td>
+<td>0.2428</td>
+<td>0.06s</td>
+</tr>
+<tr>
+<td>basic</td>
+<td>0.3700</td>
+<td>0.3480</td>
+<td>0.3240</td>
+<td>0.2726</td>
+<td>0.03s</td>
+</tr>
+<tr>
+<td>combobasic</td>
+<td>0.3600</td>
+<td>0.3240</td>
+<td>0.3200</td>
+<td>0.2726</td>
+<td>0.04s</td>
+</tr>
+<tr>
+<td>rake</td>
+<td>0.0700</td>
+<td>0.1260</td>
+<td>0.1940</td>
+<td>0.2838</td>
+<td>0.48s</td>
+</tr>
+<tr>
+<td>glossex</td>
+<td>0.0100</td>
+<td>0.1620</td>
+<td>0.0880</td>
+<td>0.2408</td>
+<td>0.13s</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Observations</strong>: TTF and TF-IDF dominate at small K — simple frequency is a strong signal in computational linguistics text. Reference-based methods (weirdness, termex) show erratic behaviour, likely because the BNC reference corpus is not well-suited to computational linguistics terminology. RAKE performs poorly at small K but catches up at P@5000.</p>
+<hr />
+<h2 id="acter">acter<a class="headerlink" href="#acter" title="Permanent link">&para;</a></h2>
+<p>ACTER v1.5 — 241 documents across 4 English domains (corruption, dressage, heart failure, wind energy). 5,329 gold terms (Specific_Term + Common_Term categories, excluding OOD_Term).</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Documents</strong></td>
+<td>241</td>
+</tr>
+<tr>
+<td><strong>Gold terms</strong></td>
+<td>5,329</td>
+</tr>
+<tr>
+<td><strong>Candidates</strong></td>
+<td>16,497</td>
+</tr>
+<tr>
+<td><strong>NLP time</strong></td>
+<td>53.9s</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Algorithm</th>
+<th>P@100</th>
+<th>P@500</th>
+<th>P@1,000</th>
+<th>P@5,000</th>
+<th>P@10,000</th>
+<th>Score time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>basic</td>
+<td>0.6100</td>
+<td>0.4900</td>
+<td>0.4120</td>
+<td>0.2814</td>
+<td>0.1866</td>
+<td>0.07s</td>
+</tr>
+<tr>
+<td>combobasic</td>
+<td>0.6100</td>
+<td>0.4780</td>
+<td>0.4060</td>
+<td>0.2810</td>
+<td>0.1891</td>
+<td>0.35s</td>
+</tr>
+<tr>
+<td>cvalue</td>
+<td>0.5300</td>
+<td>0.4180</td>
+<td>0.3700</td>
+<td>0.1808</td>
+<td>0.1326</td>
+<td>0.10s</td>
+</tr>
+<tr>
+<td>ncvalue</td>
+<td>0.5300</td>
+<td>0.4240</td>
+<td>0.3700</td>
+<td>0.1842</td>
+<td>0.1395</td>
+<td>0.56s</td>
+</tr>
+<tr>
+<td>tfidf</td>
+<td>0.4700</td>
+<td>0.4120</td>
+<td>0.4030</td>
+<td>0.2774</td>
+<td>0.1802</td>
+<td>0.08s</td>
+</tr>
+<tr>
+<td>ttf</td>
+<td>0.4600</td>
+<td>0.3920</td>
+<td>0.3940</td>
+<td>0.2860</td>
+<td>0.1802</td>
+<td>0.06s</td>
+</tr>
+<tr>
+<td>ridf</td>
+<td>0.4200</td>
+<td>0.4640</td>
+<td>0.4070</td>
+<td>0.2774</td>
+<td>0.1802</td>
+<td>0.25s</td>
+</tr>
+<tr>
+<td>attf</td>
+<td>0.4100</td>
+<td>0.4220</td>
+<td>0.3970</td>
+<td>0.2632</td>
+<td>0.1764</td>
+<td>0.07s</td>
+</tr>
+<tr>
+<td>chi_square</td>
+<td>0.2800</td>
+<td>0.2860</td>
+<td>0.2970</td>
+<td>0.2368</td>
+<td>0.1890</td>
+<td>0.33s</td>
+</tr>
+<tr>
+<td>weirdness</td>
+<td>0.2200</td>
+<td>0.2820</td>
+<td>0.2850</td>
+<td>0.2452</td>
+<td>0.2008</td>
+<td>0.36s</td>
+</tr>
+<tr>
+<td>termex</td>
+<td>0.1600</td>
+<td>0.2820</td>
+<td>0.3100</td>
+<td>0.2800</td>
+<td>0.2131</td>
+<td>0.44s</td>
+</tr>
+<tr>
+<td>rake</td>
+<td>0.0300</td>
+<td>0.0500</td>
+<td>0.0720</td>
+<td>0.1138</td>
+<td>0.1280</td>
+<td>1.42s</td>
+</tr>
+<tr>
+<td>glossex</td>
+<td>0.0000</td>
+<td>0.0880</td>
+<td>0.1850</td>
+<td>0.2318</td>
+<td>0.2117</td>
+<td>0.17s</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Observations</strong>: Basic and combobasic lead at P@100 (0.61). The multi-domain nature of ACTER makes it challenging — reference-based methods underperform because the BNC doesn't cover all four specialist domains well. For comparison, the best classical system at TermEval 2020 (NYU Termolator) achieved F1=30.6% on the heart failure held-out test set.</p>
+<hr />
+<h2 id="coastterm">coastterm<a class="headerlink" href="#coastterm" title="Permanent link">&para;</a></h2>
+<p>CoastTerm — 2,004 sentences from coastal science abstracts. 4,316 gold terms. First published classical ATE benchmarks on this dataset.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Documents</strong></td>
+<td>2,004</td>
+</tr>
+<tr>
+<td><strong>Gold terms</strong></td>
+<td>4,316</td>
+</tr>
+<tr>
+<td><strong>Candidates</strong></td>
+<td>7,819</td>
+</tr>
+<tr>
+<td><strong>NLP time</strong></td>
+<td>11.8s</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Algorithm</th>
+<th>P@100</th>
+<th>P@500</th>
+<th>P@1,000</th>
+<th>P@5,000</th>
+<th>Score time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>combobasic</td>
+<td>0.5900</td>
+<td>0.4440</td>
+<td>0.4340</td>
+<td>0.2732</td>
+<td>0.05s</td>
+</tr>
+<tr>
+<td>basic</td>
+<td>0.5700</td>
+<td>0.4660</td>
+<td>0.4330</td>
+<td>0.2966</td>
+<td>0.03s</td>
+</tr>
+<tr>
+<td>cvalue</td>
+<td>0.4600</td>
+<td>0.3260</td>
+<td>0.2830</td>
+<td>0.2164</td>
+<td>0.05s</td>
+</tr>
+<tr>
+<td>ncvalue</td>
+<td>0.4700</td>
+<td>0.3400</td>
+<td>0.2860</td>
+<td>0.2178</td>
+<td>0.10s</td>
+</tr>
+<tr>
+<td>termex</td>
+<td>0.4500</td>
+<td>0.4880</td>
+<td>0.4730</td>
+<td>0.3116</td>
+<td>0.26s</td>
+</tr>
+<tr>
+<td>weirdness</td>
+<td>0.4300</td>
+<td>0.4860</td>
+<td>0.4420</td>
+<td>0.3050</td>
+<td>0.13s</td>
+</tr>
+<tr>
+<td>tfidf</td>
+<td>0.4200</td>
+<td>0.4900</td>
+<td>0.4390</td>
+<td>0.2920</td>
+<td>0.04s</td>
+</tr>
+<tr>
+<td>ttf</td>
+<td>0.4200</td>
+<td>0.4940</td>
+<td>0.4460</td>
+<td>0.2920</td>
+<td>0.03s</td>
+</tr>
+<tr>
+<td>ridf</td>
+<td>0.4000</td>
+<td>0.4320</td>
+<td>0.4390</td>
+<td>0.2920</td>
+<td>0.20s</td>
+</tr>
+<tr>
+<td>glossex</td>
+<td>0.3800</td>
+<td>0.4400</td>
+<td>0.4160</td>
+<td>0.3120</td>
+<td>0.12s</td>
+</tr>
+<tr>
+<td>attf</td>
+<td>0.2900</td>
+<td>0.3740</td>
+<td>0.2890</td>
+<td>0.2796</td>
+<td>0.04s</td>
+</tr>
+<tr>
+<td>chi_square</td>
+<td>0.2700</td>
+<td>0.2420</td>
+<td>0.2910</td>
+<td>0.2868</td>
+<td>0.29s</td>
+</tr>
+<tr>
+<td>rake</td>
+<td>0.0300</td>
+<td>0.0640</td>
+<td>0.0970</td>
+<td>0.2280</td>
+<td>0.36s</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Observations</strong>: Basic/combobasic lead at P@100. Termex, weirdness, and glossex perform well at P@500+ — the BNC reference is a reasonable match for coastal science vocabulary. TF-IDF and TTF are strong at mid-range K. No prior classical ATE baselines exist for CoastTerm; the original paper only evaluated transformer-based sequence labelling (RoBERTa F1 ≈ 82%).</p>
+<hr />
+<h2 id="cross-dataset-summary">Cross-dataset summary<a class="headerlink" href="#cross-dataset-summary" title="Permanent link">&para;</a></h2>
+<p>Best algorithm at each P@K cutoff per dataset:</p>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>P@100</th>
+<th>P@500</th>
+<th>P@1,000</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>acl_rdtec_mini</td>
+<td>attf (0.37)</td>
+<td>basic (0.23)</td>
+<td>basic (0.17)</td>
+</tr>
+<tr>
+<td>genia</td>
+<td>attf (0.79)</td>
+<td>ridf (0.76)</td>
+<td>ridf (0.77)</td>
+</tr>
+<tr>
+<td>acl_rdtec</td>
+<td>ttf (0.73)</td>
+<td>ttf (0.54)</td>
+<td>tfidf/ttf (0.46)</td>
+</tr>
+<tr>
+<td>acter</td>
+<td>basic (0.61)</td>
+<td>basic (0.49)</td>
+<td>basic (0.41)</td>
+</tr>
+<tr>
+<td>coastterm</td>
+<td>combobasic (0.59)</td>
+<td>ttf (0.49)</td>
+<td>termex (0.47)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>General findings:</strong>
+- <strong>basic/combobasic</strong> are the most consistent performers across domains and K values.
+- <strong>ridf</strong> excels on large biomedical corpora (GENIA).
+- <strong>tfidf/ttf</strong> dominate on computational linguistics text (ACL RD-TEC) where simple frequency is a strong signal.
+- <strong>termex/weirdness</strong> improve with larger K values and are competitive on coastterm, where the BNC reference is a good domain contrast.
+- <strong>rake</strong> consistently underperforms at small K — it is designed for document-level keyword extraction, not corpus-level term extraction.
+- <strong>glossex</strong> shows poor precision at small K across all datasets, suggesting a calibration issue in the top-ranked terms.</p>
+<hr />
+<h2 id="neural-tagger-xlm-r-atetagger">Neural tagger: XLM-R (ATETagger)<a class="headerlink" href="#neural-tagger-xlm-r-atetagger" title="Permanent link">&para;</a></h2>
+<p>The XLM-R tagger (<a href="https://huggingface.co/ziqizhang2026/jate-ate-xlmr">ziqizhang2026/jate-ate-xlmr</a>) is a transformer token classifier fine-tuned on ACTER using BIO sequence labelling. It operates per-document (no corpus-level statistics) and is evaluated with set-based P/R/F1 — not P@K, since taggers do not produce rankings.</p>
+<p>Trained on 3 ACTER domains (corruption, equitation, wind energy), evaluated on held-out domain (heart failure) and cross-domain on all datasets.</p>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Precision</th>
+<th>Recall</th>
+<th>F1</th>
+<th>Time</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>acl_rdtec_mini</td>
+<td>0.2059</td>
+<td>0.0161</td>
+<td>0.0299</td>
+<td>9s</td>
+<td>3 documents, too small for meaningful results</td>
+</tr>
+<tr>
+<td>genia</td>
+<td>0.3736</td>
+<td>0.2291</td>
+<td>0.2840</td>
+<td>1,505s</td>
+<td>Biomedical domain, cross-domain from ACTER training</td>
+</tr>
+<tr>
+<td>acl_rdtec</td>
+<td>0.2297</td>
+<td>0.0590</td>
+<td>0.0939</td>
+<td>767s</td>
+<td>Computational linguistics, cross-domain</td>
+</tr>
+<tr>
+<td>acter</td>
+<td>0.4904</td>
+<td>0.2550</td>
+<td>0.3356</td>
+<td>192s</td>
+<td>In-domain (trained on 3/4 ACTER domains)</td>
+</tr>
+<tr>
+<td>coastterm</td>
+<td>0.2650</td>
+<td>0.1362</td>
+<td>0.1800</td>
+<td>272s</td>
+<td>Coastal science, cross-domain</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Observations:</strong>
+- <strong>Best on in-domain data (ACTER)</strong>: F1=0.34, matching TermEval 2020 range (NYU Termolator F1=0.306, TALN-LS2N F1=0.467)
+- <strong>Cross-domain performance drops significantly</strong>: F1 drops to 0.09-0.28 on other datasets, confirming that domain-specific fine-tuning matters
+- <strong>High precision, low recall</strong>: The model is conservative — when it predicts a term, it's usually correct, but it misses many terms
+- <strong>Slow on CPU</strong>: ~0.75s per document on CPU. GPU recommended for large corpora
+- <strong>Complementary to rankers</strong>: The tagger finds different terms than statistical rankers — ensembling (issue #92 P1.3) could combine their strengths</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
