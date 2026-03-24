@@ -39,12 +39,12 @@ async def extract_page(request: Request) -> HTMLResponse:
 async def run_extract(request: Request) -> HTMLResponse:
     """Run term extraction and return a results partial."""
     form = await request.form()
-    text = form.get("text", "")
+    text = str(form.get("text", ""))
     uploaded_file = form.get("file")
-    algorithm = form.get("algorithm", "cvalue")
-    _pattern = form.get("pattern", "default")  # noqa: F841 — reserved for future use
-    min_frequency = int(form.get("min_frequency", "1"))
-    top_n = int(form.get("top_n", "50"))
+    algorithm = str(form.get("algorithm", "cvalue"))
+    _pattern = str(form.get("pattern", "default"))  # noqa: F841 — reserved for future use
+    min_frequency = int(str(form.get("min_frequency", "1")))
+    top_n = int(str(form.get("top_n", "50")))
 
     # Read uploaded file if present.
     if uploaded_file and hasattr(uploaded_file, "read") and getattr(uploaded_file, "filename", None):
@@ -57,19 +57,23 @@ async def run_extract(request: Request) -> HTMLResponse:
     # Collect algorithm-specific params from form fields prefixed algo_param_.
     algo_kwargs: dict[str, Any] = {}
     algo_info = ALGO_REGISTRY.get(algorithm, {})
-    for param_name, param_def in algo_info.get("params", {}).items():
+    params = algo_info.get("params", {})
+    assert isinstance(params, dict)
+    for param_name, param_def in params.items():
         val = form.get(f"algo_param_{param_name}")
         if val is not None and val != "":
+            val_str = str(val)
             ptype = param_def["type"]
             if ptype == "float":
-                algo_kwargs[param_name] = float(val)
+                algo_kwargs[param_name] = float(val_str)
             elif ptype == "int":
-                algo_kwargs[param_name] = int(val)
+                algo_kwargs[param_name] = int(val_str)
             elif ptype == "bool":
-                algo_kwargs[param_name] = val in ("on", "true", "True")
+                algo_kwargs[param_name] = val_str in ("on", "true", "True")
 
     # Reference corpus path (optional).
-    ref_file = form.get("algo_param_reference_frequency_file")
+    ref_file_raw = form.get("algo_param_reference_frequency_file")
+    ref_file: str | None = str(ref_file_raw) if ref_file_raw else None
     if ref_file and not ref_file.strip():
         ref_file = None
 

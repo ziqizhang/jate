@@ -30,6 +30,7 @@ pandas = "^2.0"
 numpy = ">=1.26"
 fastapi = { version = "^0.121.1", optional = true }
 uvicorn = { version = "^0.38.0", optional = true }
+python-multipart = { version = ">=0.0.7", optional = true }
 transformers = { version = ">=4.40", optional = true }
 torch = { version = ">=2.0", optional = true }
 datasets = { version = ">=3.0", optional = true }
@@ -64,7 +65,7 @@ mkdocstrings-python = "^2.0.3"
 mike = "^2.1.4"
 
 [tool.poetry.extras]
-server = ["fastapi", "uvicorn"]
+server = ["fastapi", "uvicorn", "python-multipart"]
 neural = ["transformers", "torch", "datasets", "seqeval"]
 
 [build-system]

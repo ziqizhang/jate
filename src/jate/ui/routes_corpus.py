@@ -10,6 +10,7 @@ import threading
 import time
 import uuid
 import warnings
+from collections.abc import AsyncGenerator
 from pathlib import Path
 from typing import Any
 
@@ -42,7 +43,7 @@ async def corpus_page(request: Request) -> HTMLResponse:
 async def scan_directory(request: Request) -> HTMLResponse:
     """Scan a directory and return file stats as a partial."""
     form = await request.form()
-    directory = form.get("directory", "").strip()
+    directory = str(form.get("directory", "")).strip()
 
     if not directory:
         return HTMLResponse("<div class='error-banner'>Please enter a directory path.</div>")
@@ -84,12 +85,12 @@ async def scan_directory(request: Request) -> HTMLResponse:
 async def run_corpus(request: Request) -> HTMLResponse:
     """Start corpus extraction in a background thread."""
     form = await request.form()
-    directory = form.get("directory", "").strip()
+    directory = str(form.get("directory", "")).strip()
 
     # Algorithm chips submitted as multiple values with same name.
-    algorithms = form.getlist("algorithms")
+    algorithms: list[str] = [str(a) for a in form.getlist("algorithms")]
     if not algorithms:
-        algo_str = form.get("algorithms", "")
+        algo_str = str(form.get("algorithms", ""))
         algorithms = [a.strip() for a in algo_str.split(",") if a.strip()]
 
     if not algorithms:
@@ -101,28 +102,32 @@ async def run_corpus(request: Request) -> HTMLResponse:
     if not any(Path(directory).glob("*.txt")):
         return HTMLResponse("<div class='error-banner'>No .txt files found in the specified directory.</div>")
 
-    top_n = int(form.get("top_n", "20"))
-    min_frequency = int(form.get("min_frequency", "2"))
-    pattern = form.get("pattern", "default")
+    top_n = int(str(form.get("top_n", "20")))
+    min_frequency = int(str(form.get("min_frequency", "2")))
+    pattern = str(form.get("pattern", "default"))
 
     # Collect per-algorithm params.
     algo_params: dict[str, dict[str, Any]] = {}
     for algo_name in algorithms:
         algo_info = ALGO_REGISTRY.get(algo_name, {})
+        algo_param_defs = algo_info.get("params", {})
+        assert isinstance(algo_param_defs, dict)
         params: dict[str, Any] = {}
-        for param_name, param_def in algo_info.get("params", {}).items():
+        for param_name, param_def in algo_param_defs.items():
             val = form.get(f"algo_param_{algo_name}_{param_name}")
             if val is not None:
+                val_str = str(val)
                 if param_def["type"] == "float":
-                    params[param_name] = float(val)
+                    params[param_name] = float(val_str)
                 elif param_def["type"] == "int":
-                    params[param_name] = int(val)
+                    params[param_name] = int(val_str)
                 elif param_def["type"] == "bool":
-                    params[param_name] = val in ("on", "true", "True")
+                    params[param_name] = val_str in ("on", "true", "True")
         if params:
             algo_params[algo_name] = params
 
-    ref_file = form.get("reference_frequency_file", "").strip() or None
+    ref_file_raw = str(form.get("reference_frequency_file", "")).strip()
+    ref_file: str | None = ref_file_raw or None
 
     job_id = str(uuid.uuid4())[:8]
     _jobs[job_id] = {
@@ -322,7 +327,7 @@ def _run_corpus_job(
 async def progress_stream(job_id: str) -> StreamingResponse:
     """SSE endpoint streaming progress updates for a corpus job."""
 
-    async def event_generator():
+    async def event_generator() -> AsyncGenerator[str, None]:
         last_msg_count = 0
         while True:
             job = _jobs.get(job_id)

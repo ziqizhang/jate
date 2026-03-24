@@ -4370,6 +4370,19 @@ docs = ["furo (>=2025.12.19)", "sphinx (>=9.1)", "sphinx-autodoc-typehints (>=3.
 testing = ["covdefaults (>=2.3)", "coverage (>=7.5.4)", "pytest (>=8.3.5)", "pytest-mock (>=3.14)", "setuptools (>=75.1)"]
 
 [[package]]
+name = "python-multipart"
+version = "0.0.22"
+description = "A streaming multipart parser for Python"
+optional = true
+python-versions = ">=3.10"
+groups = ["main"]
+markers = "extra == \"server\""
+files = [
+    {file = "python_multipart-0.0.22-py3-none-any.whl", hash = "sha256:2b2cd894c83d21bf49d702499531c7bafd057d730c201782048f7945d82de155"},
+    {file = "python_multipart-0.0.22.tar.gz", hash = "sha256:7340bef99a7e0032613f56dc36027b959fd3b30a787ed62d310e951f7c3a3a58"},
+]
+
+[[package]]
 name = "pytokens"
 version = "0.4.1"
 description = "A Fast, spec compliant Python 3.14+ tokenizer that runs on older Pythons."
@@ -6768,9 +6781,9 @@ cffi = ["cffi (>=1.17,<2.0) ; platform_python_implementation != \"PyPy\" and pyt
 
 [extras]
 neural = ["datasets", "seqeval", "torch", "transformers"]
-server = ["fastapi", "uvicorn"]
+server = ["fastapi", "python-multipart", "uvicorn"]
 
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11"
-content-hash = "0feafb32cb25e42282f8d4829b14389cc35703549cd01d952955e5d6a48c9cab"
+content-hash = "df2eadbd5dcab666ef1e3360390dc6a038388f3e5f684ff3507c5be3aea345b6"

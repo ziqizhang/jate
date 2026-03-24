@@ -237,17 +237,19 @@ ALGO_REGISTRY = {
 }
 
 
-def get_algorithms_for_mode(mode: str) -> dict:
+def get_algorithms_for_mode(mode: str) -> dict[str, dict[str, object]]:
     """Return algorithms available for 'extract' (single doc) or 'corpus' mode."""
     if mode == "extract":
         return {k: v for k, v in ALGO_REGISTRY.items() if v["single_doc"]}
     return ALGO_REGISTRY
 
 
-def get_algo_params(algo_name: str) -> dict:
+def get_algo_params(algo_name: str) -> dict[str, object]:
     """Return parameter definitions for an algorithm."""
-    algo = ALGO_REGISTRY.get(algo_name, {})
-    return algo.get("params", {})
+    algo: dict[str, object] = ALGO_REGISTRY.get(algo_name, {})
+    params = algo.get("params", {})
+    assert isinstance(params, dict)
+    return params
 
 
 def needs_reference_corpus(algo_names: list[str]) -> bool:
