@@ -51,7 +51,7 @@ streamlit = "^1.35"
 
 [tool.poetry.group.neural.dependencies]
 torch = "^2.0"
-transformers = "^4.40"
+transformers = ">=4.40,<6.0"
 
 [tool.poetry.group.llm.dependencies]
 langchain = "^0.3"
